@@ -1,3 +1,4 @@
 .vscode/*
 data.db
 *.a
+.fuse*
