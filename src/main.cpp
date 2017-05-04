@@ -36,7 +36,7 @@ static void ui()
     std::regex re("\\\\[^\\\\]*$");
     std::string uiCall("\\renderer.exe ");
 
-    uiArgs += std::to_string(GetCurrentProcessId());
+    uiArgs += std::to_string(GetCurrentProcessId()); // give the pid so that renderer can terminate the server
 
     uiCall += uiArgs;
     std::cout << uiCall.c_str() << "\n";
@@ -49,7 +49,7 @@ static void ui()
     std::regex re("/[^/]*$");
     std::string uiCall("/renderer ");
 
-    uiArgs += std::to_string(::getpid());
+    uiArgs += std::to_string(::getpid()); // give the pid so that renderer can terminate the server
 
     uiCall += uiArgs;
     std::cout << uiCall.c_str() << "\n";

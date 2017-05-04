@@ -1,14 +1,13 @@
 INC=-I include
 CXXFLAGS=-pthread -std=gnu++11 -g -Wno-format-security
-CSS=design/main.css
-HTML=design/main.html
-JS=design/main.js
-INCC=include/ui.h include/server.h include/sql_scripts.h
+INCC=include/ui.h include/sql_scripts.h
+CSS=$(shell find design -name '*.less' | sed 's/\.less$$/.css/g')
+HTML=$(shell find design -name '*.html')
+JS=$(shell find design  -name '*.js')
 
 UIH=$(HTML:design/%.html=include/html_ui/%.h)
 
 INCC+=$(UIH)
-
 ifeq ($(OS),Windows_NT)
 	INC+=-I include/windows
 	LIBS=-L lib/windows -lwxregexu-3.0 -lwxtiff-3.0 -lwxjpeg-3.0 -lwxpng-3.0 -lrpcrt4 -loleaut32 -lole32 -luuid -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32 -static -static-libstdc++ -static-libgcc -lstdc++ -lpthread -lwxexpat-3.0 -lz -lws2_32

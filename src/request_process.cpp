@@ -3,8 +3,6 @@
 
 #include <string>
 #include <cstring>
-#include <iostream>
-
 
 std::string mainPage(int &code, const char *data)
 {
@@ -17,4 +15,3 @@ void bindUris()
 {
 	uriBindings["/"] = mainPage;
 }
-
