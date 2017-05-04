@@ -19,11 +19,10 @@ void dao::prepareDB()
     {
         if (!dao::transTableExists())
         {
-            if (sqlite3_exec(main_db, CREATE_EXPENSE_PROFILES_TABLE
-                                          CREATE_EXPENSES_TABLE
-                                              CREATE_TYPES_TABLE
-                                                  CREATE_ACCOUNTS_TABLE
-                                                      CREATE_TRANSACTION_TABLE,
+            if (sqlite3_exec(main_db, CREATE_EXPENSES_TABLE
+                                          CREATE_TYPES_TABLE
+                                              CREATE_ACCOUNTS_TABLE
+                                                  CREATE_TRANSACTION_TABLE,
                              NULL, NULL, NULL))
             {
                 throw sqlite3_errmsg(main_db);

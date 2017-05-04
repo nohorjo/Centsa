@@ -24,3 +24,7 @@ function init() {
  * Needed for Trident
  */
 setTimeout(init, 1000);
+
+function alertHi(){
+    alert('hi');
+}

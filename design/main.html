@@ -3,7 +3,14 @@
 
 <!--$
 #include "server.h"
-typedef struct {}main_html_input;
+#include <vector>
+#include <string>
+
+typedef struct {
+    std::vector<const char*> accounts;
+    std::vector<const char*> types;
+    std::vector<const char*> expenses;
+}main_html_input;
 $-->
 
 <head>
@@ -12,7 +19,65 @@ $-->
 </head>
 
 <body onload="init()">
-Server running on port: <!--= serverPort() =-->
+    Server running on port:
+    <!--= serverPort() =-->
+    <hr>
+    <table>
+        <tbody>
+            <tr>
+                <td>Amount</td>
+                <td><input type="number" step='0.01' value='0.00' placeholder='0.00'></td>
+            </tr>
+            <tr>
+                <td>Comment</td>
+                <td><input></td>
+            </tr>
+            <tr>
+                <td>Account</td>
+                <td><select>
+                    <!--%
+                    for(const char * account:input.accounts){
+                        %-->
+                        <option value="<!--=account=-->" ><!--=account=--></option>
+                        <!--%
+                    }
+                    %-->
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td><select>
+                    <!--%
+                    for(const char * type:input.types){
+                        %-->
+                        <option value="<!--=type=-->" ><!--=type=--></option>
+                        <!--%
+                    }
+                    %-->
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td><input type="date"></td>
+            </tr>
+            <tr>
+                <td>Expense</td>
+                <td><select>
+                    <option value="NONE">N/A</option>
+                    <!--%
+                    for(const char * expense:input.expenses){
+                        %-->
+                        <option value="<!--=expense=-->" ><!--=expense=--></option>
+                        <!--%
+                    }
+                    %-->
+                    </select></td>
+            </tr>
+            <tr>
+                <td><input type="button" onclick="alertHi()" value="Save"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>
