@@ -4,7 +4,8 @@
 #include <string>
 typedef struct {}main_html_input;
 
-std::string main_html(main_html_input &input){
+main_html_input default_input;
+std::string main_html(main_html_input &input = default_input){
 std::stringstream page;
 page << "<!DOCTYPE html>";
 page << "<html>";

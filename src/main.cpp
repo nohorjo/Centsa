@@ -26,7 +26,7 @@ static void ui()
     uiArgs += serverIP();
     uiArgs += ":";
     uiArgs += std::to_string(serverPort());
-    uiArgs += " ";
+    uiArgs += "/ ";
 #ifdef _WIN32
     WCHAR buff[MAX_PATH];
     GetModuleFileNameW(GetModuleHandleW(NULL), buff, MAX_PATH);
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     try
     {
         dao::prepareDB();
-        startServer("127.0.0.1", 8080);
+        startServer("127.0.0.1", 0);
     }
     catch (std::string err)
     {

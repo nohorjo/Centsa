@@ -28,7 +28,7 @@ else ifeq ($(shell uname -s),Linux)
 	LDFLAGS=lib/linux/*.a
 endif
 
-SERVOBJ+=$(OBJ)/dao.o $(OBJ)/sqlite3/sqlite3.o $(OBJ)/main.o $(OBJ)/server.o $(OBJ)/event2/bufferevent.o $(OBJ)/event2/buffer.o $(OBJ)/event2/bufferevent_ratelim.o $(OBJ)/event2/bufferevent_sock.o $(OBJ)/event2/event.o $(OBJ)/event2/event_tagging.o $(OBJ)/event2/evmap.o $(OBJ)/event2/evthread.o $(OBJ)/event2/log.o $(OBJ)/event2/listener.o $(OBJ)/event2/evutil_time.o $(OBJ)/event2/evutil_rand.o  $(OBJ)/event2/evutil.o $(OBJ)/event2/strlcpy.o $(OBJ)/event2/http.o $(OBJ)/event2/signal.o
+SERVOBJ+=$(OBJ)/request_process.o $(OBJ)/dao.o $(OBJ)/sqlite3/sqlite3.o $(OBJ)/main.o $(OBJ)/server.o $(OBJ)/event2/bufferevent.o $(OBJ)/event2/buffer.o $(OBJ)/event2/bufferevent_ratelim.o $(OBJ)/event2/bufferevent_sock.o $(OBJ)/event2/event.o $(OBJ)/event2/event_tagging.o $(OBJ)/event2/evmap.o $(OBJ)/event2/evthread.o $(OBJ)/event2/log.o $(OBJ)/event2/listener.o $(OBJ)/event2/evutil_time.o $(OBJ)/event2/evutil_rand.o  $(OBJ)/event2/evutil.o $(OBJ)/event2/strlcpy.o $(OBJ)/event2/http.o $(OBJ)/event2/signal.o
 
 all: bin/renderer bin/Centsa
 
