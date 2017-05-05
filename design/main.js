@@ -9,15 +9,15 @@ document.onselectstart = function () { return false; }
 function contextMenu() {
 }
 
-/**
- * Prevent default context menu
- */
 function init() {
+    //Prevent default context menu
     if (document.addEventListener) {
         document.addEventListener('contextmenu', function (e) { contextMenu(); e.preventDefault(); }, false);
     } else {
         document.attachEvent('oncontextmenu', function () { contextMenu(); window.event.returnValue = false; });
     }
+
+    $("#transDate").datepicker();
 }
 
 /**
