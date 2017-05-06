@@ -4,7 +4,7 @@
 #include <sqlite3.h>
 namespace dao
 {
-void prepareDB();
+void prepareDB(const char *dbFile);
 bool transTableExists();
 void saveTransaction();
 }

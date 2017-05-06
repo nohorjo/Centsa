@@ -1,23 +1,33 @@
 /**
  * Prevent text selection
  */
-document.onselectstart = function () { return false; }
+document.onselectstart = function () {
+    return false;
+}
 
 /**
  * Custom context menu
  */
-function contextMenu() {
-}
+function contextMenu() {}
 
 function init() {
-    //Prevent default context menu
+    // Prevent default context menu
     if (document.addEventListener) {
-        document.addEventListener('contextmenu', function (e) { contextMenu(); e.preventDefault(); }, false);
+        document.addEventListener('contextmenu', function (e) {
+            contextMenu();
+            e.preventDefault();
+        }, false);
     } else {
-        document.attachEvent('oncontextmenu', function () { contextMenu(); window.event.returnValue = false; });
+        document.attachEvent('oncontextmenu', function () {
+            contextMenu();
+            window.event.returnValue = false;
+        });
     }
 
-    $("#transDate").datepicker();
+    // Set date picker
+    $("#transDate").datepicker({
+        dateFormat: 'dd/mm/yy'
+    }).datepicker("setDate", new Date());
 }
 
 /**
@@ -25,6 +35,6 @@ function init() {
  */
 setTimeout(init, 1000);
 
-function alertHi(){
+function alertHi() {
     alert('hi');
 }
