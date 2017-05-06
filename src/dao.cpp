@@ -3,15 +3,17 @@
 
 #include <string>
 
+static const char *dbFileName;
 sqlite3 *main_db;
 
 /**
  * Checks the database if file exists, tries to create it and set it up if not
  */
-void dao::prepareDB(const char* dbFile)
+void dao::prepareDB(const char *dbFile)
 {
+    dbFileName = dbFile;
 
-    if (sqlite3_open(dbFile, &main_db))
+    if (sqlite3_open(dbFileName, &main_db))
     {
         throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db));
     }
