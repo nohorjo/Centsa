@@ -25,11 +25,12 @@ else ifeq ($(shell uname -s),Linux)
 	OBJ=obj/linux
 	SERVOBJ=$(OBJ)/event2/epoll.o $(OBJ)/event2/select.o $(OBJ)/event2/poll.o 
 	LDFLAGS=lib/linux/*.a
+	RENDERER=bin/renderer
 endif
 
-SERVOBJ+=$(OBJ)/request_process.o $(OBJ)/dao.o $(OBJ)/sqlite3/sqlite3.o $(OBJ)/main.o $(OBJ)/server.o $(OBJ)/event2/bufferevent.o $(OBJ)/event2/buffer.o $(OBJ)/event2/bufferevent_ratelim.o $(OBJ)/event2/bufferevent_sock.o $(OBJ)/event2/event.o $(OBJ)/event2/event_tagging.o $(OBJ)/event2/evmap.o $(OBJ)/event2/evthread.o $(OBJ)/event2/log.o $(OBJ)/event2/listener.o $(OBJ)/event2/evutil_time.o $(OBJ)/event2/evutil_rand.o  $(OBJ)/event2/evutil.o $(OBJ)/event2/strlcpy.o $(OBJ)/event2/http.o $(OBJ)/event2/signal.o
+SERVOBJ+=$(OBJ)/ping.o $(OBJ)/request_process.o $(OBJ)/dao.o $(OBJ)/sqlite3/sqlite3.o $(OBJ)/main.o $(OBJ)/server.o $(OBJ)/event2/bufferevent.o $(OBJ)/event2/buffer.o $(OBJ)/event2/bufferevent_ratelim.o $(OBJ)/event2/bufferevent_sock.o $(OBJ)/event2/event.o $(OBJ)/event2/event_tagging.o $(OBJ)/event2/evmap.o $(OBJ)/event2/evthread.o $(OBJ)/event2/log.o $(OBJ)/event2/listener.o $(OBJ)/event2/evutil_time.o $(OBJ)/event2/evutil_rand.o  $(OBJ)/event2/evutil.o $(OBJ)/event2/strlcpy.o $(OBJ)/event2/http.o $(OBJ)/event2/signal.o
 
-all: bin/renderer bin/Centsa
+all: $(RENDERER) bin/Centsa
 
 bin/Centsa: $(SERVOBJ) $(SERVRES)
 	$(CC) $^ -o $@ $(LIBS) $(CXXFLAGS) $(SERVRES)
@@ -62,14 +63,17 @@ design/%.htm: $(HTML) $(CSS) $(JS)
 	java -cp . MonoHtml $< > $@
 
 design/%.css: design/%.less
+ifeq ($(shell uname -s),Linux)
 	lessc $< $@
+endif
 
 clean:
 	rm -rf bin/Centsa*
 	rm -rf bin/renderer*
 	rm -rf $(OBJ)/*.o
-	rm -rf design/*.css
+ifeq ($(shell uname -s),Linux)
 	rm -rf design/*.htm
-	rm -rf *.db
+	rm -rf design/*.css
+endif
 	rm -rf bin/*.db
 
