@@ -10,6 +10,9 @@ document.onselectstart = function () {
  */
 function contextMenu() { }
 
+/**
+ * Prevent default context menu
+ */
 function init() {
     // Prevent default context menu
     if (document.addEventListener) {
