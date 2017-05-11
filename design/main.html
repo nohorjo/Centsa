@@ -1,91 +1,22 @@
-<!DOCTYPE html>
 <html>
-
 <!--$
-#include "server.h"
-#include <vector>
-#include <string>
-
 typedef struct {
-    std::vector<const char*> accounts;
-    std::vector<const char*> types;
-    std::vector<const char*> expenses;
 }main_html_input;
 $-->
-
 <head>
+    <title>Centsa</title>
     <link href="main.css" rel="stylesheet"></link>
-    <link href="jquery-ui.min.css" rel="stylesheet"></link>
     <script src="jquery-3.2.1.min.js"></script>
-    <script src="jquery-ui.min.js"></script>
     <script src="main.js"></script>
-    <link href="jquery-ui.min.css" rel="stylesheet"></link>
-    <script src="jquery-3.2.1.min.js"></script>
-    <script src="jquery-ui.min.js"></script>
+    <script src="utils.js"></script>
 </head>
 
 <body onload="init()">
-    Server running on port:
-    <!--= serverPort() =-->
-    <br>one % 
-    <br> two %%
+    <a href="#" onclick="load('transinput.html')">Transaction</a>
     <hr>
-    <table id="transactionDetails">
-        <tbody>
-            <tr>
-                <td>Amount</td>
-                <td><input name="AMOUNT" type="number" step='0.01' value='0.00' placeholder='0.00'></td>
-            </tr>
-            <tr>
-                <td>Comment</td>
-                <td><textarea name="COMMENT" rows="3" cols="40"></textarea></td>
-            </tr>
-            <tr>
-                <td>Account</td>
-                <td><select name="ACCOUNT">
-                    <!--%
-                    for(const char * account:input.accounts){
-                        %-->
-                        <option value="<!--=account=-->" ><!--=account=--></option>
-                        <!--%
-                    }
-                    %-->
-                    </select></td>
-            </tr>
-            <tr>
-                <td>Type</td>
-                <td><select name="TYPE">
-                    <!--%
-                    for(const char * type:input.types){
-                        %-->
-                        <option value="<!--=type=-->" ><!--=type=--></option>
-                        <!--%
-                    }
-                    %-->
-                    </select></td>
-            </tr>
-            <tr>
-                <td>Date</td>
-                <td><input name="DATE" id="transDate"></td>
-            </tr>
-            <tr>
-                <td>Expense</td>
-                <td><select name="EXPENSE">
-                    <option value="NONE">N/A</option>
-                    <!--%
-                    for(const char * expense:input.expenses){
-                        %-->
-                        <option value="<!--=expense=-->" ><!--=expense=--></option>
-                        <!--%
-                    }
-                    %-->
-                    </select></td>
-            </tr>
-            <tr>
-                <td><input type="button" onclick="alertHi()" value="Save"></td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <iframe frameborder="no" scrolling="no" id="MAIN_CONTENT"></iframe>
+    </div>
 </body>
 
 </html>

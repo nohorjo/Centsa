@@ -26,27 +26,17 @@ function init() {
             window.event.returnValue = false;
         });
     }
-
-    // Set date picker
-    $("#transDate").datepicker({
-        dateFormat: 'dd/mm/yy'
-    }).datepicker("setDate", new Date());
 }
 
 /**
- * Coverts all child user-changeables to JSON string
- * @param {*} id id of the element
+ * Load url into the main iframe
  */
-function serializeElement(id) {
-    var form0 = {};
-    $("#" + id).find("input:not([type='button']), select, textarea").each(function () {
-        form0[this.name] = this.value;
-    });
-    return JSON.stringify(form0);
-}
-
-function alertHi() {
-    alert(serializeElement("transactionDetails"));
+function load(url) {
+    $("#MAIN_CONTENT")[0].src = url;
+    setTimeout(function () {
+        var mainContentBody = $("#MAIN_CONTENT")[0].contentWindow.document.body;
+        $("#MAIN_CONTENT").css({ width: mainContentBody.scrollWidth, height: Math.ceil(mainContentBody.scrollHeight * 1.1) })
+    }, 200);
 }
 
 /**

@@ -47,7 +47,7 @@ $(OBJ)/%.o: src/%.cpp $(INCC)
 $(OBJ)/%.o: src/%.c
 	$(CC) $(INC) $(LIBS) $(CXXFLAGS) -c -o $@ $<
 	
-$(UIH): $(HTML:.html=.htm)
+include/html_ui/%.h: design/%.htm
 ifeq ($(shell uname -s),Linux)
 	./ncspc $< > $@
 endif
@@ -59,7 +59,7 @@ include/ui.h: $(UIH)
 	for h in include/html_ui/*; do echo \#include \"$$(echo $$h | sed 's/include\///g')\" >> $@; done
 	echo "#endif" >> $@
 
-design/%.htm: $(HTML) $(CSS) $(JS)
+design/%.htm: design/%.html $(CSS) $(JS)
 	java -cp . MonoHtml $< > $@
 
 clean:
@@ -67,6 +67,7 @@ clean:
 	rm -rf bin/renderer*
 	rm -rf $(OBJ)/*.o
 	rm -rf bin/*.db
+	rm -rf include/html_ui/*
 ifeq ($(shell uname -s),Linux)
 	rm -rf design/*.htm
 endif

@@ -8,10 +8,17 @@
 
 #include <vector>
 
-std::string mainPage(int &code, const char *data)
+std::string mainPage(int &code, const char*data){
+	code = 200;
+	std::string resp = main_html();
+	replaceAll(resp, "%", "%%");
+	return resp;
+}
+
+std::string transinputPage(int &code, const char *data)
 {
 	code = 200;
-	main_html_input i;
+	transinput_html_input i;
 
 	std::vector<const char *> acc;
 	acc.push_back("BANK");
@@ -28,7 +35,7 @@ std::string mainPage(int &code, const char *data)
 	ex.push_back("RENT");
 	i.expenses = ex;
 
-	std::string resp = main_html(i);
+	std::string resp = transinput_html(i);
 	replaceAll(resp, "%", "%%");
 	return resp;
 };
@@ -44,4 +51,5 @@ void bindUris()
 {
 	uriBindings["/"] = mainPage;
 	uriBindings["/ping"] = pingServer;
+	uriBindings["/transinput.html"] = transinputPage;
 }
