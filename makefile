@@ -1,7 +1,7 @@
 INC=-I include
 CXXFLAGS=-pthread -std=gnu++11 -g -Wno-format-security
 INCC=include/ui.h include/sql_scripts.h
-CSS=$(shell find design -name '*.less' | sed 's/\.less$$/.css/g')
+CSS=$(shell find design -name '*.css')
 HTML=$(shell find design -name '*.html')
 JS=$(shell find design  -name '*.js')
 
@@ -62,18 +62,12 @@ include/ui.h: $(UIH)
 design/%.htm: $(HTML) $(CSS) $(JS)
 	java -cp . MonoHtml $< > $@
 
-design/%.css: design/%.less
-ifeq ($(shell uname -s),Linux)
-	lessc $< $@
-endif
-
 clean:
 	rm -rf bin/Centsa*
 	rm -rf bin/renderer*
 	rm -rf $(OBJ)/*.o
+	rm -rf bin/*.db
 ifeq ($(shell uname -s),Linux)
 	rm -rf design/*.htm
-	rm -rf design/*.css
 endif
-	rm -rf bin/*.db
 

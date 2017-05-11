@@ -1,7 +1,5 @@
-@bgcolour:#FFFFFF;
-
 body{
-    background: @bgcolour;
+    background: #FFFFFF;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
