@@ -7,7 +7,8 @@
 
 #include <vector>
 
-std::string mainPage(int &code, const char*data){
+std::string mainPage(int &code, const char *data)
+{
 	code = 200;
 	return main_html();
 }
@@ -39,12 +40,12 @@ std::string pingServer(int &code, const char *data)
 {
 	code = 200;
 	ping::alive();
-	return NULL;
+	return std::string("");
 }
 
 void bindUris()
 {
-	uriBindings[""] = mainPage;
-	uriBindings["ping"] = pingServer;
-	uriBindings["transinput.html"] = transinputPage;
+	uriBindings["/"] = mainPage;
+	uriBindings["/ping"] = pingServer;
+	uriBindings["/transinput.html"] = transinputPage;
 }

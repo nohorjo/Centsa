@@ -48,6 +48,7 @@ $(OBJ)/%.o: src/%.c
 	$(CC) $(INC) $(LIBS) $(CXXFLAGS) -c -o $@ $<
 	
 include/html_ui/%.h: design/%.htm
+	mkdir -p include/html_ui
 ifeq ($(shell uname -s),Linux)
 	./ncspc $< > $@
 endif

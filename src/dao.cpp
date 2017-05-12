@@ -44,24 +44,17 @@ void dao::prepareDB(const char *dbFile)
  */
 bool dao::transTableExists()
 {
-    struct rowCounter
-    {
-        static int forEachRow(void *data, int colCount, char **colData, char **colNames)
-        {
-            int *rowCount = (int *)data;
-            (*rowCount)++;
-            return 0;
-        }
+    int rowCount = 0;
+    auto forEachRow = [](void *data, int colCount, char **colData, char **colNames) {
+        (*(int *)data)++;
+        return 0;
     };
-    int *rowCount = new int;
-    *rowCount = 0;
-    if (sqlite3_exec(main_db, CHECK_TABLE, rowCounter::forEachRow, rowCount, NULL) != SQLITE_OK)
+    if (sqlite3_exec(main_db, CHECK_TABLE, forEachRow, &rowCount, NULL) != SQLITE_OK)
     {
         throw sqlite3_errmsg(main_db);
     }
 
-    bool rtn = *rowCount > 0;
-    delete rowCount;
+    bool rtn = rowCount > 0;
     return rtn;
 }
 
