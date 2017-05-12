@@ -13,6 +13,8 @@ typedef struct
 
 #ifdef __cplusplus
 
+#include "StringUtils.h"
+
 #include <string>
 #include <map>
 #include <cstring>
@@ -39,7 +41,7 @@ request_processor getProcessor(const char *uri)
         bindUris();
     }
 
-    UrlBindings::iterator it = uriBindings.find(uri);
+    UrlBindings::iterator it = uriBindings.find("/" uri);
     if (it != uriBindings.end())
     {
         return it->second;
@@ -54,12 +56,17 @@ extern "C" char *process_request(http_request &req, int &code)
     if (rp != NULL)
     {
         std::string resp = rp(code, req.data);
-        char *rtn = new char[resp.length()];
-        std::strcpy(rtn, resp.c_str());
-        return rtn;
+		if(resp != NULL){
+			replaceAll(resp, "%", "%%");
+			char *rtn = new char[resp.length()];
+			std::strcpy(rtn, resp.c_str());
+			return rtn;
+		}
+		
+		return NULL;
     }
     code = 404;
     return NULL;
 }
-#endif __cplusplus
-#endif REQUEST_PROCESS_H
+#endif
+#endif

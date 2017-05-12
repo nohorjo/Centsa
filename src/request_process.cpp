@@ -1,6 +1,5 @@
 #include "request_process.h"
 #include "ui.h"
-#include "StringUtils.h"
 #include "ping.h"
 
 #include <string>
@@ -10,9 +9,7 @@
 
 std::string mainPage(int &code, const char*data){
 	code = 200;
-	std::string resp = main_html();
-	replaceAll(resp, "%", "%%");
-	return resp;
+	return main_html();
 }
 
 std::string transinputPage(int &code, const char *data)
@@ -35,21 +32,19 @@ std::string transinputPage(int &code, const char *data)
 	ex.push_back("RENT");
 	i.expenses = ex;
 
-	std::string resp = transinput_html(i);
-	replaceAll(resp, "%", "%%");
-	return resp;
+	return transinput_html(i);
 };
 
 std::string pingServer(int &code, const char *data)
 {
 	code = 200;
 	ping::alive();
-	return std::string("");
+	return NULL;
 }
 
 void bindUris()
 {
-	uriBindings["/"] = mainPage;
-	uriBindings["/ping"] = pingServer;
-	uriBindings["/transinput.html"] = transinputPage;
+	uriBindings[""] = mainPage;
+	uriBindings["ping"] = pingServer;
+	uriBindings["transinput.html"] = transinputPage;
 }
