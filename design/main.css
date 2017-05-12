@@ -4,5 +4,13 @@ body{
     -ms-user-select: none;
     user-select: none;
     font-size: 11pt;
+	margin:0;
 }
 
+#MAIN_CONTENT{
+	margin:0px;
+}
+
+#MAIN_MENU{
+	margin:8px;
+}

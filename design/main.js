@@ -26,6 +26,20 @@ function init() {
             window.event.returnValue = false;
         });
     }
+	
+	$(window).resize(sizeContent);
+}
+
+var reziseTimeout;
+
+function sizeContent(){
+	clearTimeout(reziseTimeout);
+	reziseTimeout = setTimeout(function () {
+		$("#MAIN_CONTENT").css({
+			width: Math.ceil($("body").width()*0.95),
+			height: Math.ceil(($("body").height() - $("#MAIN_MENU").height())*0.95)
+		});
+	}, 200);
 }
 
 /**
@@ -33,10 +47,7 @@ function init() {
  */
 function load(url) {
     $("#MAIN_CONTENT")[0].src = url;
-    setTimeout(function () {
-        var mainContentBody = $("#MAIN_CONTENT")[0].contentWindow.document.body;
-        $("#MAIN_CONTENT").css({ width: mainContentBody.scrollWidth, height: Math.ceil(mainContentBody.scrollHeight * 1.1) })
-    }, 200);
+	sizeContent();
 }
 
 /**

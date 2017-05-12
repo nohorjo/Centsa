@@ -1,5 +1,7 @@
 <html>
 <!--$
+#include "server.h"
+
 typedef struct {
 }main_html_input;
 $-->
@@ -12,10 +14,15 @@ $-->
 </head>
 
 <body onload="init()">
-    <a href="#" onclick="load('transinput.html')">Transaction</a>
-    <hr>
+    <div id="MAIN_MENU">
+	<a href="#" onclick="load('transinput.html')">Transaction</a>
+	<span style="float:right">Server running on port:
+       <!--= serverPort() =-->
+	</span>
+    	<hr>
+    </div>
     <div>
-        <iframe frameborder="no" scrolling="no" id="MAIN_CONTENT"></iframe>
+        <iframe frameborder="no" id="MAIN_CONTENT"></iframe>
     </div>
 </body>
 
