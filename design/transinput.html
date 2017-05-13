@@ -2,13 +2,15 @@
 <html>
 
 <!--$
+#include "dao.h"
+
 #include <vector>
 #include <string>
 
 typedef struct {
-    std::vector<const char*> accounts;
-    std::vector<const char*> types;
-    std::vector<const char*> expenses;
+    std::vector<dao::account> accounts;
+    std::vector<dao::type> types;
+    std::vector<dao::expense> expenses;
 }transinput_html_input;
 $-->
 
@@ -38,9 +40,9 @@ $-->
                 <td>Account</td>
                 <td><select name="ACCOUNT">
                     <!--%
-                    for(const char * account:input.accounts){
+                    for(dao::account account:input.accounts){
                         %-->
-                        <option value="<!--=account=-->" ><!--=account=--></option>
+                        <option value="<!--=account.id=-->" ><!--=account.name=--></option>
                         <!--%
                     }
                     %-->
@@ -50,9 +52,9 @@ $-->
                 <td>Type</td>
                 <td><select name="TYPE">
                     <!--%
-                    for(const char * type:input.types){
+                    for(dao::type type:input.types){
                         %-->
-                        <option value="<!--=type=-->" ><!--=type=--></option>
+                        <option value="<!--=type.id=-->" ><!--=type.name=--></option>
                         <!--%
                     }
                     %-->
@@ -67,9 +69,9 @@ $-->
                 <td><select name="EXPENSE">
                     <option value="NONE">N/A</option>
                     <!--%
-                    for(const char * expense:input.expenses){
+                    for(dao::expense expense:input.expenses){
                         %-->
-                        <option value="<!--=expense=-->" ><!--=expense=--></option>
+                        <option value="<!--=expense.id=-->" ><!--=expense.name=--></option>
                         <!--%
                     }
                     %-->

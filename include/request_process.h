@@ -57,6 +57,7 @@ extern "C" char *process_request(http_request &req, int &code)
     {
         std::string resp = rp(code, req.data);
         replaceAll(resp, "%", "%%");
+        replaceAll(resp, "%;", "% ;");
         char *rtn = new char[resp.length()];
         std::strcpy(rtn, resp.c_str());
         return rtn;

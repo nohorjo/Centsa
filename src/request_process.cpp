@@ -1,6 +1,7 @@
 #include "request_process.h"
 #include "ui.h"
 #include "ping.h"
+#include "dao.h"
 
 #include <string>
 #include <cstring>
@@ -15,25 +16,21 @@ std::string mainPage(int &code, const char *data)
 
 std::string transinputPage(int &code, const char *data)
 {
-	code = 200;
-	transinput_html_input i;
+	try
+	{
+		transinput_html_input i;
 
-	std::vector<const char *> acc;
-	acc.push_back("BANK");
-	acc.push_back("POCKET");
-	i.accounts = acc;
+		i.accounts = dao::getAccounts();
+		i.types = dao::getTypes();
+		i.expenses = dao::getExpenses();
 
-	std::vector<const char *> ty;
-	ty.push_back("FOOD");
-	ty.push_back("RENT");
-	i.types = ty;
-
-	std::vector<const char *> ex;
-	ex.push_back("FOOD");
-	ex.push_back("RENT");
-	i.expenses = ex;
-
-	return transinput_html(i);
+		code = 200;
+		return transinput_html(i);
+	}
+	catch (const char *err)
+	{
+		return std::string(err);
+	}
 };
 
 std::string pingServer(int &code, const char *data)

@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     }
     try
     {
-        dao::prepareDB(std::string(exeDir + FILE_SEP "data.db").c_str());
+        dao::prepareDB(std::string(exeDir + FILE_SEP "data.db"));
         startServer("127.0.0.1", 0);
     }
     catch (std::string err)

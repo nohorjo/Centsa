@@ -1,6 +1,6 @@
 INC=-I include
 CXXFLAGS=-pthread -std=gnu++11 -g -Wno-format-security
-INCC=include/ui.h include/sql_scripts.h
+INCC=include/ui.h include/sql_scripts.h include/dao.h include/request_process.h include/StringUtils.h
 CSS=$(shell find design -name '*.css')
 HTML=$(shell find design -name '*.html')
 JS=$(shell find design  -name '*.js')
@@ -68,8 +68,9 @@ clean:
 	rm -rf bin/renderer*
 	rm -rf $(OBJ)/*.o
 	rm -rf bin/*.db
-	rm -rf include/html_ui/*
 ifeq ($(shell uname -s),Linux)
+	rm -rf include/html_ui/*
+	rm -rf include/ui.h
 	rm -rf design/*.htm
 endif
 
