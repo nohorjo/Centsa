@@ -1,45 +1,46 @@
 /**
- * Prevent text selection
- */
-document.onselectstart = function () {
-    return false;
-}
-
-/**
  * Custom context menu
  */
 function contextMenu() { }
+
+function applyMouseRestrictions(doc) {
+    // Prevent text selection
+    doc.onselectstart = function () {
+        return false;
+    }
+    // Prevent default context menu
+    if (doc.addEventListener) {
+        doc.addEventListener('contextmenu', function (e) {
+            contextMenu();
+            e.preventDefault();
+        }, false);
+    } else {
+        doc.attachEvent('oncontextmenu', function () {
+            contextMenu();
+            window.event.returnValue = false;
+        });
+    }
+}
 
 /**
  * Prevent default context menu
  */
 function init() {
-    // Prevent default context menu
-    if (document.addEventListener) {
-        document.addEventListener('contextmenu', function (e) {
-            contextMenu();
-            e.preventDefault();
-        }, false);
-    } else {
-        document.attachEvent('oncontextmenu', function () {
-            contextMenu();
-            window.event.returnValue = false;
-        });
-    }
-	
-	$(window).resize(sizeContent);
+    applyMouseRestrictions(document);
+    $(window).resize(sizeContent);
 }
 
 var reziseTimeout;
 
-function sizeContent(){
-	clearTimeout(reziseTimeout);
-	reziseTimeout = setTimeout(function () {
-		$("#MAIN_CONTENT").css({
-			width: Math.ceil($("body").width()*0.95),
-			height: Math.ceil(($("body").height() - $("#MAIN_MENU").height())*0.95)
-		});
-	}, 200);
+function sizeContent() {
+    clearTimeout(reziseTimeout);
+    reziseTimeout = setTimeout(function () {
+        $("#MAIN_CONTENT").css({
+            width: Math.ceil($("body").width() * 0.95),
+            height: Math.ceil(($("body").height() - $("#MAIN_MENU").height()) * 0.95)
+        });
+        applyMouseRestrictions($("#MAIN_CONTENT")[0].contentDocument);
+    }, 200);
 }
 
 /**
@@ -47,8 +48,10 @@ function sizeContent(){
  */
 function load(url) {
     $("#MAIN_CONTENT")[0].src = url;
-	sizeContent();
+    sizeContent();
 }
+
+
 
 /**
  * Keep the server alive

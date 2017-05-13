@@ -5,6 +5,10 @@
 #include <regex>
 #include <iostream>
 
+#ifndef _WIN32
+#include "../bin/icon.xpm"
+#endif
+
 class Frame : public wxFrame
 {
   public:
@@ -21,6 +25,9 @@ class Frame : public wxFrame
         {
             webView = wxWebView::New(this, wxID_ANY, url);
         }
+#ifndef _WIN32
+        SetIcon(wxIcon(icon_xpm));
+#endif
         this->Centre();
     };
 };

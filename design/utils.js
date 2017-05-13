@@ -1,5 +1,5 @@
 /**
- * Coverts all child user-changeables to JSON string
+ * Coverts all child user-changeables to JSON
  * @param {*} id id of the element
  */
 function serializeElement(id) {
@@ -7,5 +7,5 @@ function serializeElement(id) {
     $("#" + id).find("input:not([type='button']), select, textarea").each(function () {
         form0[this.name] = this.value;
     });
-    return JSON.stringify(form0);
+    return form0;
 }

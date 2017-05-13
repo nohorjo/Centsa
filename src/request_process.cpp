@@ -3,9 +3,11 @@
 #include "ping.h"
 #include "dao.h"
 
+#include "rapidjson/document.h"
+
 #include <string>
 #include <cstring>
-
+#include <iostream>
 #include <vector>
 
 std::string mainPage(int &code, const char *data)
@@ -29,6 +31,7 @@ std::string transinputPage(int &code, const char *data)
 	}
 	catch (const char *err)
 	{
+		std::cerr << err << "\n";
 		return std::string(err);
 	}
 };
@@ -40,9 +43,46 @@ std::string pingServer(int &code, const char *data)
 	return std::string("");
 }
 
+std::string accountsPage(int &code, const char *data)
+{
+	try
+	{
+		accounts_html_input i;
+		i.accounts = dao::getAccounts();
+		code = 200;
+		return accounts_html(i);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string addAccount(int &code, const char *data)
+{
+	try
+	{
+		rapidjson::Document account;
+		account.Parse(data);
+
+		long id = dao::addAccount(account["NAME"].GetString());
+		std::cout << "Created new account: " << id << "\n";
+		code = 200;
+		return std::to_string(id);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
 	uriBindings["/ping"] = pingServer;
 	uriBindings["/transinput.html"] = transinputPage;
+	uriBindings["/accounts.html"] = accountsPage;
+	uriBindings["/addAccount"] = addAccount;
 }

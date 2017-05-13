@@ -100,8 +100,12 @@ int main(int argc, char **argv)
         dao::prepareDB(std::string(exeDir + FILE_SEP "data.db"));
         startServer("127.0.0.1", 0);
     }
-    catch (std::string err)
+    catch (const char *err)
     {
+#ifdef _WIN32
+        MessageBox(NULL, err, "Error", MB_OK | MB_ICONERROR);
+#else
         std::cerr << err << "\n";
+#endif
     }
 }

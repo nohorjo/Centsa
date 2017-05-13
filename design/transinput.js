@@ -5,6 +5,6 @@ function init(){
     }).datepicker("setDate", new Date());
 }
 
-function alertHi() {
+function saveTransaction() {
     alert(serializeElement("transactionDetails"));
 }

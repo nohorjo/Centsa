@@ -51,8 +51,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 
 	const char *uri = evhttp_request_get_uri(req);
 	hreq.uri = uri;
-	printf("Got a request for <%s>\n", uri);
-
+	
 	struct evhttp_uri *decoded = evhttp_uri_parse(uri);
 
 	if (!decoded)

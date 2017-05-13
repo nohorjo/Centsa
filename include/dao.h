@@ -50,6 +50,7 @@ void saveTransaction();
 std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpenses();
+long addAccount(const char *name);
 }
 
 #endif

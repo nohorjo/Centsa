@@ -56,8 +56,13 @@ extern "C" char *process_request(http_request &req, int &code)
     if (rp != NULL)
     {
         std::string resp = rp(code, req.data);
+        
+        // These seem to cause problems....
         replaceAll(resp, "%", "%%");
         replaceAll(resp, "%;", "% ;");
+        replaceAll(resp, "($", "( $");
+        replaceAll(resp, "$(\"", "$( \"");
+        
         char *rtn = new char[resp.length()];
         std::strcpy(rtn, resp.c_str());
         return rtn;
