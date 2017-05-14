@@ -7,6 +7,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <map>
 
 namespace dao
 {
@@ -52,6 +53,7 @@ std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpenses();
 long addAccount(const char *name);
+std::map<std::string,std::string> getSettings();
 }
 
 #endif

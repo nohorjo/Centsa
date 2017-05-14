@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<!--$
+
+#include <map>
+#include <string>
+
+typedef struct {
+    std::map<std::string,std::string> settings;
+}settings_html_input;
+
+$-->
+
+<head></head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Setting</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--%
+            for(std::map<std::string,std::string>::iterator iter = input.settings.begin(); iter != input.settings.end(); ++iter)
+            {
+                %-->
+            <tr>
+                <td>
+                    <!--=iter->first=-->
+                </td>
+                <td>
+                    <input value="<!--=iter->second=-->">
+                </td>
+            </tr>
+            <!--%
+            }
+            %-->
+        </tbody>
+    </table>
+</body>
+
+</html>

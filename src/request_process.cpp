@@ -5,8 +5,6 @@
 
 #include "rapidjson/document.h"
 
-#include <string>
-#include <cstring>
 #include <iostream>
 #include <vector>
 
@@ -75,6 +73,22 @@ std::string addAccount(int &code, const char *data)
 	}
 }
 
+std::string settingsPage(int &code, const char *data)
+{
+	try
+	{
+		settings_html_input i;
+		i.settings = dao::getSettings();
+		code = 200;
+		return settings_html(i);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -82,4 +96,5 @@ void bindUris()
 	uriBindings["/transinput.html"] = transinputPage;
 	uriBindings["/accounts.html"] = accountsPage;
 	uriBindings["/addAccount"] = addAccount;
+	uriBindings["/settings.html"] = settingsPage;
 }

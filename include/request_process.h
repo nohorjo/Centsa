@@ -15,22 +15,13 @@ typedef struct
 
 #include "StringUtils.h"
 
-#include <string>
-#include <map>
 #include <cstring>
-
-struct cmp_str
-{
-    bool operator()(char const *a, char const *b)
-    {
-        return std::strcmp(a, b) < 0;
-    }
-};
+#include <map>
+#include <stdexcept>
 
 typedef std::string (*request_processor)(int &, const char *);
-typedef std::map<const char *, request_processor, cmp_str> UrlBindings;
 
-UrlBindings uriBindings;
+std::map<std::string, request_processor> uriBindings;
 
 void bindUris();
 
@@ -40,14 +31,14 @@ request_processor getProcessor(const char *uri)
     {
         bindUris();
     }
-
-    UrlBindings::iterator it = uriBindings.find(uri);
-    if (it != uriBindings.end())
+    try
     {
-        return it->second;
+        return uriBindings.at(uri);
     }
-
-    return NULL;
+    catch (const std::out_of_range &oor)
+    {
+        return NULL;
+    }
 }
 
 extern "C" char *process_request(http_request &req, int &code)
@@ -56,14 +47,14 @@ extern "C" char *process_request(http_request &req, int &code)
     if (rp != NULL)
     {
         std::string resp = rp(code, req.data);
-        
+
         // These seem to cause problems....
         replaceAll(resp, "%", "%%");
         replaceAll(resp, "%;", "% ;");
         replaceAll(resp, "($", "( $");
         replaceAll(resp, "$(\"", "$( \"");
         replaceAll(resp, "\")", "\" )");
-        
+
         char *rtn = new char[resp.length()];
         std::strcpy(rtn, resp.c_str());
         return rtn;

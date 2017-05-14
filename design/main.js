@@ -39,7 +39,6 @@ function sizeContent() {
             width: Math.ceil($("body").width() * 0.95),
             height: Math.ceil(($("body").height() - $("#MAIN_MENU").height()) * 0.95)
         });
-        applyMouseRestrictions($("#MAIN_CONTENT")[0].contentDocument);
     }, 200);
 }
 
@@ -49,6 +48,7 @@ function sizeContent() {
 function load(url) {
     $("#MAIN_CONTENT")[0].src = url;
     sizeContent();
+    applyMouseRestrictions($("#MAIN_CONTENT")[0].contentDocument);
 }
 
 

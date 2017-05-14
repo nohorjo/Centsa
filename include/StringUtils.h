@@ -8,7 +8,7 @@
 #include <regex>
 
 template <typename Out>
-void split(const std::string &s, char delim, Out result)
+inline void split(const std::string &s, char delim, Out result)
 {
     std::stringstream ss;
     ss.str(s);
@@ -19,14 +19,14 @@ void split(const std::string &s, char delim, Out result)
     }
 }
 
-std::vector<std::string> split(const std::string &s, char delim)
+inline std::vector<std::string> split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;
     split(s, delim, std::back_inserter(elems));
     return elems;
 }
 
-bool StartsWith(std::string string, const char *match)
+inline bool StartsWith(std::string string, const char *match)
 {
     const char *cc = string.c_str();
     for (int i = 0; *match; i++, match++)
@@ -37,7 +37,7 @@ bool StartsWith(std::string string, const char *match)
     return true;
 }
 
-void replaceAll(std::string &s, const char *find, const char *replace)
+inline void replaceAll(std::string &s, const char *find, const char *replace)
 {
     size_t fLen = std::string(find).length();
     size_t rLen = std::string(replace).length();
@@ -54,7 +54,7 @@ void replaceAll(std::string &s, const char *find, const char *replace)
     }
 }
 
-std::string trim(std::string s)
+inline std::string trim(std::string s)
 {
     return std::regex_replace(std::regex_replace(s, std::regex("\\s+$"), ""), std::regex("^\\s+"), "");
 }

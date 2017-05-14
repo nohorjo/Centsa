@@ -195,6 +195,25 @@ long addAccount(const char *name)
     return id;
 }
 
+std::map<std::string, std::string> getSettings()
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+    std::map<std::string, std::string> settings;
+    auto forEachRow = [](void *settings, int colCount, char **colData, char **colNames) {
+        (*(std::map<std::string, std::string> *)settings)[colData[0]] = colData[1];
+        return 0;
+    };
+    if (sqlite3_exec(main_db, GET_SETTINGS, forEachRow, &settings, NULL))
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+    sqlite3_close(main_db);
+    return settings;
+}
+
 /**
  * Saves a transaction
  */

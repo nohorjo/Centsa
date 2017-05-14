@@ -2,6 +2,7 @@
 <!--$
 #include "server.h"
 $-->
+
 <head>
     <title>Centsa</title>
     <link href="main.css" rel="stylesheet"></link>
@@ -12,12 +13,13 @@ $-->
 
 <body onload="init()">
     <div id="MAIN_MENU">
-	<a href="#" onclick="load('transinput.html')">Transaction</a>
-	<a href="#" onclick="load('accounts.html')">Accounts</a>
-	<span style="float:right">Server running on port:
+        <a href="#" onclick="load('transinput.html')">Transaction</a>
+        <a href="#" onclick="load('accounts.html')">Accounts</a>
+        <a href="#" onclick="load('settings.html')">Settings</a>
+        <span style="float:right">Server running on port:
        <!--= serverPort() =-->
 	</span>
-    	<hr>
+        <hr>
     </div>
     <div>
         <iframe frameborder="no" id="MAIN_CONTENT"></iframe>
