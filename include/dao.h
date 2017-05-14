@@ -46,6 +46,7 @@ typedef struct
 } expense;
 
 void prepareDB(std::string dbFile);
+const char *getIPPort(int *port);
 void saveTransaction();
 std::vector<account> getAccounts();
 std::vector<type> getTypes();

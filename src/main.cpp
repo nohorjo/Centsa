@@ -98,7 +98,9 @@ int main(int argc, char **argv)
     try
     {
         dao::prepareDB(std::string(exeDir + FILE_SEP "data.db"));
-        startServer("127.0.0.1", 0);
+        int *port = new int;
+        const char *ip = dao::getIPPort(port);
+        startServer(ip, *port);
     }
     catch (const char *err)
     {
