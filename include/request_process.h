@@ -54,6 +54,7 @@ extern "C" char *process_request(http_request &req, int &code)
         replaceAll(resp, "($", "( $");
         replaceAll(resp, "$(\"", "$( \"");
         replaceAll(resp, "\")", "\" )");
+        resp = std::regex_replace(resp, std::regex("(\\w):"), "$1 :");
 
         char *rtn = new char[resp.length()];
         std::strcpy(rtn, resp.c_str());

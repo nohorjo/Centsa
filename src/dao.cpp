@@ -214,6 +214,21 @@ std::map<std::string, std::string> getSettings()
     return settings;
 }
 
+void setSetting(const char *setting, const char *value)
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    sqlite3_stmt *ps;
+    if (sqlite3_prepare_v2(main_db, SET_SETTING, -1, &ps, NULL) || sqlite3_bind_text(ps, 1, setting, -1, SQLITE_TRANSIENT) || sqlite3_bind_text(ps, 2, value, -1, SQLITE_TRANSIENT) || sqlite3_step(ps) != SQLITE_DONE)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+    sqlite3_close(main_db);
+}
+
 /**
  * Saves a transaction
  */

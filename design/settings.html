@@ -11,7 +11,10 @@ typedef struct {
 
 $-->
 
-<head></head>
+<head>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="settings.js"></script>
+</head>
 
 <body>
     <table>
@@ -31,7 +34,7 @@ $-->
                     <!--=iter->first=-->
                 </td>
                 <td>
-                    <input value="<!--=iter->second=-->">
+                    <input value="<!--=iter->second=-->" onfocus="prepareSetting(this.value)" onblur="setSetting('<!--=iter->first=-->',this.value)">
                 </td>
             </tr>
             <!--%

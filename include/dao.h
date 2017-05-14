@@ -53,7 +53,8 @@ std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpenses();
 long addAccount(const char *name);
-std::map<std::string,std::string> getSettings();
+std::map<std::string, std::string> getSettings();
+void setSetting(const char *setting, const char *value);
 }
 
 #endif

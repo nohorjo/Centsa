@@ -5,7 +5,7 @@
 #include <cstring>
 
 extern "C" {
-int startServer(const char *ip, int port);
+char *startServer(const char *ip, int port);
 int serverPort();
 const char *serverIP();
 }

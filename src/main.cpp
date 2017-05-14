@@ -25,7 +25,7 @@ std::string exeDir;
  */
 static void ui()
 {
-    while (serverPort() == 0)
+    while (!serverPort())
     {
         continue; // wait for the server to start up
     }
@@ -100,7 +100,14 @@ int main(int argc, char **argv)
         dao::prepareDB(std::string(exeDir + FILE_SEP "data.db"));
         int *port = new int;
         const char *ip = dao::getIPPort(port);
-        startServer(ip, *port);
+        char *err = startServer(ip, *port);
+        if (err)
+        {
+            // reset ip and port
+            dao::setSetting("IP", "127.0.0.1");
+            dao::setSetting("PORT", "0");
+            throw err;
+        }
     }
     catch (const char *err)
     {

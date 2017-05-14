@@ -51,7 +51,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 
 	const char *uri = evhttp_request_get_uri(req);
 	hreq.uri = uri;
-	
+
 	struct evhttp_uri *decoded = evhttp_uri_parse(uri);
 
 	if (!decoded)
@@ -84,7 +84,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 	}
 }
 
-int startServer(const char *ip, int port)
+char *startServer(const char *ip, int port)
 {
 	struct event_base *base;
 	struct evhttp *http;
@@ -100,25 +100,19 @@ int startServer(const char *ip, int port)
 
 	if (!(base = event_base_new()))
 	{
-		fprintf(stderr, "Couldn't create an event_base: exiting\n");
-		return 1;
+		return "Couldn't create an event_base: exiting";
 	}
 
-	http = evhttp_new(base);
-	if (!http)
+	if (!(http = evhttp_new(base)))
 	{
-		fprintf(stderr, "couldn't create evhttp. Exiting.\n");
-		return 1;
+		return "couldn't create evhttp. Exiting";
 	}
 
 	evhttp_set_gencb(http, process_request_cb, ".");
 
-	handle = evhttp_bind_socket_with_handle(http, ip, port);
-	if (!handle)
+	if (!(handle = evhttp_bind_socket_with_handle(http, ip, port)))
 	{
-		fprintf(stderr, "couldn't bind to port %d. Exiting.\n",
-				(int)port);
-		return 1;
+		return "Invalid IP/port";
 	}
 
 	{
@@ -132,8 +126,7 @@ int startServer(const char *ip, int port)
 		memset(&ss, 0, sizeof(ss));
 		if (getsockname(fd, (struct sockaddr *)&ss, &socklen))
 		{
-			perror("getsockname() failed");
-			return 1;
+			return "getsockname() failed";
 		}
 		if (ss.ss_family == AF_INET)
 		{
@@ -147,25 +140,21 @@ int startServer(const char *ip, int port)
 		}
 		else
 		{
-			fprintf(stderr, "Weird address family %d\n",
-					ss.ss_family);
-			return 1;
+			char *buffer = (char *)malloc(sizeof(char) * 1024);
+			sprintf(buffer, "Weird address family %d\n", ss.ss_family);
+			return buffer;
 		}
-		addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf,
-								sizeof(addrbuf));
-		if (addr)
+		if (addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf)))
 		{
 			server_ip = addr;
 			printf("Listening on %s:%d\n", addr, got_port);
 		}
 		else
 		{
-			fprintf(stderr, "evutil_inet_ntop failed\n");
-			return 1;
+			return "evutil_inet_ntop failed";
 		}
 	}
 
 	event_base_dispatch(base);
-	printf("done\n");
 	return 0;
 }

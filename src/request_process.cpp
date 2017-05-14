@@ -89,6 +89,32 @@ std::string settingsPage(int &code, const char *data)
 	}
 }
 
+std::string setSetting(int &code, const char *data)
+{
+	try
+	{
+		rapidjson::Document setting;
+		rapidjson::ParseResult result = setting.Parse(data);
+		if (result)
+		{
+			const char *key = setting["setting"].GetString();
+			const char *value = setting["value"].GetString();
+			dao::setSetting(key, value);
+			std::cout << "Set " << key << " to " << value << "\n";
+			code = 200;
+			return std::string("");
+		}
+
+		code = 400;
+		return std::string("JSON error ") + data;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -97,4 +123,5 @@ void bindUris()
 	uriBindings["/accounts.html"] = accountsPage;
 	uriBindings["/addAccount"] = addAccount;
 	uriBindings["/settings.html"] = settingsPage;
+	uriBindings["/setSetting"] = setSetting;
 }
