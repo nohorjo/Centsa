@@ -1,14 +1,14 @@
 function addAccount() {
-    var newAccount = serializeElement("newAccountDetails");
+    var newAccount = $("#newAccountName").val();
     $.ajax({
         url: "/addAccount",
         type: "POST",
-        data: JSON.stringify(newAccount),
-        success: function (data) {
-            var row = "<tr><td>" + newAccount["NAME"]
-                + '</td><td><input type="button" value="&times;" onclick="deleteAccount(\''
-                + data.responseText + '\')"></td>';
-            $("#accountsTable tbody").prepend(row);
+        data: newAccount,
+        success: function (newId) {
+            var row = "<tr><td>" + newAccount +
+                '</td><td><input type="button" value="&times;" onclick="deleteAccount(\'' +
+                newId + '\')"></td>';
+            $("#newAccountDetails").before(row);
             $("#newAccountName").val("");
         },
         error: function (data) {

@@ -63,10 +63,7 @@ std::string addAccount(int &code, const char *data)
 {
 	try
 	{
-		rapidjson::Document account;
-		account.Parse(data);
-
-		long id = dao::addAccount(account["NAME"].GetString());
+		long id = dao::addAccount(data);
 		std::cout << "Created new account: " << id << "\n";
 		code = 200;
 		return std::to_string(id);
