@@ -36,7 +36,7 @@ std::string transinputPage(int &code, const char *data)
 
 std::string pingServer(int &code, const char *data)
 {
-	code = 200;
+	code = 204;
 	ping::alive();
 	return std::string("");
 }
@@ -101,7 +101,7 @@ std::string setSetting(int &code, const char *data)
 			const char *value = setting["value"].GetString();
 			dao::setSetting(key, value);
 			std::cout << "Set " << key << " to " << value << "\n";
-			code = 200;
+			code = 204;
 			return std::string("");
 		}
 

@@ -14,7 +14,8 @@ function setSetting(setting, value) {
                 "value": value
             }),
             error: function (data) {
-                alert(data.responseText);
+                if (data.responseText)
+                    alert(data.responseText);
             }
         });
     }

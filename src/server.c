@@ -95,7 +95,7 @@ char *startServer(const char *ip, int port)
 	WSAStartup(0x101, &WSAData);
 #else
 	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-		return (1);
+		return "SIG_ERR";
 #endif
 
 	if (!(base = event_base_new()))

@@ -12,7 +12,8 @@ function addAccount() {
             $("#newAccountName").val("");
         },
         error: function (data) {
-            alert(data.responseText);
+            if (data.responseText)
+                alert(data.responseText);
         }
     });
 }
