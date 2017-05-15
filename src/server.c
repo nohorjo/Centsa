@@ -23,11 +23,13 @@
 #endif
 #endif
 
+#include <string.h>
+
 static int got_port = 0;
 static char *server_ip = "127.0.0.1";
 
 int serverPort() { return got_port; };
-const char *serverIP() { return server_ip; };
+char *serverIP() { return server_ip; };
 
 extern char *process_request(http_request *req, int *code);
 
@@ -121,7 +123,7 @@ char *startServer(const char *ip, int port)
 		ev_socklen_t socklen = sizeof(ss);
 		char addrbuf[128];
 		void *inaddr;
-		char *addr;
+		const char *addr;
 		fd = evhttp_bound_socket_get_fd(handle);
 		memset(&ss, 0, sizeof(ss));
 		if (getsockname(fd, (struct sockaddr *)&ss, &socklen))
@@ -146,7 +148,7 @@ char *startServer(const char *ip, int port)
 		}
 		if (addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf)))
 		{
-			server_ip = addr;
+			server_ip = strdup(addr);
 			printf("Listening on %s:%d\n", addr, got_port);
 		}
 		else

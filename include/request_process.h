@@ -48,12 +48,13 @@ extern "C" char *process_request(http_request &req, int &code)
     {
         std::string resp = rp(code, req.data);
 
-        char *rtn = std::strdup(resp.c_str());
-		if(rtn){
-			return rtn;
-		}
-		code = 500;
-		return "strdup failed";
+        char *rtn = strdup(resp.c_str());
+        if (rtn)
+        {
+            return rtn;
+        }
+        code = 500;
+        return strdup("strdup failed");
     }
     code = 404;
     return NULL;
