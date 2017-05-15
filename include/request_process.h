@@ -48,22 +48,12 @@ extern "C" char *process_request(http_request &req, int &code)
     {
         std::string resp = rp(code, req.data);
 
-        // These seem to cause problems....
-		/*
-		replaceAll(resp, "%", "%%");
-        replaceAll(resp, "%;", "% ;");
-        replaceAll(resp, "($", "( $");
-        replaceAll(resp, "$(\"", "$( \"");
-        replaceAll(resp, "\")", "\" )");
-        resp = std::regex_replace(resp, std::regex("(\\w):"), "$1 :");
-		*/
-		
         char *rtn = std::strdup(resp.c_str());
 		if(rtn){
 			return rtn;
 		}
 		code = 500;
-		return "strdup error";
+		return "strdup failed";
     }
     code = 404;
     return NULL;

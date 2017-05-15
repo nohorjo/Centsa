@@ -73,7 +73,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 	int code = 500;
 	struct evbuffer *evb = evbuffer_new();
 	char *resp = process_request(&hreq, &code);
-	evbuffer_add_printf(evb, resp);
+	evbuffer_add_printf(evb, "%s", resp);
 	evhttp_send_reply(req, code, "", evb);
 
 	free(dbuff);
