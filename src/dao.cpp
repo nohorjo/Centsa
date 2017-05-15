@@ -232,7 +232,7 @@ void setSetting(const char *setting, const char *value)
 /**
  * Saves a transaction
  */
-void saveTransaction()
+void saveTransaction(transaction)
 {
     throw "UNIMPLEMENTED";
 }

@@ -1,12 +1,21 @@
 function init() {
     // Set date picker
-    try {
-        $("#transDate").datepicker({
-            dateFormat: 'dd/mm/yy'
-        }).datepicker("setDate", new Date());
-    } catch (e) { }
+    $("#transDate").datepicker({
+        dateFormat: 'dd/mm/yy'
+    }).datepicker("setDate", new Date());
 }
 
 function saveTransaction() {
-    alert(serializeElement("transactionDetails"));
+    $.ajax({
+        url: "/saveTrans",
+        type: "POST",
+        data: JSON.stringify(serializeElement("transactionDetails")),
+        success: function (newId) {
+            clearInputs("transactionDetails");
+        },
+        error: function (data) {
+            if (data.responseText)
+                alert(data.responseText);
+        }
+    });
 }

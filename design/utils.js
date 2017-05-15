@@ -9,3 +9,12 @@ function serializeElement(id) {
     });
     return form0;
 }
+
+/**
+ * Clears inputs
+ */
+function clearInputs(id) {
+    $("#" + id).find("input:not([type='button']), textarea").each(function () {
+        this.value = "";
+    });
+}

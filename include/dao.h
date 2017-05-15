@@ -1,7 +1,7 @@
 #ifndef DAO_H
 #define DAO_H
 
-#define DATE_FORMAT "%d/%m/%y"
+#define DATE_FORMAT "%d/%m/%Y %H:%M:%S"
 
 #include <sqlite3.h>
 #include <string>
@@ -15,7 +15,7 @@ namespace dao
 typedef struct
 {
     long id;
-    float amount;
+    double amount;
     std::string comment;
     long accountId;
     long typeId;
@@ -39,7 +39,7 @@ typedef struct
 {
     long id;
     std::string name;
-    float cost;
+    double cost;
     int frequencyDays;
     time_t starting;
     time_t ended;
@@ -48,7 +48,7 @@ typedef struct
 
 void prepareDB(std::string dbFile);
 const char *getIPPort(int *port);
-void saveTransaction();
+void saveTransaction(transaction);
 std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpenses();

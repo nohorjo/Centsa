@@ -115,6 +115,45 @@ std::string setSetting(int &code, const char *data)
 	}
 }
 
+std::string saveTrans(int &code, const char *data)
+{
+	try
+	{
+		rapidjson::Document trans;
+		rapidjson::ParseResult result = trans.Parse(data);
+		if (result)
+		{
+			dao::transaction t;
+
+			t.amount = atof(trans["AMOUNT"].GetString());
+			t.comment = trans["COMMENT"].GetString();
+			t.accountId = atol(trans["ACCOUNT"].GetString());
+			t.typeId = atol(trans["TYPE"].GetString());
+			t.expenseId = atol(trans["EXPENSE"].GetString());
+			// add time at midnight
+			std::string date(trans["DATE"].GetString());
+			date += " 00:00:00";
+			struct std::tm tm;
+			if (strptime(date.c_str(), DATE_FORMAT, &tm))
+			{
+				t.date = std::mktime(&tm);
+
+				dao::saveTransaction(t);
+				code = 204;
+				return std::string("");
+			}
+		}
+
+		code = 400;
+		return std::string("JSON error ") + data;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -124,4 +163,5 @@ void bindUris()
 	uriBindings["/addAccount"] = addAccount;
 	uriBindings["/settings.html"] = settingsPage;
 	uriBindings["/setSetting"] = setSetting;
+	uriBindings["/saveTrans"] = saveTrans;
 }
