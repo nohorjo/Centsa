@@ -49,16 +49,21 @@ extern "C" char *process_request(http_request &req, int &code)
         std::string resp = rp(code, req.data);
 
         // These seem to cause problems....
-        replaceAll(resp, "%", "%%");
+		/*
+		replaceAll(resp, "%", "%%");
         replaceAll(resp, "%;", "% ;");
         replaceAll(resp, "($", "( $");
         replaceAll(resp, "$(\"", "$( \"");
         replaceAll(resp, "\")", "\" )");
         resp = std::regex_replace(resp, std::regex("(\\w):"), "$1 :");
-
-        char *rtn = new char[resp.length()];
-        std::strcpy(rtn, resp.c_str());
-        return rtn;
+		*/
+		
+        char *rtn = std::strdup(resp.c_str());
+		if(rtn){
+			return rtn;
+		}
+		code = 500;
+		return "strdup error";
     }
     code = 404;
     return NULL;
