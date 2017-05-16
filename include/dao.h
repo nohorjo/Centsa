@@ -2,6 +2,7 @@
 #define DAO_H
 
 #define DATE_FORMAT "%d/%m/%Y %H:%M:%S"
+#define SQLITE_DATE_FORMAT "%Y/%m/%d"
 
 #include <sqlite3.h>
 #include <string>
@@ -48,7 +49,7 @@ typedef struct
 
 void prepareDB(std::string dbFile);
 const char *getIPPort(int *port);
-void saveTransaction(transaction);
+void saveTransaction(transaction t);
 std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpenses();

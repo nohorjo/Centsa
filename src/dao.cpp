@@ -222,7 +222,11 @@ void setSetting(const char *setting, const char *value)
     }
 
     sqlite3_stmt *ps;
-    if (sqlite3_prepare_v2(main_db, SET_SETTING, -1, &ps, NULL) || sqlite3_bind_text(ps, 1, setting, -1, SQLITE_TRANSIENT) || sqlite3_bind_text(ps, 2, value, -1, SQLITE_TRANSIENT) || sqlite3_step(ps) != SQLITE_DONE)
+    int pos = 1;
+    if (sqlite3_prepare_v2(main_db, SET_SETTING, -1, &ps, NULL) ||
+        sqlite3_bind_text(ps, pos++, setting, -1, SQLITE_TRANSIENT) ||
+        sqlite3_bind_text(ps, pos++, value, -1, SQLITE_TRANSIENT) ||
+        sqlite3_step(ps) != SQLITE_DONE)
     {
         throw sqlite3_errmsg(main_db);
     }
@@ -232,8 +236,29 @@ void setSetting(const char *setting, const char *value)
 /**
  * Saves a transaction
  */
-void saveTransaction(transaction)
+void saveTransaction(transaction t)
 {
-    throw "UNIMPLEMENTED";
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    char buff[20];
+    strftime(buff, 20, SQLITE_DATE_FORMAT, localtime(&t.date));
+
+    sqlite3_stmt *ps;
+    int pos = 1;
+    if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL) ||
+        sqlite3_bind_double(ps, pos++, t.amount) ||
+        sqlite3_bind_text(ps, pos++, t.comment.c_str(), -1, SQLITE_TRANSIENT) ||
+        sqlite3_bind_int64(ps, pos++, t.accountId) ||
+        sqlite3_bind_int64(ps, pos++, t.typeId) ||
+        sqlite3_bind_text(ps, pos++, buff, -1, SQLITE_TRANSIENT) ||
+        sqlite3_bind_int64(ps, pos++, t.expenseId) ||
+        sqlite3_step(ps) != SQLITE_DONE)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+    sqlite3_close(main_db);
 }
 }

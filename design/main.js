@@ -3,21 +3,21 @@
  */
 function contextMenu() { }
 
-function applyMouseRestrictions(doc) {
+function applyMouseRestrictions(win) {
     // Prevent text selection
-    doc.onselectstart = function () {
+    win.document.onselectstart = function () {
         return false;
     }
     // Prevent default context menu
-    if (doc.addEventListener) {
-        doc.addEventListener('contextmenu', function (e) {
+    if (win.document.addEventListener) {
+        win.document.addEventListener('contextmenu', function (e) {
             contextMenu();
             e.preventDefault();
         }, false);
     } else {
-        doc.attachEvent('oncontextmenu', function () {
+        win.document.attachEvent('oncontextmenu', function () {
             contextMenu();
-            window.event.returnValue = false;
+            win.event.returnValue = false;
         });
     }
 }
@@ -26,7 +26,7 @@ function applyMouseRestrictions(doc) {
  * Prevent default context menu
  */
 function init() {
-    applyMouseRestrictions(document);
+    applyMouseRestrictions(window);
     $(window).resize(sizeContent);
 }
 
@@ -48,7 +48,9 @@ function sizeContent() {
 function load(url) {
     $("#MAIN_CONTENT")[0].src = url;
     sizeContent();
-    applyMouseRestrictions($("#MAIN_CONTENT")[0].contentDocument);
+    setTimeout(function () {
+        applyMouseRestrictions($("#MAIN_CONTENT")[0].contentWindow);
+    }, 200);
 }
 
 
