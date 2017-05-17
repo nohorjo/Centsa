@@ -23,6 +23,7 @@ std::string transinputPage(int &code, const char *data)
 		i.accounts = dao::getAccounts();
 		i.types = dao::getTypes();
 		i.expenses = dao::getExpenses();
+		i.transactions = dao::getTransactions();
 
 		code = 200;
 		return transinput_html(i);

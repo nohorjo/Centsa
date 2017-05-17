@@ -1,13 +1,3 @@
-body{
-    background: #FFFFFF;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-size: 11pt;
-    margin:0;
-    height: 100%;
-}
-
 #MAIN_CONTENT{
 	margin:0px;
 }

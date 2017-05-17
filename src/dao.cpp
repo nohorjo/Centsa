@@ -243,9 +243,6 @@ void saveTransaction(transaction t)
         throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
     }
 
-    char buff[20];
-    strftime(buff, 20, SQLITE_DATE_FORMAT, localtime(&t.date));
-
     sqlite3_stmt *ps;
     int pos = 1;
     if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL) ||
@@ -253,12 +250,40 @@ void saveTransaction(transaction t)
         sqlite3_bind_text(ps, pos++, t.comment.c_str(), -1, SQLITE_TRANSIENT) ||
         sqlite3_bind_int64(ps, pos++, t.accountId) ||
         sqlite3_bind_int64(ps, pos++, t.typeId) ||
-        sqlite3_bind_text(ps, pos++, buff, -1, SQLITE_TRANSIENT) ||
+        sqlite3_bind_int64(ps, pos++, t.date) ||
         sqlite3_bind_int64(ps, pos++, t.expenseId) ||
         sqlite3_step(ps) != SQLITE_DONE)
     {
         throw sqlite3_errmsg(main_db);
     }
     sqlite3_close(main_db);
+}
+
+std::vector<transaction> getTransactions()
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+    std::vector<transaction> transactions;
+    auto forEachRow = [](void *transactions, int colCount, char **colData, char **colNames) {
+        int i = 0;
+        transaction t;
+        t.id = atol(colData[i++]);
+        t.amount = atof(colData[i++]);
+        t.comment = colData[i++];
+        t.accountId = atol(colData[i++]);
+        t.typeId = atol(colData[i++]);
+        t.date = atol(colData[i++]);
+        t.expenseId = atol(colData[i++]);
+        (*(std::vector<transaction> *)transactions).push_back(t);
+        return 0;
+    };
+    if (sqlite3_exec(main_db, GET_TRANSACTIONS, forEachRow, &transactions, NULL))
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+    sqlite3_close(main_db);
+    return transactions;
 }
 }

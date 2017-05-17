@@ -19,8 +19,8 @@ typedef struct
     std::string comment;
     long accountId;
     long typeId;
-    time_t date;
     long expenseId;
+    time_t date;
 } transaction;
 
 typedef struct
@@ -55,6 +55,7 @@ std::vector<expense> getExpenses();
 long addAccount(const char *name);
 std::map<std::string, std::string> getSettings();
 void setSetting(const char *setting, const char *value);
+std::vector<transaction> getTransactions();
 }
 
 #endif
