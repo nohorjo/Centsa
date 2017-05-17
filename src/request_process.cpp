@@ -130,18 +130,11 @@ std::string saveTrans(int &code, const char *data)
 			t.accountId = atol(trans["ACCOUNT"].GetString());
 			t.typeId = atol(trans["TYPE"].GetString());
 			t.expenseId = atol(trans["EXPENSE"].GetString());
-			// add time at midnight
-			std::string date(trans["DATE"].GetString());
-			date += " 00:00:00";
-			struct std::tm tm;
-			if (strptime(date.c_str(), DATE_FORMAT, &tm))
-			{
-				t.date = std::mktime(&tm);
+			t.date = trans["DATE"].GetInt64();
 
-				dao::saveTransaction(t);
-				code = 204;
-				return std::string("");
-			}
+			dao::saveTransaction(t);
+			code = 204;
+			return std::string("");
 		}
 
 		code = 400;
