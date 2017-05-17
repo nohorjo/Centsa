@@ -1,7 +1,6 @@
 #ifndef DAO_H
 #define DAO_H
 
-#define DATE_FORMAT "%d/%m/%Y %H:%M:%S"
 #define SQLITE_DATE_FORMAT "%Y/%m/%d"
 
 #include <sqlite3.h>
