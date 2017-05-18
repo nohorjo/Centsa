@@ -22,7 +22,7 @@ std::string transinputPage(int &code, const char *data)
 
 		i.accounts = dao::getAccounts();
 		i.types = dao::getTypes();
-		i.expenses = dao::getExpenses();
+		i.expenses = dao::getExpensesLite();
 		i.transactions = dao::getTransactions();
 
 		code = 200;
@@ -148,6 +148,53 @@ std::string saveTrans(int &code, const char *data)
 	}
 }
 
+std::string typesPage(int &code, const char *data)
+{
+	try
+	{
+		types_html_input i;
+		i.types = dao::getTypes();
+		code = 200;
+		return types_html(i);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string expensesPage(int &code, const char *data)
+{
+	try
+	{
+		code = 200;
+		expenses_html_input i;
+		i.expenses = dao::getExpenses();
+		return expenses_html(i);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string addType(int &code, const char *data)
+{
+	try
+	{
+		long id = dao::addType(data);
+		std::cout << "Created new type: " << id << "\n";
+		code = 200;
+		return std::to_string(id);
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -158,4 +205,7 @@ void bindUris()
 	uriBindings["/settings.html"] = settingsPage;
 	uriBindings["/setSetting"] = setSetting;
 	uriBindings["/saveTrans"] = saveTrans;
+	uriBindings["/types.html"] = typesPage;
+	uriBindings["/expenses.html"] = expensesPage;
+	uriBindings["/addType"] = addType;
 }

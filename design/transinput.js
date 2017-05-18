@@ -9,9 +9,18 @@ function init() {
     });
 
     // add selects to rows
-    $("#accountSelect").clone().appendTo(".accountSelect");
-    $("#typeSelect").clone().appendTo(".typeSelect");
-    $("#expenseSelect").clone().appendTo(".expenseSelect");
+    $(".accountSelect").each(function () {
+        $("#accountSelect").clone().appendTo($(this));
+        $(this).find("select").val($(this).find("input:hidden").val());
+    });
+    $(".typeSelect").each(function () {
+        $("#typeSelect").clone().appendTo($(this));
+        $(this).find("select").val($(this).find("input:hidden").val());
+    });
+    $(".expenseSelect").each(function () {
+        $(this).find("select").val($(this).find("input:hidden").val());
+        $("#expenseSelect").clone().appendTo($(this));
+    });
 }
 
 function saveTransaction() {

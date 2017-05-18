@@ -1,8 +1,6 @@
 #ifndef DAO_H
 #define DAO_H
 
-#define SQLITE_DATE_FORMAT "%Y/%m/%d"
-
 #include <sqlite3.h>
 #include <string>
 #include <ctime>
@@ -41,7 +39,7 @@ typedef struct
     std::string name;
     double cost;
     int frequencyDays;
-    time_t starting;
+    time_t started;
     time_t ended;
     bool automatic;
 } expense;
@@ -51,11 +49,13 @@ const char *getIPPort(int *port);
 void saveTransaction(transaction t);
 std::vector<account> getAccounts();
 std::vector<type> getTypes();
+std::vector<expense> getExpensesLite();
 std::vector<expense> getExpenses();
 long addAccount(const char *name);
 std::map<std::string, std::string> getSettings();
 void setSetting(const char *setting, const char *value);
 std::vector<transaction> getTransactions();
+long addType(const char *name);
 }
 
 #endif

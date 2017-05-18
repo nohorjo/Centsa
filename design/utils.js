@@ -4,8 +4,11 @@
  */
 function serializeElement(id) {
     var form0 = {};
-    $("#" + id).find("input:not([type='button']), select, textarea").each(function () {
+    $("#" + id).find("input:not([type='button'],[type='checkbox']), select, textarea").each(function () {
         form0[this.name] = this.value;
+    });
+    $("#" + id).find("input[type='checkbox']").each(function () {
+        form0[this.name] = this.checked;
     });
     return form0;
 }

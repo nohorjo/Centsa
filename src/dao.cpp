@@ -142,7 +142,7 @@ std::vector<type> getTypes()
 /**
  * Gets a vector of expenses
  */
-std::vector<expense> getExpenses()
+std::vector<expense> getExpensesLite()
 {
     if (sqlite3_open(dbFileName.c_str(), &main_db))
     {
@@ -164,23 +164,44 @@ std::vector<expense> getExpenses()
     return expenses;
 }
 
-/**
- * Adds an account and returns its id
- */
-long addAccount(const char *name)
+std::vector<expense> getExpenses()
 {
     if (sqlite3_open(dbFileName.c_str(), &main_db))
     {
         throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
     }
-
-    sqlite3_stmt *ps;
-
-    if (sqlite3_prepare_v2(main_db, ADD_ACCOUNT, -1, &ps, NULL) || sqlite3_bind_text(ps, 1, name, -1, SQLITE_TRANSIENT) || sqlite3_step(ps) != SQLITE_DONE)
+    std::vector<expense> expenses;
+    auto forEachRow = [](void *expenses, int colCount, char **colData, char **colNames) {
+        expense ex;
+        int i = 0;
+        ex.id = atol(colData[i++]);
+        ex.name = std::string(colData[i++]);
+        ex.cost = atof(colData[i++]);
+        ex.frequencyDays = atoi(colData[i++]);
+        ex.started = atol(colData[i++]);
+        char *ended = colData[i++];
+        if (ended)
+        {
+            ex.ended = atol(colData[i++]);
+        }
+        else
+        {
+            ex.ended = 0;
+        }
+        ex.automatic = std::string("true") == colData[i++];
+        (*(std::vector<expense> *)expenses).push_back(ex);
+        return 0;
+    };
+    if (sqlite3_exec(main_db, GET_EXPENSES, forEachRow, &expenses, NULL))
     {
         throw sqlite3_errmsg(main_db);
     }
+    sqlite3_close(main_db);
+    return expenses;
+}
 
+long getLastId()
+{
     long id = -1;
     auto forEachRow = [](void *id, int colCount, char **colData, char **colNames) {
         (*(long *)id) = atol(colData[0]);
@@ -193,6 +214,28 @@ long addAccount(const char *name)
 
     sqlite3_close(main_db);
     return id;
+}
+
+/**
+ * Adds an account and returns its id
+ */
+long addAccount(const char *name)
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    sqlite3_stmt *ps;
+
+    if (sqlite3_prepare_v2(main_db, ADD_ACCOUNT, -1, &ps, NULL) ||
+        sqlite3_bind_text(ps, 1, name, -1, SQLITE_TRANSIENT) ||
+        sqlite3_step(ps) != SQLITE_DONE)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+
+    return getLastId();
 }
 
 std::map<std::string, std::string> getSettings()
@@ -245,6 +288,7 @@ void saveTransaction(transaction t)
 
     sqlite3_stmt *ps;
     int pos = 1;
+
     if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL) ||
         sqlite3_bind_double(ps, pos++, t.amount) ||
         sqlite3_bind_text(ps, pos++, t.comment.c_str(), -1, SQLITE_TRANSIENT) ||
@@ -285,5 +329,24 @@ std::vector<transaction> getTransactions()
     }
     sqlite3_close(main_db);
     return transactions;
+}
+
+long addType(const char *name)
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    sqlite3_stmt *ps;
+
+    if (sqlite3_prepare_v2(main_db, ADD_TYPE, -1, &ps, NULL) ||
+        sqlite3_bind_text(ps, 1, name, -1, SQLITE_TRANSIENT) ||
+        sqlite3_step(ps) != SQLITE_DONE)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+
+    return getLastId();
 }
 }

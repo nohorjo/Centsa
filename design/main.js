@@ -36,7 +36,7 @@ function sizeContent() {
     clearTimeout(reziseTimeout);
     reziseTimeout = setTimeout(function () {
         $("#MAIN_CONTENT").css({
-            width: Math.ceil($("body").width() * 0.95),
+            width: Math.ceil($("body").width() * 0.99),
             height: Math.ceil(($("body").height() - $("#MAIN_MENU").height()) * 0.95)
         });
     }, 200);

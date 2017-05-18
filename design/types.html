@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<!--$
+#include "dao.h"
+
+#include <vector>
+typedef struct {
+    std::vector<dao::type> types;
+} types_html_input;
+$-->
+
+<head>
+    <link href="common.css" rel="stylesheet"></link>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="utils.js"></script>
+    <script src="types.js"></script>
+</head>
+
+<body>
+    <table id="typesTable">
+        <thead>
+            <tr>
+                <th colspan="2">Types</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--%
+            for(dao::type type:input.types){
+            %-->
+            <tr>
+                <td>
+                    <!--=type.name=-->
+                </td>
+                <td><input type="button" value="&times;" onclick="deleteType('<!--=type.id=-->')"></td>
+            </tr>
+            <!--%
+            }
+            %-->
+            <tr id="newTypeDetails">
+                <td><input name="NAME" id="newTypeName"></td>
+                <td><input type="button" value="Add" onclick="addType()"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
