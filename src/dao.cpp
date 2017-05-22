@@ -349,4 +349,23 @@ long addType(const char *name)
 
     return getLastId();
 }
+
+std::string getSetting(const char *setting)
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    sqlite3_stmt *ps;
+    if (sqlite3_prepare_v2(main_db, GET_SETTING, -1, &ps, NULL) ||
+        sqlite3_bind_text(ps, 1, setting, -1, SQLITE_TRANSIENT) ||
+        sqlite3_step(ps) != SQLITE_ROW)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+    std::string rtn(reinterpret_cast<const char *>(sqlite3_column_text(ps, 0)));
+    sqlite3_close(main_db);
+    return rtn;
+}
 }

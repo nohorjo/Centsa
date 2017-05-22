@@ -14,6 +14,8 @@ typedef struct
 #ifdef __cplusplus
 
 #include "StringUtils.h"
+#include "main.h"
+#include "dao.h"
 
 #include <cstring>
 #include <map>
@@ -41,7 +43,8 @@ request_processor getProcessor(const char *uri)
     }
 }
 
-extern "C" char *process_request(http_request &req, int &code)
+extern "C" {
+char *process_request(http_request &req, int &code)
 {
     request_processor rp = getProcessor(req.uri);
     if (rp != NULL)
@@ -56,8 +59,19 @@ extern "C" char *process_request(http_request &req, int &code)
         code = 500;
         return strdup("strdup failed");
     }
-    code = 404;
     return NULL;
+}
+const char *getFilePath(const char *uri)
+{
+    try
+    {
+        return std::string(exeDir + FILE_SEP "layout" FILE_SEP + dao::getSetting("LAYOUT") + uri).c_str();
+    }
+    catch (const char *err)
+    {
+        return NULL;
+    }
+}
 }
 #endif
 #endif

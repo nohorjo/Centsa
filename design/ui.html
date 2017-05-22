@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <title>Centsa</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        div {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: red;
+            top: 0px;
+            right: 0px;
+        }
+
+        iframe {
+            width: 100%;
+        }
+    </style>
+    <script>
+        var iframe;
+        // keep iframe the same size as the body
+        function resizeIframe() {
+               iframe.height = document.body.scrollHeight;
+        }
+        // keep server alive
+        function pingServer() {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", "/ping", true);
+            xmlHttp.send(null);
+        }
+        function init() {
+            iframe = document.querySelector("iframe");
+            setInterval(pingServer, 15000);
+            resizeIframe();
+        }
+        function showSettings() {
+            alert("unimplemented");
+        }
+    </script>
+</head>
+
+<body onload="init()" onresize="resizeIframe()">
+    <div onmouseover="showSettings()"></div>
+    <iframe frameborder="no" src="main.html"></iframe>
+</body>
+
+</html>

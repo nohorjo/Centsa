@@ -16,6 +16,9 @@
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #ifdef EVENT__HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #ifdef _XOPEN_SOURCE_EXTENDED
@@ -28,10 +31,44 @@
 static int got_port = 0;
 static char *server_ip = "127.0.0.1";
 
+static const struct table_entry
+{
+	const char *extension;
+	const char *content_type;
+} content_type_table[] = {
+	{"html", "text/html"},
+	{"htm", "text/htm"},
+	{"css", "text/css"},
+	{"js", "text/javascript"},
+	{"gif", "image/gif"},
+	{"jpg", "image/jpeg"},
+	{"jpeg", "image/jpeg"},
+	{"png", "image/png"},
+	{"ico", "image/x-icon"},
+	{NULL, NULL},
+};
+
+static const char *guess_content_type(const char *path)
+{
+	const char *last_period, *extension;
+	const struct table_entry *ent;
+	last_period = strrchr(path, '.');
+	if (last_period && !strchr(last_period, '/'))
+	{
+		extension = last_period + 1;
+		for (ent = &content_type_table[0]; ent->extension; ++ent)
+		{
+			if (!evutil_ascii_strcasecmp(ent->extension, extension))
+			{
+				return ent->content_type;
+			}
+		}
+	}
+	return "application/misc";
+}
+
 int serverPort() { return got_port; };
 char *serverIP() { return server_ip; };
-
-extern char *process_request(http_request *req, int *code);
 
 static void process_request_cb(struct evhttp_request *req, void *arg)
 {
@@ -74,8 +111,41 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 
 	int code = 500;
 	struct evbuffer *evb = evbuffer_new();
-	char *resp = process_request(&hreq, &code);
-	evbuffer_add_printf(evb, "%s", resp);
+	char *resp = (char *)(intptr_t)process_request(&hreq, &code);
+
+	if (resp)
+	{
+		evbuffer_add_printf(evb, "%s", resp);
+	}
+	else
+	{
+		//response is a static file
+		const char *filePath = (char *)(intptr_t)getFilePath(uri);
+		if (filePath)
+		{
+			int fd = -1;
+			struct stat st;
+			if ((fd = open(filePath, O_RDONLY)) >= 0)
+			{
+				if (fstat(fd, &st) >= 0)
+				{
+					code = 200;
+					const char *contentType = guess_content_type(uri);
+					evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", contentType);
+					evbuffer_add_file(evb, fd, 0, st.st_size);
+				}
+			}
+			else
+			{
+				code = 404;
+			}
+		}
+		else
+		{
+			code = 500;
+			evbuffer_add_printf(evb, "%s", "Error layout not set");
+		}
+	}
 	evhttp_send_reply(req, code, "", evb);
 
 	free(dbuff);

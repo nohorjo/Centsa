@@ -1,6 +1,7 @@
 #include "server.h"
 #include "dao.h"
 #include "ping.h"
+#include "main.h"
 
 #include <string>
 #include <thread>
@@ -9,12 +10,8 @@
 #include <iostream>
 
 #ifdef _WIN32
-#define FILE_SEP "\\"
-
 #include <windows.h>
 #else
-#define FILE_SEP "/"
-
 #include <unistd.h>
 #endif
 

@@ -1,15 +1,11 @@
 <html>
-<!--$
-#include "server.h"
-$-->
-
 <head>
     <title>Centsa</title>
-    <link href="common.css" rel="stylesheet"></link>
-    <link href="main.css" rel="stylesheet"></link>
-    <script src="jquery-3.2.1.min.js"></script>
-    <script src="main.js"></script>
-    <script src="utils.js"></script>
+    <link href="style/common.css" rel="stylesheet"></link>
+    <link href="style/main.css" rel="stylesheet"></link>
+    <script src="lib/jquery-3.2.1.min.js"></script>
+    <script src="lib/main.js"></script>
+    <script src="lib/utils.js"></script>
 </head>
 
 <body onload="init()">
@@ -19,9 +15,6 @@ $-->
         <a href="#" onclick="load('types.html')">Types</a>
         <a href="#" onclick="load('expenses.html')">Expenses</a>
         <a href="#" onclick="load('settings.html')">Settings</a>
-        <span style="float:right">Server running on port:
-       <!--= serverPort() =-->
-	</span>
         <hr>
     </div>
     <div>
