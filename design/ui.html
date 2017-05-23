@@ -9,10 +9,9 @@
 
         #settingsToggle {
             position: fixed;
-            width: 305px;
+            width: 310px;
             height: 100vh;
             top: 0px;
-            background: orangered;
             right: -300px;
             z-index: 1;
         }
@@ -65,10 +64,11 @@
 </head>
 
 <body onload="init()" onresize="resizeIframe()">
-    <div id="settingsToggle" onmouseover="showSettings()" onmouseout="hideSettings()" style="transition: 0.4s; right: -300px;">
-        <div id="settingsControl"></div>
+    <div id="settingsToggle" onmouseover="showSettings()" onmouseout="hideSettings()">
+      <div id="settingsControl">
+	</div>
     </div>
-    <iframe frameborder="no" src="main.html" height="965"></iframe>
+    <iframe frameborder="no" src="main.html"></iframe>
 </body>
 
 </html>
