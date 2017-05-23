@@ -7,13 +7,24 @@
             margin: 0;
         }
 
-        div {
+        #settingsToggle {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            background: red;
+            width: 305px;
+            height: 100vh;
+            top: 0px;
+            background: orangered;
+            right: -300px;
+            z-index: 1;
+        }
+
+        #settingsControl {
+            position: absolute;
+            background: greenyellow;
+            width: 300px;
+            height: 100vh;
             top: 0px;
             right: 0px;
+            z-index: 2;
         }
 
         iframe {
@@ -22,9 +33,10 @@
     </style>
     <script>
         var iframe;
+        var settingsToggleCSS;
         // keep iframe the same size as the body
         function resizeIframe() {
-               iframe.height = document.body.scrollHeight;
+            iframe.height = document.body.scrollHeight;
         }
         // keep server alive
         function pingServer() {
@@ -32,20 +44,31 @@
             xmlHttp.open("GET", "/ping", true);
             xmlHttp.send(null);
         }
-        function init() {
-            iframe = document.querySelector("iframe");
-            setInterval(pingServer, 15000);
-            resizeIframe();
+        function hideSettings() {
+            settingsToggleCSS.transition = "0.4s";
+            settingsToggleCSS.right = "-300px";
         }
         function showSettings() {
-            alert("unimplemented");
+            settingsToggleCSS.transition = "0.4s";
+            settingsToggleCSS.right = "0px";
+        }
+        function init() {
+            iframe = document.querySelector("iframe");
+            settingsToggleCSS = document.getElementById("settingsToggle").style;
+            showSettings();
+            setTimeout(hideSettings, 400);
+
+            setInterval(pingServer, 15000);
+            resizeIframe();
         }
     </script>
 </head>
 
 <body onload="init()" onresize="resizeIframe()">
-    <div onmouseover="showSettings()"></div>
-    <iframe frameborder="no" src="main.html"></iframe>
+    <div id="settingsToggle" onmouseover="showSettings()" onmouseout="hideSettings()" style="transition: 0.4s; right: -300px;">
+        <div id="settingsControl"></div>
+    </div>
+    <iframe frameborder="no" src="main.html" height="965"></iframe>
 </body>
 
 </html>

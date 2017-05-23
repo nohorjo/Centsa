@@ -42,12 +42,20 @@ $(OBJ)/%.o: src/%.cpp $(INCC)
 
 $(OBJ)/%.o: src/%.c
 	$(CC) $(INC) $(LIBS) $(CFLAGS) -c -o $@ $<
-	
+
+include/ui.h: design/ui.html
+ifeq ($(shell uname -s),Linux)
+	./ncspc $< > $@
+endif
+
 clean:
 	rm -rf bin/Centsa*
 	rm -rf bin/renderer*
 	rm -rf $(OBJ)/*.o
 	rm -rf bin/*.db
+ifeq ($(shell uname -s),Linux)
+	rm -rf include/ui.h
+endif
 
 _clean: clean
 	rm -rf obj/windows/*.o
