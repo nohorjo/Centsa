@@ -113,5 +113,7 @@ int main(int argc, char **argv)
 #else
         std::cerr << err << "\n";
 #endif
+        return 1;
     }
+    return 0;
 }

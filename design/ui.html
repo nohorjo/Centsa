@@ -1,4 +1,10 @@
 <html>
+<!--$
+#include "main.h"
+
+#include <dirent.h>
+#include <string>
+$-->
 
 <head>
     <title>Centsa</title>
@@ -65,8 +71,28 @@
 
 <body onload="init()" onresize="resizeIframe()">
     <div id="settingsToggle" onmouseover="showSettings()" onmouseout="hideSettings()">
-      <div id="settingsControl">
-	</div>
+        <div id="settingsControl">
+            <select>
+
+            <!--%
+            DIR *dir;
+            struct dirent *ent;
+            if ((dir = opendir(std::string(exeDir + FILE_SEP "layout").c_str())) != NULL)
+            {
+                while ((ent = readdir(dir)) != NULL)
+                {
+                    const char* dname = ent->d_name;
+                    if(dname[0] != '.'){
+            %-->
+            <option value="<!--=dname=-->"><!--=dname=--></option>
+            <!--%
+                    }
+                }
+                closedir(dir);
+            }
+          %-->
+          </select>
+        </div>
     </div>
     <iframe frameborder="no" src="main.html"></iframe>
 </body>
