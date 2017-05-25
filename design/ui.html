@@ -2,6 +2,7 @@
 <!--$
 #include "main.h"
 #include "server.h"
+#include "dao.h"
 
 #include <dirent.h>
 #include <string>
@@ -95,7 +96,12 @@ $-->
                                     const char* dname = ent->d_name;
                                     if(dname[0] != '.'){
                             %-->
-                            <option value="<!--=dname=-->"><!--=dname=--></option>
+                            <option value="<!--=dname=-->"
+                            <!--%
+							if(std::string(dname)==dao::getSetting("LAYOUT"))
+							%-->
+							selected
+						><!--=dname=--></option>
                             <!--%
                                     }
                                 }
