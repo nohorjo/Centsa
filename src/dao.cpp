@@ -1,5 +1,5 @@
-#include "dao.h"
-#include "sql_scripts.h"
+#include "centsa/dao.h"
+#include "centsa/sql_scripts.h"
 
 #include <stdlib.h>
 

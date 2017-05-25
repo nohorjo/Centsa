@@ -13,9 +13,9 @@ typedef struct
 
 #ifdef __cplusplus
 
-#include "StringUtils.h"
-#include "main.h"
-#include "dao.h"
+#include "centsa/StringUtils.h"
+#include "centsa/main.h"
+#include "centsa/dao.h"
 
 #include <cstring>
 #include <map>
