@@ -1,7 +1,7 @@
-#include "server.h"
-#include "dao.h"
-#include "ping.h"
-#include "main.h"
+#include "centsa/server.h"
+#include "centsa/dao.h"
+#include "centsa/ping.h"
+#include "centsa/main.h"
 
 #include <string>
 #include <thread>

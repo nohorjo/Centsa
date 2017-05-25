@@ -2,6 +2,7 @@
 <!--$
 #include "main.h"
 #include "server.h"
+#include "dao.h"
 
 #include <dirent.h>
 #include <string>
@@ -41,15 +42,34 @@ $-->
     <script>
         var iframe;
         var settingsToggleCSS;
+		// make simple async http request
+		function http(url, method, data, success, error){
+			var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open(method, url, true);
+			xmlHttp.onreadystatechange = function(){
+				if (this.readyState == 4) {
+					if(this.status >= 200 && this.status <= 300){
+						if(success){
+							success(this.responseText);
+						}
+					}else{
+						if(error){
+							error(this.responseText);
+						}
+					}
+				}
+			}
+            xmlHttp.send(data);
+		}
+		function post(url, data, success, error){
+			http(url, "POST", data, success, error);
+		}
+		function get(url, success, error){
+			http(url,"GET",null, success, error);
+		}
         // keep iframe the same size as the body
         function resizeIframe() {
             iframe.height = document.body.scrollHeight;
-        }
-        // keep server alive
-        function pingServer() {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", "/ping", true);
-            xmlHttp.send(null);
         }
         function hideSettings() {
             settingsToggleCSS.transition = "0.4s";
@@ -65,10 +85,18 @@ $-->
             showSettings();
             setTimeout(hideSettings, 400);
 
-            setInterval(pingServer, 15000);
+			// keep server alive
+            setInterval(function() {
+				get("/ping");
+			}, 15000);
             resizeIframe();
         }
     </script>
+	<script>
+	var centsa = {
+		
+	};
+	</script>
 </head>
 
 <body onload="init()" onresize="resizeIframe()">
@@ -95,7 +123,12 @@ $-->
                                     const char* dname = ent->d_name;
                                     if(dname[0] != '.'){
                             %-->
-                            <option value="<!--=dname=-->"><!--=dname=--></option>
+                            <option value="<!--=dname=-->"
+                            <!--%
+							if(std::string(dname)==dao::getSetting("LAYOUT"))
+							%-->
+							selected
+						><!--=dname=--></option>
                             <!--%
                                     }
                                 }
