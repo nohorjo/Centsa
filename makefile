@@ -2,7 +2,6 @@ INC=-I include
 CFLAGS=-pthread -g -Wno-format-security
 INCC=include/ui.h include/sql_scripts.h include/dao.h include/request_process.h include/StringUtils.h
 
-INCC+=$(UIH)
 ifeq ($(OS),Windows_NT)
 	INC+=-I include/windows
 	LIBS=-L lib/windows -lwxregexu-3.0 -lwxtiff-3.0 -lwxjpeg-3.0 -lwxpng-3.0 -lrpcrt4 -loleaut32 -lole32 -luuid -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32 -static -static-libstdc++ -static-libgcc -lstdc++ -lpthread -lwxexpat-3.0 -lz -lws2_32
