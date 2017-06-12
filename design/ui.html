@@ -33,6 +33,8 @@ $-->
             right: 0px;
             z-index: 2;
             padding: 5px;
+            box-shadow: 0 0 20px 10px #808080;
+            border: 1px solid #737373;
         }
 
         iframe {
@@ -42,61 +44,66 @@ $-->
     <script>
         var iframe;
         var settingsToggleCSS;
-		// make simple async http request
-		function http(url, method, data, success, error){
-			var xmlHttp = new XMLHttpRequest();
+        // make simple async http request
+        function http(url, method, data, success, error) {
+            var xmlHttp = new XMLHttpRequest();
             xmlHttp.open(method, url, true);
-			xmlHttp.onreadystatechange = function(){
-				if (this.readyState == 4) {
-					if(this.status >= 200 && this.status <= 300){
-						if(success){
-							success(this.responseText);
-						}
-					}else{
-						if(error){
-							error(this.responseText);
-						}
-					}
-				}
-			}
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status >= 200 && this.status <= 300) {
+                        if (success) {
+                            success(this.responseText);
+                        }
+                    } else {
+                        if (error) {
+                            error(this.responseText);
+                        }
+                    }
+                }
+            }
             xmlHttp.send(data);
-		}
-		function post(url, data, success, error){
-			http(url, "POST", data, success, error);
-		}
-		function get(url, success, error){
-			http(url,"GET",null, success, error);
-		}
+        }
+
+        function post(url, data, success, error) {
+            http(url, "POST", data, success, error);
+        }
+
+        function get(url, success, error) {
+            http(url, "GET", null, success, error);
+        }
         // keep iframe the same size as the body
         function resizeIframe() {
             iframe.height = document.body.scrollHeight;
         }
+
         function hideSettings() {
             settingsToggleCSS.transition = "0.4s";
             settingsToggleCSS.right = "-300px";
         }
+
         function showSettings() {
             settingsToggleCSS.transition = "0.4s";
             settingsToggleCSS.right = "0px";
         }
+
         function init() {
             iframe = document.querySelector("iframe");
             settingsToggleCSS = document.getElementById("settingsToggle").style;
             showSettings();
             setTimeout(hideSettings, 400);
 
-			// keep server alive
-            setInterval(function() {
-				get("/ping");
-			}, 15000);
+            // keep server alive
+            setInterval(function () {
+                get("/ping");
+            }, 15000);
             resizeIframe();
         }
     </script>
-	<script>
-	var centsa = {
-		
-	};
-	</script>
+    <script>
+        var centsa = {
+
+        };
+    </script>
 </head>
 
 <body onload="init()" onresize="resizeIframe()">

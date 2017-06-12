@@ -1,6 +1,6 @@
 INC=-I include
 CFLAGS=-pthread -g -Wno-format-security
-INCC=include/ui.h include/sql_scripts.h include/dao.h include/request_process.h include/StringUtils.h
+INCC=include/centsa/ui.h include/centsa/sql_scripts.h include/centsa/dao.h include/centsa/request_process.h include/centsa/StringUtils.h
 
 ifeq ($(OS),Windows_NT)
 	INC+=-I include/windows
@@ -42,7 +42,7 @@ $(OBJ)/%.o: src/%.cpp $(INCC)
 $(OBJ)/%.o: src/%.c
 	$(CC) $(INC) $(LIBS) $(CFLAGS) -c -o $@ $<
 
-include/ui.h: design/ui.html
+include/centsa/ui.h: design/ui.html
 ifeq ($(shell uname -s),Linux)
 	./ncspc $< > $@
 endif
@@ -53,7 +53,7 @@ clean:
 	rm -rf $(OBJ)/*.o
 	rm -rf bin/*.db
 ifeq ($(shell uname -s),Linux)
-	rm -rf include/ui.h
+	rm -rf include/centsa/ui.h
 endif
 
 _clean: clean
