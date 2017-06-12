@@ -1,10 +1,21 @@
-body{
-    background: #FFFFFF;
+body {
+    font-family: oxygen;
+    background: #fff7e6;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
     font-size: 11pt;
-    margin:0;
+    margin: 0;
     height: 100%;
     cursor: default;
+}
+
+@font-face {
+	font-family: oxygen;
+	src: url(/fonts/Oxygen-Regular.ttf);
+}
+
+@font-face {
+	font-family: oxygen-bold;
+	src: url(/fonts/Oxygen-Bold.ttf);
 }

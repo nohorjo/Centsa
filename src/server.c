@@ -45,6 +45,7 @@ static const struct table_entry
 	{"jpeg", "image/jpeg"},
 	{"png", "image/png"},
 	{"ico", "image/x-icon"},
+	{"tff", "application/x-font-ttf"},
 	{NULL, NULL},
 };
 

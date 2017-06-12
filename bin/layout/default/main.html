@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <title>Centsa</title>
     <link href="style/common.css" rel="stylesheet"></link>
@@ -9,14 +10,23 @@
 </head>
 
 <body onload="init()">
-    <div id="MAIN_MENU">
-        <a href="#" onclick="load('transinput.html')">Transaction</a>
-        <a href="#" onclick="load('accounts.html')">Accounts</a>
-        <a href="#" onclick="load('types.html')">Types</a>
-        <a href="#" onclick="load('expenses.html')">Expenses</a>
-        <a href="#" onclick="load('settings.html')">Settings</a>
-        <hr>
-    </div>
+    <ul id="MAIN_MENU">
+        <li>
+            <a href="#" onclick="load('transinput.html')">Transaction</a>
+        </li>
+        <li>
+            <a href="#" onclick="load('accounts.html')">Accounts</a>
+        </li>
+        <li>
+            <a href="#" onclick="load('types.html')">Types</a>
+        </li>
+        <li>
+            <a href="#" onclick="load('expenses.html')">Expenses</a>
+        </li>
+        <li>
+            <a href="#" onclick="load('settings.html')">Settings</a>
+        </li>
+    </ul>
     <div>
         <iframe frameborder="no" id="MAIN_CONTENT"></iframe>
     </div>

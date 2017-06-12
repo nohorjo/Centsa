@@ -1,7 +1,30 @@
-#MAIN_CONTENT{
-	margin:0px;
+
+#MAIN_CONTENT {
+	margin: 0px;
 }
 
-#MAIN_MENU{
-	margin:8px;
+#MAIN_MENU {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background: #e0ccff;
+}
+
+#MAIN_MENU>li {
+	float: left;
+}
+
+#MAIN_MENU a,
+#MAIN_MENU a:visited {
+	display: block;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-family: oxygen-bold;
+	color: #a76dff;
+	text-align: center;
+}
+
+#MAIN_MENU a:hover {
+	background: #d1b3ff;
 }
