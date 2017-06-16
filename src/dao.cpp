@@ -1,5 +1,6 @@
 #include "centsa/dao.h"
 #include "centsa/sql_scripts.h"
+#include "centsa/StringUtils.h"
 
 #include <stdlib.h>
 
@@ -58,35 +59,6 @@ void prepareDB(std::string dbFile)
     }
 
     sqlite3_close(main_db);
-}
-
-/**
- * Returns IP and sets port
- */
-const char *getIPPort(int *port)
-{
-    if (sqlite3_open(dbFileName.c_str(), &main_db))
-    {
-        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
-    }
-    struct ip_port
-    {
-        std::string ip;
-        int port;
-    };
-    ip_port ipp;
-    auto forEachRow = [](void *ipp, int colCount, char **colData, char **colNames) {
-        (*(ip_port *)ipp).ip = std::string(colData[0]);
-        (*(ip_port *)ipp).port = atoi(colData[1]);
-        return 0;
-    };
-    if (sqlite3_exec(main_db, GET_IP_PORT, forEachRow, &ipp, NULL))
-    {
-        throw sqlite3_errmsg(main_db);
-    }
-    sqlite3_close(main_db);
-    *port = ipp.port;
-    return ipp.ip.c_str();
 }
 
 /**
@@ -350,22 +322,44 @@ long addType(const char *name)
     return getLastId();
 }
 
+const char *prepareStatement(const char *sql, const char *params[])
+{
+    std::string rtn(sql);
+    int i = 0;
+    int pos = 0;
+    std::string param;
+    do
+    {
+        param = std::string("'");
+        const char *theParam = params[i++];
+        if (!theParam)
+            break;
+        param += theParam;
+        replaceAll(param, "'", "''", 1);
+        param += "'";
+    } while (pos = replaceFirst(rtn, "?", param.c_str(), pos));
+    return strdup(rtn.c_str());
+}
+
 std::string getSetting(const char *setting)
 {
     if (sqlite3_open(dbFileName.c_str(), &main_db))
     {
         throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
     }
-
-    sqlite3_stmt *ps;
-    if (sqlite3_prepare_v2(main_db, GET_SETTING, -1, &ps, NULL) ||
-        sqlite3_bind_text(ps, 1, setting, -1, SQLITE_TRANSIENT) ||
-        sqlite3_step(ps) != SQLITE_ROW)
+    const char *params[] = {setting};
+    std::string val;
+    auto forEachRow = [](void *val, int colCount, char **colData, char **colNames) {
+        *(std::string *)val = std::string(colData[0]);
+        return 0;
+    };
+    const char *sql = prepareStatement(GET_SETTING, params);
+    if (sqlite3_exec(main_db, sql, forEachRow, &val, NULL))
     {
         throw sqlite3_errmsg(main_db);
     }
-    std::string rtn(reinterpret_cast<const char *>(sqlite3_column_text(ps, 0)));
     sqlite3_close(main_db);
-    return rtn;
+
+    return val;
 }
 }

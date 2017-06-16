@@ -58,11 +58,13 @@ $-->
                 if (this.readyState == 4) {
                     if (this.status >= 200 && this.status <= 300) {
                         if (success) {
-                            success(this.responseText);
+                            if (this.responseText)
+                                success(this.responseText);
                         }
                     } else {
                         if (error) {
-                            error(this.responseText);
+                            if (this.responseText)
+                                error(this.responseText);
                         }
                     }
                 }
@@ -125,7 +127,22 @@ $-->
     </script>
     <script>
         var centsa = {
-
+            settings: {
+                lastValue: null,
+                set: function (setting, value) {
+                    if (value != this.lastValue) {
+                        post("/setSetting", JSON.stringify({
+                            "setting": setting,
+                            "value": value
+                        }), null, function (resp) {
+                            alert(resp);
+                        });
+                    }
+                },
+                prepare: function (value) {
+                    this.lastValue = value;
+                }
+            }
         };
     </script>
 </head>
@@ -139,6 +156,20 @@ $-->
             <table>
                 <tbody>
                     <tr>
+                        <td>Server IP</td>
+                        <td>
+                            <input value="<!--=serverIP()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="centsa.settings.set('IP',this.value)"
+                                onkeyup="if(event.keyCode==13){this.onblur();this.onfocus();}">
+                        </td>
+                        <tr>
+                            <td>Server port</td>
+                            <td>
+                                <input type="number" value="<!--=serverPort()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="centsa.settings.set('PORT',this.value)"
+                                    onkeyup="if(event.keyCode==13){this.onblur();this.onfocus();}">
+                            </td>
+                        </tr>
+                    </tr>
+                    <tr>
                         <td>Layout</td>
                         <td>
                             <!--%
@@ -149,6 +180,7 @@ $-->
                             %-->
                             <select>
                             <!--%
+                                std::string layout = dao::getSetting("LAYOUT");
                                 while ((ent = readdir(dir)) != NULL)
                                 {
                                     const char* dname = ent->d_name;
@@ -156,7 +188,7 @@ $-->
                             %-->
                             <option value="<!--=dname=-->"
                             <!--%
-							if(std::string(dname)==dao::getSetting("LAYOUT"))
+							if(std::string(dname)==layout)
 							%-->
 							selected
 						><!--=dname=--></option>

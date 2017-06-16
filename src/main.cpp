@@ -95,9 +95,9 @@ int main(int argc, char **argv)
     try
     {
         dao::prepareDB(std::string(exeDir + FILE_SEP "data.db"));
-        int *port = new int;
-        const char *ip = dao::getIPPort(port);
-        char *err = startServer(ip, *port);
+        int port = atoi(dao::getSetting("PORT").c_str());
+        std::string ip = dao::getSetting("IP");
+        char *err = startServer(ip.c_str(), port);
         if (err)
         {
             // reset ip and port

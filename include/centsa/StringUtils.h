@@ -8,7 +8,7 @@
 #include <regex>
 
 template <typename Out>
-inline void split(const std::string &s, char delim, Out result)
+inline void _split(const std::string &s, char delim, Out result)
 {
     std::stringstream ss;
     ss.str(s);
@@ -22,7 +22,7 @@ inline void split(const std::string &s, char delim, Out result)
 inline std::vector<std::string> split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;
-    split(s, delim, std::back_inserter(elems));
+    _split(s, delim, std::back_inserter(elems));
     return elems;
 }
 
@@ -37,11 +37,24 @@ inline bool StartsWith(std::string string, const char *match)
     return true;
 }
 
-inline void replaceAll(std::string &s, const char *find, const char *replace)
+inline int replaceFirst(std::string &s, const char *find, const char *replace, int pos)
+{
+    size_t fLen = std::string(find).length();
+    size_t f = s.find(find, pos);
+    if (!(f + 1))
+    {
+        return 0;
+    }
+
+    s.replace(f, fLen, replace);
+    return f;
+}
+
+inline void replaceAll(std::string &s, const char *find, const char *replace, int pos)
 {
     size_t fLen = std::string(find).length();
     size_t rLen = std::string(replace).length();
-    size_t f = -rLen;
+    size_t f = -rLen + pos;
     while (true)
     {
         f = s.find(find, f + rLen);
