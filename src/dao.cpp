@@ -207,6 +207,7 @@ long addAccount(const char *name)
         throw sqlite3_errmsg(main_db);
     }
 
+    sqlite3_finalize(ps);
     return getLastId();
 }
 
@@ -245,6 +246,7 @@ void setSetting(const char *setting, const char *value)
     {
         throw sqlite3_errmsg(main_db);
     }
+    sqlite3_finalize(ps);
     sqlite3_close(main_db);
 }
 
@@ -272,6 +274,7 @@ void saveTransaction(transaction t)
     {
         throw sqlite3_errmsg(main_db);
     }
+    sqlite3_finalize(ps);
     sqlite3_close(main_db);
 }
 
@@ -319,26 +322,8 @@ long addType(const char *name)
         throw sqlite3_errmsg(main_db);
     }
 
+    sqlite3_finalize(ps);
     return getLastId();
-}
-
-const char *prepareStatement(const char *sql, const char *params[])
-{
-    std::string rtn(sql);
-    int i = 0;
-    int pos = 0;
-    std::string param;
-    do
-    {
-        param = std::string("'");
-        const char *theParam = params[i++];
-        if (!theParam)
-            break;
-        param += theParam;
-        replaceAll(param, "'", "''", 1);
-        param += "'";
-    } while (pos = replaceFirst(rtn, "?", param.c_str(), pos));
-    return strdup(rtn.c_str());
 }
 
 std::string getSetting(const char *setting)
@@ -347,19 +332,17 @@ std::string getSetting(const char *setting)
     {
         throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
     }
-    const char *params[] = {setting};
-    std::string val;
-    auto forEachRow = [](void *val, int colCount, char **colData, char **colNames) {
-        *(std::string *)val = std::string(colData[0]);
-        return 0;
-    };
-    const char *sql = prepareStatement(GET_SETTING, params);
-    if (sqlite3_exec(main_db, sql, forEachRow, &val, NULL))
+
+    sqlite3_stmt *ps;
+    if (sqlite3_prepare_v2(main_db, GET_SETTING, -1, &ps, NULL) ||
+        sqlite3_bind_text(ps, 1, setting, -1, SQLITE_TRANSIENT) ||
+        sqlite3_step(ps) != SQLITE_ROW)
     {
         throw sqlite3_errmsg(main_db);
     }
+    std::string rtn(reinterpret_cast<const char *>(sqlite3_column_text(ps, 0)));
+    sqlite3_finalize(ps);
     sqlite3_close(main_db);
-
-    return val;
+    return rtn;
 }
 }
