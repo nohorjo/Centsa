@@ -50,35 +50,30 @@ $-->
     <script>
         var iframe;
         var settingsToggleCSS;
+        var heartbeat;
         // make simple async http request
-        function http(url, method, data, success, error) {
+        function ajax(payload) {
             var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open(method, url, true);
+            xmlHttp.open(payload.method, payload.url, payload.async || true);
             xmlHttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
+                    if (payload.complete) {
+                        payload.complete(this);
+                    }
                     if (this.status >= 200 && this.status <= 300) {
-                        if (success) {
-                            if (this.responseText)
-                                success(this.responseText);
+                        if (payload.success) {
+                            payload.success(this);
                         }
                     } else {
-                        if (error) {
-                            if (this.responseText)
-                                error(this.responseText);
+                        if (payload.error) {
+                            payload.error(this);
                         }
                     }
                 }
             }
-            xmlHttp.send(data);
+            xmlHttp.send(payload.data);
         }
 
-        function post(url, data, success, error) {
-            http(url, "POST", data, success, error);
-        }
-
-        function get(url, success, error) {
-            http(url, "GET", null, success, error);
-        }
         // keep iframe the same size as the body
         function resizeIframe() {
             iframe.height = document.body.scrollHeight;
@@ -87,7 +82,7 @@ $-->
         function hideSettings() {
             settingsToggleCSS.transition = "0.4s";
             settingsToggleCSS.right = "-300px";
-            document.getElementById("MAIN").focus();
+            iframe.focus();
         }
 
         function showSettings() {
@@ -119,8 +114,15 @@ $-->
             setTimeout(hideSettings, 400);
 
             // keep server alive
-            setInterval(function () {
-                get("/ping");
+            heartbeat = setInterval(function () {
+                ajax({
+                    url: "/ping",
+                    method: "GET",
+                    error: function () {
+                        alert("Could not connect to server");
+                        clearInterval(heartbeat);
+                    }
+                });
             }, 15000);
             resizeIframe();
             applyMouseRestrictions(window);
@@ -132,14 +134,20 @@ $-->
                 lastValue: null,
                 set: function (setting, value) {
                     if (value != this.lastValue) {
-                        post("/setSetting", JSON.stringify({
-                            "setting": setting,
-                            "value": value
-                        }), null, function (resp) {
-                            alert(resp);
+                        this.prepare(value);
+                        ajax({
+                            url: "/setSetting",
+                            method: "POST",
+                            data: JSON.stringify({
+                                "setting": setting,
+                                "value": value
+                            }),
+                            error: function (data) {
+                                centsa.settings.prepare(null);
+                                alert(data.responseText);
+                            }
                         });
                     }
-                    this.prepare(value);
                 },
                 prepare: function (value) {
                     this.lastValue = value;
@@ -158,7 +166,7 @@ $-->
                         <td>Server IP</td>
                         <td>
                             <input value="<!--=serverIP()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="centsa.settings.set('IP',this.value)"
-                                onkeyup="if(event.keyCode==13){this.onblur();this.onfocus();}">
+                                onkeyup="if(event.keyCode==13){this.onblur();}">
                         </td>
                         <tr>
                             <td>Server port</td>
@@ -212,7 +220,7 @@ $-->
             </table>
         </div>
     </div>
-    <iframe frameborder="no" src="main.html" id="MAIN"></iframe>
+    <iframe frameborder="no" src="main.html"></iframe>
 </body>
 
 </html>
