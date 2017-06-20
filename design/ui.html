@@ -71,7 +71,6 @@ $-->
             height: 1.5em;
             width: 1.5em;
         }
-
     </style>
     <script>
         var iframe;
@@ -153,12 +152,29 @@ $-->
             resizeIframe();
             applyMouseRestrictions(window);
         }
+
+        function glow(e, colour) {
+            var style = e.style;
+            style.transition = "0.2s";
+            style["box-shadow"] = "0 0 7px 3px " + colour;
+            setTimeout(function () {
+                style.transition = "0.2s";
+                style["box-shadow"] = "";
+            }, 200);
+        }
+
+        function setSetting(key, e) {
+            var error = function () {
+                glow(e, '#99ff00');
+            }
+            centsa.settings.set(key, e.value, error, alert);
+        }
     </script>
     <script>
         var centsa = {
             settings: {
                 lastValue: null,
-                set: function (setting, value) {
+                set: function (setting, value, success, error) {
                     if (value != this.lastValue) {
                         this.prepare(value);
                         ajax({
@@ -168,9 +184,13 @@ $-->
                                 "setting": setting,
                                 "value": value
                             }),
+                            success: function () {
+                                if (success)
+                                    success();
+                            },
                             error: function (data) {
                                 centsa.settings.prepare(null);
-                                alert(data.responseText);
+                                error(data.responseText);
                             }
                         });
                     }
@@ -191,13 +211,13 @@ $-->
                     <tr>
                         <td>Server IP</td>
                         <td>
-                            <input type="text" value="<!--=serverIP()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="centsa.settings.set('IP',this.value)"
+                            <input type="text" value="<!--=serverIP()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="setSetting('IP',this)"
                                 onkeyup="if(event.keyCode==13){this.onblur();}">
                         </td>
                         <tr>
                             <td>Server port</td>
                             <td>
-                                <input type="number" value="<!--=serverPort()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="centsa.settings.set('PORT',this.value)"
+                                <input type="number" value="<!--=serverPort()=-->" onfocus="centsa.settings.prepare(this.value)" onblur="setSetting('PORT',this)"
                                     onkeyup="if(event.keyCode==13){this.onblur();}" onchange="this.onblur();">
                             </td>
                         </tr>
@@ -214,7 +234,7 @@ $-->
                             if ((dir = opendir(std::string(exeDir + FILE_SEP "layout").c_str())) != NULL)
                             {
                             %-->
-                                        <select onchange="centsa.settings.set('LAYOUT',this.value); iframe.contentWindow.location.reload();">
+                                        <select onchange="setSetting('LAYOUT',this); iframe.contentWindow.location.reload();">
                             <!--%
                                 std::string layout = dao::getSetting("LAYOUT");
                                 while ((ent = readdir(dir)) != NULL)
