@@ -72,12 +72,12 @@ std::string saveTrans(int &code, const char *data)
 		{
 			dao::transaction t;
 
-			t.amount = atof(trans["AMOUNT"].GetString());
-			t.comment = trans["COMMENT"].GetString();
-			t.accountId = atol(trans["ACCOUNT"].GetString());
-			t.typeId = atol(trans["TYPE"].GetString());
-			t.expenseId = atol(trans["EXPENSE"].GetString());
-			t.date = trans["DATE"].GetInt64();
+			t.amount = trans["amount"].GetDouble();
+			t.comment = trans["comment"].GetString();
+			t.accountId = trans["account"].GetInt64();
+			t.typeId = trans["type"].GetInt64();
+			t.expenseId = trans["expense"].GetInt64();
+			t.date = trans["date"].GetInt64();
 
 			dao::saveTransaction(t);
 			code = 204;
@@ -110,6 +110,132 @@ std::string addType(int &code, const char *data)
 	}
 }
 
+std::string getTrans(int &code, const char *data)
+{
+	try
+	{
+		rapidjson::Document req;
+		rapidjson::ParseResult result = req.Parse(data);
+		if (result)
+		{
+			std::vector<dao::transaction> trans = dao::getTransactions(req["limit"].GetInt64(), req["offset"].GetInt64());
+			std::string resp("[");
+			for (dao::transaction t : trans)
+			{
+				resp += "{";
+				resp += "\"id\":";
+				resp += std::to_string(t.id);
+				resp += ",\"amount\":";
+				resp += std::to_string(t.amount);
+				resp += ",\"comment\":\"";
+				resp += t.comment;
+				resp += "\",\"account\":";
+				resp += std::to_string(t.accountId);
+				resp += ",\"type\":";
+				resp += std::to_string(t.typeId);
+				resp += ",\"date\":";
+				resp += std::to_string(t.date);
+				resp += ",\"expense\":";
+				resp += std::to_string(t.expenseId);
+				resp += "},";
+			}
+			if (trans.size() > 0)
+				resp.pop_back();
+			resp += "]";
+			code = 200;
+			return resp;
+		}
+		code = 400;
+		return std::string("JSON error ") + data;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string getAccounts(int &code, const char *data)
+{
+	try
+	{
+		std::vector<dao::account> accounts = dao::getAccounts();
+		std::string resp("[");
+		for (dao::account account : accounts)
+		{
+			resp += "{\"id\":";
+			resp += std::to_string(account.id);
+			resp += ",\"name\":\"";
+			resp += account.name;
+			resp += "\"},";
+		}
+		if (accounts.size() > 0)
+			resp.pop_back();
+		resp += "]";
+		code = 200;
+		return resp;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string getTypes(int &code, const char *data)
+{
+	try
+	{
+		std::vector<dao::type> types = dao::getTypes();
+		std::string resp("[");
+		for (dao::type type : types)
+		{
+			resp += "{\"id\":";
+			resp += std::to_string(type.id);
+			resp += ",\"name\":\"";
+			resp += type.name;
+			resp += "\"},";
+		}
+		if (types.size() > 0)
+			resp.pop_back();
+		resp += "]";
+		code = 200;
+		return resp;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string getExpenses(int &code, const char *data)
+{
+	try
+	{
+		std::vector<dao::expense> expenses = dao::getExpensesLite();
+		std::string resp("[");
+		for (dao::expense expense : expenses)
+		{
+			resp += "{\"id\":";
+			resp += std::to_string(expense.id);
+			resp += ",\"name\":\"";
+			resp += expense.name;
+			resp += "\"},";
+		}
+		if (expenses.size() > 0)
+			resp.pop_back();
+		resp += "]";
+		code = 200;
+		return resp;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -118,4 +244,8 @@ void bindUris()
 	uriBindings["/setSetting"] = setSetting;
 	uriBindings["/saveTrans"] = saveTrans;
 	uriBindings["/addType"] = addType;
+	uriBindings["/getTrans.json"] = getTrans;
+	uriBindings["/getAccounts.json"] = getAccounts;
+	uriBindings["/getTypes.json"] = getTypes;
+	uriBindings["/getExpenses.json"] = getExpenses;
 }

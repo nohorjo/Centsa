@@ -36,11 +36,10 @@ static void ui()
     // load url in default browser
     ShellExecute(0, 0, url.c_str(), 0, 0, SW_SHOW);
 #else
-    std::string uiCall(FILE_SEP "renderer ");
-    uiCall += "Centsa ";
+    std::string uiCall("xdg-open ");
     uiCall += url;
     std::cout << uiCall.c_str() << "\n";
-    system(std::string(exeDir + uiCall).c_str());
+    system(uiCall.c_str());
 #endif
 }
 

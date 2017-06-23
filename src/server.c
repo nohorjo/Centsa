@@ -40,6 +40,7 @@ static const struct table_entry
 	{"htm", "text/htm"},
 	{"css", "text/css"},
 	{"js", "text/javascript"},
+	{"json", "application/json"},
 	{"gif", "image/gif"},
 	{"jpg", "image/jpeg"},
 	{"jpeg", "image/jpeg"},

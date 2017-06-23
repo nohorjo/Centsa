@@ -4,35 +4,18 @@
 <head>
     <link href="style/common.css" rel="stylesheet"></link>
     <link href="style/jquery-ui.min.css" rel="stylesheet"></link>
+    <link href="style/jsgrid.min.css" rel="stylesheet"></link>
+    <link href="style/jsgrid-theme.css" rel="stylesheet"></link>
+    <link href="style/transinput.css" rel="stylesheet"></link>
     <script src="lib/jquery-3.2.1.min.js"></script>
     <script src="lib/jquery-ui.min.js"></script>
+    <script src="lib/jsgrid.min.js"></script>
     <script src="lib/utils.js"></script>
     <script src="lib/transinput.js"></script>
 </head>
 
 <body onload="init()">
-    <table id="transactionTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Amount</th>
-                <th>Comment</th>
-                <th>Account</th>
-                <th>Type</th>
-                <th>Expense</th>
-                <th>Date</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="transactionDetails">
-                <td></td>
-                <td><input name="AMOUNT" type="number" step="0.01" value="0.00" placeholder="0.00"></td>
-                <td><textarea name="COMMENT" rows="2" cols="40"></textarea></td>
-                <td><select name="ACCOUNT" id="accountSelect">
-           </tr>
-        </tbody>
-    </table>
+    <div id="transGrid" />
 </body>
 
 </html>

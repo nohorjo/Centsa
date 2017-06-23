@@ -1,4 +1,5 @@
 #include "centsa/ping.h"
+#include <iostream>
 
 namespace ping
 {
@@ -15,6 +16,7 @@ static void check()
         std::this_thread::sleep_for(std::chrono::seconds(20));
         if (!isAlive)
         {
+            std::cout << "Exiting...\n";
             exit(0);
         }
         isAlive = false;

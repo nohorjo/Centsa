@@ -54,7 +54,7 @@ long addAccount(const char *name);
 std::map<std::string, std::string> getSettings();
 void setSetting(const char *setting, const char *value);
 std::string getSetting(const char *setting);
-std::vector<transaction> getTransactions();
+std::vector<transaction> getTransactions(int limit, int offset);
 long addType(const char *name);
 }
 
