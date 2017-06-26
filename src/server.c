@@ -122,7 +122,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 	else
 	{
 		//response is a static file
-		const char *filePath = (char *)(intptr_t)getFilePath(uri);
+		char *filePath = (char *)(intptr_t)getFilePath(uri);
 		if (filePath)
 		{
 			int fd = -1;
@@ -141,6 +141,7 @@ static void process_request_cb(struct evhttp_request *req, void *arg)
 			{
 				code = 404;
 			}
+			free(filePath);
 		}
 		else
 		{

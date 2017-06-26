@@ -10,12 +10,16 @@ body {
     cursor: default;
 }
 
-@font-face {
-	font-family: oxygen;
-	src: url(/fonts/Oxygen-Regular.ttf);
+input {
+    font-size: 10pt;
 }
 
 @font-face {
-	font-family: oxygen-bold;
-	src: url(/fonts/Oxygen-Bold.ttf);
+    font-family: oxygen;
+    src: url(/fonts/Oxygen-Regular.ttf);
+}
+
+@font-face {
+    font-family: oxygen-bold;
+    src: url(/fonts/Oxygen-Bold.ttf);
 }
