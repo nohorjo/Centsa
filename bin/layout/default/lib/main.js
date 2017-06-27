@@ -52,10 +52,3 @@ function load(url) {
         applyMouseRestrictions($("#MAIN_CONTENT")[0].contentWindow);
     }, 200);
 }
-
-
-
-/**
- * Keep the server alive
- */
-setInterval(function () { $.get("/ping"); }, 15000);

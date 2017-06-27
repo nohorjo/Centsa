@@ -263,8 +263,23 @@ long saveTransaction(transaction t)
     sqlite3_stmt *ps;
     int pos = 1;
 
-    if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL) ||
-        sqlite3_bind_double(ps, pos++, t.amount) ||
+    if (t.id == -1)
+    {
+        if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL))
+        {
+            throw sqlite3_errmsg(main_db);
+        }
+    }
+    else
+    {
+        if (sqlite3_prepare_v2(main_db, UPDATE_TRANSACTION, -1, &ps, NULL) ||
+            sqlite3_bind_int64(ps, pos++, t.id))
+        {
+            throw sqlite3_errmsg(main_db);
+        }
+    }
+
+    if (sqlite3_bind_double(ps, pos++, t.amount) ||
         sqlite3_bind_text(ps, pos++, t.comment.c_str(), -1, SQLITE_TRANSIENT) ||
         sqlite3_bind_int64(ps, pos++, t.accountId) ||
         sqlite3_bind_int64(ps, pos++, t.typeId) ||

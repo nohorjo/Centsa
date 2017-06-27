@@ -63,12 +63,8 @@ function initGrid(transactions, accounts, types, expenses) {
         width: "100%",
         inserting: true,
         editing: true,
-        onItemInserting: function (row) {
-            var trans = row.item;
-            trans.date = Date.parse(row.item.dateFormatted.split("/").reverse());
-            trans.id = saveTransaction(trans);
-            if (trans.id == -1) row.cancel = true;
-        },
+        onItemInserting: saveTransaction,
+        onItemUpdated: saveTransaction,
         onItemInserted: function () {
             setTimeout(prepareNewTransDate, 100)
         },
@@ -143,20 +139,9 @@ function initGrid(transactions, accounts, types, expenses) {
     $(".jsgrid-insert-mode-button").click(prepareNewTransDate);
 }
 
-function saveTransaction(trans) {
-    var id = -1;
-    $.ajax({
-        url: "/saveTrans",
-        type: "POST",
-        data: JSON.stringify(trans),
-        success: function (data) {
-            id = data;
-        },
-        error: function (data) {
-            if (data.responseText)
-                alert(data.responseText);
-        },
-        async: false
-    });
-    return id;
+function saveTransaction(row) {
+    var trans = row.item;
+    trans.date = Date.parse(row.item.dateFormatted.split("/").reverse());
+    trans.id = top.centsa.transaction.save(trans);
+    if (trans.id == -1) row.cancel = true;
 }

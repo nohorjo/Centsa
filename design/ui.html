@@ -80,7 +80,7 @@ $-->
         // make simple async http request
         function ajax(payload) {
             var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open(payload.method, payload.url, payload.async || true);
+            xmlHttp.open(payload.method, payload.url, payload.async != undefined ? payload.async : true);
             xmlHttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (payload.complete) {
@@ -198,6 +198,25 @@ $-->
                 },
                 prepare: function (value) {
                     this.lastValue = value;
+                }
+            },
+            transaction: {
+                save: function (trans) {
+                    var id = -1;
+                    ajax({
+                        url: "/saveTrans",
+                        method: "POST",
+                        data: JSON.stringify(trans),
+                        success: function (data) {
+                            id = parseInt(data.responseText);
+                        },
+                        error: function (data) {
+                            if (data.responseText)
+                                alert(data.responseText);
+                        },
+                        async: false
+                    });
+                    return id;
                 }
             }
         };
