@@ -1,29 +1,13 @@
 function init() {
-
     getGridData();
+}
 
-    // Set date pickers
-    $(".transDate").datepicker({
+function prepareNewTransDate() {
+    var newDate = $(".jsgrid-insert-row .dateInput > input");
+    newDate.datepicker({
         dateFormat: 'dd/mm/yy'
     });
-    $("#transDate").datepicker("setDate", new Date());
-    $(".transDate:not(#transDate)").each(function () {
-        $(this).datepicker("setDate", new Date($(this).val() * 1000));
-    });
-
-    // add selects to rows
-    $(".accountSelect").each(function () {
-        $("#accountSelect").clone().appendTo($(this));
-        $(this).find("select").val($(this).find("input:hidden").val());
-    });
-    $(".typeSelect").each(function () {
-        $("#typeSelect").clone().appendTo($(this));
-        $(this).find("select").val($(this).find("input:hidden").val());
-    });
-    $(".expenseSelect").each(function () {
-        $(this).find("select").val($(this).find("input:hidden").val());
-        $("#expenseSelect").clone().appendTo($(this));
-    });
+    newDate.datepicker("setDate", new Date());
 }
 
 function getGridData() {
@@ -80,8 +64,13 @@ function initGrid(transactions, accounts, types, expenses) {
         inserting: true,
         editing: true,
         onItemInserting: function (row) {
-            console.dir(row);
-            row.item.id = 99;
+            var trans = row.item;
+            trans.date = Date.parse(row.item.dateFormatted.split("/").reverse());
+            trans.id = saveTransaction(trans);
+            if (trans.id == -1) row.cancel = true;
+        },
+        onItemInserted: function () {
+            setTimeout(prepareNewTransDate, 100)
         },
         rowClick: function (row) {
             $("#transGrid").jsGrid("editItem", row.item);
@@ -151,29 +140,23 @@ function initGrid(transactions, accounts, types, expenses) {
         ]
     });
 
-    $(".jsgrid-insert-mode-button").click(function () {
-        var newDate = $(".jsgrid-insert-row .dateInput > input");
-        newDate.datepicker({
-            dateFormat: 'dd/mm/yy'
-        });
-        newDate.datepicker("setDate", new Date());
-    });
+    $(".jsgrid-insert-mode-button").click(prepareNewTransDate);
 }
 
-function saveTransaction() {
-    var trans = serializeElement("transactionDetails");
-    var timeStamp = $("#transDate").datepicker("getDate").getTime();
-    trans["DATE"] = timeStamp / 1000;
+function saveTransaction(trans) {
+    var id = -1;
     $.ajax({
         url: "/saveTrans",
         type: "POST",
         data: JSON.stringify(trans),
-        success: function () {
-            location.reload();
+        success: function (data) {
+            id = data;
         },
         error: function (data) {
             if (data.responseText)
                 alert(data.responseText);
-        }
+        },
+        async: false
     });
+    return id;
 }

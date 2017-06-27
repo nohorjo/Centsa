@@ -79,9 +79,9 @@ std::string saveTrans(int &code, const char *data)
 			t.expenseId = trans["expense"].GetInt64();
 			t.date = trans["date"].GetInt64();
 
-			dao::saveTransaction(t);
-			code = 204;
-			return std::string("");
+			long id = dao::saveTransaction(t);
+			code = 200;
+			return std::to_string(id);
 		}
 
 		code = 400;

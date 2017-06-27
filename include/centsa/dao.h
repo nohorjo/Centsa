@@ -45,7 +45,7 @@ typedef struct
 } expense;
 
 void prepareDB(std::string dbFile);
-void saveTransaction(transaction t);
+long saveTransaction(transaction t);
 std::vector<account> getAccounts();
 std::vector<type> getTypes();
 std::vector<expense> getExpensesLite();

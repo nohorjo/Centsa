@@ -41,7 +41,8 @@ static void ui()
     }
     url += ":";
     url += std::to_string(serverPort());
-    url += "/ ";
+    url += "/";
+    std::cout << "Server running on: " << url << "\n";
 #ifdef _WIN32
     // load url in default browser
     ShellExecute(0, 0, url.c_str(), 0, 0, SW_SHOW);
