@@ -236,6 +236,21 @@ std::string getExpenses(int &code, const char *data)
 	}
 }
 
+std::string getSetting(int &code, const char *data)
+{
+	try
+	{
+		std::string resp = dao::getSetting(data);
+		code = 200;
+		return resp;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -248,4 +263,5 @@ void bindUris()
 	uriBindings["/getAccounts.json"] = getAccounts;
 	uriBindings["/getTypes.json"] = getTypes;
 	uriBindings["/getExpenses.json"] = getExpenses;
+	uriBindings["/getSetting"] = getSetting;
 }
