@@ -28,7 +28,17 @@ static void ui()
     }
     // generate url
     std::string url("http://");
-    url += serverIP();
+    const char *ip = serverIP();
+    if (ip[0] == ':')
+    {
+        url += "[";
+        url += ip;
+        url += "]";
+    }
+    else
+    {
+        url += ip;
+    }
     url += ":";
     url += std::to_string(serverPort());
     url += "/ ";
@@ -38,7 +48,6 @@ static void ui()
 #else
     std::string uiCall("xdg-open ");
     uiCall += url;
-    std::cout << uiCall.c_str() << "\n";
     system(uiCall.c_str());
 #endif
 }
@@ -100,7 +109,7 @@ int main(int argc, char **argv)
         if (err)
         {
             // reset ip and port
-            dao::setSetting("IP", "127.0.0.1");
+            dao::setSetting("IP", "::1");
             dao::setSetting("PORT", "0");
             throw err;
         }
