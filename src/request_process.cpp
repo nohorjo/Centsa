@@ -36,6 +36,22 @@ std::string addAccount(int &code, const char *data)
 	}
 }
 
+const char *getJsonProperty(rapidjson::Document *json, const char *prop)
+{
+	if (json->HasMember((prop)))
+	{
+		std::string rtn;
+		if ((*json)[prop].IsString())
+			rtn = (*json)[prop].GetString();
+		if ((*json)[prop].IsDouble())
+			rtn = std::to_string((*json)[prop].GetDouble());
+		if ((*json)[prop].IsInt64())
+			rtn = std::to_string((*json)[prop].GetInt64());
+		return rtn.c_str();
+	}
+	throw(std::string("Property not found or invalid: ") + prop).c_str();
+}
+
 std::string setSetting(int &code, const char *data)
 {
 	try
@@ -44,8 +60,8 @@ std::string setSetting(int &code, const char *data)
 		rapidjson::ParseResult result = setting.Parse(data);
 		if (result)
 		{
-			const char *key = setting["setting"].GetString();
-			const char *value = setting["value"].GetString();
+			const char *key = getJsonProperty(&setting, "setting");
+			const char *value = getJsonProperty(&setting, "value");
 			dao::setSetting(key, value);
 			std::cout << "Set " << key << " to " << value << "\n";
 			code = 204;
@@ -72,16 +88,25 @@ std::string saveTrans(int &code, const char *data)
 		{
 			dao::transaction t;
 
-			t.amount = trans["amount"].GetDouble();
-			t.comment = trans["comment"].GetString();
-			t.accountId = trans["account"].GetInt64();
-			t.typeId = trans["type"].GetInt64();
-			t.expenseId = trans["expense"].GetInt64();
-			t.date = trans["date"].GetInt64();
+			try
+			{
+				t.id = atol(getJsonProperty(&trans, "id"));
+			}
+			catch (const char *err)
+			{
+				t.id = -1;
+			}
 
-			dao::saveTransaction(t);
-			code = 204;
-			return std::string("");
+			t.amount = atof(getJsonProperty(&trans, "amount"));
+			t.comment = getJsonProperty(&trans, "comment");
+			t.accountId = atol(getJsonProperty(&trans, "account"));
+			t.typeId = atol(getJsonProperty(&trans, "type"));
+			t.expenseId = atol(getJsonProperty(&trans, "expense"));
+			t.date = atol(getJsonProperty(&trans, "date"));
+
+			long id = dao::saveTransaction(t);
+			code = 200;
+			return std::to_string(id);
 		}
 
 		code = 400;
@@ -118,7 +143,7 @@ std::string getTrans(int &code, const char *data)
 		rapidjson::ParseResult result = req.Parse(data);
 		if (result)
 		{
-			std::vector<dao::transaction> trans = dao::getTransactions(req["limit"].GetInt64(), req["offset"].GetInt64());
+			std::vector<dao::transaction> trans = dao::getTransactions(atol(getJsonProperty(&req, "limit")), atol(getJsonProperty(&req, "offset")));
 			std::string resp("[");
 			for (dao::transaction t : trans)
 			{
@@ -236,6 +261,36 @@ std::string getExpenses(int &code, const char *data)
 	}
 }
 
+std::string getSetting(int &code, const char *data)
+{
+	try
+	{
+		std::string resp = dao::getSetting(data);
+		code = 200;
+		return resp;
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
+std::string deleteTrans(int &code, const char *data)
+{
+	try
+	{
+		dao::deleteTrans(atol(data));
+		code = 204;
+		return std::string("");
+	}
+	catch (const char *err)
+	{
+		std::cerr << err << "\n";
+		return std::string(err);
+	}
+}
+
 void bindUris()
 {
 	uriBindings["/"] = mainPage;
@@ -248,4 +303,6 @@ void bindUris()
 	uriBindings["/getAccounts.json"] = getAccounts;
 	uriBindings["/getTypes.json"] = getTypes;
 	uriBindings["/getExpenses.json"] = getExpenses;
+	uriBindings["/getSetting"] = getSetting;
+	uriBindings["/deleteTrans"] = deleteTrans;
 }

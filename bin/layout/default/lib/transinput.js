@@ -1,38 +1,16 @@
 function init() {
-
-    initGrid();
-
-    // Set date pickers
-    $(".transDate").datepicker({
-        dateFormat: 'dd/mm/yy'
-    });
-    $("#transDate").datepicker("setDate", new Date());
-    $(".transDate:not(#transDate)").each(function () {
-        $(this).datepicker("setDate", new Date($(this).val() * 1000));
-    });
-
-    // add selects to rows
-    $(".accountSelect").each(function () {
-        $("#accountSelect").clone().appendTo($(this));
-        $(this).find("select").val($(this).find("input:hidden").val());
-    });
-    $(".typeSelect").each(function () {
-        $("#typeSelect").clone().appendTo($(this));
-        $(this).find("select").val($(this).find("input:hidden").val());
-    });
-    $(".expenseSelect").each(function () {
-        $(this).find("select").val($(this).find("input:hidden").val());
-        $("#expenseSelect").clone().appendTo($(this));
-    });
+    getGridData();
 }
 
-function initDatePicker() {
-    $(".dateInput > input").datepicker({
+function prepareNewTransDate() {
+    var newDate = $(".jsgrid-insert-row .dateInput > input");
+    newDate.datepicker({
         dateFormat: 'dd/mm/yy'
     });
+    newDate.datepicker("setDate", new Date());
 }
 
-function initGrid() {
+function getGridData() {
     var transactions;
     var accounts;
     var types;
@@ -47,47 +25,57 @@ function initGrid() {
         }),
         success: function (data) {
             transactions = JSON.parse(data);
+            $(transactions).each(function () {
+                this.dateFormatted = new Date(this.date).formatDate("dd/MM/yyyy");
+            });
+            $.ajax({
+                url: "/getAccounts.json",
+                method: "GET",
+                success: function (data) {
+                    accounts = JSON.parse(data);
+
+                    $.ajax({
+                        url: "/getTypes.json",
+                        method: "GET",
+                        success: function (data) {
+                            types = JSON.parse(data);
+                            $.ajax({
+                                url: "/getExpenses.json",
+                                method: "GET",
+                                success: function (data) {
+                                    expenses = JSON.parse(data);
+                                    initGrid(transactions, accounts, types, expenses);
+                                },
+                            });
+                        },
+                    });
+
+                },
+            });
         },
-        async: false
     });
 
-    $.ajax({
-        url: "/getAccounts.json",
-        method: "GET",
-        success: function (data) {
-            accounts = JSON.parse(data);
-        },
-        async: false
-    });
-    $.ajax({
-        url: "/getTypes.json",
-        method: "GET",
-        success: function (data) {
-            types = JSON.parse(data);
-        },
-        async: false
-    });
-    $.ajax({
-        url: "/getExpenses.json",
-        method: "GET",
-        success: function (data) {
-            expenses = JSON.parse(data);
-        },
-        async: false
-    });
+}
 
+function initGrid(transactions, accounts, types, expenses) {
 
     $("#transGrid").jsGrid({
         width: "100%",
         inserting: true,
         editing: true,
-        onItemInserting: function (row) {
-            console.dir(row);
-            row.item.id = 99;
+        onItemInserting: saveTransaction,
+        onItemUpdated: saveTransaction,
+        onItemDeleting: function (row) {
+            top.centsa.transaction.delete(row.item.id);
+        },
+        onItemInserted: function () {
+            setTimeout(prepareNewTransDate, 100)
         },
         rowClick: function (row) {
-            console.dir(row);
             $("#transGrid").jsGrid("editItem", row.item);
+            $($(row.event.target).parents()[1]).find(".jsgrid-edit-row > .dateInput > input").datepicker({
+                dateFormat: 'dd/mm/yy'
+            });
         },
         data: transactions,
         fields: [{
@@ -100,13 +88,13 @@ function initGrid() {
             },
             {
                 title: "Amount",
-                width: "10%",
+                width: "15%",
                 name: "amount",
                 type: "number"
             },
             {
                 title: "Comment",
-                width: "40%",
+                width: "30%",
                 name: "comment",
                 type: "text"
             },
@@ -139,8 +127,8 @@ function initGrid() {
             },
             {
                 title: "Date",
-                width: "10%",
-                name: "date",
+                width: "15%",
+                name: "dateFormatted",
                 type: "text",
                 css: "dateInput"
             },
@@ -151,26 +139,12 @@ function initGrid() {
         ]
     });
 
-    $(".jsgrid-insert-mode-button").click(function () {
-        initDatePicker();
-        $("jsgrid-insert-row .dateInput > input").datepicker("setDate", new Date());
-    });
+    $(".jsgrid-insert-mode-button").click(prepareNewTransDate);
 }
 
-function saveTransaction() {
-    var trans = serializeElement("transactionDetails");
-    var timeStamp = $("#transDate").datepicker("getDate").getTime();
-    trans["DATE"] = timeStamp / 1000;
-    $.ajax({
-        url: "/saveTrans",
-        type: "POST",
-        data: JSON.stringify(trans),
-        success: function () {
-            location.reload();
-        },
-        error: function (data) {
-            if (data.responseText)
-                alert(data.responseText);
-        }
-    });
+function saveTransaction(row) {
+    var trans = row.item;
+    trans.date = Date.parse(row.item.dateFormatted.split("/").reverse());
+    trans.id = top.centsa.transaction.save(trans);
+    if (trans.id == -1) row.cancel = true;
 }

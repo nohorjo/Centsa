@@ -65,7 +65,7 @@ const char *getFilePath(const char *uri)
 {
     try
     {
-        return std::string(exeDir + FILE_SEP "layout" FILE_SEP + dao::getSetting("LAYOUT") + uri).c_str();
+        return strdup(std::string(exeDir + FILE_SEP "layout" FILE_SEP + dao::getSetting("LAYOUT") + uri).c_str());
     }
     catch (const char *err)
     {

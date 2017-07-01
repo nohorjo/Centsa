@@ -253,7 +253,7 @@ void setSetting(const char *setting, const char *value)
 /**
  * Saves a transaction
  */
-void saveTransaction(transaction t)
+long saveTransaction(transaction t)
 {
     if (sqlite3_open(dbFileName.c_str(), &main_db))
     {
@@ -263,8 +263,23 @@ void saveTransaction(transaction t)
     sqlite3_stmt *ps;
     int pos = 1;
 
-    if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL) ||
-        sqlite3_bind_double(ps, pos++, t.amount) ||
+    if (t.id == -1)
+    {
+        if (sqlite3_prepare_v2(main_db, SAVE_TRANSACTION, -1, &ps, NULL))
+        {
+            throw sqlite3_errmsg(main_db);
+        }
+    }
+    else
+    {
+        if (sqlite3_prepare_v2(main_db, UPDATE_TRANSACTION, -1, &ps, NULL) ||
+            sqlite3_bind_int64(ps, pos++, t.id))
+        {
+            throw sqlite3_errmsg(main_db);
+        }
+    }
+
+    if (sqlite3_bind_double(ps, pos++, t.amount) ||
         sqlite3_bind_text(ps, pos++, t.comment.c_str(), -1, SQLITE_TRANSIENT) ||
         sqlite3_bind_int64(ps, pos++, t.accountId) ||
         sqlite3_bind_int64(ps, pos++, t.typeId) ||
@@ -275,7 +290,7 @@ void saveTransaction(transaction t)
         throw sqlite3_errmsg(main_db);
     }
     sqlite3_finalize(ps);
-    sqlite3_close(main_db);
+    return getLastId();
 }
 
 std::vector<transaction> getTransactions(int limit, int offset)
@@ -297,13 +312,13 @@ std::vector<transaction> getTransactions(int limit, int offset)
     {
         int i = 0;
         transaction t;
-        t.id = sqlite3_column_int(ps, i++);
+        t.id = sqlite3_column_int64(ps, i++);
         t.amount = sqlite3_column_double(ps, i++);
         t.comment = reinterpret_cast<const char *>(sqlite3_column_text(ps, i++));
-        t.accountId = sqlite3_column_int(ps, i++);
-        t.typeId = sqlite3_column_int(ps, i++);
-        t.date = sqlite3_column_int(ps, i++);
-        t.expenseId = sqlite3_column_int(ps, i++);
+        t.accountId = sqlite3_column_int64(ps, i++);
+        t.typeId = sqlite3_column_int64(ps, i++);
+        t.date = sqlite3_column_int64(ps, i++);
+        t.expenseId = sqlite3_column_int64(ps, i++);
         transactions.push_back(t);
     }
 
@@ -350,5 +365,24 @@ std::string getSetting(const char *setting)
     sqlite3_finalize(ps);
     sqlite3_close(main_db);
     return rtn;
+}
+
+void deleteTrans(long id)
+{
+    if (sqlite3_open(dbFileName.c_str(), &main_db))
+    {
+        throw std::string(std::string("Can't open database: ") + sqlite3_errmsg(main_db)).c_str();
+    }
+
+    sqlite3_stmt *ps;
+    if (sqlite3_prepare_v2(main_db, DELETE_TRANSACTION, -1, &ps, NULL) ||
+        sqlite3_bind_int64(ps, 1, id) ||
+        sqlite3_step(ps) != SQLITE_DONE)
+    {
+        throw sqlite3_errmsg(main_db);
+    }
+
+    sqlite3_finalize(ps);
+    sqlite3_close(main_db);
 }
 }
