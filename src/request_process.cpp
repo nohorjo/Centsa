@@ -47,7 +47,7 @@ const char *getJsonProperty(rapidjson::Document *json, const char *prop)
 			rtn = std::to_string((*json)[prop].GetDouble());
 		if ((*json)[prop].IsInt64())
 			rtn = std::to_string((*json)[prop].GetInt64());
-		return rtn.c_str();
+		return strdup(rtn.c_str());
 	}
 	throw(std::string("Property not found or invalid: ") + prop).c_str();
 }

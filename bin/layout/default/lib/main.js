@@ -1,7 +1,7 @@
 /**
  * Custom context menu
  */
-function contextMenu() { }
+function contextMenu() {}
 
 function applyMouseRestrictions(win) {
     // Prevent text selection
@@ -36,8 +36,8 @@ function sizeContent() {
     clearTimeout(reziseTimeout);
     reziseTimeout = setTimeout(function () {
         $("#MAIN_CONTENT").css({
-            width: Math.ceil($("body").width() * 0.99),
-            height: Math.ceil(($("body").height() - $("#MAIN_MENU").height()) * 0.95)
+            width: Math.ceil(($("body").width() - $("div.sidebar").width()) * 0.95),
+            height: Math.ceil($("body").height() * 0.9)
         });
     }, 200);
 }
@@ -45,10 +45,12 @@ function sizeContent() {
 /**
  * Load url into the main iframe
  */
-function load(url) {
+function load(url, li) {
     $("#MAIN_CONTENT")[0].src = url;
     sizeContent();
     setTimeout(function () {
         applyMouseRestrictions($("#MAIN_CONTENT")[0].contentWindow);
     }, 200);
+    $("ul.nav > li").removeClass("active");
+    $(li).addClass("active");
 }

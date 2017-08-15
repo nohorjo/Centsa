@@ -1,3 +1,17 @@
-.jsgrid-cell {
-    height: 1px;
+#transTable td:nth-of-type(1) {
+    width: 5%;
+}
+
+#transTable td:nth-of-type(2),
+#transTable td:nth-of-type(6) {
+    width: 10%;
+}
+
+#transTable tr:first-child {
+    background: #ffe6f5;
+    border: 2px solid #ffcceb;
+}
+
+td>button {
+    padding: 6px 15px !important;
 }
