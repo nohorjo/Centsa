@@ -1,10 +1,10 @@
 INC=-I include
-CFLAGS=-pthread -g -Wno-format-security
+CFLAGS=-pthread -g -Wno-format-security -Wno-builtin-macro-redefined
 INCC=include/centsa/ui.h include/centsa/sql_scripts.h include/centsa/dao.h include/centsa/request_process.h include/centsa/StringUtils.h
 
 ifeq ($(OS),Windows_NT)
 	INC+=-I include/windows
-	LIBS=-L lib/windows -lrpcrt4 -loleaut32 -lole32 -luuid -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32 -static -static-libstdc++ -static-libgcc -lstdc++ -lpthread -lwxexpat-3.0 -lz -lws2_32
+	LIBS=-L lib/windows -lrpcrt4 -loleaut32 -lole32 -luuid -lwinspool -lwinmm -lshell32 -lcomctl32 -lcomdlg32 -ladvapi32 -lwsock32 -lgdi32 -static -static-libstdc++ -static-libgcc -lstdc++ -lpthread -lz -lws2_32
 	OBJ=obj/windows
 	SERVOBJ=$(OBJ)/event2/bufferevent_async.o $(OBJ)/event2/buffer_iocp.o $(OBJ)/event2/win32select.o $(OBJ)/event2/event_iocp.o
 	CC=gcc
@@ -28,8 +28,8 @@ bin/Centsa: $(SERVOBJ) $(SERVRES)
 bin/renderer: $(OBJ)/renderer.o
 	$(CC) $< -o $@ $(LIBS) $(CXXFLAGS)
 
-obj/windows/meta.res: include/wx/msw/wx.rc bin/icon.ico src/meta.rc
-	windres -I include src/meta.rc -O coff -o $@
+obj/windows/meta.res: bin/icon.ico src/meta.rc
+	cmd /c "windres -I include src/meta.rc -O coff -o $@"
 
 $(OBJ)/%.o: src/%.cpp $(INCC)
 	$(CC) $(INC) $(LIBS) $(CXXFLAGS) -c -o $@ $<

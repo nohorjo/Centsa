@@ -110,8 +110,12 @@ int main(int argc, char **argv)
         if (err)
         {
             // reset ip and port
-            dao::setSetting("IP", "::1");
-            dao::setSetting("PORT", "0");
+#ifdef _WIN32
+        dao::setSetting("IP", "127.0.0.1");
+#else
+        dao::setSetting("IP", "::1");
+#endif
+        dao::setSetting("PORT", "0");
             throw err;
         }
     }
