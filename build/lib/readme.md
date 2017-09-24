@@ -1,0 +1,9 @@
+cglib-nodep-2.2.2.jar
+hamcrest-core-1.3.jar
+jacocoant.jar
+javassist-3.21.0-GA.jar
+junit-4.12.jar
+mockito-core-1.10.19.jar
+objenesis-2.4.jar
+powermock-mockito-1.6.6-full.jar
+readme.md

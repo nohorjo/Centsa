@@ -1,0 +1,37 @@
+package nohorjo.centsa;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.render.Renderer;
+import nohorjo.centsa.server.EmbeddedServer;
+
+public class Main extends Application {
+
+	@Override
+	public void start(Stage stage) {
+		stage.setTitle("Centsa");
+		stage.setScene(new Scene(new Renderer(stage)));
+		stage.show();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		EmbeddedServer.stopServer();
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		String ip = SystemProperties.get("server.ip");
+		int port = SystemProperties.get("server.port");
+
+		// start the server and obtain the running port (in the case of port set to 0)
+		port = EmbeddedServer.startServer(ip, port);
+
+		SystemProperties.setRuntime("server.root",
+				String.format("%s://%s:%d/", SystemProperties.get("server.protocol"), ip, port));
+
+		launch(args);
+	}
+}

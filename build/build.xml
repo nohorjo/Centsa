@@ -1,0 +1,116 @@
+<project name="Centsa - build" default="build" basedir="..">
+
+	<property name="version.info" value="1" />
+	<property name="app.name" value="Centsa" />
+	<property name="main.class" value="nohorjo.centsa.Main" />
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="build/lib/jacocoant.jar" />
+	</taskdef>
+
+	<target name="build" depends="clean,jar" />
+
+	<target name="clean">
+		<delete dir="build">
+			<exclude name="build.xml" />
+			<exclude name="release/**.*" />
+			<exclude name="lib/**.*" />
+			<exclude name="*.zip" />
+		</delete>
+		<delete dir="bin" />
+		<mkdir dir="bin" />
+	</target>
+
+	<target name="jar" depends="compile, testReport">
+		<buildnumber />
+		<jar destfile="build/release/lib/${app.name}.v${version.info}.build-${build.number}.jar">
+			<fileset dir="bin">
+				<exclude name="**/*TEST.class" />
+				<exclude name="**/*MOCK.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="${main.class}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="clean">
+		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on">
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="testReport" depends="test" if="test.complete">
+		<jacoco:report xmlns:jacoco="antlib:org.jacoco.ant">
+			<executiondata>
+				<file file="build/jacoco.exec" />
+			</executiondata>
+			<structure name="${app.name}">
+				<classfiles>
+					<fileset dir="bin">
+						<exclude name="**/*TEST*" />
+						<exclude name="**/*MOCK*" />
+					</fileset>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="src">
+						<exclude name="**/*TEST*" />
+						<exclude name="**/*MOCK*" />
+					</fileset>
+				</sourcefiles>
+			</structure>
+			<html destdir="build/report" />
+		</jacoco:report>
+	</target>
+
+	<target name="test">
+		<jacoco:coverage destfile="build/jacoco.exec" xmlns:jacoco="antlib:org.jacoco.ant">
+			<junit dir="." fork="true" showoutput="true" printsummary="withOutAndErr" haltonerror="true" haltonfailure="true" failureproperty="test.failed">
+				<formatter type="plain" usefile="false" />
+				<classpath>
+					<pathelement location="bin" />
+					<pathelement location="res" />
+					<fileset dir="build/lib" />
+				</classpath>
+				<batchtest>
+					<fileset dir="bin" includes="**/*TEST.class" />
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+
+		<available file="build/jacoco.exec" property="test.complete" />
+	</target>
+
+	<target name="release" depends="build, prepareRelease" description="Builds a release zip">
+		<zip destfile="build/${app.name}.v${version.info}.zip">
+			<fileset dir="build/release" />
+		</zip>
+		<script language="javascript">
+			<![CDATA[
+		 	project.setProperty("new.version", parseInt(project.getProperty("version.info"))+1);
+		    ]]>
+		</script>
+		<replaceregexp match='name="version.info" value="\d*' replace='name="version.info" value="${new.version}'>
+			<fileset dir="build" includes="build.xml" />
+		</replaceregexp>
+	</target>
+
+	<target name="prepareRelease">
+		<copy todir="build/release/lib">
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="build/release/layout/">
+			<fileset dir="ui">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+
+
+</project>
