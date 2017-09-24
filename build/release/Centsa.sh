@@ -1,1 +1,1 @@
-java -cp lib:. -jar lib/Centsa*.jar
+java -cp lib/*:. nohorjo.centsa.Main

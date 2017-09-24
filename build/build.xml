@@ -11,6 +11,9 @@
 	<target name="build" depends="clean,jar" />
 
 	<target name="clean">
+		<delete dir="build/release/lib/">
+			<include name="${app.name}*.jar" />
+		</delete>
 		<delete dir="build">
 			<exclude name="build.xml" />
 			<exclude name="release/**/**.*" />
@@ -20,6 +23,7 @@
 		<delete dir="bin" />
 		<mkdir dir="bin" />
 	</target>
+
 
 	<target name="jar" depends="compile, testReport">
 		<buildnumber />
@@ -31,6 +35,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
 			</manifest>
+			<zipfileset dir="res" includes="**/*" />
 		</jar>
 	</target>
 
@@ -100,6 +105,10 @@
 	</target>
 
 	<target name="prepareRelease">
+		<delete dir="build/release/lib">
+		</delete>
+		<delete dir="build/release/layout/">
+		</delete>
 		<copy todir="build/release/lib">
 			<fileset dir="lib">
 				<include name="*.jar" />

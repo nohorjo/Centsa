@@ -1,0 +1,59 @@
+@font-face {
+	font-family: roboto;
+	src: url(Roboto-Regular.ttf);
+}
+
+body {
+	margin: 0;
+}
+
+#settingsToggle {
+	position: fixed;
+	width: 310px;
+	height: 100vh;
+	top: 0px;
+	right: -300px;
+	z-index: 1;
+}
+
+#settingsControl {
+	position: absolute;
+	background: #ffd36d;
+	width: 289px;
+	height: 100vh;
+	top: 0px;
+	right: 0px;
+	z-index: 2;
+	padding: 5px;
+	box-shadow: 0 0 20px 10px #808080;
+	border: 1px solid #737373;
+	font-family: roboto;
+}
+
+iframe {
+	width: 100%;
+}
+
+input[type="text"], input[type="number"], select {
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	outline: none;
+	display: block;
+	width: 100%;
+	border: none;
+	border-bottom: 1px solid #ddd;
+	background: transparent;
+	background: #fff0cc;
+	border-radius: 3px;
+	font-size: 1em;
+}
+
+#settingsControl table {
+	width: 100%;
+}
+
+#refresh {
+	height: 1.5em;
+	width: 1.5em;
+}

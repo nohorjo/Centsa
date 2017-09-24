@@ -9,6 +9,7 @@ import nohorjo.centsa.properties.SystemProperties;
 public class ConnectionUtils {
 
 	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:sqlite:" + SystemProperties.get("root.dir") + "/data.db");
+		return DriverManager
+				.getConnection("jdbc:sqlite:" + SystemProperties.get("root.dir", String.class) + "/data.db");
 	}
 }

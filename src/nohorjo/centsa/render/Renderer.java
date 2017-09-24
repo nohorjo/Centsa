@@ -1,14 +1,14 @@
 package nohorjo.centsa.render;
 
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker.State;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import nohorjo.centsa.properties.SystemProperties;
 
 public class Renderer extends Region {
@@ -21,19 +21,18 @@ public class Renderer extends Region {
 
 	public Renderer(final Stage stage) {
 
-		// load the home page
-		webEngine.load(SystemProperties.get("server.root") + "uiroot");
+		webEngine.load(SystemProperties.get("server.root", String.class) + "core/ui.html");
+
+		webEngine.setOnAlert((WebEvent<String> wEvent) -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("");
+			alert.setHeaderText("");
+			alert.setContentText(wEvent.getData());
+
+			alert.showAndWait();
+		});
 
 		getChildren().add(browser);
-
-		// set js interface
-		webEngine.getLoadWorker().stateProperty()
-				.addListener((ObservableValue<? extends State> observable, State oldValue, State newState) -> {
-					if (newState == State.SUCCEEDED) {
-						JSObject win = (JSObject) webEngine.executeScript("window");
-						win.setMember("centsa", new CentsaJSInterface());
-					}
-				});
 	}
 
 	@Override
@@ -47,13 +46,13 @@ public class Renderer extends Region {
 
 	@Override
 	protected double computePrefWidth(double height) {
-		Double width = SystemProperties.get("width");
+		Double width = SystemProperties.get("width", Double.class);
 		return width > MIN_WIDTH ? width : MIN_WIDTH;
 	}
 
 	@Override
 	protected double computePrefHeight(double width) {
-		Double height = SystemProperties.get("height");
+		Double height = SystemProperties.get("height", Double.class);
 		return height > MIN_HEIGHT ? height : MIN_HEIGHT;
 	}
 }

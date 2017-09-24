@@ -1,2 +1,1 @@
-javaw -cp lib;. -jar lib/Centsa*.jar
-
+javaw -cp lib/*;. nohorjo.centsa.Main
