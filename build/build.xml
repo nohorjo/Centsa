@@ -13,7 +13,7 @@
 	<target name="clean">
 		<delete dir="build">
 			<exclude name="build.xml" />
-			<exclude name="release/**.*" />
+			<exclude name="release/**/**.*" />
 			<exclude name="lib/**.*" />
 			<exclude name="*.zip" />
 		</delete>
