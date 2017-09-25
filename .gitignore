@@ -88,3 +88,4 @@ hs_err_pid*
 
 build/release/lib/*
 build/release/layout/*
+*.db

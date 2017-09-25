@@ -2,6 +2,7 @@ package nohorjo.centsa;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
@@ -13,6 +14,7 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		stage.setTitle("Centsa");
 		stage.setScene(new Scene(new Renderer(stage)));
+		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("icon.png")));
 		stage.show();
 	}
 
