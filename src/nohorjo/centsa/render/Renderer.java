@@ -10,6 +10,7 @@ import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.server.APIRequestHandler;
 
 public class Renderer extends Region {
 
@@ -21,7 +22,8 @@ public class Renderer extends Region {
 
 	public Renderer(final Stage stage) {
 
-		webEngine.load(SystemProperties.get("server.root", String.class) + "core/ui.html");
+		webEngine.load(
+				SystemProperties.get("server.root", String.class) + "core/ui.html?" + APIRequestHandler.UNIQUE_KEY);
 
 		webEngine.setOnAlert((WebEvent<String> wEvent) -> {
 			Alert alert = new Alert(AlertType.INFORMATION);

@@ -27,8 +27,11 @@ function ajax(payload) {
 }
 
 var centsa = new (function() {
-	var key = '#UNIQUE_KEY#';
+	var key = null;
 	return {
+		setUniqueKey : function(ukey) 
+			key = ukey;
+		},
 		settings : {
 			set : function(key, value, success, error) {
 				ajax({

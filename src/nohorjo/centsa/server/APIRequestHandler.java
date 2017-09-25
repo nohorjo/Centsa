@@ -15,8 +15,9 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class APIRequestHandler {
 
+	public static final String UNIQUE_KEY = UUID.randomUUID().toString();
+
 	private static final Map<String, HttpRequestProcessor> PROCESSORS = new HashMap<>();
-	private static final String UNIQUE_KEY = UUID.randomUUID().toString();
 
 	static {
 		PROCESSORS.put("centsa.api.js", (HttpServletRequest req, HttpServletResponse resp) -> {
@@ -48,7 +49,7 @@ public class APIRequestHandler {
 		String _target = target.replaceAll("^/[^/]*/", "");
 		if (key.equals(UNIQUE_KEY)) {
 			processor = PROCESSORS.get(_target);
-			
+
 			if (processor == null) {
 				processor = (HttpServletRequest req, HttpServletResponse resp) -> {
 					resp.setStatus(404);

@@ -45,6 +45,7 @@ function init() {
 
 	resizeIframe();
 	applyMouseRestrictions(window);
+	centsa.setUniqueKey(location.search.substr(1));
 	iframe.contentWindow.centsa = censta;
 }
 
