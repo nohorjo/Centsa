@@ -2,10 +2,13 @@
 
 	<property name="version.info" value="1" />
 	<property name="app.name" value="Centsa" />
-	<property name="main.class" value="nohorjo.centsa.Main" />
 
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath path="build/lib/jacocoant.jar" />
+		<classpath>
+			<fileset dir="build/lib/">
+				<include name="**/*.jar" />
+			</fileset>
+		</classpath>
 	</taskdef>
 
 	<target name="build" depends="clean,jar" />
@@ -32,9 +35,6 @@
 				<exclude name="**/*TEST.class" />
 				<exclude name="**/*MOCK.class" />
 			</fileset>
-			<manifest>
-				<attribute name="Main-Class" value="${main.class}" />
-			</manifest>
 			<zipfileset dir="res" includes="**/*" />
 		</jar>
 	</target>
