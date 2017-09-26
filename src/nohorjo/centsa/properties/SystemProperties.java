@@ -18,6 +18,17 @@ public class SystemProperties {
 			systemProperties.setAutoSave(true);
 
 			runtimeProperties.setProperty("root.dir", propertiesFile.getParentFile().getAbsolutePath());
+
+			File layoutDir = new File(propertiesFile.getParentFile(), "layout");
+			String layoutsJson = "[";
+			for (File d : layoutDir.listFiles()) {
+				if (d.isDirectory())
+					layoutsJson += String.format("\"%s\",", d.getName());
+			}
+			layoutsJson = layoutsJson.replaceAll(",$", "]");
+
+			runtimeProperties.setProperty("layouts", layoutsJson);
+			
 		} catch (ConfigurationException e) {
 			throw new Error(e);
 		}

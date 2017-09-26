@@ -47,6 +47,19 @@ function init() {
 	applyMouseRestrictions(window);
 	centsa.setUniqueKey(location.search.substr(1));
 	iframe.contentWindow.centsa = centsa;
+	document.getElementById("serverIP").value = centsa.settings
+			.get("server.ip");
+	document.getElementById("serverPort").value = centsa.settings
+			.get("server.port");
+
+	var layoutsSelect = document.getElementById("layout");
+	var layouts = JSON.parse(centsa.settings.get("layouts"));
+	for (var i = 0; i < layouts.length; i++) {
+		var option = document.createElement("option");
+		option.value = layouts[i];
+		option.text = layouts[i];
+		layoutsSelect.appendChild(option);
+	}
 }
 
 function glow(e, colour) {

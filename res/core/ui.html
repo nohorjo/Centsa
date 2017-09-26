@@ -14,12 +14,12 @@
 				<tbody>
 					<tr>
 						<td>Server IP</td>
-						<td><input type="text" value="ip"
+						<td><input id="serverIP" type="text" value="ip"
 							onblur="setSetting('server.ip',this)"
 							onkeyup="if(event.keyCode==13){this.onblur();}"></td>
 					<tr>
 						<td>Server port</td>
-						<td><input type="number" value="0"
+						<td><input id="serverPort" type="number" value="0"
 							onblur="setSetting('server.port',this)"
 							onkeyup="if(event.keyCode==13){this.onblur();}"
 							onchange="this.onblur();"></td>
@@ -29,10 +29,8 @@
 						<td>
 							<table>
 								<tr>
-									<td><select
-										onchange="setSetting('layout',this); iframe.contentWindow.location.reload();">
-											<option value="name" selected>name</option>
-									</select></td>
+									<td><select id="layout"
+										onchange="setSetting('layout',this); iframe.contentWindow.location.reload();"></select></td>
 									<td><img id="refresh"
 										onclick="hideSettings();setTimeout(function(){window.location.reload();},500)"
 										src="refresh.png" /></td>

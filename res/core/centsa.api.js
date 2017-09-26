@@ -33,6 +33,21 @@ var centsa = (function() {
 			apiUrl = "/api/" + ukey;
 		},
 		settings : {
+			get : function(key) {
+				var val = null;
+				ajax({
+					url : apiUrl + "/settings?key=" + key,
+					method : "GET",
+					async : false,
+					success : function(resp) {
+						val = resp.responseText;
+					},
+					error : function(resp) {
+						alert(resp);
+					}
+				});
+				return val;
+			},
 			set : function(key, value, success, error) {
 				ajax({
 					url : apiUrl + "/settings",
