@@ -21,14 +21,15 @@ public class SystemProperties {
 
 			File layoutDir = new File(propertiesFile.getParentFile(), "layout");
 			String layoutsJson = "[";
-			for (File d : layoutDir.listFiles()) {
-				if (d.isDirectory())
-					layoutsJson += String.format("\"%s\",", d.getName());
+			for (File d : layoutDir.listFiles((File d) -> {
+				return d.isDirectory();
+			})) {
+				layoutsJson += String.format("\"%s\",", d.getName());
 			}
 			layoutsJson = layoutsJson.replaceAll(",$", "]");
 
 			runtimeProperties.setProperty("layouts", layoutsJson);
-			
+
 		} catch (ConfigurationException e) {
 			throw new Error(e);
 		}
@@ -36,8 +37,6 @@ public class SystemProperties {
 
 	public static <T> T get(String key, Class<T> clazz) {
 		T prop = null;
-
-		prop = (T) systemProperties.getProperty(key);
 
 		switch (clazz.getName()) {
 		case "java.lang.String":

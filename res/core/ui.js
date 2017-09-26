@@ -3,6 +3,7 @@
  */
 var iframe;
 var settingsToggleCSS;
+var currentSettingsVal;
 
 // keep iframe the same size as the body
 function resizeIframe() {
@@ -72,11 +73,17 @@ function glow(e, colour) {
 	}, 200);
 }
 
+function prepareSetting(val) {
+	currentSettingsVal = val;
+}
+
 function setSetting(key, e) {
 	var success = function() {
 		glow(e, '#99ff00');
 	}
-	centsa.settings.set(key, e.value, success, function(x) {
-		alert(x);
-	});
+	if (e.value != currentSettingsVal) {
+		centsa.settings.set(key, e.value, success, function(x) {
+			alert(x);
+		});
+	}
 }

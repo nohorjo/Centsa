@@ -15,11 +15,13 @@
 					<tr>
 						<td>Server IP</td>
 						<td><input id="serverIP" type="text" value="ip"
+							onfocus="prepareSetting(this.value)"
 							onblur="setSetting('server.ip',this)"
 							onkeyup="if(event.keyCode==13){this.onblur();}"></td>
 					<tr>
 						<td>Server port</td>
 						<td><input id="serverPort" type="number" value="0"
+							onfocus="prepareSetting(this.value)"
 							onblur="setSetting('server.port',this)"
 							onkeyup="if(event.keyCode==13){this.onblur();}"
 							onchange="this.onblur();"></td>
