@@ -1,5 +1,7 @@
 package nohorjo.centsa.render;
 
+import com.sun.javafx.webkit.WebConsoleListener;
+
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
@@ -32,6 +34,10 @@ public class Renderer extends Region {
 			alert.setContentText(wEvent.getData());
 
 			alert.showAndWait();
+		});
+
+		WebConsoleListener.setDefaultListener((WebView webView, String message, int lineNumber, String sourceId) -> {
+			System.out.printf("Console: [%s:%d] %s\n", sourceId, lineNumber, message);
 		});
 
 		getChildren().add(browser);

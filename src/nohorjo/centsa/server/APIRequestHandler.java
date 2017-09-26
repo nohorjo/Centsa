@@ -18,7 +18,7 @@ public class APIRequestHandler {
 	private static final Map<String, HttpRequestProcessor> PROCESSORS = new HashMap<>();
 
 	static {
-		System.out.printf("Key set to %s", UNIQUE_KEY);
+		System.out.printf("Key set to %s\n", UNIQUE_KEY);
 		PROCESSORS.put("settings", new SettingsRS());
 	}
 
