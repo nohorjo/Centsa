@@ -2,7 +2,7 @@
  * 
  */
 var iframe;
-var settingsToggleCSS;
+var settingsToggle;
 var currentSettingsVal;
 
 // keep iframe the same size as the body
@@ -11,14 +11,28 @@ function resizeIframe() {
 }
 
 function hideSettings() {
-	settingsToggleCSS.transition = "0.4s";
-	settingsToggleCSS.right = "-300px";
-	iframe.focus();
+	function shouldHide() {
+		var activeEl = document.activeElement;
+		do {
+			if (activeEl == settingsToggle) {
+				return false
+			}
+		} while (activeEl = activeEl.parentElement);
+		return true;
+	}
+
+	if (shouldHide()) {
+		settingsToggle.style.transition = "0.4s";
+		settingsToggle.style.right = "-300px";
+		iframe.focus();
+	} else {
+		setTimeout(hideSettings, 200);
+	}
 }
 
 function showSettings() {
-	settingsToggleCSS.transition = "0.4s";
-	settingsToggleCSS.right = "0px";
+	settingsToggle.style.transition = "0.4s";
+	settingsToggle.style.right = "0px";
 }
 
 function applyMouseRestrictions(win) {
@@ -40,7 +54,7 @@ function applyMouseRestrictions(win) {
 
 function init() {
 	iframe = document.querySelector("iframe");
-	settingsToggleCSS = document.getElementById("settingsToggle").style;
+	settingsToggle = document.getElementById("settingsToggle");
 	showSettings();
 	setTimeout(hideSettings, 400);
 
