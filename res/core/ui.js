@@ -46,7 +46,7 @@ function init() {
 	resizeIframe();
 	applyMouseRestrictions(window);
 	centsa.setUniqueKey(location.search.substr(1));
-	iframe.contentWindow.centsa = censta;
+	iframe.contentWindow.centsa = centsa;
 }
 
 function glow(e, colour) {
@@ -60,8 +60,10 @@ function glow(e, colour) {
 }
 
 function setSetting(key, e) {
-	var error = function() {
+	var success = function() {
 		glow(e, '#99ff00');
 	}
-	centsa.settings.set(key, e.value, error, alert);
+	centsa.settings.set(key, e.value, success, function(x) {
+		alert(x);
+	});
 }

@@ -22,17 +22,22 @@ public class EmbeddedServer extends AbstractHandler {
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		switch (target.split("/")[1]) {
-		case "api":
-			APIRequestHandler.handle(request, response, target.replaceAll("^/api/", ""));
-			break;
-		case "core":
-			FileRequestHandler.handle(response, target.substring(1));
-			break;
-		default:
-			target = "layout/" + SystemProperties.get("layout", String.class) + target;
-			FileRequestHandler.handle(response, target);
-			break;
+		try {
+			switch (target.split("/")[1]) {
+			case "api":
+				APIRequestHandler.handle(request, response, target.replaceAll("^/api/", ""));
+				break;
+			case "core":
+				FileRequestHandler.handle(response, target.substring(1));
+				break;
+			default:
+				target = "layout/" + SystemProperties.get("layout", String.class) + target;
+				FileRequestHandler.handle(response, target);
+				break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(500, e.getMessage());
 		}
 
 		baseRequest.setHandled(true);

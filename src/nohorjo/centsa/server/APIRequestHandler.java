@@ -1,8 +1,6 @@
 package nohorjo.centsa.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +9,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import nohorjo.centsa.rest.SettingsRS;
 
 public class APIRequestHandler {
 
@@ -20,25 +18,8 @@ public class APIRequestHandler {
 	private static final Map<String, HttpRequestProcessor> PROCESSORS = new HashMap<>();
 
 	static {
-		PROCESSORS.put("centsa.api.js", (HttpServletRequest req, HttpServletResponse resp) -> {
-			int code = 500;
-			resp.setContentType("application/javascript");
-			try (PrintWriter writer = resp.getWriter()) {
-				try (BufferedReader reader = new BufferedReader(
-						new InputStreamReader(ClassLoader.getSystemResourceAsStream("centsa.api.js")))) {
-					String line;
-					String contents = "";
-					while ((line = reader.readLine()) != null) {
-						contents += line + "\n";
-					}
-					writer.write(contents.replace("#UNIQUE_KEY#", UNIQUE_KEY));
-				} catch (IOException e) {
-					e.printStackTrace();
-					writer.write(ExceptionUtils.getFullStackTrace(e));
-				}
-			}
-			resp.setStatus(code);
-		});
+		System.out.printf("Key set to %s", UNIQUE_KEY);
+		PROCESSORS.put("settings", new SettingsRS());
 	}
 
 	public static void handle(HttpServletRequest request, HttpServletResponse response, String target)
@@ -46,7 +27,7 @@ public class APIRequestHandler {
 		HttpRequestProcessor processor;
 
 		String key = target.split("/")[0];
-		String _target = target.replaceAll("^/[^/]*/", "");
+		String _target = target.replaceAll("^[^/]*/", "");
 		if (key.equals(UNIQUE_KEY)) {
 			processor = PROCESSORS.get(_target);
 

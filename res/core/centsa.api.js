@@ -2,7 +2,7 @@
  * 
  */
 var centsa = (function() {
-	var key = null;
+	var apiUrl = null;
 
 	// make simple async http request
 	function ajax(payload) {
@@ -30,13 +30,17 @@ var centsa = (function() {
 
 	return {
 		setUniqueKey : function(ukey) {
-			key = ukey;
+			apiUrl = "/api/" + ukey;
 		},
 		settings : {
 			set : function(key, value, success, error) {
 				ajax({
-					url : "/api/" + key + "/settings",
+					url : apiUrl + "/settings",
 					method : "POST",
+					data : JSON.stringify({
+						key : key,
+						value : value
+					}),
 					success : success,
 					error : error
 				});

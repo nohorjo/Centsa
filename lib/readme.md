@@ -1,6 +1,9 @@
 commons-configuration-1.9.jar
 commons-lang-2.6.jar
 commons-logging-api-1.1.jar
+jackson-annotations-2.9.1.jar
+jackson-core-2.9.1.jar
+jackson-databind-2.9.1.jar
 javax.servlet-api-3.1.0.jar
 javax.websocket-api-1.0.jar
 jetty-all-9.2.22.v20170606.jar
