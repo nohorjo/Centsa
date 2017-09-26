@@ -1,5 +1,8 @@
 package nohorjo.centsa.render;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.javafx.webkit.WebConsoleListener;
 
 import javafx.geometry.HPos;
@@ -18,6 +21,7 @@ public class Renderer extends Region {
 
 	private static final int MIN_WIDTH = 1000;
 	private static final int MIN_HEIGHT = 500;
+	private final Logger log = LoggerFactory.getLogger("Console");
 
 	private final WebView browser = new WebView();
 	private final WebEngine webEngine = browser.getEngine();
@@ -37,7 +41,7 @@ public class Renderer extends Region {
 		});
 
 		WebConsoleListener.setDefaultListener((WebView webView, String message, int lineNumber, String sourceId) -> {
-			System.out.printf("Console: [%s:%d] %s\n", sourceId, lineNumber, message);
+			log.warn("[{}:{}] {}", sourceId, lineNumber, message);
 		});
 
 		getChildren().add(browser);

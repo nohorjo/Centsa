@@ -9,6 +9,9 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nohorjo.centsa.rest.SettingsRS;
 
 public class APIRequestHandler {
@@ -16,9 +19,10 @@ public class APIRequestHandler {
 	public static final String UNIQUE_KEY = UUID.randomUUID().toString();
 
 	private static final Map<String, HttpRequestProcessor> PROCESSORS = new HashMap<>();
+	private static final Logger log = LoggerFactory.getLogger(APIRequestHandler.class);
 
 	static {
-		System.out.printf("Key set to %s\n", UNIQUE_KEY);
+		log.info("Key set to {}", UNIQUE_KEY);
 		PROCESSORS.put("settings", new SettingsRS());
 	}
 

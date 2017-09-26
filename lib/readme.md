@@ -1,11 +1,11 @@
-commons-configuration-1.9.jar
+commons-configuration-1.10.jar
 commons-lang-2.6.jar
-commons-logging-api-1.1.jar
+commons-logging-1.2.jar
 jackson-annotations-2.9.1.jar
 jackson-core-2.9.1.jar
 jackson-databind-2.9.1.jar
-javax.servlet-api-3.1.0.jar
-javax.websocket-api-1.0.jar
-jetty-all-9.2.22.v20170606.jar
-sqlite-jdbc-3.7.2.jar
+jetty-all-9.4.7.v20170914-uber.jar
+slf4j-api-1.7.25.jar
+slf4j-simple-1.7.25.jar
+sqlite-jdbc-3.20.0.jar
 tika-core-1.16.jar
