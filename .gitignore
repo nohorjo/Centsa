@@ -90,3 +90,4 @@ build/release/lib/*
 build/release/layout/*
 *.db
 *.desktop
+*.lnk
