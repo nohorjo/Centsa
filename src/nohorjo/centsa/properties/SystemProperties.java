@@ -35,6 +35,7 @@ public class SystemProperties {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Class<T> clazz) {
 		T prop = null;
 

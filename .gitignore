@@ -91,3 +91,5 @@ build/release/layout/*
 *.db
 *.desktop
 *.lnk
+build/release/log/*
+

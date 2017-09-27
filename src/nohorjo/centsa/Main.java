@@ -24,6 +24,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) throws Exception {
+		String logfile = SystemProperties.get("root.dir", String.class) + "/log/application.log";
+
+		System.setErr(FilePrintStreamRedirector.getRedirector(logfile, System.err, false));
+		System.setOut(FilePrintStreamRedirector.getRedirector(logfile, System.out, true));
+
 		String ip = SystemProperties.get("server.ip", String.class);
 		int port = (int) SystemProperties.get("server.port", Integer.class);
 
