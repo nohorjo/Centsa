@@ -2,7 +2,20 @@
  * 
  */
 var centsa = (function() {
-	var apiUrl = null;
+	var apiUrl = (function() {
+		var url;
+		return {
+			get : function() {
+				if (!url)
+					throw "Key not set!";
+				return url;
+			},
+			set : function(key) {
+				if (key)
+					url = "/api/" + key;
+			}
+		};
+	})();
 
 	// make simple async http request
 	function ajax(payload) {
@@ -30,13 +43,13 @@ var centsa = (function() {
 
 	return {
 		setUniqueKey : function(ukey) {
-			apiUrl = "/api/" + ukey;
+			apiUrl.set(ukey);
 		},
 		settings : {
 			get : function(key) {
 				var val = null;
 				ajax({
-					url : apiUrl + "/settings?key=" + key,
+					url : apiUrl.get() + "/settings?key=" + key,
 					method : "GET",
 					async : false,
 					success : function(resp) {
@@ -50,7 +63,7 @@ var centsa = (function() {
 			},
 			set : function(key, value, success, error) {
 				ajax({
-					url : apiUrl + "/settings",
+					url : apiUrl.get() + "/settings",
 					method : "POST",
 					data : JSON.stringify({
 						key : key,

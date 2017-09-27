@@ -90,7 +90,10 @@
 		<available file="build/jacoco.exec" property="test.complete" />
 	</target>
 
-	<target name="release" depends="build, prepareRelease" description="Builds a release zip">
+	<target name="release" depends="prepareRelease, build" description="Builds a release zip">
+		<replaceregexp match='org.slf4j.simpleLogger.defaultLogLevel=.*' replace='org.slf4j.simpleLogger.defaultLogLevel=info'>
+			<fileset dir="build/release" includes="simplelogger.properties" />
+		</replaceregexp>
 		<zip destfile="build/${app.name}.v${version.info}.zip">
 			<fileset dir="build/release" />
 		</zip>
@@ -105,9 +108,11 @@
 	</target>
 
 	<target name="prepareRelease">
-		<delete dir="build/release/lib">
-		</delete>
-		<delete dir="build/release/layout/">
+		<delete>
+			<fileset dir="build/release/lib">
+				<exclude name="${app.name}*" />
+			</fileset>
+			<fileset dir="build/release/layout/"/>
 		</delete>
 		<copy todir="build/release/lib">
 			<fileset dir="lib">

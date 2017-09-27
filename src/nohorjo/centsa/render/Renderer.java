@@ -21,15 +21,20 @@ public class Renderer extends Region {
 
 	private static final int MIN_WIDTH = 1000;
 	private static final int MIN_HEIGHT = 500;
-	private final Logger log = LoggerFactory.getLogger("Console");
+	private final Logger log = LoggerFactory.getLogger(Renderer.class);
+	private final Logger console = LoggerFactory.getLogger("Console");
 
 	private final WebView browser = new WebView();
 	private final WebEngine webEngine = browser.getEngine();
 
 	public Renderer(final Stage stage) {
 
-		webEngine.load(
-				SystemProperties.get("server.root", String.class) + "core/ui.html?" + APIRequestHandler.UNIQUE_KEY);
+		
+		
+		String url = SystemProperties.get("server.root", String.class) + "core/ui.html?" + APIRequestHandler.UNIQUE_KEY;
+		log.info("UI available at {}", url);
+		
+		webEngine.load(url);
 
 		webEngine.setOnAlert((WebEvent<String> wEvent) -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -41,7 +46,7 @@ public class Renderer extends Region {
 		});
 
 		WebConsoleListener.setDefaultListener((WebView webView, String message, int lineNumber, String sourceId) -> {
-			log.warn("[{}:{}] {}", sourceId, lineNumber, message);
+			console.warn("[{}:{}] {}", sourceId, lineNumber, message);
 		});
 
 		getChildren().add(browser);

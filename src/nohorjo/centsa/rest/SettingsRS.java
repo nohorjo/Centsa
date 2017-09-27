@@ -31,7 +31,7 @@ public class SettingsRS implements HttpRequestProcessor {
 
 	private void getSetting(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		int status = 404;
-		String value = SystemProperties.get(req.getParameter("key"), String.class);
+		String value = SystemProperties.get(req.getParameter("key"), Object.class).toString();
 		if (value != null) {
 			try (PrintWriter w = resp.getWriter()) {
 				w.write(value);

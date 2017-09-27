@@ -48,6 +48,9 @@ public class SystemProperties {
 		case "java.lang.Double":
 			prop = (T) (Double) systemProperties.getDouble(key);
 			break;
+		case "java.lang.Object":
+			prop = (T) systemProperties.getProperty(key);
+			break;
 		default:
 			throw new Error("Cannot get type: " + clazz.getName());
 		}

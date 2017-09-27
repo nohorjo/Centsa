@@ -54,14 +54,15 @@ function applyMouseRestrictions(win) {
 
 function init() {
 	iframe = document.querySelector("iframe");
+	centsa.setUniqueKey(location.search.substr(1));
+	iframe.contentWindow.centsa = centsa;
 	settingsToggle = document.getElementById("settingsToggle");
+
 	showSettings();
 	setTimeout(hideSettings, 400);
 
 	resizeIframe();
 	applyMouseRestrictions(window);
-	centsa.setUniqueKey(location.search.substr(1));
-	iframe.contentWindow.centsa = centsa;
 	document.getElementById("serverIP").value = centsa.settings
 			.get("server.ip");
 	document.getElementById("serverPort").value = centsa.settings
