@@ -1,19 +1,20 @@
 $(function() {
-
 	// Prevent text selection
 	window.document.onselectstart = function() {
 		return false;
 	}
-
-	// resize sidebar
+	// resize body
 	$(window).resize((function() {
 		var reziseTimeout;
 
-		return function sizeContent() {
+		return function() {
 			clearTimeout(reziseTimeout);
 			reziseTimeout = setTimeout(function() {
-				$(".sidebar").height(centsa.settings.get("height"));
+				$("body").height(centsa.settings.get("height"));
 			}, 50);
 		}
 	})());
 });
+
+// set up angular
+var app = angular.module("app", [ "ngRoute" ]);
