@@ -22,6 +22,8 @@ else
 		echo "Categories=Office;" >> ${DIR}/Centsa.desktop
 		echo "Comment=Centsa money managing solution" >> ${DIR}/Centsa.desktop
 		
+		chmod +x ${DIR}/Centsa.desktop
+		
 		cp ${DIR}/Centsa.desktop ~/.local/share/applications
 		
 		read -p "Do you wish to install this program for all users (y/N)? (requires root)" choice

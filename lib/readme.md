@@ -1,3 +1,4 @@
+commons-collections-3.2.2.jar
 commons-configuration-1.10.jar
 commons-lang-2.6.jar
 commons-logging-1.2.jar
