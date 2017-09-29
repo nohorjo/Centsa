@@ -1,17 +1,35 @@
-<project name="Centsa - build" default="build" basedir="..">
+<project name="Centsa - build" default="build" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<property name="version.info" value="1" />
 	<property name="app.name" value="Centsa" />
 
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath>
-			<fileset dir="build/lib/">
-				<include name="**/*.jar" />
-			</fileset>
-		</classpath>
-	</taskdef>
 
-	<target name="build" depends="clean,jar" />
+	<path id="build.lib.path">
+		<fileset dir="build/lib" includes="*.jar" />
+	</path>
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
+
+	<target name="check-ivy">
+		<available file="build/lib/ivy.jar" property="ivy.present" />
+	</target>
+
+	<target name="download-ivy" unless="ivy.present">
+		<property name="ivy.install.version" value="2.4.0" />
+		<mkdir dir="build/lib" />
+		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="build/lib/ivy.jar" usetimestamp="true" />
+	</target>
+
+	<target name="install-ivy" depends="check-ivy,download-ivy">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="build.lib.path" />
+	</target>
+
+	<target name="resolve" depends="install-ivy">
+		<mkdir dir="lib" />
+		<ivy:retrieve pathid="lib.path.id" pattern="lib/[artifact].[ext]" conf="rt" />
+	</target>
+
+	<target name="build" depends="resolve,clean,jar" />
 
 	<target name="clean">
 		<delete dir="build/release/lib/">
@@ -40,13 +58,7 @@
 	</target>
 
 	<target name="compile" depends="clean">
-		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on">
-			<classpath>
-				<fileset dir="lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
+		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
 	</target>
 
 	<target name="testReport" depends="test" if="test.complete">
@@ -112,7 +124,7 @@
 			<fileset dir="build/release/lib">
 				<exclude name="${app.name}*" />
 			</fileset>
-			<fileset dir="build/release/layout/"/>
+			<fileset dir="build/release/layout/" />
 		</delete>
 		<copy todir="build/release/lib">
 			<fileset dir="lib">

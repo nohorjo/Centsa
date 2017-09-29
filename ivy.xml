@@ -1,0 +1,40 @@
+<ivy-module version="2.0">
+	<info organisation="org.apache" module="Centsa" />
+	<configurations defaultconfmapping="rt->default">
+		<conf name="rt" />
+	</configurations>
+	<dependencies>
+		<dependency org="commons-collections" name="commons-collections"
+			rev="3.2.2" conf="rt" />
+		<dependency org="commons-configuration" name="commons-configuration"
+			rev="1.10" conf="rt" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.6"
+			conf="rt" />
+		<dependency org="commons-logging" name="commons-logging"
+			rev="1.2" conf="rt" />
+		<dependency org="com.fasterxml.jackson.core" name="jackson-annotations"
+			rev="2.9.1" conf="rt" />
+		<dependency org="com.fasterxml.jackson.core" name="jackson-core"
+			rev="2.9.1" conf="rt" />
+		<dependency org="com.fasterxml.jackson.core" name="jackson-databind"
+			rev="2.9.1" conf="rt" />
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.25"
+			conf="rt" />
+		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25"
+			conf="rt" />
+		<dependency org="org.xerial" name="sqlite-jdbc" rev="3.20.0"
+			conf="rt" />
+		<dependency org="org.apache.tika" name="tika-core" rev="1.16"
+			conf="rt" />
+		<dependency org="javax.servlet" name="javax.servlet-api"
+			rev="4.0.0" conf="rt" />
+		<dependency org="org.eclipse.jetty" name="jetty-server"
+			rev="9.4.7.v20170914" conf="rt" />
+		<dependency org="org.eclipse.jetty" name="jetty-http" rev="9.4.7.v20170914"
+			conf="rt" />
+		<dependency org="org.eclipse.jetty" name="jetty-io" rev="9.4.7.v20170914"
+			conf="rt" />
+		<dependency org="org.eclipse.jetty" name="jetty-util" rev="9.4.7.v20170914"
+			conf="rt" />
+	</dependencies>
+</ivy-module>
