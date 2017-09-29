@@ -7,7 +7,7 @@ var currentSettingsVal;
 
 // keep iframe the same size as the body
 function resizeIframe() {
-	iframe.height = document.body.scrollHeight;
+	iframe.height = document.body.scrollHeight - 10;
 }
 
 function hideSettings() {

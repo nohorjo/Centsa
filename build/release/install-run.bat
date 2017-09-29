@@ -4,6 +4,16 @@
 set DIR=%~dp0
 set LINK=%DIR%Centsa.lnk
 
+echo delete.me > %DIR%\delete.me.centsa
+
+if exist "%DIR%\delete.me.centsa" (
+	del %DIR%\delete.me.centsa
+) else (
+	echo You do not have permission to write to this directory. Try a different directory or running as administrator
+	pause
+	exit /b 1
+)
+
 echo delete.me > %windir%\delete.me.centsa
 
 if exist "%windir%\delete.me.centsa" (
