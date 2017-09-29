@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nohorjo.centsa.rest.SettingsRS;
+import nohorjo.centsa.rest.TransactionsRS;
 
 public class APIRequestHandler {
 
@@ -26,6 +27,7 @@ public class APIRequestHandler {
 	static {
 		log.info("Key set to {}", UNIQUE_KEY);
 		SERVLETS.put("settings", new SettingsRS());
+		SERVLETS.put("transaction", new TransactionsRS());
 	}
 
 	public static void handle(HttpServletRequest request, HttpServletResponse response, String target)

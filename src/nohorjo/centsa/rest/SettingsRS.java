@@ -2,7 +2,6 @@ package nohorjo.centsa.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ public class SettingsRS extends HttpServlet {
 	private static final long serialVersionUID = -4610961678167873846L;
 
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		int status = 404;
 		String value = SystemProperties.get(req.getParameter("key"), Object.class).toString();
 		if (value != null) {
@@ -34,9 +33,8 @@ public class SettingsRS extends HttpServlet {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		SettingsVO vo = new ObjectMapper().readValue(
-				req.getReader().lines().collect(Collectors.joining(System.lineSeparator())), SettingsVO.class);
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		SettingsVO vo = new ObjectMapper().readValue(req.getReader(), SettingsVO.class);
 		SystemProperties.set(vo.getKey(), vo.getValue());
 		resp.setStatus(204);
 	}

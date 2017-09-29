@@ -29,7 +29,7 @@ public class TransactionsDAO implements DAO {
 	}
 
 	@Override
-	public List<? extends VO> getAll(int page, int pageSize, String order) throws SQLException {
+	public List<Transaction> getAll(int page, int pageSize, String order) throws SQLException {
 		page = (page > 0) ? page : 1;
 		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
 		order = (order == null) ? order : "1 ASC";
@@ -60,7 +60,7 @@ public class TransactionsDAO implements DAO {
 	}
 
 	@Override
-	public VO get(long id) throws SQLException {
+	public Transaction get(long id) throws SQLException {
 		try (Connection conn = SQLUtils.getConnection();
 				PreparedStatement ps = conn.prepareStatement(SQLUtils.getQuery("Transactions.Get"))) {
 			ps.setLong(1, id);
