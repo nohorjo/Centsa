@@ -13,7 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 		stage.setTitle("Centsa");
-		stage.setScene(new Scene(new Renderer(stage)));
+		stage.setScene(new Scene(new Renderer()));
 		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("icon.png")));
 		stage.show();
 	}

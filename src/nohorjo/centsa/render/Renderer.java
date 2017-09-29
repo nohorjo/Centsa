@@ -13,7 +13,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.server.APIRequestHandler;
 
@@ -27,10 +26,7 @@ public class Renderer extends Region {
 	private final WebView browser = new WebView();
 	private final WebEngine webEngine = browser.getEngine();
 
-	public Renderer(final Stage stage) {
-
-		
-		
+	public Renderer() {
 		String url = SystemProperties.get("server.root", String.class) + "core/ui.html?" + APIRequestHandler.UNIQUE_KEY;
 		log.info("UI available at {}", url);
 		
