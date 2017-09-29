@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Queries>
-	<Transaction>
+	<Transactions>
 		<CreateTable>
 		<![CDATA[
 		CREATE TABLE IF NOT EXISTS TRANSACTIONS
@@ -14,5 +14,26 @@
 			EXPENSE_ID INTEGER REFERENCES EXPENSES(ID) 
 		);
 		]]></CreateTable>
-	</Transaction>
+		<Insert>
+		<![CDATA[
+		REPLACE INTO TRANSACTIONS (ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID) VALUES (?,?,?,?,?,?,?);
+		SELECT LAST_INSERT_ROWID();
+		]]>
+		</Insert>
+		<GetAll>
+		<![CDATA[
+		SELECT ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID FROM TRANSACTIONS LIMIT ?, ? ORDER BY {orderby};
+		]]>
+		</GetAll>
+		<Get>
+		<![CDATA[
+		SELECT AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID FROM TRANSACTIONS WHERE ID = ?;
+		]]>
+		</Get>
+		<Delete>
+		<![CDATA[
+		DELETE FROM TRANSACTIONS WHERE ID = ?;
+		]]>
+		</Delete>
+	</Transactions>
 </Queries>
