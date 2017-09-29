@@ -73,6 +73,43 @@ var centsa = (function() {
 					error : error
 				});
 			}
+		},
+		transactions : {
+			get : function(id, success, error) {
+				ajax({
+					url : apiUrl.get() + "/transactions?id=" + id,
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			getAll : function(page, pageSize, order) {
+				ajax({
+					url : apiUrl.get() + "/transactions?page=" + page
+							+ "&pageSize=" + pageSize + "&order="
+							+ (order || ""),
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			remove : function(id) {
+				ajax({
+					url : apiUrl.get() + "/transactions?id=" + id,
+					method : "DELETE",
+					success : success,
+					error : error
+				});
+			},
+			insert : function(t) {
+				ajax({
+					url : apiUrl.get() + "/transactions",
+					method : "POST",
+					data : JSON.stringify(t),
+					success : success,
+					error : error
+				});
+			}
 		}
 	}
 })();
