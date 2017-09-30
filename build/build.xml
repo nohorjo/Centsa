@@ -33,6 +33,7 @@
 		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
 
 		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="build.lib.path" />
 
 		<!-- prepare eclipse classpath-->
 		<path id="jar-fileset">
