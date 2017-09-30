@@ -92,4 +92,5 @@ build/release/layout/*
 *.desktop
 *.lnk
 build/release/log/*
+.fuse*
 

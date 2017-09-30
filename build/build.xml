@@ -1,23 +1,26 @@
-<project name="Centsa - build" default="build" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="Centsa - build" default="build" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<property name="version.info" value="1" />
 	<property name="app.name" value="Centsa" />
 
+	<property name="build.dir" value="build" />
+	<property name="lib.dir" value="lib" />
+
+	<property name="build.lib.dir" value="${build.dir}/lib" />
+	<property name="release.dir" value="${build.dir}/release" />
 
 	<path id="build.lib.path">
-		<fileset dir="build/lib" includes="*.jar" />
+		<fileset dir="${build.lib.dir}" includes="*.jar" />
 	</path>
 
-	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
-
 	<target name="check-ivy">
-		<available file="build/lib/ivy.jar" property="ivy.present" />
+		<available file="${build.lib.dir}/ivy.jar" property="ivy.present" />
 	</target>
 
 	<target name="download-ivy" unless="ivy.present">
 		<property name="ivy.install.version" value="2.4.0" />
-		<mkdir dir="build/lib" />
-		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="build/lib/ivy.jar" usetimestamp="true" />
+		<mkdir dir="${build.lib.dir}" />
+		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${build.lib.dir}/ivy.jar" usetimestamp="true" />
 	</target>
 
 	<target name="install-ivy" depends="check-ivy,download-ivy">
@@ -25,17 +28,31 @@
 	</target>
 
 	<target name="resolve" depends="install-ivy">
-		<mkdir dir="lib" />
-		<ivy:retrieve pathid="lib.path.id" pattern="lib/[artifact].[ext]" conf="rt" />
+		<mkdir dir="${lib.dir}" />
+		<ivy:retrieve pathid="lib.path.id" pattern="${lib.dir}/[artifact].[ext]" conf="rt" />
+		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
+
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
+
+		<!-- prepare eclipse classpath-->
+		<path id="jar-fileset">
+			<path refid="lib.path.id" />
+			<path refid="build.lib.path" />
+		</path>
+		<pathconvert pathsep="&quot;/&gt;${line.separator}&#x9;&lt;classpathentry kind=&quot;lib&quot; path=&quot;" property="eclipse-jars" refid="jar-fileset" />
+		<property name="libs" value="&#x9;&lt;classpathentry kind=&quot;lib&quot; path=&quot;${eclipse-jars}&quot;/&gt;" />
+		<replaceregexp file=".classpath" match="&lt;classpathentry kind=&quot;lib&quot;[^&gt;]*&gt;" replace="" flags="g" />
+		<replaceregexp file=".classpath" match="(\r?\n)\s*\r?\n" flags="g" replace="\1" />
+		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
 
 	<target name="build" depends="resolve,clean,jar" />
 
 	<target name="clean">
-		<delete dir="build/release/lib/">
+		<delete dir="${release.dir}/lib/">
 			<include name="${app.name}*.jar" />
 		</delete>
-		<delete dir="build">
+		<delete dir="${build.dir}">
 			<exclude name="build.xml" />
 			<exclude name="release/**/**.*" />
 			<exclude name="lib/**.*" />
@@ -48,7 +65,7 @@
 
 	<target name="jar" depends="compile, testReport">
 		<buildnumber />
-		<jar destfile="build/release/lib/${app.name}.v${version.info}.build-${build.number}.jar">
+		<jar destfile="${release.dir}/lib/${app.name}.v${version.info}.build-${build.number}.jar">
 			<fileset dir="bin">
 				<exclude name="**/*TEST.class" />
 				<exclude name="**/*MOCK.class" />
@@ -64,7 +81,7 @@
 	<target name="testReport" depends="test" if="test.complete">
 		<jacoco:report xmlns:jacoco="antlib:org.jacoco.ant">
 			<executiondata>
-				<file file="build/jacoco.exec" />
+				<file file="${build.dir}/jacoco.exec" />
 			</executiondata>
 			<structure name="${app.name}">
 				<classfiles>
@@ -80,18 +97,18 @@
 					</fileset>
 				</sourcefiles>
 			</structure>
-			<html destdir="build/report" />
+			<html destdir="${build.dir}/report" />
 		</jacoco:report>
 	</target>
 
 	<target name="test">
-		<jacoco:coverage destfile="build/jacoco.exec" xmlns:jacoco="antlib:org.jacoco.ant">
+		<jacoco:coverage destfile="${build.dir}/jacoco.exec">
 			<junit dir="." fork="true" showoutput="true" printsummary="withOutAndErr" haltonerror="true" haltonfailure="true" failureproperty="test.failed">
 				<formatter type="plain" usefile="false" />
 				<classpath>
 					<pathelement location="bin" />
 					<pathelement location="res" />
-					<fileset dir="build/lib" />
+					<fileset dir="${build.lib.dir}" />
 				</classpath>
 				<batchtest>
 					<fileset dir="bin" includes="**/*TEST.class" />
@@ -104,10 +121,10 @@
 
 	<target name="release" depends="prepareRelease, build" description="Builds a release zip">
 		<replaceregexp match='org.slf4j.simpleLogger.defaultLogLevel=.*' replace='org.slf4j.simpleLogger.defaultLogLevel=info'>
-			<fileset dir="build/release" includes="simplelogger.properties" />
+			<fileset dir="${release.dir}" includes="simplelogger.properties" />
 		</replaceregexp>
-		<zip destfile="build/${app.name}.v${version.info}.zip">
-			<fileset dir="build/release" />
+		<zip destfile="${build.dir}/${app.name}.v${version.info}.zip">
+			<fileset dir="${release.dir}" />
 		</zip>
 		<script language="javascript">
 			<![CDATA[
@@ -115,23 +132,23 @@
 		    ]]>
 		</script>
 		<replaceregexp match='name="version.info" value="\d*' replace='name="version.info" value="${new.version}'>
-			<fileset dir="build" includes="build.xml" />
+			<fileset dir="${build.dir}" includes="build.xml" />
 		</replaceregexp>
 	</target>
 
 	<target name="prepareRelease">
 		<delete>
-			<fileset dir="build/release/lib">
+			<fileset dir="${release.dir}/lib">
 				<exclude name="${app.name}*" />
 			</fileset>
-			<fileset dir="build/release/layout/" />
+			<fileset dir="${release.dir}/layout/" />
 		</delete>
-		<copy todir="build/release/lib">
-			<fileset dir="lib">
+		<copy todir="${release.dir}/lib">
+			<fileset dir="${lib.dir}">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		<copy todir="build/release/layout/">
+		<copy todir="${release.dir}/layout/">
 			<fileset dir="ui">
 				<include name="**/*" />
 			</fileset>
