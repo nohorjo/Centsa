@@ -47,7 +47,7 @@
 		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
 
-	<target name="build" depends="resolve,clean,jar" />
+	<target name="build" depends="jar" />
 
 	<target name="clean">
 		<delete dir="${release.dir}/lib/">
@@ -75,7 +75,7 @@
 		</jar>
 	</target>
 
-	<target name="compile" depends="clean">
+	<target name="compile" depends="resolve,clean">
 		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
 	</target>
 
