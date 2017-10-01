@@ -25,9 +25,14 @@ public class APIRequestHandler {
 	private static final Logger log = LoggerFactory.getLogger(APIRequestHandler.class);
 
 	static {
-		log.info("Key set to {}", UNIQUE_KEY);
-		SERVLETS.put("settings", new SettingsRS());
-		SERVLETS.put("transaction", new TransactionsRS());
+		try {
+			log.info("Key set to {}", UNIQUE_KEY);
+			SERVLETS.put("settings", new SettingsRS());
+			SERVLETS.put("transaction", new TransactionsRS());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	public static void handle(HttpServletRequest request, HttpServletResponse response, String target)
