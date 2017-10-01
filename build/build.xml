@@ -42,7 +42,7 @@
 		</path>
 		<pathconvert pathsep="&quot;/&gt;${line.separator}&#x9;&lt;classpathentry kind=&quot;lib&quot; path=&quot;" property="eclipse-jars" refid="jar-fileset" />
 		<property name="libs" value="&#x9;&lt;classpathentry kind=&quot;lib&quot; path=&quot;${eclipse-jars}&quot;/&gt;" />
-		<replaceregexp file=".classpath" match="&lt;classpathentry kind=&quot;lib&quot;[^&gt;]*&gt;" replace="" flags="g" />
+		<replaceregexp file=".classpath" match="&lt;classpathentry kind=&quot;lib&quot; path=&quot;.*\.jar&quot;/&gt;" replace="" flags="g" />
 		<replaceregexp file=".classpath" match="(\r?\n)\s*\r?\n" flags="g" replace="\1" />
 		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
