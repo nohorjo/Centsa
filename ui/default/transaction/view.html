@@ -1,3 +1,35 @@
 <div data-ng-controller="transCtrl">
-	
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Date</th>
+				<th>Amount</th>
+				<th>Comment</th>
+				<th>Account</th>
+				<th>Type</th>
+				<th>Expense</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="button" value="+" data-ng-click="saveTrans()"></td>
+				<td><input type="text" data-ng-model="newTrans.date"></td>
+				<td><input type="number" data-ng-model="newTrans.amount"></td>
+				<td><input type="text" data-ng-model="newTrans.comment"></td>
+				<td><input type="number" data-ng-model="newTrans.accountId"></td>
+				<td><input type="number" data-ng-model="newTrans.typeId"></td>
+				<td><input type="number" data-ng-model="newTrans.expenseId"></td>
+			</tr>
+			<tr data-ng-repeat="t in transactions">
+				<td>{{t.id}}</td>
+				<td>{{t.date}}</td>
+				<td>{{t.amount}}</td>
+				<td>{{t.comment}}</td>
+				<td>{{t.accountId}}</td>
+				<td>{{t.typeId}}</td>
+				<td>{{t.expenseId}}</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

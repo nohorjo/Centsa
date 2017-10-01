@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import nohorjo.centsa.vo.Expense;
 import nohorjo.centsa.vo.VO;
@@ -35,40 +36,60 @@ public class ExpensesDAO extends AbstractDAO {
 
 	@Override
 	public List<Expense> getAll(int page, int pageSize, String order) throws SQLException {
-		List<Expense> es = new LinkedList<>();
+		Function<ResultSet, List<Expense>> processor = new Function<ResultSet, List<Expense>>() {
 
-		try (ResultSet rs = getAll(TABLE_NAME, COLUMNS, order, page, pageSize)) {
-			while (rs.next()) {
-				Expense e = new Expense();
-				e.setId(rs.getLong("ID"));
-				e.setName(rs.getString("NAME"));
-				e.setCost(rs.getDouble("COST"));
-				e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
-				e.setStarted(rs.getTimestamp("STARTED"));
-				e.setEnded(rs.getTimestamp("ENDED"));
-				e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-				es.add(e);
+			@Override
+			public List<Expense> apply(ResultSet rs) {
+				List<Expense> es = new LinkedList<>();
+				try {
+					while (rs.next()) {
+						Expense e = new Expense();
+						e.setId(rs.getLong("ID"));
+						e.setName(rs.getString("NAME"));
+						e.setCost(rs.getDouble("COST"));
+						e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
+						e.setStarted(rs.getTimestamp("STARTED"));
+						e.setEnded(rs.getTimestamp("ENDED"));
+						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+						es.add(e);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new Error(e);
+				}
+				return es;
 			}
-		}
-		return es;
+		};
+		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
 	}
 
 	@Override
 	public Expense get(long id) throws SQLException {
-		try (ResultSet rs = get(TABLE_NAME, COLUMNS, id)) {
-			if (rs.next()) {
-				Expense e = new Expense();
-				e.setId(rs.getLong("ID"));
-				e.setName(rs.getString("NAME"));
-				e.setCost(rs.getDouble("COST"));
-				e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
-				e.setStarted(rs.getTimestamp("STARTED"));
-				e.setEnded(rs.getTimestamp("ENDED"));
-				e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-				return e;
+		Function<ResultSet, Expense> processor = new Function<ResultSet, Expense>() {
+
+			@Override
+			public Expense apply(ResultSet rs) {
+				try {
+					if (rs.next()) {
+						Expense e = new Expense();
+						e.setId(rs.getLong("ID"));
+						e.setName(rs.getString("NAME"));
+						e.setCost(rs.getDouble("COST"));
+						e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
+						e.setStarted(rs.getTimestamp("STARTED"));
+						e.setEnded(rs.getTimestamp("ENDED"));
+						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+						return e;
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new Error(e);
+				}
+				return null;
 			}
-		}
-		return null;
+		};
+
+		return get(TABLE_NAME, COLUMNS, id, processor);
 	}
 
 	@Override

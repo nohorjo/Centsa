@@ -75,25 +75,35 @@ var centsa = (function() {
 			}
 		},
 		transactions : {
-			get : function(id, success, error) {
+			get : function(id, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/transactions?id=" + id,
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			getAll : function(page, pageSize, order) {
+			getAll : function(page, pageSize, order, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/transactions?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			remove : function(id) {
+			remove : function(id, success, error) {
 				ajax({
 					url : apiUrl.get() + "/transactions?id=" + id,
 					method : "DELETE",
@@ -101,36 +111,51 @@ var centsa = (function() {
 					error : error
 				});
 			},
-			insert : function(t) {
+			insert : function(t, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/transactions",
 					method : "POST",
+					async : false,
 					data : JSON.stringify(t),
-					success : success,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			}
 		},
 		accounts : {
-			get : function(id, success, error) {
+			get : function(id, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/accounts?id=" + id,
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			getAll : function(page, pageSize, order) {
+			getAll : function(page, pageSize, order, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/accounts?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			remove : function(id) {
+			remove : function(id, success, error) {
 				ajax({
 					url : apiUrl.get() + "/accounts?id=" + id,
 					method : "DELETE",
@@ -138,35 +163,50 @@ var centsa = (function() {
 					error : error
 				});
 			},
-			insert : function(t) {
+			insert : function(a, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/accounts",
 					method : "POST",
-					data : JSON.stringify(t),
-					success : success,
+					async : false,
+					data : JSON.stringify(a),
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			}
 		},
 		types : {
-			get : function(id, success, error) {
+			get : function(id, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/types?id=" + id,
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			getAll : function(page, pageSize, order) {
+			getAll : function(page, pageSize, order, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/types?page=" + page + "&pageSize="
 							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			remove : function(id) {
+			remove : function(id, success, error) {
 				ajax({
 					url : apiUrl.get() + "/types?id=" + id,
 					method : "DELETE",
@@ -174,36 +214,51 @@ var centsa = (function() {
 					error : error
 				});
 			},
-			insert : function(t) {
+			insert : function(t, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/types",
 					method : "POST",
+					async : false,
 					data : JSON.stringify(t),
-					success : success,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			}
 		},
 		expenses : {
-			get : function(id, success, error) {
+			get : function(id, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/expenses?id=" + id,
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			getAll : function(page, pageSize, order) {
+			getAll : function(page, pageSize, order, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/expenses?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
-					success : success,
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			},
-			remove : function(id) {
+			remove : function(id, success, error) {
 				ajax({
 					url : apiUrl.get() + "/expenses?id=" + id,
 					method : "DELETE",
@@ -211,14 +266,19 @@ var centsa = (function() {
 					error : error
 				});
 			},
-			insert : function(t) {
+			insert : function(e, error) {
+				var rtn = null;
 				ajax({
 					url : apiUrl.get() + "/expenses",
 					method : "POST",
-					data : JSON.stringify(t),
-					success : success,
+					async : false,
+					data : JSON.stringify(e),
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
 					error : error
 				});
+				return rtn;
 			}
 		}
 	}

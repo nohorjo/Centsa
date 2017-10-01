@@ -4,12 +4,11 @@
 		<Insert>
 		<![CDATA[
 		REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
-		SELECT LAST_INSERT_ROWID();
 		]]>
 		</Insert>
 		<GetAll>
 		<![CDATA[
-		SELECT {columns} FROM {tablename} LIMIT ?, ? ORDER BY {orderby};
+		SELECT {columns} FROM {tablename} ORDER BY {orderby} LIMIT ?, ?;
 		]]>
 		</GetAll>
 		<Get>
@@ -42,41 +41,41 @@
 	<Accounts>
 		<CreateTable>
 		<![CDATA[
-		CREATE TABLE ACCOUNTS
+		CREATE TABLE IF NOT EXISTS ACCOUNTS
 	    (
 	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR NOT NULL
+	        NAME VARCHAR UNIQUE NOT NULL
 	    );
-	    INSERT INTO ACCOUNTS (NAME) VALUES ('Default');
+	    REPLACE INTO ACCOUNTS (NAME) VALUES ('Default');
 		]]>
 		</CreateTable>
 	</Accounts>
 	<Types>
 		<CreateTable>
 		<![CDATA[
-		CREATE TABLE TYPES 
+		CREATE TABLE IF NOT EXISTS TYPES 
 	    (
 	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR NOT NULL
+	        NAME VARCHAR UNIQUE NOT NULL
 	    );
-	    INSERT INTO TYPES (NAME) VALUES ('Other');
+	    REPLACE INTO TYPES (NAME) VALUES ('Other');
 		]]>
 		</CreateTable>
 	</Types>
 	<Expenses>
 		<CreateTable>
 		<![CDATA[
-		CREATE TABLE EXPENSES
+		CREATE TABLE IF NOT EXISTS EXPENSES
 	    (
 	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR NOT NULL,
+	        NAME VARCHAR UNIQUE NOT NULL,
 	        COST DECIMAL(10,2) NOT NULL,
 	        FREQUENCY_DAYS INT NOT NULL,
 	        STARTED TIMESTAMP NOT NULL DEFAULT (STRFTIME('%s', 'NOW')),
 	        ENDED TIMESTAMP,
 	        AUTOMATIC TINYINT NOT NULL DEFAULT 0
 	    );
-	    INSERT INTO EXPENSES (NAME, COST, FREQUENCY_DAYS) VALUES ('N/A', 0, 1);
+	    REPLACE INTO EXPENSES (NAME, COST, FREQUENCY_DAYS) VALUES ('N/A', 0, 1);
 		]]>
 		</CreateTable>
 	</Expenses>

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import nohorjo.centsa.vo.Transaction;
 import nohorjo.centsa.vo.VO;
@@ -36,40 +37,60 @@ public class TransactionsDAO extends AbstractDAO {
 
 	@Override
 	public List<Transaction> getAll(int page, int pageSize, String order) throws SQLException {
-		List<Transaction> ts = new LinkedList<>();
+		Function<ResultSet, List<Transaction>> processor = new Function<ResultSet, List<Transaction>>() {
 
-		try (ResultSet rs = getAll(TABLE_NAME, COLUMNS, order, page, pageSize)) {
-			while (rs.next()) {
-				Transaction t = new Transaction();
-				t.setId(rs.getLong("ID"));
-				t.setAmount(rs.getDouble("AMOUNT"));
-				t.setComment(rs.getString("COMMENT"));
-				t.setAccountId(rs.getLong("ACCOUNT_ID"));
-				t.setTypeId(rs.getLong("TYPE_ID"));
-				t.setDate(rs.getTimestamp("DATE"));
-				t.setExpenseId(rs.getLong("EXPENSE_ID"));
-				ts.add(t);
+			@Override
+			public List<Transaction> apply(ResultSet rs) {
+				List<Transaction> ts = new LinkedList<>();
+				try {
+					while (rs.next()) {
+						Transaction t = new Transaction();
+						t.setId(rs.getLong("ID"));
+						t.setAmount(rs.getDouble("AMOUNT"));
+						t.setComment(rs.getString("COMMENT"));
+						t.setAccountId(rs.getLong("ACCOUNT_ID"));
+						t.setTypeId(rs.getLong("TYPE_ID"));
+						t.setDate(rs.getTimestamp("DATE"));
+						t.setExpenseId(rs.getLong("EXPENSE_ID"));
+						ts.add(t);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new Error(e);
+				}
+				return ts;
 			}
-		}
-		return ts;
+		};
+		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
 	}
 
 	@Override
 	public Transaction get(long id) throws SQLException {
-		try (ResultSet rs = get(TABLE_NAME, COLUMNS, id)) {
-			if (rs.next()) {
-				Transaction t = new Transaction();
-				t.setId(id);
-				t.setAmount(rs.getDouble("AMOUNT"));
-				t.setComment(rs.getString("COMMENT"));
-				t.setAccountId(rs.getLong("ACCOUNT_ID"));
-				t.setTypeId(rs.getLong("TYPE_ID"));
-				t.setDate(rs.getTimestamp("DATE"));
-				t.setExpenseId(rs.getLong("EXPENSE_ID"));
-				return t;
+		Function<ResultSet, Transaction> processor = new Function<ResultSet, Transaction>() {
+
+			@Override
+			public Transaction apply(ResultSet rs) {
+				try {
+					if (rs.next()) {
+						Transaction t = new Transaction();
+						t.setId(id);
+						t.setAmount(rs.getDouble("AMOUNT"));
+						t.setComment(rs.getString("COMMENT"));
+						t.setAccountId(rs.getLong("ACCOUNT_ID"));
+						t.setTypeId(rs.getLong("TYPE_ID"));
+						t.setDate(rs.getTimestamp("DATE"));
+						t.setExpenseId(rs.getLong("EXPENSE_ID"));
+						return t;
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new Error(e);
+				}
+				return null;
 			}
-		}
-		return null;
+		};
+
+		return get(TABLE_NAME, COLUMNS, id, processor);
 	}
 
 	@Override

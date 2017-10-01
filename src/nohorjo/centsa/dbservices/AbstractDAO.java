@@ -4,14 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
+import java.util.function.Function;
 
 public abstract class AbstractDAO implements DAO {
 
 	protected void createTable(String query) throws SQLException {
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(SQLUtils.getQuery(query))) {
-			ps.execute();
+		try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
+			String sql[] = SQLUtils.getQuery(query).split(";");
+			for (String part : sql) {
+				if (!part.equals(""))
+					ps.addBatch(part);
+			}
+			ps.executeBatch();
 		}
 	}
 
@@ -25,22 +31,23 @@ public abstract class AbstractDAO implements DAO {
 				.replace("{columns}", String.join(",", columns))
 				.replace("{placeholders}", String.join(",", Collections.nCopies(columns.length, "?")));
 
-		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-			for (int i = 1; i <= values.length; i++) {
-				ps.setObject(i, values[i]);
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			for (int i = 0; i < columns.length; i++) {
+				ps.setObject(i + 1, values[i]);
 			}
-			try (ResultSet rs = ps.executeQuery()) {
-				rs.next();
-				return rs.getLong(1);
+			ps.executeUpdate();
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				return rs.next() ? rs.getLong(1) : -1;
 			}
 		}
 	}
 
-	protected ResultSet getAll(String tableName, String[] columnsWithoutID, String orderBy, int page, int pageSize)
-			throws SQLException {
+	protected <R> R getAll(String tableName, String[] columnsWithoutID, String orderBy, int page, int pageSize,
+			Function<ResultSet, R> processor) throws SQLException {
 		String[] columns = addIDColumn(columnsWithoutID);
 
-		orderBy = orderBy != null ? orderBy : "1 ASC";
+		orderBy = orderBy != null && !orderBy.equals("") ? orderBy : "1 ASC";
 		page = (page > 0) ? page : 1;
 		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
 
@@ -50,16 +57,21 @@ public abstract class AbstractDAO implements DAO {
 		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.setInt(1, skip);
 			ps.setInt(2, pageSize);
-			return ps.executeQuery();
+			try (ResultSet rs = ps.executeQuery()) {
+				return processor.apply(rs);
+			}
 		}
 	}
 
-	protected ResultSet get(String tableName, String[] columns, long id) throws SQLException {
+	protected <R> R get(String tableName, String[] columns, long id, Function<ResultSet, R> processor)
+			throws SQLException {
 		String sql = SQLUtils.getQuery("Templates.Get").replace("{tablename}", tableName).replace("{columns}",
 				String.join(",", columns));
 		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.setLong(1, id);
-			return ps.executeQuery();
+			try (ResultSet rs = ps.executeQuery()) {
+				return processor.apply(rs);
+			}
 		}
 	}
 
