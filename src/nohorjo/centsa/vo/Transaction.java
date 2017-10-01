@@ -1,6 +1,6 @@
 package nohorjo.centsa.vo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Transaction implements VO {
 	private Long id;
@@ -8,7 +8,7 @@ public class Transaction implements VO {
 	private String comment;
 	private long accountId;
 	private long typeId;
-	private Date date;
+	private Timestamp date;
 	private long expenseId;
 
 	public Long getId() {
@@ -51,11 +51,11 @@ public class Transaction implements VO {
 		this.typeId = typeId;
 	}
 
-	public Date getDate() {
+	public Timestamp getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Timestamp date) {
 		this.date = date;
 	}
 
