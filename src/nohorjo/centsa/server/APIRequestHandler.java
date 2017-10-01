@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nohorjo.centsa.rest.AccountsRS;
+import nohorjo.centsa.rest.ExpensesRS;
 import nohorjo.centsa.rest.SettingsRS;
 import nohorjo.centsa.rest.TransactionsRS;
+import nohorjo.centsa.rest.TypesRS;
 
 public class APIRequestHandler {
 
@@ -28,7 +31,10 @@ public class APIRequestHandler {
 		try {
 			log.info("Key set to {}", UNIQUE_KEY);
 			SERVLETS.put("settings", new SettingsRS());
-			SERVLETS.put("transaction", new TransactionsRS());
+			SERVLETS.put("transactions", new TransactionsRS());
+			SERVLETS.put("accounts", new AccountsRS());
+			SERVLETS.put("types", new TypesRS());
+			SERVLETS.put("expenses", new ExpensesRS());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

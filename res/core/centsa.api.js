@@ -110,6 +110,116 @@ var centsa = (function() {
 					error : error
 				});
 			}
+		},
+		accounts : {
+			get : function(id, success, error) {
+				ajax({
+					url : apiUrl.get() + "/accounts?id=" + id,
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			getAll : function(page, pageSize, order) {
+				ajax({
+					url : apiUrl.get() + "/accounts?page=" + page
+							+ "&pageSize=" + pageSize + "&order="
+							+ (order || ""),
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			remove : function(id) {
+				ajax({
+					url : apiUrl.get() + "/accounts?id=" + id,
+					method : "DELETE",
+					success : success,
+					error : error
+				});
+			},
+			insert : function(t) {
+				ajax({
+					url : apiUrl.get() + "/accounts",
+					method : "POST",
+					data : JSON.stringify(t),
+					success : success,
+					error : error
+				});
+			}
+		},
+		types : {
+			get : function(id, success, error) {
+				ajax({
+					url : apiUrl.get() + "/types?id=" + id,
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			getAll : function(page, pageSize, order) {
+				ajax({
+					url : apiUrl.get() + "/types?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			remove : function(id) {
+				ajax({
+					url : apiUrl.get() + "/types?id=" + id,
+					method : "DELETE",
+					success : success,
+					error : error
+				});
+			},
+			insert : function(t) {
+				ajax({
+					url : apiUrl.get() + "/types",
+					method : "POST",
+					data : JSON.stringify(t),
+					success : success,
+					error : error
+				});
+			}
+		},
+		expenses : {
+			get : function(id, success, error) {
+				ajax({
+					url : apiUrl.get() + "/expenses?id=" + id,
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			getAll : function(page, pageSize, order) {
+				ajax({
+					url : apiUrl.get() + "/expenses?page=" + page
+							+ "&pageSize=" + pageSize + "&order="
+							+ (order || ""),
+					method : "GET",
+					success : success,
+					error : error
+				});
+			},
+			remove : function(id) {
+				ajax({
+					url : apiUrl.get() + "/expenses?id=" + id,
+					method : "DELETE",
+					success : success,
+					error : error
+				});
+			},
+			insert : function(t) {
+				ajax({
+					url : apiUrl.get() + "/expenses",
+					method : "POST",
+					data : JSON.stringify(t),
+					success : success,
+					error : error
+				});
+			}
 		}
 	}
 })();

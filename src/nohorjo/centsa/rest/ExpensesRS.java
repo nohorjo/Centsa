@@ -12,17 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import nohorjo.centsa.dbservices.TransactionsDAO;
-import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.dbservices.ExpensesDAO;
+import nohorjo.centsa.vo.Expense;
 
-public class TransactionsRS extends HttpServlet {
+public class ExpensesRS extends HttpServlet {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3321157826434071421L;
-
-	TransactionsDAO dao = new TransactionsDAO();
+	private static final long serialVersionUID = 4226490664862421970L;
+	ExpensesDAO dao = new ExpensesDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,9 +29,9 @@ public class TransactionsRS extends HttpServlet {
 		int code = 500;
 		if (id != null) {
 			try {
-				Transaction t = dao.get(Long.parseLong(id));
+				Expense e = dao.get(Long.parseLong(id));
 				try (PrintWriter pw = resp.getWriter()) {
-					new ObjectMapper().writeValue(pw, t);
+					new ObjectMapper().writeValue(pw, e);
 				}
 				code = 200;
 			} catch (NumberFormatException e) {
@@ -45,9 +44,9 @@ public class TransactionsRS extends HttpServlet {
 			String pageSize = req.getParameter("pageSize");
 			String order = req.getParameter("order");
 			try {
-				List<Transaction> ts = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
+				List<Expense> as = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
 				try (PrintWriter pw = resp.getWriter()) {
-					new ObjectMapper().writeValue(pw, ts);
+					new ObjectMapper().writeValue(pw, as);
 				}
 				code = 200;
 			} catch (NumberFormatException e) {
@@ -76,18 +75,17 @@ public class TransactionsRS extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Transaction t = new ObjectMapper().readValue(req.getReader(), Transaction.class);
+		Expense e = new ObjectMapper().readValue(req.getReader(), Expense.class);
 		int code = 500;
 		try {
-			long id = dao.insert(t);
+			long id = dao.insert(e);
 			try (PrintWriter pw = resp.getWriter()) {
 				pw.write(Long.toString(id));
 			}
-			code = 204;
-		} catch (SQLException e) {
-			e.printStackTrace();
+			code = 200;
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 		resp.setStatus(code);
 	}
-
 }

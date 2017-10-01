@@ -8,13 +8,13 @@ import java.util.List;
 import nohorjo.centsa.vo.Expense;
 import nohorjo.centsa.vo.VO;
 
-public class ExpenseDAO extends AbstractDAO {
+public class ExpensesDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY_DAYS", "STARTED", "ENDED", "AUTOMATIC" };
 	private static final String TABLE_NAME = "EXPENSES";
 
 	static {
 		try {
-			new ExpenseDAO().createTable();
+			new ExpensesDAO().createTable();
 		} catch (SQLException e) {
 			throw new Error(e);
 		}
@@ -54,7 +54,7 @@ public class ExpenseDAO extends AbstractDAO {
 	}
 
 	@Override
-	public VO get(long id) throws SQLException {
+	public Expense get(long id) throws SQLException {
 		try (ResultSet rs = get(TABLE_NAME, COLUMNS, id)) {
 			if (rs.next()) {
 				Expense e = new Expense();

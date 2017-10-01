@@ -12,17 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import nohorjo.centsa.dbservices.TransactionsDAO;
-import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.dbservices.TypesDAO;
+import nohorjo.centsa.vo.Type;
 
-public class TransactionsRS extends HttpServlet {
+public class TypesRS extends HttpServlet {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3321157826434071421L;
-
-	TransactionsDAO dao = new TransactionsDAO();
+	private static final long serialVersionUID = 4940380628125775207L;
+	
+	TypesDAO dao = new TypesDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,7 +30,7 @@ public class TransactionsRS extends HttpServlet {
 		int code = 500;
 		if (id != null) {
 			try {
-				Transaction t = dao.get(Long.parseLong(id));
+				Type t = dao.get(Long.parseLong(id));
 				try (PrintWriter pw = resp.getWriter()) {
 					new ObjectMapper().writeValue(pw, t);
 				}
@@ -45,9 +45,9 @@ public class TransactionsRS extends HttpServlet {
 			String pageSize = req.getParameter("pageSize");
 			String order = req.getParameter("order");
 			try {
-				List<Transaction> ts = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
+				List<Type> as = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
 				try (PrintWriter pw = resp.getWriter()) {
-					new ObjectMapper().writeValue(pw, ts);
+					new ObjectMapper().writeValue(pw, as);
 				}
 				code = 200;
 			} catch (NumberFormatException e) {
@@ -76,18 +76,17 @@ public class TransactionsRS extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Transaction t = new ObjectMapper().readValue(req.getReader(), Transaction.class);
+		Type t = new ObjectMapper().readValue(req.getReader(), Type.class);
 		int code = 500;
 		try {
 			long id = dao.insert(t);
 			try (PrintWriter pw = resp.getWriter()) {
 				pw.write(Long.toString(id));
 			}
-			code = 204;
+			code = 200;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		resp.setStatus(code);
 	}
-
 }
