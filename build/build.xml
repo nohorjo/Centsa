@@ -124,9 +124,15 @@
 		<replaceregexp match='org.slf4j.simpleLogger.defaultLogLevel=.*' replace='org.slf4j.simpleLogger.defaultLogLevel=info'>
 			<fileset dir="${release.dir}" includes="simplelogger.properties" />
 		</replaceregexp>
+		<move file="${release.dir}" tofile="${build.dir}/${app.name}" />
 		<zip destfile="${build.dir}/${app.name}.v${version.info}.zip">
-			<fileset dir="${release.dir}" />
+			<zipfileset dir="${build.dir}">
+				<include name="${app.name}/**/**.*" />
+				<exclude name="${app.name}/log/*" />
+				<exclude name="${app.name}/data.db" />
+			</zipfileset>
 		</zip>
+		<move tofile="${release.dir}" file="${build.dir}/${app.name}" />
 		<script language="javascript">
 			<![CDATA[
 		 	project.setProperty("new.version", parseInt(project.getProperty("version.info"))+1);
