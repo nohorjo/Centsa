@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Queries>
+	<Templates>
+		<Insert>
+		<![CDATA[
+		REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
+		SELECT LAST_INSERT_ROWID();
+		]]>
+		</Insert>
+		<GetAll>
+		<![CDATA[
+		SELECT {columns} FROM {tablename} LIMIT ?, ? ORDER BY {orderby};
+		]]>
+		</GetAll>
+		<Get>
+		<![CDATA[
+		SELECT {columns} FROM {tablename} WHERE ID = ?;
+		]]>
+		</Get>
+		<Delete>
+		<![CDATA[
+		DELETE FROM {tablename} WHERE ID = ?;
+		]]>
+		</Delete>
+	</Templates>
 	<Transactions>
 		<CreateTable>
 		<![CDATA[
@@ -13,27 +36,48 @@
 			DATE TIMESTAMP NOT NULL DEFAULT (STRFTIME('%s', 'NOW')), 
 			EXPENSE_ID INTEGER REFERENCES EXPENSES(ID) 
 		);
-		]]></CreateTable>
-		<Insert>
-		<![CDATA[
-		REPLACE INTO TRANSACTIONS (ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID) VALUES (?,?,?,?,?,?,?);
-		SELECT LAST_INSERT_ROWID();
 		]]>
-		</Insert>
-		<GetAll>
-		<![CDATA[
-		SELECT ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID FROM TRANSACTIONS LIMIT ?, ? ORDER BY {orderby};
-		]]>
-		</GetAll>
-		<Get>
-		<![CDATA[
-		SELECT AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, DATE, EXPENSE_ID FROM TRANSACTIONS WHERE ID = ?;
-		]]>
-		</Get>
-		<Delete>
-		<![CDATA[
-		DELETE FROM TRANSACTIONS WHERE ID = ?;
-		]]>
-		</Delete>
+		</CreateTable>
 	</Transactions>
+	<Accounts>
+		<CreateTable>
+		<![CDATA[
+		CREATE TABLE ACCOUNTS
+	    (
+	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	        NAME VARCHAR NOT NULL
+	    );
+	    INSERT INTO ACCOUNTS (NAME) VALUES ('Default');
+		]]>
+		</CreateTable>
+	</Accounts>
+	<Types>
+		<CreateTable>
+		<![CDATA[
+		CREATE TABLE TYPES 
+	    (
+	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	        NAME VARCHAR NOT NULL
+	    );
+	    INSERT INTO TYPES (NAME) VALUES ('Other');
+		]]>
+		</CreateTable>
+	</Types>
+	<Expenses>
+		<CreateTable>
+		<![CDATA[
+		CREATE TABLE EXPENSES
+	    (
+	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	        NAME VARCHAR NOT NULL,
+	        COST DECIMAL(10,2) NOT NULL,
+	        FREQUENCY_DAYS INT NOT NULL,
+	        STARTED TIMESTAMP NOT NULL DEFAULT (STRFTIME('%s', 'NOW')),
+	        ENDED TIMESTAMP,
+	        AUTOMATIC TINYINT NOT NULL DEFAULT 0
+	    );
+	    INSERT INTO EXPENSES (NAME, COST, FREQUENCY_DAYS) VALUES ('N/A', 0, 1);
+		]]>
+		</CreateTable>
+	</Expenses>
 </Queries>

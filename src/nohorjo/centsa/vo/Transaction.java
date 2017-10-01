@@ -3,7 +3,7 @@ package nohorjo.centsa.vo;
 import java.sql.Date;
 
 public class Transaction implements VO {
-	private long id;
+	private Long id;
 	private double amount;
 	private String comment;
 	private long accountId;
@@ -11,11 +11,11 @@ public class Transaction implements VO {
 	private Date date;
 	private long expenseId;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
