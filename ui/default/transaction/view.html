@@ -14,21 +14,28 @@
 		<tbody>
 			<tr>
 				<td><input type="button" value="+" data-ng-click="saveTrans()"></td>
-				<td><input type="text" pattern="\d{2,4}/\d{1,2}/\d{1,2}" data-ng-model="newTrans.date"></td>
+				<td><input type="text" pattern="\d{2,4}/\d{1,2}/\d{1,2}"
+					data-ng-model="newTrans.date"></td>
 				<td><input type="number" data-ng-model="newTrans.amount"></td>
 				<td><input type="text" data-ng-model="newTrans.comment"></td>
-				<td><input type="number" data-ng-model="newTrans.accountId"></td>
-				<td><input type="number" data-ng-model="newTrans.typeId"></td>
-				<td><input type="number" data-ng-model="newTrans.expenseId"></td>
+				<td><select data-ng-model="newTrans.accountId">
+						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+				</select></td>
+				<td><select data-ng-model="newTrans.typeId">
+						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+				</select></td>
+				<td><select data-ng-model="newTrans.expenseId">
+						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+				</select></td>
 			</tr>
 			<tr data-ng-repeat="t in transactions">
-				<td>{{t.id}}</td>
-				<td>{{formatDate(t.date)}}</td>
-				<td>{{t.amount}}</td>
-				<td>{{t.comment}}</td>
-				<td>{{t.accountId}}</td>
-				<td>{{t.typeId}}</td>
-				<td>{{t.expenseId}}</td>
+				<td>{{ t.id }}</td>
+				<td>{{ formatDate(t.date) }}</td>
+				<td>{{ t.amount }}</td>
+				<td>{{ t.comment }}</td>
+				<td>{{ getFromArray(accounts, t.accountId).name }}</td>
+				<td>{{ getFromArray(types, t.typeId).name }}</td>
+				<td>{{ getFromArray(expenses, t.expenseId).name }}</td>
 			</tr>
 		</tbody>
 	</table>

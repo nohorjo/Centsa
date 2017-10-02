@@ -8,14 +8,14 @@ app.controller("transCtrl", function($scope) {
 		date = new Date(date);
 		return (date.getYear() + 1900) + "/" + (date.getMonth() + 1) + "/"
 				+ date.getDate();
-	}
+	};
 
 	$scope.newTrans = {
 		amount : 0.0,
 		comment : "",
-		accountId : 1,
-		typeId : 1,
-		expenseId : 1,
+		accountId : "1",
+		typeId : "1",
+		expenseId : "1",
 		date : $scope.formatDate(new Date().getTime())
 	};
 
@@ -26,6 +26,12 @@ app.controller("transCtrl", function($scope) {
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
 		$scope.transactions.unshift($scope.newTrans);
 		$scope.newTrans = Object.assign({}, newTrans);
-	}
+	};
+
+	$scope.getFromArray = function(arr, id) {
+		return arr.filter(function(item) {
+			return item.id == id;
+		})[0];
+	};
 
 });

@@ -46,7 +46,7 @@
 	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
 	        NAME VARCHAR UNIQUE NOT NULL
 	    );
-	    REPLACE INTO ACCOUNTS (NAME) VALUES ('Default');
+	    REPLACE INTO ACCOUNTS (ID, NAME) VALUES (1, 'Default');
 		]]>
 		</CreateTable>
 	</Accounts>
@@ -58,7 +58,7 @@
 	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
 	        NAME VARCHAR UNIQUE NOT NULL
 	    );
-	    REPLACE INTO TYPES (NAME) VALUES ('Other');
+	    REPLACE INTO TYPES (ID, NAME) VALUES (1, 'Other');
 		]]>
 		</CreateTable>
 	</Types>
@@ -75,7 +75,7 @@
 	        ENDED TIMESTAMP,
 	        AUTOMATIC TINYINT NOT NULL DEFAULT 0
 	    );
-	    REPLACE INTO EXPENSES (NAME, COST, FREQUENCY_DAYS) VALUES ('N/A', 0, 1);
+	    REPLACE INTO EXPENSES (ID, NAME, COST, FREQUENCY_DAYS) VALUES (1, 'N/A', 0, 1);
 		]]>
 		</CreateTable>
 	</Expenses>
