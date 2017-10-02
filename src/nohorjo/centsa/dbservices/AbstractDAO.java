@@ -47,7 +47,7 @@ public abstract class AbstractDAO implements DAO {
 			Function<ResultSet, R> processor) throws SQLException {
 		String[] columns = addIDColumn(columnsWithoutID);
 
-		orderBy = orderBy != null && !orderBy.equals("") ? orderBy : "1 ASC";
+		orderBy = (orderBy != null && orderBy.toLowerCase().matches("^[a-z]* (asc|desc)$")) ? orderBy : "1 ASC";
 		page = (page > 0) ? page : 1;
 		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
 

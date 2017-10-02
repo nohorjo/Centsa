@@ -14,7 +14,7 @@
 		<tbody>
 			<tr>
 				<td><input type="button" value="+" data-ng-click="saveTrans()"></td>
-				<td><input type="text" data-ng-model="newTrans.date"></td>
+				<td><input type="text" pattern="\d{2,4}/\d{1,2}/\d{1,2}" data-ng-model="newTrans.date"></td>
 				<td><input type="number" data-ng-model="newTrans.amount"></td>
 				<td><input type="text" data-ng-model="newTrans.comment"></td>
 				<td><input type="number" data-ng-model="newTrans.accountId"></td>
@@ -23,7 +23,7 @@
 			</tr>
 			<tr data-ng-repeat="t in transactions">
 				<td>{{t.id}}</td>
-				<td>{{t.date}}</td>
+				<td>{{formatDate(t.date)}}</td>
 				<td>{{t.amount}}</td>
 				<td>{{t.comment}}</td>
 				<td>{{t.accountId}}</td>
