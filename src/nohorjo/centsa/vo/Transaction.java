@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class Transaction implements VO {
 	private Long id;
-	private double amount;
+	private int amount;
 	private String comment;
 	private long accountId;
 	private long typeId;
@@ -19,11 +19,11 @@ public class Transaction implements VO {
 		this.id = id;
 	}
 
-	public double getAmount() {
+	public int getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 

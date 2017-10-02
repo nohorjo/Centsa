@@ -46,7 +46,7 @@ public class TransactionsDAO extends AbstractDAO {
 					while (rs.next()) {
 						Transaction t = new Transaction();
 						t.setId(rs.getLong("ID"));
-						t.setAmount(rs.getDouble("AMOUNT"));
+						t.setAmount(rs.getInt("AMOUNT"));
 						t.setComment(rs.getString("COMMENT"));
 						t.setAccountId(rs.getLong("ACCOUNT_ID"));
 						t.setTypeId(rs.getLong("TYPE_ID"));
@@ -74,7 +74,7 @@ public class TransactionsDAO extends AbstractDAO {
 					if (rs.next()) {
 						Transaction t = new Transaction();
 						t.setId(id);
-						t.setAmount(rs.getDouble("AMOUNT"));
+						t.setAmount(rs.getInt("AMOUNT"));
 						t.setComment(rs.getString("COMMENT"));
 						t.setAccountId(rs.getLong("ACCOUNT_ID"));
 						t.setTypeId(rs.getLong("TYPE_ID"));
