@@ -13,9 +13,9 @@ app.controller("transCtrl", function($scope) {
 	$scope.newTrans = {
 		amount : 0.0,
 		comment : "",
-		accountId : "1",
-		typeId : "1",
-		expenseId : "1",
+		account_id : "1",
+		type_id : "1",
+		expense_id : "1",
 		date : $scope.formatDate(new Date().getTime())
 	};
 

@@ -6,10 +6,10 @@ public class Transaction implements VO {
 	private Long id;
 	private int amount;
 	private String comment;
-	private long accountId;
-	private long typeId;
+	private long account_id;
+	private long type_id;
 	private Timestamp date;
-	private long expenseId;
+	private long expense_id;
 
 	public Long getId() {
 		return id;
@@ -35,22 +35,6 @@ public class Transaction implements VO {
 		this.comment = comment;
 	}
 
-	public long getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(long accountId) {
-		this.accountId = accountId;
-	}
-
-	public long getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(long typeId) {
-		this.typeId = typeId;
-	}
-
 	public Timestamp getDate() {
 		return date;
 	}
@@ -59,11 +43,28 @@ public class Transaction implements VO {
 		this.date = date;
 	}
 
-	public long getExpenseId() {
-		return expenseId;
+	public long getAccount_id() {
+		return account_id;
 	}
 
-	public void setExpenseId(long expenseId) {
-		this.expenseId = expenseId;
+	public void setAccount_id(long account_id) {
+		this.account_id = account_id;
 	}
+
+	public long getType_id() {
+		return type_id;
+	}
+
+	public void setType_id(long type_id) {
+		this.type_id = type_id;
+	}
+
+	public long getExpense_id() {
+		return expense_id;
+	}
+
+	public void setExpense_id(long expense_id) {
+		this.expense_id = expense_id;
+	}
+
 }

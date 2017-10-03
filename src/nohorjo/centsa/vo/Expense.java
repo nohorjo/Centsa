@@ -6,7 +6,7 @@ public class Expense implements VO {
 	private Long id;
 	private String name;
 	private double cost;
-	private int frequencyDays;
+	private int frequency_days;
 	private Timestamp started;
 	private Timestamp ended;
 	private boolean automatic;
@@ -35,12 +35,12 @@ public class Expense implements VO {
 		this.cost = cost;
 	}
 
-	public int getFrequencyDays() {
-		return frequencyDays;
+	public int getFrequency_days() {
+		return frequency_days;
 	}
 
-	public void setFrequencyDays(int frequencyDays) {
-		this.frequencyDays = frequencyDays;
+	public void setFrequency_days(int frequency_days) {
+		this.frequency_days = frequency_days;
 	}
 
 	public Timestamp getStarted() {

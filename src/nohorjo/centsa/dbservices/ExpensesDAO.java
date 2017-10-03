@@ -30,7 +30,7 @@ public class ExpensesDAO extends AbstractDAO {
 	public long insert(VO _vo) throws SQLException {
 		Expense e = (Expense) _vo;
 
-		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequencyDays(),
+		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequency_days(),
 				e.getStarted(), e.getEnded(), e.isAutomatic() ? 1 : 0 });
 	}
 
@@ -47,7 +47,7 @@ public class ExpensesDAO extends AbstractDAO {
 						e.setId(rs.getLong("ID"));
 						e.setName(rs.getString("NAME"));
 						e.setCost(rs.getDouble("COST"));
-						e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
+						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 						e.setStarted(rs.getTimestamp("STARTED"));
 						e.setEnded(rs.getTimestamp("ENDED"));
 						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
@@ -75,7 +75,7 @@ public class ExpensesDAO extends AbstractDAO {
 						e.setId(rs.getLong("ID"));
 						e.setName(rs.getString("NAME"));
 						e.setCost(rs.getDouble("COST"));
-						e.setFrequencyDays(rs.getInt("FREQUENCY_DAYS"));
+						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 						e.setStarted(rs.getTimestamp("STARTED"));
 						e.setEnded(rs.getTimestamp("ENDED"));
 						e.setAutomatic(rs.getBoolean("AUTOMATIC"));

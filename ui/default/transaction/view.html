@@ -18,13 +18,13 @@
 					data-ng-model="newTrans.date"></td>
 				<td><input type="number" data-ng-model="newTrans.amount"></td>
 				<td><input type="text" data-ng-model="newTrans.comment"></td>
-				<td><select data-ng-model="newTrans.accountId">
+				<td><select data-ng-model="newTrans.account_id">
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
 				</select></td>
-				<td><select data-ng-model="newTrans.typeId">
+				<td><select data-ng-model="newTrans.type_id">
 						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
 				</select></td>
-				<td><select data-ng-model="newTrans.expenseId">
+				<td><select data-ng-model="newTrans.expense_id">
 						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
 				</select></td>
 			</tr>
@@ -33,9 +33,9 @@
 				<td>{{ formatDate(t.date) }}</td>
 				<td>{{ t.amount }}</td>
 				<td>{{ t.comment }}</td>
-				<td>{{ getFromArray(accounts, t.accountId).name }}</td>
-				<td>{{ getFromArray(types, t.typeId).name }}</td>
-				<td>{{ getFromArray(expenses, t.expenseId).name }}</td>
+				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
+				<td>{{ getFromArray(types, t.type_id).name }}</td>
+				<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
 			</tr>
 		</tbody>
 	</table>

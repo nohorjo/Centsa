@@ -31,8 +31,8 @@ public class TransactionsDAO extends AbstractDAO {
 	public long insert(VO _vo) throws SQLException {
 		Transaction t = (Transaction) _vo;
 
-		return insert(TABLE_NAME, COLUMNS, new Object[] { t.getId(), t.getAmount(), t.getComment(), t.getAccountId(),
-				t.getTypeId(), t.getExpenseId(), t.getDate() });
+		return insert(TABLE_NAME, COLUMNS, new Object[] { t.getId(), t.getAmount(), t.getComment(), t.getAccount_id(),
+				t.getType_id(), t.getExpense_id(), t.getDate() });
 	}
 
 	@Override
@@ -48,10 +48,10 @@ public class TransactionsDAO extends AbstractDAO {
 						t.setId(rs.getLong("ID"));
 						t.setAmount(rs.getInt("AMOUNT"));
 						t.setComment(rs.getString("COMMENT"));
-						t.setAccountId(rs.getLong("ACCOUNT_ID"));
-						t.setTypeId(rs.getLong("TYPE_ID"));
+						t.setAccount_id(rs.getLong("ACCOUNT_ID"));
+						t.setType_id(rs.getLong("TYPE_ID"));
 						t.setDate(rs.getTimestamp("DATE"));
-						t.setExpenseId(rs.getLong("EXPENSE_ID"));
+						t.setExpense_id(rs.getLong("EXPENSE_ID"));
 						ts.add(t);
 					}
 				} catch (SQLException e) {
@@ -76,10 +76,10 @@ public class TransactionsDAO extends AbstractDAO {
 						t.setId(id);
 						t.setAmount(rs.getInt("AMOUNT"));
 						t.setComment(rs.getString("COMMENT"));
-						t.setAccountId(rs.getLong("ACCOUNT_ID"));
-						t.setTypeId(rs.getLong("TYPE_ID"));
+						t.setAccount_id(rs.getLong("ACCOUNT_ID"));
+						t.setType_id(rs.getLong("TYPE_ID"));
 						t.setDate(rs.getTimestamp("DATE"));
-						t.setExpenseId(rs.getLong("EXPENSE_ID"));
+						t.setExpense_id(rs.getLong("EXPENSE_ID"));
 						return t;
 					}
 				} catch (SQLException e) {
