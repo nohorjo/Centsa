@@ -5,9 +5,7 @@ app.controller("transCtrl", function($scope) {
 	$scope.expenses = centsa.expenses.getAll(0, 0);
 
 	$scope.formatDate = function(date) {
-		date = new Date(date);
-		return (date.getYear() + 1900) + "/" + (date.getMonth() + 1) + "/"
-				+ date.getDate();
+		return new Date(date).formatDate("yyyy/MM/dd");
 	};
 
 	$scope.newTrans = {
@@ -16,7 +14,7 @@ app.controller("transCtrl", function($scope) {
 		account_id : "1",
 		type_id : "1",
 		expense_id : "1",
-		date : $scope.formatDate(new Date().getTime())
+		date : new Date().formatDate("yyyy/MM/dd")
 	};
 
 	var newTrans = Object.assign({}, $scope.newTrans);
@@ -26,6 +24,7 @@ app.controller("transCtrl", function($scope) {
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
 		$scope.transactions.unshift($scope.newTrans);
 		$scope.newTrans = Object.assign({}, newTrans);
+		$('.datepicker').datepicker("update", new Date());
 	};
 
 	$scope.getFromArray = function(arr, id) {
@@ -34,4 +33,11 @@ app.controller("transCtrl", function($scope) {
 		})[0];
 	};
 
+	$('.datepicker').datepicker({
+		format : "yyyy/mm/dd",
+		endDate : "+0",
+		todayBtn : "linked",
+		autoclose : true,
+		todayHighlight : true
+	});
 });

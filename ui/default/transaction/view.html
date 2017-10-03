@@ -14,17 +14,17 @@
 		<tbody>
 			<tr>
 				<td><input type="button" value="+" data-ng-click="saveTrans()"></td>
-				<td><input type="text" pattern="\d{2,4}/\d{1,2}/\d{1,2}"
+				<td><input type="text" class="datepicker form-control"
 					data-ng-model="newTrans.date"></td>
-				<td><input type="number" data-ng-model="newTrans.amount"></td>
-				<td><input type="text" data-ng-model="newTrans.comment"></td>
-				<td><select data-ng-model="newTrans.account_id">
+				<td><input type="number" class="form-control" data-ng-model="newTrans.amount"></td>
+				<td><input type="text" class="form-control" data-ng-model="newTrans.comment"></td>
+				<td><select class="form-control" data-ng-model="newTrans.account_id">
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
 				</select></td>
-				<td><select data-ng-model="newTrans.type_id">
+				<td><select class="form-control" data-ng-model="newTrans.type_id">
 						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
 				</select></td>
-				<td><select data-ng-model="newTrans.expense_id">
+				<td><select class="form-control" data-ng-model="newTrans.expense_id">
 						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
 				</select></td>
 			</tr>
