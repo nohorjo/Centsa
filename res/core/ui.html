@@ -34,9 +34,6 @@
 								<tr>
 									<td><select id="layout"
 										onchange="setSetting('layout',this); iframe.contentWindow.location.reload();"></select></td>
-									<td><img id="refresh"
-										onclick="hideSettings();setTimeout(function(){window.location.reload();},500)"
-										src="refresh.png" /></td>
 								</tr>
 							</table>
 						</td>
@@ -45,7 +42,7 @@
 			</table>
 		</div>
 	</div>
-	<iframe src="/main.html" seamless></iframe>
+	<iframe name="main_frame" src="/main.html" seamless></iframe>
 </body>
 
 </html>
