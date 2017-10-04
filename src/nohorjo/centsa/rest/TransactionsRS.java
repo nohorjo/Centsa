@@ -27,6 +27,7 @@ public class TransactionsRS extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
+		String countPages = req.getParameter("countPages");
 		int code = 500;
 		if (id != null) {
 			try {
@@ -40,6 +41,18 @@ public class TransactionsRS extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		} else if (countPages != null) {
+			try {
+				int count = dao.countPages(Integer.parseInt(countPages));
+				try (PrintWriter pw = resp.getWriter()) {
+					pw.write(Integer.toString(count));
+				}
+			} catch (NumberFormatException e) {
+				code = 400;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			code = 200;
 		} else {
 			String page = req.getParameter("page");
 			String pageSize = req.getParameter("pageSize");

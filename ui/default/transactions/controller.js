@@ -1,8 +1,25 @@
 app.controller("transCtrl", function($scope) {
-	$scope.transactions = centsa.transactions.getAll(0, 0, "ID DESC");
+	$scope.currentPage = 1;
+	$scope.pagesCount = 0;
+	var pageSize = 15;
+
+	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
+			pageSize, "ID DESC");
 	$scope.accounts = centsa.accounts.getAll(0, 0);
 	$scope.types = centsa.types.getAll(0, 0);
 	$scope.expenses = centsa.expenses.getAll(0, 0);
+
+	$scope.countPages = function() {
+		return $scope.pagesCount
+				|| ($scope.pagesCount = centsa.transactions
+						.countPages(pageSize));
+	};
+
+	$scope.goToPage = function(n) {
+		$scope.currentPage = n;
+		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
+				pageSize, "ID DESC");
+	}
 
 	$scope.formatDate = function(date) {
 		return new Date(date).formatDate("yyyy/MM/dd");
@@ -20,10 +37,13 @@ app.controller("transCtrl", function($scope) {
 	var newTrans = Object.assign({}, $scope.newTrans);
 
 	$scope.saveTrans = function() {
+		$scope.pagesCount = 0;
 		$scope.newTrans.date = new Date($scope.newTrans.date);
 		$scope.newTrans.amount = $scope.newTrans.amount * 100;
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
-		$scope.transactions.unshift($scope.newTrans);
+		if ($scope.currentPage == 1) {
+			$scope.transactions.unshift($scope.newTrans);
+		}
 		$scope.newTrans = Object.assign({}, newTrans);
 		$('.datepicker').datepicker("update", new Date());
 	};
@@ -41,4 +61,13 @@ app.controller("transCtrl", function($scope) {
 		autoclose : true,
 		todayHighlight : true
 	});
+});
+
+app.filter('range', function() {
+	return function(input, total) {
+		total = parseInt(total);
+		for (var i = 0; i < total; i++)
+			input.push(i);
+		return input;
+	};
 });

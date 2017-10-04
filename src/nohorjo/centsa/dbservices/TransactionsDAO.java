@@ -98,4 +98,8 @@ public class TransactionsDAO extends AbstractDAO {
 		delete(TABLE_NAME, id);
 	}
 
+	public int countPages(int pageSize) throws SQLException {
+		return (int) Math.ceil(((double) count(TABLE_NAME)) / pageSize);
+	}
+
 }

@@ -83,6 +83,15 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	protected int count(String tableName) throws SQLException {
+		String sql = SQLUtils.getQuery("Templates.Count").replace("{tablename}", tableName);
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			return rs.getInt(1);
+		}
+	}
+
 	private String[] addIDColumn(String[] columnsWithoutID) {
 		String[] columns = new String[columnsWithoutID.length + 1];
 		columns[0] = "ID";

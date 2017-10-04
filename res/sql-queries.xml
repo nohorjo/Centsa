@@ -21,6 +21,11 @@
 		DELETE FROM {tablename} WHERE ID = ?;
 		]]>
 		</Delete>
+		<Count>
+		<![CDATA[
+		SELECT COUNT(*) FROM {tablename};
+		]]>
+		</Count>
 	</Templates>
 	<Transactions>
 		<CreateTable>

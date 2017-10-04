@@ -53,3 +53,7 @@ body {
 #transTable th:nth-of-type(4) {
 	width: 25%
 }
+
+.float-right {
+	float: right;
+}
