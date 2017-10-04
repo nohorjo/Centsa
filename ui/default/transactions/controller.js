@@ -35,7 +35,7 @@ app.controller("transCtrl", function($scope) {
 
 	$('.datepicker').datepicker({
 		format : "yyyy/mm/dd",
-		endDate : "+0",
+		endDate : "+1m",
 		todayBtn : "linked",
 		autoclose : true,
 		todayHighlight : true
