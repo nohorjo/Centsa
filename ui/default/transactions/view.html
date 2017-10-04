@@ -1,5 +1,5 @@
 <div data-ng-controller="transCtrl">
-	<table>
+	<table id="transTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -13,25 +13,31 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td><input type="button" value="+" class="btn btn-primary" data-ng-click="saveTrans()"></td>
+				<td><input type="button" value="+" class="btn btn-primary"
+					data-ng-click="saveTrans()"></td>
 				<td><input type="text" class="datepicker form-control"
 					data-ng-model="newTrans.date"></td>
-				<td><input type="number" class="form-control" data-ng-model="newTrans.amount"></td>
-				<td><input type="text" class="form-control" data-ng-model="newTrans.comment"></td>
-				<td><select class="form-control" data-ng-model="newTrans.account_id">
+				<td><input type="number" class="form-control"
+					data-ng-model="newTrans.amount"></td>
+				<td><input type="text" class="form-control"
+					data-ng-model="newTrans.comment"></td>
+				<td><select class="form-control"
+					data-ng-model="newTrans.account_id">
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
 				</select></td>
-				<td><select class="form-control" data-ng-model="newTrans.type_id">
+				<td><select class="form-control"
+					data-ng-model="newTrans.type_id">
 						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
 				</select></td>
-				<td><select class="form-control" data-ng-model="newTrans.expense_id">
+				<td><select class="form-control"
+					data-ng-model="newTrans.expense_id">
 						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
 				</select></td>
 			</tr>
 			<tr data-ng-repeat="t in transactions">
 				<td>{{ t.id }}</td>
 				<td>{{ formatDate(t.date) }}</td>
-				<td>{{ t.amount }}</td>
+				<td>{{ t.amount / 100 }}</td>
 				<td>{{ t.comment }}</td>
 				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
 				<td>{{ getFromArray(types, t.type_id).name }}</td>

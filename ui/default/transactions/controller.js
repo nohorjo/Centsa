@@ -21,6 +21,7 @@ app.controller("transCtrl", function($scope) {
 
 	$scope.saveTrans = function() {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
+		$scope.newTrans.amount = $scope.newTrans.amount * 100;
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
 		$scope.transactions.unshift($scope.newTrans);
 		$scope.newTrans = Object.assign({}, newTrans);
