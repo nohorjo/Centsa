@@ -1,0 +1,20 @@
+<table id="accountsTable" class="table table-condensed table-hover">
+	<thead>
+		<tr>
+			<th width="5%">ID</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="button" value="+" class="btn btn-primary"
+				data-ng-click="saveAccount()"></td>
+			<td><input type="text" class="form-control"
+				data-ng-model="newAccount.name"></td>
+		</tr>
+		<tr data-ng-repeat="a in accounts">
+			<td>{{ a.id }}</td>
+			<td>{{ a.name }}</td>
+		</tr>
+	</tbody>
+</table>

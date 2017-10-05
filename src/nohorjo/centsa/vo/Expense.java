@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class Expense implements VO {
 	private Long id;
 	private String name;
-	private double cost;
+	private int cost;
 	private int frequency_days;
 	private Timestamp started;
 	private Timestamp ended;
@@ -27,11 +27,11 @@ public class Expense implements VO {
 		this.name = name;
 	}
 
-	public double getCost() {
+	public int getCost() {
 		return cost;
 	}
 
-	public void setCost(double cost) {
+	public void setCost(int cost) {
 		this.cost = cost;
 	}
 

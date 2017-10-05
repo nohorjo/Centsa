@@ -1,0 +1,20 @@
+<table id="typesTable" class="table table-condensed table-hover">
+	<thead>
+		<tr>
+			<th width="5%">ID</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="button" value="+" class="btn btn-primary"
+				data-ng-click="saveType()"></td>
+			<td><input type="text" class="form-control"
+				data-ng-model="newType.name"></td>
+		</tr>
+		<tr data-ng-repeat="t in types">
+			<td>{{ t.id }}</td>
+			<td>{{ t.name }}</td>
+		</tr>
+	</tbody>
+</table>

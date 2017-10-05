@@ -1,0 +1,40 @@
+<table id="expensesTable" class="table table-condensed table-hover">
+	<thead>
+		<tr>
+			<th width="5%">ID</th>
+			<th width="30%">Name</th>
+			<th width="10%">Cost</th>
+			<th width="15%">Every x days</th>
+			<th width="15%">Started</th>
+			<th width="15%">Ended</th>
+			<th width="10%">Automatic</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="button" value="+" class="btn btn-primary"
+				data-ng-click="saveExpense()"></td>
+			<td><input type="text" class="form-control"
+				data-ng-model="newExpense.name"></td>
+			<td><input type="number" class="form-control"
+				data-ng-model="newExpense.cost"></td>
+			<td><input type="number" class="form-control"
+				data-ng-model="newExpense.frequency_days"></td>
+			<td><input type="text" class="datepicker form-control"
+				data-ng-model="newExpense.started"></td>
+			<td><input type="text" class="datepicker form-control"
+				data-ng-model="newExpense.ended"></td>
+			<td><input type="checkbox" data-ng-model="newExpense.automatic"></td>
+		</tr>
+		<tr data-ng-repeat="e in expenses">
+			<td>{{ e.id }}</td>
+			<td>{{ e.name }}</td>
+			<td>{{ e.cost / 100 }}</td>
+			<td>{{ e.frequency_days }}</td>
+			<td>{{ formatDate(e.started) }}</td>
+			<td>{{ e.ended ? formatDate(e.ended) : '' }}</td>
+			<td><input type="checkbox" disabled="disabled"
+				data-ng-checked="e.automatic"></td>
+		</tr>
+	</tbody>
+</table>

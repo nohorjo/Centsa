@@ -13,7 +13,7 @@ body {
 
 #settingsControl {
 	position: absolute;
-	background: #ffd36d;
+	background: #7a8799;
 	width: 289px;
 	height: 100vh;
 	top: 0px;
@@ -39,7 +39,7 @@ input[type="text"], input[type="number"], select {
 	border: none;
 	border-bottom: 1px solid #ddd;
 	background: transparent;
-	background: #fff0cc;
+	background: #f1f2f4;
 	border-radius: 3px;
 	font-size: 1em;
 }
@@ -48,4 +48,3 @@ input[type="text"], input[type="number"], select {
 	width: 100%;
 }
 
-}
