@@ -16,9 +16,10 @@ app.controller("transCtrl", function($scope) {
 	};
 
 	$scope.goToPage = function(n) {
-		$scope.currentPage = n;
-		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-				pageSize, "ID DESC");
+		if ($scope.currentPage != ($scope.currentPage = n)) {
+			$scope.transactions = centsa.transactions.getAll(
+					$scope.currentPage, pageSize, "ID DESC");
+		}
 	}
 
 	$scope.formatDate = function(date) {
