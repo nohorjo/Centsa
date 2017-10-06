@@ -8,10 +8,14 @@ $(function() {
 // set up angular
 var app = angular.module("app", [ "ngRoute" ]);
 
-app.controller("mainCtrl", function($scope, $rootScope) {
+app.controller("mainCtrl", function($scope, $rootScope, $location) {
 	$rootScope.formatDate = function(date) {
 		return new Date(date).formatDate("yyyy/MM/dd");
 	};
+
+	$scope.isActive = function(path) {
+		return $location.path() == path;
+	}
 });
 
 app.filter('range', function() {

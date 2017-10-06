@@ -23,7 +23,7 @@ function hideSettings() {
 
 	if (shouldHide()) {
 		settingsToggle.style.transition = "0.4s";
-		settingsToggle.style.right = "-300px";
+		settingsToggle.style.right = "-250px";
 		iframe.focus();
 	} else {
 		setTimeout(hideSettings, 200);

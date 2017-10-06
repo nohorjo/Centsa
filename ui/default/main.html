@@ -34,12 +34,11 @@
 	<div class="sidebar">
 		<div class="logo">Centsa</div>
 		<div>
-			<ul>
-				<li><a href="#!transactions">Transactions</a></li>
-				<li><a href="#!accounts">Accounts</a></li>
-				<li><a href="#!types">Types</a></li>
-				<li><a href="#!expenses">Expenses</a></li>
-			</ul>
+			<a href="#!transactions"
+				data-ng-class="{'active':isActive('/transactions')}">Transactions</a>
+			<a href="#!accounts" data-ng-class="{'active':isActive('/accounts')}">Accounts</a>
+			<a href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
+			<a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}">Expenses</a>
 		</div>
 	</div>
 	<div class="main-panel">

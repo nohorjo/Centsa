@@ -4,17 +4,17 @@ body {
 
 #settingsToggle {
 	position: fixed;
-	width: 320px;
+	width: 270px;
 	height: 100vh;
 	top: 0px;
-	right: -300px;
+	right: -250px;
 	z-index: 1;
 }
 
 #settingsControl {
 	position: absolute;
 	background: #7a8799;
-	width: 289px;
+	width: 239px;
 	height: 100vh;
 	top: 0px;
 	right: 0px;
