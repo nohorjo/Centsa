@@ -41,3 +41,14 @@ body {
 .float-right {
 	float: right;
 }
+
+.sidebar a {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	text-decoration: none;
+	border-radius: 3px;
+	margin: 0.5em 15px;
+	box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px
+		rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
+}
