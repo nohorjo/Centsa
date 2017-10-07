@@ -1,20 +1,23 @@
-<table id="typesTable" class="table table-condensed table-hover">
-	<thead>
-		<tr>
-			<th width="5%">ID</th>
-			<th>Name</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><input type="button" value="+" class="btn btn-primary"
-				data-ng-click="saveType()"></td>
-			<td><input type="text" class="form-control"
-				data-ng-model="newType.name"></td>
-		</tr>
-		<tr data-ng-repeat="t in types">
-			<td>{{ t.id }}</td>
-			<td>{{ t.name }}</td>
-		</tr>
-	</tbody>
-</table>
+<form name="Form">
+	<table id="typesTable" class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th width="5%">ID</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="button" value="+" class="btn btn-primary"
+					data-ng-class="{ 'btn-danger': Form.$invalid }"
+					data-ng-disabled="Form.$invalid" data-ng-click="saveType()"></td>
+				<td><input type="text" class="form-control" required="required"
+					data-ng-model="newType.name"></td>
+			</tr>
+			<tr data-ng-repeat="t in types">
+				<td>{{ t.id }}</td>
+				<td>{{ t.name }}</td>
+			</tr>
+		</tbody>
+	</table>
+</form>

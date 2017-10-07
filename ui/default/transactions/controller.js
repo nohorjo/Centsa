@@ -9,7 +9,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 				|| ($scope.pagesCount = centsa.transactions
 						.countPages(pageSize));
 	};
-	
+
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
@@ -43,7 +43,8 @@ app.controller("transCtrl", function($scope, $rootScope) {
 			$scope.transactions.unshift($scope.newTrans);
 		}
 		$scope.newTrans = Object.assign({}, newTrans);
-		$('.datepicker').datepicker("update", new Date());
+		$('.datepicker').datepicker("update",
+				new Date().formatDate("yyyy/MM/dd"));
 	};
 
 	$scope.getFromArray = function(arr, id) {
@@ -54,7 +55,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	$('.datepicker').datepicker({
 		format : "yyyy/mm/dd",
-		endDate : "+1s",
+		endDate : new Date(),
 		todayBtn : "linked",
 		autoclose : true,
 		todayHighlight : true

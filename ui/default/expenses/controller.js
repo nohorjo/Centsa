@@ -20,7 +20,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		$scope.expenses.unshift($scope.newExpense);
 		$scope.newExpense = Object.assign({}, newExpense);
 		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
-				"update", new Date());
+				"update", new Date().formatDate("yyyy/MM/dd"));
 	};
 
 	$('.datepicker').datepicker({

@@ -1,49 +1,53 @@
-<table id="transTable" class="table table-condensed table-hover">
-	<thead>
-		<tr>
-			<th width="5%">ID</th>
-			<th width="15%">Date</th>
-			<th width="10%">Amount</th>
-			<th width="25%">Comment</th>
-			<th width="15%">Account</th>
-			<th width="15%">Type</th>
-			<th width="15%">Expense</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><input type="button" value="+" class="btn btn-primary"
-				data-ng-click="saveTrans()"></td>
-			<td><input type="text" class="datepicker form-control"
-				data-ng-model="newTrans.date"></td>
-			<td><input type="number" class="form-control"
-				data-ng-model="newTrans.amount"></td>
-			<td><input type="text" class="form-control"
-				data-ng-model="newTrans.comment"></td>
-			<td><select class="form-control"
-				data-ng-model="newTrans.account_id">
-					<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-			</select></td>
-			<td><select class="form-control"
-				data-ng-model="newTrans.type_id">
-					<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-			</select></td>
-			<td><select class="form-control"
-				data-ng-model="newTrans.expense_id">
-					<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
-			</select></td>
-		</tr>
-		<tr data-ng-repeat="t in transactions">
-			<td>{{ t.id }}</td>
-			<td>{{ formatDate(t.date) }}</td>
-			<td>{{ t.amount / 100 }}</td>
-			<td>{{ t.comment }}</td>
-			<td>{{ getFromArray(accounts, t.account_id).name }}</td>
-			<td>{{ getFromArray(types, t.type_id).name }}</td>
-			<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
-		</tr>
-	</tbody>
-</table>
+<form name="Form">
+	<table id="transTable" class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th width="5%">ID</th>
+				<th width="15%">Date</th>
+				<th width="10%">Amount</th>
+				<th width="25%">Comment</th>
+				<th width="15%">Account</th>
+				<th width="15%">Type</th>
+				<th width="15%">Expense</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="button" value="+" class="btn btn-primary"
+					data-ng-class="{ 'btn-danger': Form.$invalid }"
+					data-ng-disabled="Form.$invalid" data-ng-click="saveTrans()"></td>
+				<td><input type="text" class="datepicker form-control"
+					pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
+					data-ng-model="newTrans.date"></td>
+				<td><input type="number" class="form-control"
+					required="required" data-ng-model="newTrans.amount"></td>
+				<td><input type="text" class="form-control" required="required"
+					placeholder="Enter a comment" data-ng-model="newTrans.comment"></td>
+				<td><select class="form-control"
+					data-ng-model="newTrans.account_id">
+						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+				</select></td>
+				<td><select class="form-control"
+					data-ng-model="newTrans.type_id">
+						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+				</select></td>
+				<td><select class="form-control"
+					data-ng-model="newTrans.expense_id">
+						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+				</select></td>
+			</tr>
+			<tr data-ng-repeat="t in transactions">
+				<td>{{ t.id }}</td>
+				<td>{{ formatDate(t.date) }}</td>
+				<td>{{ t.amount / 100 }}</td>
+				<td>{{ t.comment }}</td>
+				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
+				<td>{{ getFromArray(types, t.type_id).name }}</td>
+				<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
 <ul class="pagination float-right">
 	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
 		data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a></li>
