@@ -51,7 +51,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 			return item.id == id;
 		})[0];
 	};
-	
+
 	$('.datepicker').datepicker({
 		format : "yyyy/mm/dd",
 		endDate : "+1m",

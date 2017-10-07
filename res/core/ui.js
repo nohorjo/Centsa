@@ -78,25 +78,19 @@ function init() {
 	}
 }
 
-function glow(e, colour) {
-	var style = e.style;
-	style.transition = "0.2s";
-	style["box-shadow"] = "0 0 7px 3px " + colour;
-	setTimeout(function() {
-		style.transition = "0.2s";
-		style["box-shadow"] = "";
-	}, 200);
-}
-
 function prepareSetting(val) {
 	currentSettingsVal = val;
 }
 
 function setSetting(key, e) {
+	var loader = document.getElementById("loader");
 	var success = function() {
-		glow(e, '#99ff00');
+		setTimeout(function() {
+			loader.style.display = "none";
+		}, 200);
 	}
 	if (e.value != currentSettingsVal) {
+		loader.style.display = "block";
 		centsa.settings.set(key, e.value, success, function(x) {
 			alert(x);
 		});

@@ -128,7 +128,7 @@ var centsa = (function() {
 			countPages : function(pageSize, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions?countPages="+pageSize,
+					url : apiUrl.get() + "/transactions?countPages=" + pageSize,
 					method : "GET",
 					async : false,
 					success : function(data) {
