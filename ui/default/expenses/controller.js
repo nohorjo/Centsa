@@ -25,7 +25,6 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 
 	$('.datepicker').datepicker({
 		format : "yyyy/mm/dd",
-		endDate : "+1m",
 		todayBtn : "linked",
 		autoclose : true,
 		todayHighlight : true
