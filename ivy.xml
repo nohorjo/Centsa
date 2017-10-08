@@ -16,17 +16,19 @@
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" conf="rt" />
 		<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.25" conf="rt" />
 		<dependency org="org.xerial" name="sqlite-jdbc" rev="3.20.0" conf="rt" />
-		<dependency org="org.apache.tika" name="tika-core" rev="1.16" conf="rt" />
 		<dependency org="javax.servlet" name="javax.servlet-api" rev="4.0.0" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-server" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-http" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-io" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-util" rev="9.4.7.v20170914" conf="rt" />
+		<dependency org="org.eclipse.jetty" name="jetty-servlet" rev="9.4.7.v20170914" conf="rt" />
+		<dependency org="org.glassfish.jersey.core" name="jersey-server" rev="2.7" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="2.7" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-jetty-http" rev="2.7" conf="rt" />
 
 		<!-- build -->
 		<dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.9" conf="build" />
 		<dependency org="junit" name="junit" rev="4.12" conf="build" />
 		<dependency org="ant" name="ant-junit" rev="1.6.5" conf="build" />
-
 	</dependencies>
 </ivy-module>

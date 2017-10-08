@@ -1,52 +1,44 @@
 package nohorjo.centsa.server;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.UUID;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 
-import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.rest.AccountsRS;
+import nohorjo.centsa.rest.ExpensesRS;
+import nohorjo.centsa.rest.SettingsRS;
+import nohorjo.centsa.rest.TransactionsRS;
+import nohorjo.centsa.rest.TypesRS;
 
-public class EmbeddedServer extends AbstractHandler {
+public class EmbeddedServer {
 
+	public static final String UNIQUE_KEY = UUID.randomUUID().toString();
 	private static Server server;
-
-	@Override
-	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-
-		try {
-			switch (target.split("/")[1]) {
-			case "api":
-				APIRequestHandler.handle(request, response, target.replaceAll("^/api/", ""));
-				break;
-			case "core":
-				FileRequestHandler.handle(response, target.substring(1));
-				break;
-			default:
-				target = "layout/" + SystemProperties.get("layout", String.class) + target;
-				FileRequestHandler.handle(response, target);
-				break;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.sendError(500, e.getMessage());
-		}
-
-		baseRequest.setHandled(true);
-	}
 
 	public static int startServer(String ip, int port) throws Exception {
 		InetSocketAddress addr = new InetSocketAddress(ip, port);
+		String apiPath = "/api/" + UNIQUE_KEY;
+
+		ResourceConfig config = new ResourceConfig();
+		config.packages("nohorjo.centsa.rest");
+
 		server = new Server(addr);
-		server.setHandler(new EmbeddedServer());
+
+		ServletContextHandler context = new ServletContextHandler(server, "/*");
+
+		context.addServlet(new ServletHolder(new ServletContainer(config)), "/*");
+		context.addServlet(SettingsRS.class, apiPath + "/settings/*");
+		context.addServlet(TransactionsRS.class, apiPath + "/transactions/*");
+		context.addServlet(AccountsRS.class, apiPath + "/accounts/*");
+		context.addServlet(TypesRS.class, apiPath + "/types/*");
+		context.addServlet(ExpensesRS.class, apiPath + "/expenses/*");
+
 		server.start();
 		return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
 	}

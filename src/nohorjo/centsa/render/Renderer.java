@@ -14,7 +14,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import nohorjo.centsa.properties.SystemProperties;
-import nohorjo.centsa.server.APIRequestHandler;
+import nohorjo.centsa.server.EmbeddedServer;
 
 public class Renderer extends Region {
 
@@ -27,9 +27,9 @@ public class Renderer extends Region {
 	private final WebEngine webEngine = browser.getEngine();
 
 	public Renderer() {
-		String url = SystemProperties.get("server.root", String.class) + "core/ui.html?" + APIRequestHandler.UNIQUE_KEY;
+		String url = SystemProperties.get("server.root", String.class) + "core/ui.html?" + EmbeddedServer.UNIQUE_KEY;
 		log.info("UI available at {}", url);
-		
+
 		webEngine.load(url);
 
 		webEngine.setOnAlert((WebEvent<String> wEvent) -> {

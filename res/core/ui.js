@@ -88,6 +88,7 @@ function setSetting(key, e) {
 		setTimeout(function() {
 			loader.style.display = "none";
 		}, 200);
+		currentSettingsVal = e.value;
 	}
 	if (e.value != currentSettingsVal) {
 		loader.style.display = "block";
