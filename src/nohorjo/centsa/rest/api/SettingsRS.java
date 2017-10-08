@@ -1,26 +1,25 @@
-package nohorjo.centsa.rest;
+package nohorjo.centsa.rest.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.vo.SettingsVO;
 
-public class SettingsRS extends HttpServlet {
+@Path("/settings")
+public class SettingsRS {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4610961678167873846L;
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	@GET
+	public void doGet(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		int status = 404;
 		String value = SystemProperties.get(req.getParameter("key"), Object.class).toString();
 		if (value != null) {
@@ -32,8 +31,8 @@ public class SettingsRS extends HttpServlet {
 		resp.setStatus(status);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	@POST
+	public void doPost(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		SettingsVO vo = new ObjectMapper().readValue(req.getReader(), SettingsVO.class);
 		SystemProperties.set(vo.getKey(), vo.getValue());
 		resp.setStatus(204);

@@ -1,31 +1,30 @@
-package nohorjo.centsa.rest;
+package nohorjo.centsa.rest.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nohorjo.centsa.dbservices.AccountsDAO;
 import nohorjo.centsa.vo.Account;
 
-public class AccountsRS extends HttpServlet {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2838315598819859923L;
+@Path("/accounts")
+public class AccountsRS {
 
 	AccountsDAO dao = new AccountsDAO();
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@GET
+	public void doGet(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		String id = req.getParameter("id");
 		int code = 500;
 		if (id != null) {
@@ -59,8 +58,8 @@ public class AccountsRS extends HttpServlet {
 		resp.setStatus(code);
 	}
 
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@DELETE
+	public void doDelete(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		String id = req.getParameter("id");
 		int code = 500;
 		try {
@@ -74,8 +73,8 @@ public class AccountsRS extends HttpServlet {
 		resp.setStatus(code);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@POST
+	public void doPost(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		Account a = new ObjectMapper().readValue(req.getReader(), Account.class);
 		int code = 500;
 		try {

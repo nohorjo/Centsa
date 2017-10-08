@@ -10,12 +10,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import nohorjo.centsa.rest.AccountsRS;
-import nohorjo.centsa.rest.ExpensesRS;
-import nohorjo.centsa.rest.SettingsRS;
-import nohorjo.centsa.rest.TransactionsRS;
-import nohorjo.centsa.rest.TypesRS;
-
 public class EmbeddedServer {
 
 	public static final String UNIQUE_KEY = UUID.randomUUID().toString();
@@ -23,21 +17,15 @@ public class EmbeddedServer {
 
 	public static int startServer(String ip, int port) throws Exception {
 		InetSocketAddress addr = new InetSocketAddress(ip, port);
-		String apiPath = "/api/" + UNIQUE_KEY;
-
-		ResourceConfig config = new ResourceConfig();
-		config.packages("nohorjo.centsa.rest");
-
 		server = new Server(addr);
 
-		ServletContextHandler context = new ServletContextHandler(server, "/*");
+		ResourceConfig coreREST = new ResourceConfig().packages("nohorjo.centsa.rest.core");
+		ResourceConfig apiREST = new ResourceConfig().packages("nohorjo.centsa.rest.api");
 
-		context.addServlet(new ServletHolder(new ServletContainer(config)), "/*");
-		context.addServlet(SettingsRS.class, apiPath + "/settings/*");
-		context.addServlet(TransactionsRS.class, apiPath + "/transactions/*");
-		context.addServlet(AccountsRS.class, apiPath + "/accounts/*");
-		context.addServlet(TypesRS.class, apiPath + "/types/*");
-		context.addServlet(ExpensesRS.class, apiPath + "/expenses/*");
+		ServletContextHandler context = new ServletContextHandler(server, "/");
+
+		context.addServlet(new ServletHolder(new ServletContainer(coreREST)), "/*");
+		context.addServlet(new ServletHolder(new ServletContainer(apiREST)), "/api/" + UNIQUE_KEY + "/*");
 
 		server.start();
 		return ((ServerConnector) server.getConnectors()[0]).getLocalPort();

@@ -1,38 +1,37 @@
-package nohorjo.centsa.rest;
+package nohorjo.centsa.rest.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import nohorjo.centsa.dbservices.TypesDAO;
-import nohorjo.centsa.vo.Type;
+import nohorjo.centsa.dbservices.ExpensesDAO;
+import nohorjo.centsa.vo.Expense;
 
-public class TypesRS extends HttpServlet {
+@Path("/expenses")
+public class ExpensesRS {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4940380628125775207L;
-	
-	TypesDAO dao = new TypesDAO();
+	ExpensesDAO dao = new ExpensesDAO();
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@GET
+	public void doGet(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		String id = req.getParameter("id");
 		int code = 500;
 		if (id != null) {
 			try {
-				Type t = dao.get(Long.parseLong(id));
+				Expense e = dao.get(Long.parseLong(id));
 				try (PrintWriter pw = resp.getWriter()) {
-					new ObjectMapper().writeValue(pw, t);
+					new ObjectMapper().writeValue(pw, e);
 				}
 				code = 200;
 			} catch (NumberFormatException e) {
@@ -45,7 +44,7 @@ public class TypesRS extends HttpServlet {
 			String pageSize = req.getParameter("pageSize");
 			String order = req.getParameter("order");
 			try {
-				List<Type> as = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
+				List<Expense> as = dao.getAll(Integer.parseInt(page), Integer.parseInt(pageSize), order);
 				try (PrintWriter pw = resp.getWriter()) {
 					new ObjectMapper().writeValue(pw, as);
 				}
@@ -59,8 +58,8 @@ public class TypesRS extends HttpServlet {
 		resp.setStatus(code);
 	}
 
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@DELETE
+	public void doDelete(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
 		String id = req.getParameter("id");
 		int code = 500;
 		try {
@@ -74,18 +73,18 @@ public class TypesRS extends HttpServlet {
 		resp.setStatus(code);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Type t = new ObjectMapper().readValue(req.getReader(), Type.class);
+	@POST
+	public void doPost(@Context HttpServletRequest req, @Context HttpServletResponse resp) throws IOException {
+		Expense e = new ObjectMapper().readValue(req.getReader(), Expense.class);
 		int code = 500;
 		try {
-			long id = dao.insert(t);
+			long id = dao.insert(e);
 			try (PrintWriter pw = resp.getWriter()) {
 				pw.write(Long.toString(id));
 			}
 			code = 200;
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 		resp.setStatus(code);
 	}
