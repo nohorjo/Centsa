@@ -22,6 +22,11 @@ var centsa = (function() {
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open(payload.method, payload.url,
 				payload.async != undefined ? payload.async : true);
+		if (payload.headers) {
+			for ( var header in payload.headers) {
+				xmlHttp.setRequestHeader(header, payload.headers[header]);
+			}
+		}
 		xmlHttp.onreadystatechange = function() {
 			if (this.readyState == 4) {
 				if (payload.complete) {
@@ -91,7 +96,7 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions?page=" + page
+					url : apiUrl.get() + "/transactions/all?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
@@ -118,6 +123,9 @@ var centsa = (function() {
 					method : "POST",
 					async : false,
 					data : JSON.stringify(t),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
@@ -128,7 +136,8 @@ var centsa = (function() {
 			countPages : function(pageSize, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions?countPages=" + pageSize,
+					url : apiUrl.get() + "/transactions/countPages?pageSize="
+							+ pageSize,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -156,7 +165,7 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/accounts?page=" + page
+					url : apiUrl.get() + "/accounts/all?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
@@ -183,6 +192,9 @@ var centsa = (function() {
 					method : "POST",
 					async : false,
 					data : JSON.stringify(a),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
@@ -208,8 +220,9 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/types?page=" + page + "&pageSize="
-							+ pageSize + "&order=" + (order || ""),
+					url : apiUrl.get() + "/types/all?page=" + page
+							+ "&pageSize=" + pageSize + "&order="
+							+ (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -234,6 +247,9 @@ var centsa = (function() {
 					method : "POST",
 					async : false,
 					data : JSON.stringify(t),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
@@ -259,7 +275,7 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses?page=" + page
+					url : apiUrl.get() + "/expenses/all?page=" + page
 							+ "&pageSize=" + pageSize + "&order="
 							+ (order || ""),
 					method : "GET",
@@ -286,6 +302,9 @@ var centsa = (function() {
 					method : "POST",
 					async : false,
 					data : JSON.stringify(e),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
