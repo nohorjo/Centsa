@@ -13,7 +13,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize);
+					$scope.currentPage, pageSize, "ID DESC");
 		}
 	};
 
@@ -36,7 +36,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	$scope.saveTrans = function() {
 		$scope.pagesCount = 0;
-		$scope.newTrans.date = new Date($scope.newTrans.date);
+		$scope.newTrans.date = new Date($scope.newTrans.date).getTime();
 		$scope.newTrans.amount = $scope.newTrans.amount * 100;
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
 		if ($scope.currentPage == 1) {

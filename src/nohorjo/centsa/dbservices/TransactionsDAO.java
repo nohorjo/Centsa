@@ -50,7 +50,7 @@ public class TransactionsDAO extends AbstractDAO {
 						t.setComment(rs.getString("COMMENT"));
 						t.setAccount_id(rs.getLong("ACCOUNT_ID"));
 						t.setType_id(rs.getLong("TYPE_ID"));
-						t.setDate(rs.getTimestamp("DATE"));
+						t.setDate(rs.getLong("DATE"));
 						t.setExpense_id(rs.getLong("EXPENSE_ID"));
 						ts.add(t);
 					}
@@ -78,7 +78,7 @@ public class TransactionsDAO extends AbstractDAO {
 						t.setComment(rs.getString("COMMENT"));
 						t.setAccount_id(rs.getLong("ACCOUNT_ID"));
 						t.setType_id(rs.getLong("TYPE_ID"));
-						t.setDate(rs.getTimestamp("DATE"));
+						t.setDate(rs.getLong("DATE"));
 						t.setExpense_id(rs.getLong("EXPENSE_ID"));
 						return t;
 					}

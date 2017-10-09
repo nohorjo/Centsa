@@ -3,14 +3,14 @@ package nohorjo.centsa.rest.api;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.vo.Expense;
@@ -21,11 +21,13 @@ public class ExpensesRS {
 	ExpensesDAO dao = new ExpensesDAO();
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Expense get(@QueryParam("id") long id) throws SQLException {
 		return dao.get(id);
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/all")
 	public List<Expense> getAll(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize,
 			@QueryParam("order") String order) throws SQLException {
@@ -38,8 +40,8 @@ public class ExpensesRS {
 	}
 
 	@POST
-	public long insert(Expense e, @Context HttpServletRequest req, @Context HttpServletResponse resp)
-			throws SQLException {
+	@Consumes(MediaType.APPLICATION_JSON)
+	public long insert(Expense e) throws SQLException {
 		return dao.insert(e);
 	}
 }

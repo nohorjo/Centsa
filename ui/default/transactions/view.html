@@ -1,4 +1,4 @@
-<form name="Form">
+<form name="Form" data-ng-submit="saveTrans()">
 	<table id="transTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
@@ -13,9 +13,9 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td><input type="button" value="+" class="btn btn-primary"
+				<td><input type="submit" value="+" class="btn btn-primary"
 					data-ng-class="{ 'btn-danger': Form.$invalid }"
-					data-ng-disabled="Form.$invalid" data-ng-click="saveTrans()"></td>
+					data-ng-disabled="Form.$invalid"></td>
 				<td><input type="text" class="datepicker form-control"
 					pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
 					data-ng-model="newTrans.date"></td>

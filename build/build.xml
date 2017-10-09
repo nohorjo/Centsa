@@ -29,6 +29,7 @@
 
 	<target name="resolve" depends="install-ivy">
 		<mkdir dir="${lib.dir}" />
+		<property name="packaging.type" value="jar"/>
 		<ivy:retrieve pathid="lib.path.id" pattern="${lib.dir}/[artifact].[ext]" conf="rt" />
 		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
 

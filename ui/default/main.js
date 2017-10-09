@@ -10,6 +10,9 @@ var app = angular.module("app", [ "ngRoute" ]);
 
 app.controller("mainCtrl", function($scope, $rootScope, $location) {
 	$rootScope.formatDate = function(date) {
+		if(date.constructor == String){
+			date = date.substr(0, 19);
+		}
 		return new Date(date).formatDate("yyyy/MM/dd");
 	};
 

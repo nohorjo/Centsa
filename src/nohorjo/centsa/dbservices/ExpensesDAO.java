@@ -48,8 +48,8 @@ public class ExpensesDAO extends AbstractDAO {
 						e.setName(rs.getString("NAME"));
 						e.setCost(rs.getInt("COST"));
 						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-						e.setStarted(rs.getTimestamp("STARTED"));
-						e.setEnded(rs.getTimestamp("ENDED"));
+						e.setStarted(rs.getLong("STARTED"));
+						e.setEnded(rs.getLong("ENDED"));
 						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
 						es.add(e);
 					}
@@ -76,8 +76,8 @@ public class ExpensesDAO extends AbstractDAO {
 						e.setName(rs.getString("NAME"));
 						e.setCost(rs.getInt("COST"));
 						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-						e.setStarted(rs.getTimestamp("STARTED"));
-						e.setEnded(rs.getTimestamp("ENDED"));
+						e.setStarted(rs.getLong("STARTED"));
+						e.setEnded(rs.getLong("ENDED"));
 						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
 						return e;
 					}

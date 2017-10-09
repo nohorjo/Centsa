@@ -1,17 +1,16 @@
 package nohorjo.centsa.rest.api;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.vo.Transaction;
@@ -22,6 +21,7 @@ public class TransactionsRS {
 	TransactionsDAO dao = new TransactionsDAO();
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Transaction get(@QueryParam("id") long id) throws SQLException {
 		return dao.get(id);
 	}
@@ -33,6 +33,7 @@ public class TransactionsRS {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/all")
 	public List<Transaction> getAll(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize,
 			@QueryParam("order") String order) throws SQLException {
@@ -45,8 +46,8 @@ public class TransactionsRS {
 	}
 
 	@POST
-	public long insert(Transaction t, @Context HttpServletRequest req, @Context HttpServletResponse resp)
-			throws IOException, SQLException {
+	@Consumes(MediaType.APPLICATION_JSON)
+	public long insert(Transaction t) throws SQLException {
 		return dao.insert(t);
 	}
 

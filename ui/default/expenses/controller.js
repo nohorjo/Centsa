@@ -13,9 +13,10 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 
 	$scope.saveExpense = function() {
 		$scope.newExpense.cost = $scope.newExpense.cost * 100;
-		$scope.newExpense.started = new Date($scope.newExpense.started);
+		$scope.newExpense.started = new Date($scope.newExpense.started)
+				.getTime();
 		$scope.newExpense.ended = $scope.newExpense.ended ? new Date(
-				$scope.newExpense.ended) : null;
+				$scope.newExpense.ended).getTime() : null;
 		$scope.newExpense.id = centsa.expenses.insert($scope.newExpense);
 		$scope.expenses.unshift($scope.newExpense);
 		$scope.newExpense = Object.assign({}, newExpense);
@@ -29,4 +30,5 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		autoclose : true,
 		todayHighlight : true
 	});
+
 });

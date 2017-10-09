@@ -68,12 +68,9 @@ var centsa = (function() {
 			},
 			set : function(key, value, success, error) {
 				ajax({
-					url : apiUrl.get() + "/settings",
+					url : apiUrl.get() + "/settings/" + key,
 					method : "POST",
-					data : JSON.stringify({
-						key : key,
-						value : value
-					}),
+					data : value,
 					success : success,
 					error : error
 				});

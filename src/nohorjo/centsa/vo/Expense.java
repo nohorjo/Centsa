@@ -1,14 +1,12 @@
 package nohorjo.centsa.vo;
 
-import java.sql.Timestamp;
-
 public class Expense implements VO {
 	private Long id;
 	private String name;
 	private int cost;
 	private int frequency_days;
-	private Timestamp started;
-	private Timestamp ended;
+	private long started;
+	private Long ended;
 	private boolean automatic;
 
 	public Long getId() {
@@ -43,19 +41,19 @@ public class Expense implements VO {
 		this.frequency_days = frequency_days;
 	}
 
-	public Timestamp getStarted() {
+	public long getStarted() {
 		return started;
 	}
 
-	public void setStarted(Timestamp started) {
+	public void setStarted(long started) {
 		this.started = started;
 	}
 
-	public Timestamp getEnded() {
+	public Long getEnded() {
 		return ended;
 	}
 
-	public void setEnded(Timestamp ended) {
+	public void setEnded(Long ended) {
 		this.ended = ended;
 	}
 

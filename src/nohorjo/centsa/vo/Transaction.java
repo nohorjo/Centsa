@@ -1,14 +1,12 @@
 package nohorjo.centsa.vo;
 
-import java.sql.Timestamp;
-
 public class Transaction implements VO {
 	private Long id;
 	private int amount;
 	private String comment;
 	private long account_id;
 	private long type_id;
-	private Timestamp date;
+	private long date;
 	private long expense_id;
 
 	public Long getId() {
@@ -35,11 +33,11 @@ public class Transaction implements VO {
 		this.comment = comment;
 	}
 
-	public Timestamp getDate() {
+	public long getDate() {
 		return date;
 	}
 
-	public void setDate(Timestamp date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 

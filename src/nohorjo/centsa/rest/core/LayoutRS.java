@@ -9,7 +9,7 @@ import javax.ws.rs.PathParam;
 
 import nohorjo.centsa.properties.SystemProperties;
 
-@Path("/layout")
+@Path("/")
 public class LayoutRS {
 
 	@GET

@@ -19,11 +19,12 @@
 		<dependency org="org.eclipse.jetty" name="jetty-io" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-util" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-servlet" rev="9.4.7.v20170914" conf="rt" />
-		<dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="2.7" conf="rt" />
-		<dependency org="org.glassfish.jersey.containers" name="jersey-container-jetty-http" rev="2.7" conf="rt" />
-		<dependency org="org.glassfish.jersey.media" name="jersey-media-json-jackson" rev="2.7" conf="rt" />
-		<dependency org="org.glassfish.jersey.core" name="jersey-client" rev="2.7" conf="rt" />
-		<dependency org="org.glassfish.jersey.bundles" name="jaxrs-ri" rev="2.7" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="2.26" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-jetty-http" rev="2.26" conf="rt" />
+		<dependency org="org.glassfish.jersey.media" name="jersey-media-json-jackson" rev="2.26" conf="rt" />
+		<dependency org="org.glassfish.jersey.core" name="jersey-client" rev="2.26" conf="rt" />
+		<dependency org="org.glassfish.jersey.bundles" name="jaxrs-ri" rev="2.26" conf="rt" />
+		
 		
 		<!-- build -->
 		<dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.9" conf="build" />
