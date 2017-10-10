@@ -13,12 +13,12 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "ID DESC");
+					$scope.currentPage, pageSize, "DATE DESC");
 		}
 	};
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, "ID DESC");
+			pageSize, "DATE DESC");
 	$scope.accounts = centsa.accounts.getAll(0, 0);
 	$scope.types = centsa.types.getAll(0, 0);
 	$scope.expenses = centsa.expenses.getAll(0, 0);
