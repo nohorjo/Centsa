@@ -41,6 +41,9 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
 		if ($scope.currentPage == 1) {
 			$scope.transactions.unshift($scope.newTrans);
+			if ($scope.transactions.length > pageSize) {
+				$scope.transactions.pop();
+			}
 		}
 		$scope.newTrans = Object.assign({}, newTrans);
 		$('.datepicker').datepicker("update",
