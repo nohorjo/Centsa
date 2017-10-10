@@ -89,16 +89,26 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	var newTrans = Object.assign({}, $scope.newTrans);
 
-	$scope.saveTrans = function() {
+	$scope.saveTrans = function(updating) {
 		$scope.pagesCount = 0;
 		$scope.newTrans.date = new Date($scope.newTrans.date).getTime();
 		$scope.newTrans.amount = $scope.newTrans.amount * 100;
-		$scope.newTrans.id = centsa.transactions.insert($scope.newTrans);
-		if ($scope.currentPage == 1) {
+		var newId = centsa.transactions.insert($scope.newTrans);
+		if (newId > 0) {
+			$scope.newTrans.id = newId;
+		}
+		if ($scope.currentPage == 1 && !updating) {
 			$scope.transactions.unshift($scope.newTrans);
 			if ($scope.transactions.length > pageSize) {
 				$scope.transactions.pop();
 			}
+		} else if (updating) {
+			for (var i = 0; i < $scope.transactions.length; i++) {
+				if ($scope.transactions[i].id == $scope.newTrans.id) {
+					$scope.transactions[i] = $scope.newTrans;
+				}
+			}
+			$('#transModal').modal('hide');
 		}
 		$scope.newTrans = Object.assign({}, newTrans);
 		$('.datepicker').datepicker("update",
@@ -111,12 +121,46 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		})[0];
 	};
 
-	$('.datepicker').datepicker({
-		format : "yyyy/mm/dd",
-		endDate : new Date(),
-		todayBtn : "linked",
-		autoclose : true,
-		todayHighlight : true
-	});
+	$scope.editTrans = function(trans) {
+		var t = Object.assign({}, trans);
+		t.date = $rootScope.formatDate(t.date);
+		t.amount = t.amount / 100;
+		t.account_id = t.account_id.toString();
+		t.type_id = t.type_id.toString();
+		t.expense_id = t.expense_id.toString();
+		$scope.newTrans = t;
+		$('#transModal').modal("show");
+		$('#transModal').on(
+				'hidden.bs.modal',
+				function(e) {
+					$scope.newTrans = Object.assign({}, newTrans);
+					$('.datepicker').datepicker("update",
+							new Date().formatDate("yyyy/MM/dd"));
+				})
+	}
+
+	$scope.initDatePickers = function() {
+		$('.datepicker').datepicker({
+			format : "yyyy/mm/dd",
+			endDate : new Date(),
+			todayBtn : "linked",
+			autoclose : true,
+			todayHighlight : true
+		});
+		$('.datepicker').datepicker("update",
+				new Date().formatDate("yyyy/MM/dd"));
+	};
+
+	$scope.deleteTrans = function(id) {
+		$scope.pagesCount = 0;
+		if (centsa.transactions.remove(id)) {
+			for (var i = 0; i < $scope.transactions.length; i++) {
+				if ($scope.transactions[i].id == id) {
+					$scope.transactions.splice(i, 1);
+				}
+			}
+		}
+		$('#transModal').modal("hide");
+	}
 
 });

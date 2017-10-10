@@ -105,13 +105,18 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			remove : function(id, success, error) {
+			remove : function(id, error) {
+				var rtn = false;
 				ajax({
 					url : apiUrl.get() + "/transactions?id=" + id,
 					method : "DELETE",
-					success : success,
+					async : false,
+					success : function() {
+						rtn = true;
+					},
 					error : error
 				});
+				return rtn;
 			},
 			insert : function(t, error) {
 				var rtn = null;
@@ -187,13 +192,18 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			remove : function(id, success, error) {
+			remove : function(id, error) {
+				var rtn = false;
 				ajax({
 					url : apiUrl.get() + "/accounts?id=" + id,
 					method : "DELETE",
-					success : success,
+					async : false,
+					success : function() {
+						rtn = true;
+					},
 					error : error
 				});
+				return rtn;
 			},
 			insert : function(a, error) {
 				var rtn = null;
@@ -242,13 +252,18 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			remove : function(id, success, error) {
+			remove : function(id, error) {
+				var rtn = false;
 				ajax({
 					url : apiUrl.get() + "/types?id=" + id,
 					method : "DELETE",
-					success : success,
+					async : false,
+					success : function() {
+						rtn = true;
+					},
 					error : error
 				});
+				return rtn;
 			},
 			insert : function(t, error) {
 				var rtn = null;
@@ -297,13 +312,18 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			remove : function(id, success, error) {
+			remove : function(id, error) {
+				var rtn = false;
 				ajax({
 					url : apiUrl.get() + "/expenses?id=" + id,
 					method : "DELETE",
-					success : success,
+					async : false,
+					success : function() {
+						rtn = true;
+					},
 					error : error
 				});
+				return rtn;
 			},
 			insert : function(e, error) {
 				var rtn = null;
