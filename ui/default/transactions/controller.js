@@ -13,12 +13,12 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC");
+					$scope.currentPage, pageSize, "DATE DESC, ID DESC");
 		}
 	};
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, "DATE DESC");
+			pageSize, "DATE DESC, ID DESC");
 	$scope.accounts = centsa.accounts.getAll(0, 0);
 	$scope.types = centsa.types.getAll(0, 0);
 	$scope.expenses = centsa.expenses.getAll(0, 0);
@@ -69,7 +69,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 			case 9:
 			case 13:
 				if (index != -1) {
-					$scope.setComment(dataListItems[index].innerText);
+					$scope.setComment(dataListItems[index].innerText.trim());
 				}
 			default:
 				index = -1;
