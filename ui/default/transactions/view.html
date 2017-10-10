@@ -22,7 +22,7 @@
 				<td><input type="number" class="form-control"
 					required="required" data-ng-model="newTrans.amount"></td>
 				<td>
-					<div class="datalist">
+					<div class="datalist" data-ng-keydown="navigateDataList($event)">
 						<input type="text" class="form-control" required="required"
 							placeholder="Enter a comment" data-ng-model="newTrans.comment"
 							data-ng-focus="showDataList = true"

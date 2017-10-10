@@ -40,6 +40,44 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		}, 200);
 	};
 
+	$scope.navigateDataList = (function() {
+
+		var index = -1;
+		var dataListItems;
+
+		return function($event) {
+
+			var temp = $(".datalist span");
+			dataListItems = temp.length > 0 ? temp : (dataListItems || temp);
+			dataListItems.removeClass("hover");
+
+			switch ($event.keyCode) {
+			case 38:
+				if (index > 0) {
+					index--;
+				}
+				$(dataListItems[index]).addClass("hover");
+				$(dataListItems[index]).focus();
+				break;
+			case 40:
+				if (index < dataListItems.length - 1) {
+					index++;
+				}
+				$(dataListItems[index]).addClass("hover");
+				$(dataListItems[index]).focus();
+				break;
+			case 9:
+			case 13:
+				if (index != -1) {
+					$scope.setComment(dataListItems[index].innerText);
+				}
+			default:
+				index = -1;
+				break;
+			}
+		}
+	})();
+
 	$scope.newTrans = {
 		amount : 0.0,
 		comment : "",
