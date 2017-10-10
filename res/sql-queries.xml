@@ -42,6 +42,11 @@
 		);
 		]]>
 		</CreateTable>
+		<UniqueComments>
+		<![CDATA[
+		SELECT DISTINCT COMMENT FROM TRANSACTIONS;
+		]]>
+		</UniqueComments>
 	</Transactions>
 	<Accounts>
 		<CreateTable>

@@ -22,7 +22,10 @@
 				<td><input type="number" class="form-control"
 					required="required" data-ng-model="newTrans.amount"></td>
 				<td><input type="text" class="form-control" required="required"
-					placeholder="Enter a comment" data-ng-model="newTrans.comment"></td>
+					list="comments" placeholder="Enter a comment"
+					data-ng-model="newTrans.comment"> <datalist id="comments">
+						<option value="{{ c }}" data-ng-repeat="c in uniqueComments" />
+					</datalist></td>
 				<td><select class="form-control"
 					data-ng-model="newTrans.account_id">
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>

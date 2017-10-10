@@ -143,6 +143,19 @@ var centsa = (function() {
 					error : error
 				});
 				return rtn;
+			},
+			getUniqueComments : function(error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/transactions/comments",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error
+				});
+				return rtn;
 			}
 		},
 		accounts : {

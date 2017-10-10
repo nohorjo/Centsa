@@ -1,7 +1,10 @@
 package nohorjo.centsa.dbservices;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -100,6 +103,19 @@ public class TransactionsDAO extends AbstractDAO {
 
 	public int countPages(int pageSize) throws SQLException {
 		return (int) Math.ceil(((double) count(TABLE_NAME)) / pageSize);
+	}
+
+	public List<String> getUniqueComments() throws SQLException {
+		String sql = SQLUtils.getQuery("Transactions.UniqueComments");
+		List<String> comments = new ArrayList<>();
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				comments.add(rs.getString(1));
+			}
+		}
+		return comments;
 	}
 
 }

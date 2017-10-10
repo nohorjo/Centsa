@@ -88,8 +88,11 @@ public abstract class AbstractDAO implements DAO {
 		try (Connection conn = SQLUtils.getConnection();
 				PreparedStatement ps = conn.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
-			return rs.getInt(1);
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
 		}
+		return 0;
 	}
 
 	private String[] addIDColumn(String[] columnsWithoutID) {

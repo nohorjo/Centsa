@@ -51,4 +51,11 @@ public class TransactionsRS {
 		return dao.insert(t);
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/comments")
+	public List<String> getUniqueComments() throws SQLException {
+		return dao.getUniqueComments();
+	}
+
 }
