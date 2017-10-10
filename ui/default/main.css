@@ -64,3 +64,38 @@ body {
 	color: white;
 	border-radius: 3px;
 }
+
+.datalist {
+	position: relative;
+}
+
+.datalist input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10
+}
+
+.datalist div {
+	position: absolute;
+	top: 2.4em;
+	left: 0;
+	z-index: 9;
+	width: 100%;
+	background-color: white;
+	border: 1px #ddd solid;
+	border-radius: 2px;
+}
+
+.datalist span {
+	cursor: default;
+	display: block;
+	padding: 1px 2px;
+	margin: 2px 1px;
+	width: 100%;
+}
+
+.datalist span:hover {
+	background-color: #428bca;
+	color: white;
+}

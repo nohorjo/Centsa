@@ -24,6 +24,22 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.expenses = centsa.expenses.getAll(0, 0);
 	$scope.uniqueComments = centsa.transactions.getUniqueComments();
 
+	$scope.showDataList = false;
+
+	$scope.setComment = function(c) {
+		$scope.showDataList = false;
+		$scope.newTrans.comment = c;
+	};
+
+	$scope.closeDataList = function() {
+		setTimeout(function() {
+			if (!$rootScope.isActive('.datalist *')) {
+				$scope.showDataList = false;
+				$scope.$apply();
+			}
+		}, 200);
+	};
+
 	$scope.newTrans = {
 		amount : 0.0,
 		comment : "",
