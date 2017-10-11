@@ -31,15 +31,6 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.newTrans.comment = c;
 	};
 
-	$scope.closeDataList = function() {
-		setTimeout(function() {
-			if (!$rootScope.isActive('.datalist *')) {
-				$scope.showDataList = false;
-				$scope.$apply();
-			}
-		}, 200);
-	};
-
 	$scope.navigateDataList = (function() {
 
 		var index = -1;
@@ -47,24 +38,19 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 		return function($event) {
 
-			var temp = $(".datalist span");
+			var temp = $(".datalist:first span");
 			dataListItems = temp.length > 0 ? temp : (dataListItems || temp);
-			dataListItems.removeClass("hover");
 
 			switch ($event.keyCode) {
 			case 38:
 				if (index > 0) {
 					index--;
 				}
-				$(dataListItems[index]).addClass("hover");
-				$(dataListItems[index]).focus();
 				break;
 			case 40:
 				if (index < dataListItems.length - 1) {
 					index++;
 				}
-				$(dataListItems[index]).addClass("hover");
-				$(dataListItems[index]).focus();
 				break;
 			case 9:
 			case 13:
@@ -75,6 +61,12 @@ app.controller("transCtrl", function($scope, $rootScope) {
 				index = -1;
 				break;
 			}
+			$(".datalist").each(function() {
+				var dataListItems = $(this).find("span");
+				dataListItems.removeClass("hover");
+				$(dataListItems[index]).addClass("hover");
+				$(dataListItems[index]).focus();
+			});
 		}
 	})();
 
@@ -154,11 +146,8 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.deleteTrans = function(id) {
 		$scope.pagesCount = 0;
 		if (centsa.transactions.remove(id)) {
-			for (var i = 0; i < $scope.transactions.length; i++) {
-				if ($scope.transactions[i].id == id) {
-					$scope.transactions.splice(i, 1);
-				}
-			}
+			$scope.transactions = centsa.transactions.getAll(
+					$scope.currentPage, pageSize, "DATE DESC, ID DESC");
 		}
 		$('#transModal').modal("hide");
 	}
