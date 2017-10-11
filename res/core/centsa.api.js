@@ -342,6 +342,21 @@ var centsa = (function() {
 				});
 				return rtn;
 			}
+		},
+		general : {
+			budget : function(error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/general/budget",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error
+				});
+				return rtn;
+			}
 		}
 	}
 })();

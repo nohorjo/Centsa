@@ -17,14 +17,6 @@ public class TransactionsDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "AMOUNT", "COMMENT", "ACCOUNT_ID", "TYPE_ID", "EXPENSE_ID", "DATE" };
 	private static final String TABLE_NAME = "TRANSACTIONS";
 
-	static {
-		try {
-			new TransactionsDAO().createTable();
-		} catch (SQLException e) {
-			throw new Error(e);
-		}
-	}
-
 	@Override
 	public void createTable() throws SQLException {
 		createTable("Transactions.CreateTable");
@@ -116,6 +108,18 @@ public class TransactionsDAO extends AbstractDAO {
 			}
 		}
 		return comments;
+	}
+
+	public int sumNonAutoExpenseAmount() throws SQLException {
+		String sql = SQLUtils.getQuery("Transactions.SumNonAutoExpenseAmount");
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		}
+		return 0;
 	}
 
 }

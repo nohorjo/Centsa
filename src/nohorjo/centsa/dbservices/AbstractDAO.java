@@ -10,6 +10,17 @@ import java.util.function.Function;
 
 public abstract class AbstractDAO implements DAO {
 
+	static {
+		try {
+			new AccountsDAO().createTable();
+			new ExpensesDAO().createTable();
+			new TransactionsDAO().createTable();
+			new TypesDAO().createTable();
+		} catch (SQLException e) {
+			throw new Error(e);
+		}
+	}
+
 	protected void createTable(String query) throws SQLException {
 		try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
 			String sql[] = SQLUtils.getQuery(query).split(";");

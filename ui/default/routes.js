@@ -1,5 +1,8 @@
 app.config(function($routeProvider) {
-	$routeProvider.when("/transactions", {
+	$routeProvider.when("/summary", {
+		templateUrl : "summary/view.html",
+		controller : "summaryCtrl"
+	}).when("/transactions", {
 		templateUrl : "transactions/view.html",
 		controller : "transCtrl"
 	}).when("/accounts", {
@@ -12,6 +15,6 @@ app.config(function($routeProvider) {
 		templateUrl : "expenses/view.html",
 		controller : "expensesCtrl"
 	}).otherwise({
-		redirectTo : '/transactions'
+		redirectTo : '/summary'
 	});
 });

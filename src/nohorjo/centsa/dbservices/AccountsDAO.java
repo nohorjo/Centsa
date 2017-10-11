@@ -13,14 +13,6 @@ public class AccountsDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "NAME" };
 	private static final String TABLE_NAME = "ACCOUNTS";
 
-	static {
-		try {
-			new AccountsDAO().createTable();
-		} catch (SQLException e) {
-			throw new Error(e);
-		}
-	}
-
 	@Override
 	public void createTable() throws SQLException {
 		createTable("Accounts.CreateTable");

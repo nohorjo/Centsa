@@ -10,12 +10,12 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 
 	$rootScope.isActive = function(sel) {
 		var active = false;
-		
-		$(sel).each(function(){
-			if(this == document.activeElement)
+
+		$(sel).each(function() {
+			if (this == document.activeElement)
 				active = true;
 		});
-		
+
 		return active;
 	}
 
