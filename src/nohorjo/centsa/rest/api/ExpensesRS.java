@@ -44,4 +44,11 @@ public class ExpensesRS {
 	public long insert(Expense e) throws SQLException {
 		return dao.insert(e);
 	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/totalActive")
+	public int getTotalActive(@QueryParam("auto") boolean auto) throws SQLException {
+		return dao.getTotalActive(auto);
+	}
 }

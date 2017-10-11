@@ -115,4 +115,16 @@ public class ExpensesDAO extends AbstractDAO {
 		return es;
 	}
 
+	public int getTotalActive(boolean auto) throws SQLException {
+		String sql = SQLUtils.getQuery(auto ? "Expenses.GetTotalAuto" : "Expenses.GetTotalActive");
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		}
+		return 0;
+	}
+
 }

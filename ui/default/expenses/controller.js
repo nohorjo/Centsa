@@ -1,5 +1,7 @@
 app.controller("expensesCtrl", function($scope, $rootScope) {
 	$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
+	$scope.totalActiveExpenses = centsa.expenses.totalActive();
+	$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
 
 	$scope.newExpense = {
 		name : "",
@@ -18,6 +20,8 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		$scope.newExpense.ended = $scope.newExpense.ended ? new Date(
 				$scope.newExpense.ended).getTime() : null;
 		$scope.newExpense.id = centsa.expenses.insert($scope.newExpense);
+		$scope.totalActiveExpenses = centsa.expenses.totalActive();
+		$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
 		$scope.expenses.unshift($scope.newExpense);
 		$scope.newExpense = Object.assign({}, newExpense);
 		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(

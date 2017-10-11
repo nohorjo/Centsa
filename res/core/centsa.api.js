@@ -341,6 +341,19 @@ var centsa = (function() {
 					error : error
 				});
 				return rtn;
+			},
+			totalActive : function(auto, error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/expenses/totalActive?auto=" + auto,
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error
+				});
+				return rtn;
 			}
 		},
 		general : {
