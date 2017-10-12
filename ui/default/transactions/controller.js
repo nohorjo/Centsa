@@ -116,6 +116,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.editTrans = function(trans) {
 		var t = Object.assign({}, trans);
 		t.date = $rootScope.formatDate(t.date);
+		$('.datepicker').datepicker("update", t.date);
 		t.amount = t.amount / 100;
 		t.account_id = t.account_id.toString();
 		t.type_id = t.type_id.toString();
@@ -129,7 +130,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 					$('.datepicker').datepicker("update",
 							new Date().formatDate("yyyy/MM/dd"));
 				})
-	}
+	};
 
 	$scope.initDatePickers = function() {
 		$('.datepicker').datepicker({
@@ -150,6 +151,6 @@ app.controller("transCtrl", function($scope, $rootScope) {
 					$scope.currentPage, pageSize, "DATE DESC, ID DESC");
 		}
 		$('#transModal').modal("hide");
-	}
+	};
 
 });

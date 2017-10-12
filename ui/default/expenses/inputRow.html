@@ -1,0 +1,15 @@
+<td><input type="submit" value="+" class="btn btn-primary"
+	data-ng-class="{ 'btn-warning': Form.$invalid }"
+	data-ng-disabled="Form.$invalid"></td>
+<td><input type="text" class="form-control" required="required"
+	data-ng-model="newExpense.name"></td>
+<td><input type="number" class="form-control" required="required"
+	data-ng-model="newExpense.cost"></td>
+<td><input type="number" class="form-control" min="1"
+	required="required" data-ng-model="newExpense.frequency_days"></td>
+<td><input type="text" class="datepicker form-control"
+	pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
+	data-ng-model="newExpense.started"></td>
+<td><input type="text" class="datepicker form-control"
+	pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="newExpense.ended"></td>
+<td><input type="checkbox" data-ng-model="newExpense.automatic"></td>
