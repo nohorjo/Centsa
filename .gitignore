@@ -95,3 +95,4 @@ build/release/log/*
 .fuse*
 
 build/release/layout
+/importer_bin/

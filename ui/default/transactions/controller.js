@@ -152,5 +152,4 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		}
 		$('#transModal').modal("hide");
 	};
-
 });

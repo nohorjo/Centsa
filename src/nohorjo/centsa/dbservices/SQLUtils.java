@@ -1,5 +1,7 @@
 package nohorjo.centsa.dbservices;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,8 +19,8 @@ public class SQLUtils {
 	static {
 		AbstractConfiguration.setDefaultListDelimiter((char) 0);
 		try {
-			QUERIES = new XMLConfiguration(ClassLoader.getSystemResource("sql-queries.xml").getPath());
-		} catch (ConfigurationException e) {
+			QUERIES = new XMLConfiguration(ClassLoader.getSystemResource("sql-queries.xml").toURI().toURL());
+		} catch (ConfigurationException | MalformedURLException | URISyntaxException e) {
 			throw new Error(e);
 		}
 	}

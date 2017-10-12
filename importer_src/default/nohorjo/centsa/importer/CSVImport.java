@@ -1,10 +1,7 @@
-package nohorjo.centsa.importing;
+package nohorjo.centsa.importer;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,20 +16,20 @@ import nohorjo.centsa.vo.Account;
 import nohorjo.centsa.vo.Transaction;
 import nohorjo.centsa.vo.Type;
 
-public class CSVImport {
+public class CSVImport implements Importer {
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
-	private static AccountsDAO aDao = new AccountsDAO();
-	private static TypesDAO tDao = new TypesDAO();
-	private static TransactionsDAO transDao = new TransactionsDAO();
+	private AccountsDAO aDao = new AccountsDAO();
+	private TypesDAO tDao = new TypesDAO();
+	private TransactionsDAO transDao = new TransactionsDAO();
 
-	public static void importCSV(String csv) throws IOException, SQLException, ParseException {
+	public void doImport(String csv) throws Exception {
 		Map<Account, Long> accounts = new HashMap<>();
 		Map<Type, Long> types = new HashMap<>();
 		try (Reader r = new StringReader(csv)) {
-			Iterable<CSVRecord> records = CSVFormat.RFC4180
-					.withHeader("date", "amount", "comment", "account", "type", "expense").parse(r);
+			Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("date", "amount", "comment", "account", "type")
+					.parse(r);
 			for (CSVRecord record : records) {
 				Transaction trans = new Transaction();
 				trans.setDate(sdf.parse(record.get("date")).getTime());
@@ -54,7 +51,7 @@ public class CSVImport {
 				}
 
 				trans.setType_id(types.get(type));
-				// FIXME expenses
+
 				transDao.insert(trans);
 			}
 		}

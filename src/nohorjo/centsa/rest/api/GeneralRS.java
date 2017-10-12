@@ -3,11 +3,16 @@ package nohorjo.centsa.rest.api;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
+import nohorjo.centsa.importer.Importer;
 import nohorjo.centsa.vo.Expense;
 
 @Path("/general")
@@ -32,4 +37,18 @@ public class GeneralRS {
 
 		return -totalAuto - sumNonAuto;
 	}
+
+	@POST
+	@Path("/import")
+	@Consumes(MediaType.TEXT_PLAIN)
+	public void importFile(String data, @QueryParam("format") String format) throws Exception {
+		switch (format.toLowerCase()) {
+		case "csv":
+			Importer imp = (Importer) Class.forName("nohorjo.centsa.importer.CSVImport").newInstance();
+			imp.doImport(data);
+		default:
+			throw new Exception("Unsupported format: " + format);
+		}
+	}
+
 }

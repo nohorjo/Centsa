@@ -30,5 +30,7 @@
 		<dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.9" conf="build" />
 		<dependency org="junit" name="junit" rev="4.12" conf="build" />
 		<dependency org="ant" name="ant-junit" rev="1.6.5" conf="build" />
+		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build"/>
+		
 	</dependencies>
 </ivy-module>

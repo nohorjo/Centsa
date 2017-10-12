@@ -29,7 +29,7 @@
 
 	<target name="resolve" depends="install-ivy">
 		<mkdir dir="${lib.dir}" />
-		<property name="packaging.type" value="jar"/>
+		<property name="packaging.type" value="jar" />
 		<ivy:retrieve pathid="lib.path.id" pattern="${lib.dir}/[artifact].[ext]" conf="rt" />
 		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
 
@@ -48,7 +48,7 @@
 		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
 
-	<target name="build" depends="jar" />
+	<target name="build" depends="jar,build-importers" />
 
 	<target name="clean">
 		<delete dir="${release.dir}/lib/">
@@ -149,7 +149,6 @@
 			<fileset dir="${release.dir}/lib">
 				<exclude name="${app.name}*" />
 			</fileset>
-			<fileset dir="${release.dir}/layout/" />
 		</delete>
 		<copy todir="${release.dir}/lib">
 			<fileset dir="${lib.dir}">
@@ -163,5 +162,30 @@
 		</copy>
 	</target>
 
+	<target name="build-importers" description="">
+		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="build.lib.path" />
+		<for param="dir" list="default,custom1">
+			<sequential>
+				<mkdir dir="importer_bin/@{dir}" />
+				<javac srcdir="importer_src/@{dir}" destdir="importer_bin/@{dir}" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
+				<jar destfile="${build.dir}/Centsa.importer.@{dir}.jar" basedir="importer_bin/@{dir}" />
+			</sequential>
+		</for>
+		<copy todir="${release.dir}/lib">
+			<fileset dir="${build.dir}">
+				<include name="Centsa.importer.default.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="run">
+		<java classname="nohorjo.centsa.Main" fork="true">
+			<classpath>
+				<pathelement location="${release.dir}/lib/*" />
+				<pathelement location="${release.dir}" />
+			</classpath>
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n" />
+		</java>
+	</target>
 
 </project>
