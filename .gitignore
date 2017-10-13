@@ -87,12 +87,10 @@ hs_err_pid*
 # End of https://www.gitignore.io/api/java,eclipse
 
 build/release/lib/*
-build/release/layout/*
 *.db
 *.desktop
 *.lnk
 build/release/log/*
 .fuse*
 
-build/release/layout
 /importer_bin/

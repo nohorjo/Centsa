@@ -4,13 +4,16 @@
 	<property name="app.name" value="Centsa" />
 
 	<property name="build.dir" value="build" />
-	<property name="lib.dir" value="lib" />
 
 	<property name="build.lib.dir" value="${build.dir}/lib" />
 	<property name="release.dir" value="${build.dir}/release" />
+	<property name="lib.dir" value="${release.dir}/lib" />
 
 	<path id="build.lib.path">
 		<fileset dir="${build.lib.dir}" includes="*.jar" />
+	</path>
+	<path id="lib.path.id">
+		<fileset dir="${lib.dir}" includes="*.jar" />
 	</path>
 
 	<target name="check-ivy">
@@ -23,20 +26,15 @@
 		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${build.lib.dir}/ivy.jar" usetimestamp="true" />
 	</target>
 
-	<target name="install-ivy" depends="check-ivy,download-ivy">
+	<target name="resolve-dependencies" depends="check-ivy,download-ivy">
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="build.lib.path" />
-	</target>
-
-	<target name="resolve" depends="install-ivy">
 		<mkdir dir="${lib.dir}" />
 		<property name="packaging.type" value="jar" />
 		<ivy:retrieve pathid="lib.path.id" pattern="${lib.dir}/[artifact].[ext]" conf="rt" />
 		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
+	</target>
 
-		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
-		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="build.lib.path" />
-
-		<!-- prepare eclipse classpath-->
+	<target name="prepare-eclipse-classpath" depends="resolve-dependencies">
 		<path id="jar-fileset">
 			<path refid="lib.path.id" />
 			<path refid="build.lib.path" />
@@ -51,9 +49,6 @@
 	<target name="build" depends="jar,build-importers" />
 
 	<target name="clean">
-		<delete dir="${release.dir}/lib/">
-			<include name="${app.name}*.jar" />
-		</delete>
 		<delete dir="${build.dir}">
 			<exclude name="build.xml" />
 			<exclude name="release/**/**.*" />
@@ -65,8 +60,11 @@
 	</target>
 
 
-	<target name="jar" depends="compile, testReport">
+	<target name="jar" depends="compile, test-report">
 		<buildnumber />
+		<delete dir="${release.dir}/lib/">
+			<include name="${app.name}*.jar" />
+		</delete>
 		<jar destfile="${release.dir}/lib/${app.name}.v${version.info}.build-${build.number}.jar">
 			<fileset dir="bin">
 				<exclude name="**/*TEST.class" />
@@ -76,11 +74,11 @@
 		</jar>
 	</target>
 
-	<target name="compile" depends="resolve,clean">
+	<target name="compile" depends="resolve-dependencies,clean">
 		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
 	</target>
 
-	<target name="testReport" depends="test" if="test.complete">
+	<target name="test-report" depends="test" if="test.complete">
 		<jacoco:report xmlns:jacoco="antlib:org.jacoco.ant">
 			<executiondata>
 				<file file="${build.dir}/jacoco.exec" />
@@ -103,7 +101,9 @@
 		</jacoco:report>
 	</target>
 
-	<target name="test">
+	<target name="test" depends="resolve-dependencies">
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="build.lib.path" />
 		<jacoco:coverage destfile="${build.dir}/jacoco.exec">
 			<junit dir="." fork="true" showoutput="true" printsummary="withOutAndErr" haltonerror="true" haltonfailure="true" failureproperty="test.failed">
 				<formatter type="plain" usefile="false" />
@@ -121,7 +121,7 @@
 		<available file="build/jacoco.exec" property="test.complete" />
 	</target>
 
-	<target name="release" depends="prepareRelease, build" description="Builds a release zip">
+	<target name="release" depends="clean-release,build" description="Builds a release zip">
 		<replaceregexp match='org.slf4j.simpleLogger.defaultLogLevel=.*' replace='org.slf4j.simpleLogger.defaultLogLevel=info'>
 			<fileset dir="${release.dir}" includes="simplelogger.properties" />
 		</replaceregexp>
@@ -144,25 +144,15 @@
 		</replaceregexp>
 	</target>
 
-	<target name="prepareRelease">
+	<target name="clean-release">
 		<delete>
 			<fileset dir="${release.dir}/lib">
 				<exclude name="${app.name}*" />
 			</fileset>
 		</delete>
-		<copy todir="${release.dir}/lib">
-			<fileset dir="${lib.dir}">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-		<copy todir="${release.dir}/layout/">
-			<fileset dir="ui">
-				<include name="**/*" />
-			</fileset>
-		</copy>
 	</target>
 
-	<target name="build-importers" description="">
+	<target name="build-importers" depends="resolve-dependencies" description="">
 		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="build.lib.path" />
 		<for param="dir" list="default,custom1">
 			<sequential>
