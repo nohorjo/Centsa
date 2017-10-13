@@ -10,8 +10,15 @@ import nohorjo.centsa.server.EmbeddedServer;
 
 public class Main extends Application {
 
+	private static Stage stage;
+	
+	public static Stage getStage() {
+		return stage;
+	}
+	
 	@Override
 	public void start(Stage stage) {
+		Main.stage = stage;
 		stage.setTitle("Centsa");
 		stage.setScene(new Scene(new Renderer()));
 		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("icon.png")));

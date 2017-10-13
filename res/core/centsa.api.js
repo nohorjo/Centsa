@@ -412,14 +412,10 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			importFile : function(file, type, success, error) {
+			importFile : function(success, error) {
 				ajax({
-					url : apiUrl.get() + "/general/import?format=" + type,
-					method : "POST",
-					data : file,
-					headers : {
-						"Content-Type" : "text/plain"
-					},
+					url : apiUrl.get() + "/general/import",
+					method : "GET",
 					success : success,
 					error : error || function(resp) {
 						throw resp.responseText;

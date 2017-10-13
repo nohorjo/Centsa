@@ -1,15 +1,18 @@
 package nohorjo.centsa.rest.api;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
+import javafx.application.Platform;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import nohorjo.centsa.Main;
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.importer.Importer;
@@ -38,17 +41,23 @@ public class GeneralRS {
 		return -totalAuto - sumNonAuto;
 	}
 
-	@POST
+	@GET
 	@Path("/import")
-	@Consumes(MediaType.TEXT_PLAIN)
-	public void importFile(String data, @QueryParam("format") String format) throws Exception {
-		switch (format.toLowerCase()) {
-		case "csv":
-			Importer imp = (Importer) Class.forName("nohorjo.centsa.importer.CSVImport").newInstance();
-			imp.doImport(data);
-		default:
-			throw new Exception("Unsupported format: " + format);
-		}
-	}
+	public void importFile() {
+		Platform.runLater(() -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open CSV spreadsheet");
+			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV spreadsheets", "*.csv"));
+			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
+			if (selectedFile != null) {
+				try {
+					Importer imp = (Importer) Class.forName("nohorjo.centsa.importer.CSVImport").newInstance();
+					imp.doImport(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+				} catch (Exception e) {
+					throw new Error(e);
+				}
+			}
+		});
+	}
 }

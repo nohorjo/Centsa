@@ -46,7 +46,7 @@
 		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
 
-	<target name="build" depends="jar,build-importers" />
+	<target name="build" depends="jar,test-report,build-importers" />
 
 	<target name="clean">
 		<delete dir="${build.dir}">
@@ -60,7 +60,7 @@
 	</target>
 
 
-	<target name="jar" depends="compile, test-report">
+	<target name="jar" depends="compile">
 		<buildnumber />
 		<delete dir="${release.dir}/lib/">
 			<include name="${app.name}*.jar" />
@@ -176,6 +176,9 @@
 			</classpath>
 			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n" />
 		</java>
+	</target>
+
+	<target name="build-run" depends="jar,run" description="">
 	</target>
 
 </project>
