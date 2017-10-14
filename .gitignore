@@ -94,3 +94,4 @@ build/release/log/*
 .fuse*
 
 /importer_bin/
+build/release/rules/MyCustomRule.js
