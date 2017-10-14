@@ -61,11 +61,17 @@
 </form>
 <ul class="pagination float-right">
 	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
+		data-ng-click="goToPage(1)">First</a></li>
+	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
 		data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a></li>
 	<li data-ng-class="{ 'active':currentPage==(n+1) }"
-		data-ng-repeat="n in [] | range:countPages()"><a href=""
-		data-ng-click="goToPage(n+1)">{{ n + 1 }}</a></li>
+		data-ng-repeat="n in [] | range:countPages()"
+		data-ng-if="(n+1) > (currentPage-6) && (n+1) < (currentPage+6) "><a
+		href="" data-ng-click="goToPage(n+1)">{{ n + 1 }}</a></li>
 	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
 		href=""
 		data-ng-click="goToPage((currentPage+1 <= pagesCount) ? currentPage+1 : currentPage )">&raquo;</a></li>
+	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
+		href="" data-ng-click="goToPage(pagesCount)">Last</a></li>
+
 </ul>
