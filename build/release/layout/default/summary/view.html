@@ -12,5 +12,30 @@
 			<td><input type="button" value="Import file"
 				class="btn btn-primary" data-ng-click="importFile()" /></td>
 		</tr>
+		<tr>
+			<td colspan="3">Import CSV spreadsheets into the database. The
+				file is parsed according to one of the rules defined in the <i>rules</i>
+				directory. The <i>default</i> rule expects a CSV in the format of
+				the example below.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3"><table class="table table-bordered">
+					<tr>
+						<th>Date</th>
+						<th>Amount</th>
+						<th>Comment</th>
+						<th>Account</th>
+						<th>Type</th>
+					</tr>
+					<tr>
+						<td>2017/01/29</td>
+						<td>12.99</td>
+						<td>Eating out</td>
+						<td>Cash</td>
+						<td>Food</td>
+					</tr>
+				</table></td>
+		</tr>
 	</table>
 </div>

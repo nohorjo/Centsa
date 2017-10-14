@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.Main;
@@ -57,6 +59,11 @@ public class GeneralRS {
 				try {
 					new JSCSVParser().parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))),
 							rule);
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("");
+					alert.setHeaderText("");
+					alert.setContentText("Import complete!");
+					alert.show();
 				} catch (Exception e) {
 					throw new Error(e);
 				}
