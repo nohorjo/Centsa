@@ -19,17 +19,6 @@ public class SystemProperties {
 
 			runtimeProperties.setProperty("root.dir", propertiesFile.getParentFile().getAbsolutePath());
 
-			File layoutDir = new File(propertiesFile.getParentFile(), "layout");
-			String layoutsJson = "[";
-			for (File d : layoutDir.listFiles((File d) -> {
-				return d.isDirectory();
-			})) {
-				layoutsJson += String.format("\"%s\",", d.getName());
-			}
-			layoutsJson = layoutsJson.replaceAll(",$", "]");
-
-			runtimeProperties.setProperty("layouts", layoutsJson);
-
 		} catch (ConfigurationException e) {
 			throw new Error(e);
 		}

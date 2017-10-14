@@ -127,4 +127,8 @@ public class ExpensesDAO extends AbstractDAO {
 		return 0;
 	}
 
+	public Long getIdByName(String name) throws SQLException {
+		return getIdByName(name, TABLE_NAME);
+	}
+
 }

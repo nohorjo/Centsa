@@ -78,4 +78,8 @@ public class TypesDAO extends AbstractDAO {
 		delete(TABLE_NAME, id);
 	}
 
+	public Long getIdByName(String name) throws SQLException {
+		return getIdByName(name, TABLE_NAME);
+	}
+
 }

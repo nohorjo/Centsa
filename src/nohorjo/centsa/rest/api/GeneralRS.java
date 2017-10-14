@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
@@ -15,7 +16,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.Main;
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
-import nohorjo.centsa.importer.Importer;
+import nohorjo.centsa.importer.JSCSVParser;
+import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.vo.Expense;
 
 @Path("/general")
@@ -43,21 +45,51 @@ public class GeneralRS {
 
 	@GET
 	@Path("/import")
-	public void importFile() {
+	public void importFile(@QueryParam("rule") String rule) {
 		Platform.runLater(() -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open CSV spreadsheet");
 			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV spreadsheets", "*.csv"));
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
 			if (selectedFile != null) {
 				try {
-					Importer imp = (Importer) Class.forName("nohorjo.centsa.importer.CSVImport").newInstance();
-					imp.doImport(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+					new JSCSVParser().parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))),
+							rule);
 				} catch (Exception e) {
 					throw new Error(e);
 				}
 			}
 		});
 	}
+
+	@GET
+	@Path("/layouts")
+	public String getLayouts() {
+		File layoutDir = new File(SystemProperties.get("root.dir", String.class) + "/layout");
+		String layoutsJson = "[";
+		for (File d : layoutDir.listFiles((d) -> {
+			return d.isDirectory();
+		})) {
+			layoutsJson += String.format("\"%s\",", d.getName());
+		}
+		layoutsJson = layoutsJson.replaceAll(",$", "]");
+		return layoutsJson;
+	}
+
+	@GET
+	@Path("/rules")
+	public String getRules() {
+		File rulesDir = new File(SystemProperties.get("root.dir", String.class) + "/rules");
+		String rulesJson = "[";
+		for (File d : rulesDir.listFiles((d) -> {
+			return d.getName().endsWith(".js");
+		})) {
+			rulesJson += String.format("\"%s\",", d.getName().replaceAll("\\.js$", ""));
+		}
+		rulesJson = rulesJson.replaceAll(",$", "]");
+		return rulesJson;
+	}
+
 }

@@ -46,7 +46,7 @@
 		<replace file=".classpath" token="&lt;/classpath&gt;" value="${libs}&#10;&lt;/classpath&gt;" />
 	</target>
 
-	<target name="build" depends="jar,test-report,build-importers" />
+	<target name="build" depends="jar,test-report" />
 
 	<target name="clean">
 		<delete dir="${build.dir}">
@@ -150,22 +150,6 @@
 				<exclude name="${app.name}*" />
 			</fileset>
 		</delete>
-	</target>
-
-	<target name="build-importers" depends="resolve-dependencies" description="">
-		<taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="build.lib.path" />
-		<for param="dir" list="default,custom1">
-			<sequential>
-				<mkdir dir="importer_bin/@{dir}" />
-				<javac srcdir="importer_src/@{dir}" destdir="importer_bin/@{dir}" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
-				<jar destfile="${build.dir}/Centsa.importer.@{dir}.jar" basedir="importer_bin/@{dir}" />
-			</sequential>
-		</for>
-		<copy todir="${release.dir}/lib">
-			<fileset dir="${build.dir}">
-				<include name="Centsa.importer.default.jar" />
-			</fileset>
-		</copy>
 	</target>
 
 	<target name="run">

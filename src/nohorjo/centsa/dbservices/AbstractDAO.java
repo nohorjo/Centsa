@@ -38,8 +38,8 @@ public abstract class AbstractDAO implements DAO {
 		for (int i = 1; i < columns.length; i++) {
 			columns[i] = columnsWithoutID[i - 1];
 		}
-		String sql = SQLUtils.getQuery("Templates.Insert").replace("{tablename}", tableName)
-				.replace("{columns}", String.join(",", columns))
+		String sql = SQLUtils.getQuery((values[0] == null ? "Templates.Insert" : "Templates.Update"))
+				.replace("{tablename}", tableName).replace("{columns}", String.join(",", columns))
 				.replace("{placeholders}", String.join(",", Collections.nCopies(columns.length, "?")));
 
 		try (Connection conn = SQLUtils.getConnection();
@@ -105,6 +105,19 @@ public abstract class AbstractDAO implements DAO {
 			}
 		}
 		return 0;
+	}
+
+	protected Long getIdByName(String name, String tableName) throws SQLException {
+		String sql = SQLUtils.getQuery("Templates.GetIdByName").replace("{tablename}", tableName);
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, name);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getLong(1);
+				}
+			}
+		}
+		return null;
 	}
 
 	private String[] addIDColumn(String[] columnsWithoutID) {

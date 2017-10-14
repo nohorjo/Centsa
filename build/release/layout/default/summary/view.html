@@ -1,3 +1,16 @@
-<p>Budget: {{budget/100}}</p>
-<input type="button" value="Import file" class="btn btn-primary"
-	onclick="centsa.general.importFile()" />
+<div style="width: 50%;">
+	<table class="table">
+		<tr>
+			<td><label>Budget</label></td>
+			<td>{{budget/100}}</td>
+		</tr>
+		<tr>
+			<td><label>Parse rule</label></td>
+			<td><select class="form-control" data-ng-model="rule">
+					<option data-ng-repeat="r in rules" value="{{ r }}">{{ r }}</option>
+			</select></td>
+			<td><input type="button" value="Import file"
+				class="btn btn-primary" data-ng-click="importFile()" /></td>
+		</tr>
+	</table>
+</div>

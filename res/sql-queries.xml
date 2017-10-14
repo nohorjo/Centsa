@@ -3,9 +3,14 @@
 	<Templates>
 		<Insert>
 		<![CDATA[
-		REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
+		INSERT INTO {tablename} ({columns}) VALUES ({placeholders});
 		]]>
 		</Insert>
+		<Update>
+		<![CDATA[
+		REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
+		]]>
+		</Update>
 		<GetAll>
 		<![CDATA[
 		SELECT {columns} FROM {tablename} ORDER BY {orderby} LIMIT ?, ?;
@@ -26,6 +31,11 @@
 		SELECT COUNT(*) FROM {tablename};
 		]]>
 		</Count>
+		<GetIdByName>
+		<![CDATA[
+		SELECT ID FROM {tablename} WHERE NAME = ?;
+		]]>
+		</GetIdByName>
 	</Templates>
 	<Transactions>
 		<CreateTable>

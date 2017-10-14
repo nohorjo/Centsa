@@ -412,15 +412,45 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			importFile : function(success, error) {
+			importFile : function(rule, success, error) {
 				ajax({
-					url : apiUrl.get() + "/general/import",
+					url : apiUrl.get() + "/general/import?rule=" + rule,
 					method : "GET",
 					success : success,
 					error : error || function(resp) {
 						throw resp.responseText;
 					}
 				});
+			},
+			layouts : function(error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/general/layouts",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error || function(resp) {
+						throw resp.responseText;
+					}
+				});
+				return rtn;
+			},
+			rules : function(error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/general/rules",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error || function(resp) {
+						throw resp.responseText;
+					}
+				});
+				return rtn;
 			}
 		}
 	}

@@ -69,7 +69,7 @@ function init() {
 			.get("server.port");
 
 	var layoutsSelect = document.getElementById("layout");
-	var layouts = JSON.parse(centsa.settings.get("layouts"));
+	var layouts = centsa.general.layouts();
 	for (var i = 0; i < layouts.length; i++) {
 		var option = document.createElement("option");
 		option.value = layouts[i];
