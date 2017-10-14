@@ -56,17 +56,21 @@ public class GeneralRS {
 			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
 			if (selectedFile != null) {
-				try {
-					new JSCSVParser().parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))),
-							rule);
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("");
-					alert.setHeaderText("");
-					alert.setContentText("Import complete!");
-					alert.show();
-				} catch (Exception e) {
-					throw new Error(e);
-				}
+				new Thread(() -> {
+					try {
+						new JSCSVParser()
+								.parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))), rule);
+						Platform.runLater(() -> {
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("");
+							alert.setHeaderText("");
+							alert.setContentText("Import complete!");
+							alert.show();
+						});
+					} catch (Exception e) {
+						throw new Error(e);
+					}
+				}).start();
 			}
 		});
 	}
