@@ -1,4 +1,39 @@
+<form name="TransferForm">
+	<h4>Transfer funds from one account to another</h4>
+	<table class="table">
+		<tr>
+			<th width="15%">Date</th>
+			<th width="15%">From</th>
+			<th width="15%">To</th>
+			<th width="10%">Amount</th>
+			<th width="25%">Comment</th>
+			<th width="20%"></th>
+		</tr>
+		<tr>
+			<td><input type="text" class="datepicker form-control"
+				pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
+				data-ng-model="transfer.date"></td>
+			<td><select class="form-control" data-ng-model="transfer.from">
+					<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+			</select></td>
+			<td><select class="form-control" data-ng-model="transfer.to">
+					<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+			</select></td>
+			<td><input type="number" class="form-control"
+				required="required" data-ng-model="transfer.amount"></td>
+			<td><input type="text" class="form-control" required="required"
+				data-ng-model="transfer.comment"></td>
+			<td><input type="button" value="Transfer"
+				class="btn btn-primary"
+				data-ng-class="{ 'btn-warning': TransferForm.$invalid || transfer.to == transfer.from }"
+				data-ng-disabled="TransferForm.$invalid || transfer.to == transfer.from"
+				data-ng-click="transferFunds()"></td>
+		</tr>
+	</table>
+</form>
+
 <form name="Form" data-ng-submit="saveAccount()">
+	<h4>Add new accounts</h4>
 	<table id="accountsTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
