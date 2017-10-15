@@ -46,6 +46,10 @@ var centsa = (function() {
 		xmlHttp.send(payload.data);
 	}
 
+	var throwError = function(resp) {
+		throw resp.status;
+	};
+
 	return {
 		setUniqueKey : function(ukey) {
 			apiUrl.set(ukey);
@@ -60,9 +64,7 @@ var centsa = (function() {
 					success : function(resp) {
 						val = resp.responseText;
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return val;
 			},
@@ -72,9 +74,7 @@ var centsa = (function() {
 					method : "POST",
 					data : value,
 					success : success,
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 			}
 		},
@@ -88,9 +88,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -105,9 +103,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -120,9 +116,7 @@ var centsa = (function() {
 					success : function() {
 						rtn = true;
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -139,9 +133,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -155,9 +147,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -170,9 +160,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			}
@@ -187,9 +175,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -204,9 +190,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -219,9 +203,7 @@ var centsa = (function() {
 					success : function() {
 						rtn = true;
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -238,9 +220,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			}
@@ -255,9 +235,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -272,9 +250,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -287,9 +263,7 @@ var centsa = (function() {
 					success : function() {
 						rtn = true;
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -306,9 +280,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			}
@@ -323,9 +295,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -340,9 +310,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -355,9 +323,7 @@ var centsa = (function() {
 					success : function() {
 						rtn = true;
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -374,9 +340,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -389,9 +353,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			}
@@ -406,9 +368,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -417,9 +377,7 @@ var centsa = (function() {
 					url : apiUrl.get() + "/general/import?rule=" + rule,
 					method : "GET",
 					success : success,
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 			},
 			layouts : function(error) {
@@ -431,9 +389,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			},
@@ -446,9 +402,7 @@ var centsa = (function() {
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},
-					error : error || function(resp) {
-						throw resp.responseText;
-					}
+					error : error || throwError
 				});
 				return rtn;
 			}

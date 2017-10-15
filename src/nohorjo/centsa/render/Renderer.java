@@ -21,7 +21,6 @@ public class Renderer extends Region {
 	private static final int MIN_WIDTH = 1000;
 	private static final int MIN_HEIGHT = 500;
 	private final Logger log = LoggerFactory.getLogger(Renderer.class);
-	private final Logger console = LoggerFactory.getLogger("Console");
 
 	private final WebView browser = new WebView();
 	private final WebEngine webEngine = browser.getEngine();
@@ -42,7 +41,7 @@ public class Renderer extends Region {
 		});
 
 		WebConsoleListener.setDefaultListener((WebView webView, String message, int lineNumber, String sourceId) -> {
-			console.warn("[{}:{}] {}", sourceId, lineNumber, message);
+			LoggerFactory.getLogger(sourceId + ":" + lineNumber).warn(message);
 		});
 
 		getChildren().add(browser);
