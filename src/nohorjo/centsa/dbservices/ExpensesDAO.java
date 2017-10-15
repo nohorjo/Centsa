@@ -24,7 +24,7 @@ public class ExpensesDAO extends AbstractDAO {
 	@Override
 	public long insert(VO _vo) throws SQLException {
 		Expense e = (Expense) _vo;
-		if (e.getId() == 1) {
+		if (e.getId() != null && e.getId() == 1) {
 			throw new SQLException("Cannot edit default expense");
 		}
 
