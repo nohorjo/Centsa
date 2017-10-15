@@ -24,12 +24,12 @@
 		<dependency org="org.glassfish.jersey.media" name="jersey-media-json-jackson" rev="2.26" conf="rt" />
 		<dependency org="org.glassfish.jersey.core" name="jersey-client" rev="2.26" conf="rt" />
 		<dependency org="org.glassfish.jersey.bundles" name="jaxrs-ri" rev="2.26" conf="rt" />
+		<dependency org="org.apache.commons" name="commons-csv" rev="1.1" conf="rt"/>
 		
 		<!-- build -->
 		<dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.9" conf="build" />
 		<dependency org="junit" name="junit" rev="4.12" conf="build" />
 		<dependency org="ant" name="ant-junit" rev="1.6.5" conf="build" />
-		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="build"/>
 		
 	</dependencies>
 </ivy-module>

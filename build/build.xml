@@ -131,6 +131,10 @@
 				<include name="${app.name}/**/**.*" />
 				<exclude name="${app.name}/log/*" />
 				<exclude name="${app.name}/data.db" />
+				<exclude name="${app.name}/rules/*.js" />
+			</zipfileset>
+			<zipfileset dir="${build.dir}">
+				<include name="${app.name}/rules/default*.js" />
 			</zipfileset>
 		</zip>
 		<move tofile="${release.dir}" file="${build.dir}/${app.name}" />
@@ -146,7 +150,7 @@
 
 	<target name="clean-release">
 		<delete>
-			<fileset dir="${release.dir}/lib">
+			<fileset dir="${lib.dir}">
 				<exclude name="${app.name}*" />
 			</fileset>
 		</delete>
