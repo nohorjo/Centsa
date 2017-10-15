@@ -1,5 +1,9 @@
 package nohorjo.centsa;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Arrays;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,11 +15,11 @@ import nohorjo.centsa.server.EmbeddedServer;
 public class Main extends Application {
 
 	private static Stage stage;
-	
+
 	public static Stage getStage() {
 		return stage;
 	}
-	
+
 	@Override
 	public void start(Stage stage) {
 		Main.stage = stage;
@@ -31,7 +35,25 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String logfile = SystemProperties.get("root.dir", String.class) + "/log/application.log";
+		String logDir = SystemProperties.get("root.dir", String.class) + "/log";
+
+		File[] logs = new File(logDir).listFiles();
+		if (logs != null) {
+			int size = 0;
+			for (File file : logs) {
+				size += file.length() / 1024;
+			}
+			if (size > SystemProperties.get("max.logs.kb", Integer.class)) {
+				Arrays.sort(logs, (f1, f2) -> {
+					return Long.compare(f1.lastModified(), f2.lastModified());
+				});
+				for (int i = 0; i < (logs.length / 2) + 1; i++) {
+					Files.delete(logs[i].toPath());
+				}
+			}
+		}
+
+		String logfile = logDir + "/application.log";
 
 		System.setErr(FilePrintStreamRedirector.getRedirector(logfile, System.err, false));
 		System.setOut(FilePrintStreamRedirector.getRedirector(logfile, System.out, true));
