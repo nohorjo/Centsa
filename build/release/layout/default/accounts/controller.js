@@ -8,6 +8,7 @@ app.controller("accountsCtrl", function($scope) {
 
 	$scope.saveAccount = function() {
 		$scope.newAccount.id = centsa.accounts.insert($scope.newAccount);
+		$scope.newAccount.balance = 0;
 		$scope.accounts.unshift($scope.newAccount);
 		$scope.newAccount = Object.assign({}, newAccount);
 	};

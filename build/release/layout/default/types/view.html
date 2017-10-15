@@ -4,6 +4,7 @@
 			<tr>
 				<th width="5%">ID</th>
 				<th>Name</th>
+				<th>Sum</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -17,6 +18,7 @@
 			<tr data-ng-repeat="t in types">
 				<td>{{ t.id }}</td>
 				<td>{{ t.name }}</td>
+				<td>{{ t.sum/100 }}</td>
 			</tr>
 		</tbody>
 	</table>

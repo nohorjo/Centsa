@@ -3,6 +3,7 @@ package nohorjo.centsa.vo;
 public class Account implements VO {
 	private Long id;
 	private String name;
+	private int balance;
 
 	public Long getId() {
 		return id;
@@ -18,6 +19,14 @@ public class Account implements VO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
 	}
 
 	@Override

@@ -1,10 +1,11 @@
 package nohorjo.centsa.dbservices;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 import nohorjo.centsa.vo.Type;
 import nohorjo.centsa.vo.VO;
@@ -26,51 +27,50 @@ public class TypesDAO extends AbstractDAO {
 	}
 
 	@Override
-	public List<Type> getAll(int page, int pageSize, String order) throws SQLException {
-		Function<ResultSet, List<Type>> processor = new Function<ResultSet, List<Type>>() {
+	public List<Type> getAll(int page, int pageSize, String orderBy) throws SQLException {
+		List<Type> ts = new LinkedList<>();
 
-			@Override
-			public List<Type> apply(ResultSet rs) {
-				List<Type> ts = new LinkedList<>();
-				try {
-					while (rs.next()) {
-						Type a = new Type();
-						a.setId(rs.getLong("ID"));
-						a.setName(rs.getString("NAME"));
-						ts.add(a);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new Error(e);
+		orderBy = (orderBy != null && orderBy.toLowerCase().matches("^(\\s*[a-z]* (asc|desc),?)+$")) ? orderBy
+				: "1 ASC";
+		page = (page > 0) ? page : 1;
+		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
+		int skip = (page - 1) * pageSize;
+
+		String sql = SQLUtils.getQuery("Types.GetAll").replace("{orderby}", orderBy);
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, skip);
+			ps.setInt(2, pageSize);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Type t = new Type();
+					t.setId(rs.getLong("ID"));
+					t.setName(rs.getString("NAME"));
+					t.setSum(rs.getInt("SUM"));
+
+					ts.add(t);
 				}
-				return ts;
 			}
-		};
-		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
+		}
+		return ts;
 	}
 
 	@Override
 	public Type get(long id) throws SQLException {
-		Function<ResultSet, Type> processor = new Function<ResultSet, Type>() {
-
-			@Override
-			public Type apply(ResultSet rs) {
-				try {
-					if (rs.next()) {
-						Type t = new Type();
-						t.setId(rs.getLong("ID"));
-						t.setName(rs.getString("NAME"));
-						return t;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new Error(e);
+		String sql = SQLUtils.getQuery("Types.Get");
+		Type t = null;
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					t = new Type();
+					t.setId(rs.getLong("ID"));
+					t.setName(rs.getString("NAME"));
+					t.setSum(rs.getInt("SUM"));
 				}
-				return null;
 			}
-		};
+		}
 
-		return get(TABLE_NAME, COLUMNS, id, processor);
+		return t;
 	}
 
 	@Override

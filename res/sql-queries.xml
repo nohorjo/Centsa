@@ -75,6 +75,20 @@
 	    (SELECT 1 FROM ACCOUNTS WHERE ID = 1);
 		]]>
 		</CreateTable>
+		<Get>
+		<![CDATA[
+		SELECT a.ID, a.NAME,
+		(SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID)	AS BALANCE
+		FROM ACCOUNTS a WHERE a.ID = ?;
+		]]>
+		</Get>
+		<GetAll>
+		<![CDATA[
+		SELECT a.ID, a.NAME,
+		(SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID)	AS BALANCE
+		FROM ACCOUNTS a ORDER BY {orderby} LIMIT ?, ?;	
+		]]>
+		</GetAll>
 	</Accounts>
 	<Types>
 		<CreateTable>
@@ -88,6 +102,20 @@
 	    (SELECT 1 FROM TYPES WHERE ID = 1);
 		]]>
 		</CreateTable>
+		<Get>
+		<![CDATA[
+		SELECT ty.ID, ty.NAME,
+		(SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
+		FROM TYPES ty WHERE ty.ID = ?;
+		]]>
+		</Get>
+		<GetAll>
+		<![CDATA[
+		SELECT ty.ID, ty.NAME,
+		(SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
+		FROM TYPES ty ORDER BY {orderby} LIMIT ?, ?;	
+		]]>
+		</GetAll>
 	</Types>
 	<Expenses>
 		<CreateTable>

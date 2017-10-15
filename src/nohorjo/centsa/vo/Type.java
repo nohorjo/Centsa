@@ -3,6 +3,7 @@ package nohorjo.centsa.vo;
 public class Type implements VO {
 	private Long id;
 	private String name;
+	private int sum;
 
 	public Long getId() {
 		return id;
@@ -18,6 +19,14 @@ public class Type implements VO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getSum() {
+		return sum;
+	}
+
+	public void setSum(int sum) {
+		this.sum = sum;
 	}
 
 	@Override
