@@ -12,4 +12,10 @@ app.controller("typesCtrl", function($scope) {
 		$scope.types.unshift($scope.newType);
 		$scope.newType = Object.assign({}, newType);
 	};
+
+	$scope.deleteType = function(id) {
+		if (centsa.types.remove(id)) {
+			$scope.types = centsa.types.getAll(0, 0, "SUM DESC");
+		}
+	};
 });

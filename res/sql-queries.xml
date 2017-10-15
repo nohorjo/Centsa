@@ -116,6 +116,11 @@
 		FROM TYPES ty ORDER BY {orderby} LIMIT ?, ?;	
 		]]>
 		</GetAll>
+		<ConvertToOther>
+		<![CDATA[
+		UPDATE TRANSACTIONS SET TYPE_ID = 1 WHERE TYPE_ID = ?;
+		]]>
+		</ConvertToOther>
 	</Types>
 	<Expenses>
 		<CreateTable>

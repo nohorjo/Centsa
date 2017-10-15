@@ -11,7 +11,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.server.EmbeddedServer;
@@ -31,7 +30,7 @@ public class Renderer extends Region {
 
 		webEngine.load(url);
 
-		webEngine.setOnAlert((WebEvent<String> wEvent) -> {
+		webEngine.setOnAlert((wEvent) -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("");
 			alert.setHeaderText("");

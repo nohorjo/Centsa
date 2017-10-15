@@ -75,7 +75,7 @@ public class AccountsDAO extends AbstractDAO {
 
 	@Override
 	public void delete(long id) throws SQLException {
-		delete(TABLE_NAME, id);
+		throw new SQLException("Cannot delete accounts");
 	}
 
 	public Long getIdByName(String name) throws SQLException {

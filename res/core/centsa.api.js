@@ -194,19 +194,6 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			remove : function(id, error) {
-				var rtn = false;
-				ajax({
-					url : apiUrl.get() + "/accounts?id=" + id,
-					method : "DELETE",
-					async : false,
-					success : function() {
-						rtn = true;
-					},
-					error : error || throwError
-				});
-				return rtn;
-			},
 			insert : function(a, error) {
 				var rtn = null;
 				ajax({

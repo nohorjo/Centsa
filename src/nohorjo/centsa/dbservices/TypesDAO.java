@@ -75,6 +75,14 @@ public class TypesDAO extends AbstractDAO {
 
 	@Override
 	public void delete(long id) throws SQLException {
+		if (id == 1) {
+			throw new SQLException("Cannot delete default type");
+		}
+		String sql = SQLUtils.getQuery("Types.ConvertToOther");
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			ps.executeUpdate();
+		}
 		delete(TABLE_NAME, id);
 	}
 
