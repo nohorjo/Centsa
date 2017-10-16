@@ -32,7 +32,7 @@ else
 		esac
 	fi
 
-	java -cp ${DIR}/lib/*:${DIR} nohorjo.centsa.Main &
+	java -Droot.dir=${DIR} -cp ${DIR}/lib/*:${DIR} nohorjo.centsa.Main &
 fi
 
 

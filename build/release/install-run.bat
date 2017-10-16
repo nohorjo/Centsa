@@ -24,10 +24,10 @@ if exist "%windir%\delete.me.centsa" (
 )
 
 if not exist %LINK% (
-	cscript //E:JScript //nologo "%~f0" "%~f0" -linkfile "%LINK%" -linkarguments "-cp %DIR%lib\*;%DIR% nohorjo.centsa.Main" -iconlocation "%DIR%icon.ico" -adminpermissions "%ADMIN%"
+	cscript //E:JScript //nologo "%~f0" "%~f0" -linkfile "%LINK%" -linkarguments "-Droot.dir=%DIR% -cp %DIR%lib\*;%DIR% nohorjo.centsa.Main" -iconlocation "%DIR%icon.ico" -adminpermissions "%ADMIN%"
 )
 
-start javaw -cp %DIR%lib\*;%DIR% nohorjo.centsa.Main
+start javaw -Droot.dir=%DIR%  -cp %DIR%lib\*;%DIR% nohorjo.centsa.Main
 
 exit /b %errorlevel%
 @if (@X)==(@Y) @end JScript comment */
