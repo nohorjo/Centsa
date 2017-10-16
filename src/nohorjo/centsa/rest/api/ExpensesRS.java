@@ -12,11 +12,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.internal.inject.PerLookup;
+
 import nohorjo.centsa.dbservices.ExpensesDAO;
+import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Expense;
 
+@PerLookup
 @Path("/expenses")
-public class ExpensesRS {
+public class ExpensesRS extends AbstractRS {
 
 	ExpensesDAO dao = new ExpensesDAO();
 

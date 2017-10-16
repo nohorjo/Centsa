@@ -12,6 +12,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
+import org.glassfish.jersey.internal.inject.PerLookup;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,10 +28,12 @@ import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.importer.JSCSVParser;
 import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Expense;
 
+@PerLookup
 @Path("/general")
-public class GeneralRS {
+public class GeneralRS extends AbstractRS {
 
 	private TransactionsDAO tDao = new TransactionsDAO();
 	private ExpensesDAO eDao = new ExpensesDAO();

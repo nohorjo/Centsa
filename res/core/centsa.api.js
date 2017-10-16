@@ -47,7 +47,7 @@ var centsa = (function() {
 	}
 
 	var throwError = function(resp) {
-		throw resp.status;
+		throw resp.responseText;
 	};
 
 	return {

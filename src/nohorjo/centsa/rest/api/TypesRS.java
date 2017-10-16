@@ -12,11 +12,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.internal.inject.PerLookup;
+
 import nohorjo.centsa.dbservices.TypesDAO;
+import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Type;
 
+@PerLookup
 @Path("/types")
-public class TypesRS {
+public class TypesRS extends AbstractRS {
 
 	TypesDAO dao = new TypesDAO();
 

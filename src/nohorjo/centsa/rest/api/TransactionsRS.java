@@ -12,11 +12,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.internal.inject.PerLookup;
+
 import nohorjo.centsa.dbservices.TransactionsDAO;
+import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Transaction;
 
+@PerLookup
 @Path("/transactions")
-public class TransactionsRS {
+public class TransactionsRS extends AbstractRS {
 
 	TransactionsDAO dao = new TransactionsDAO();
 

@@ -9,10 +9,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import nohorjo.centsa.properties.SystemProperties;
+import org.glassfish.jersey.internal.inject.PerLookup;
 
+import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.rest.AbstractRS;
+
+@PerLookup
 @Path("/settings")
-public class SettingsRS {
+public class SettingsRS extends AbstractRS {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)

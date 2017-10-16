@@ -8,8 +8,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.glassfish.jersey.internal.inject.PerLookup;
+
+import nohorjo.centsa.rest.AbstractRS;
+
+@PerLookup
 @Path("/core")
-public class CoreRS {
+public class CoreRS extends AbstractRS {
 
 	@GET
 	@Path("/{resource:.*}")

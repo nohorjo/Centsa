@@ -11,10 +11,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import nohorjo.centsa.properties.SystemProperties;
+import org.glassfish.jersey.internal.inject.PerLookup;
 
+import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.rest.AbstractRS;
+
+@PerLookup
 @Path("/layout")
-public class LayoutRS {
+public class LayoutRS extends AbstractRS {
 
 	@GET
 	@Path("/{resource:.*}")
