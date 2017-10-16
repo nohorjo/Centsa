@@ -22,7 +22,7 @@ import nohorjo.centsa.vo.Expense;
 @Path("/expenses")
 public class ExpensesRS extends AbstractRS {
 
-	ExpensesDAO dao = new ExpensesDAO();
+	private ExpensesDAO dao = new ExpensesDAO();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

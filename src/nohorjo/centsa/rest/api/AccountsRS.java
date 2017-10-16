@@ -22,7 +22,7 @@ import nohorjo.centsa.vo.Account;
 @Path("/accounts")
 public class AccountsRS extends AbstractRS {
 
-	AccountsDAO dao = new AccountsDAO();
+	private AccountsDAO dao = new AccountsDAO();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

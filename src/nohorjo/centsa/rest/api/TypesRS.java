@@ -22,7 +22,7 @@ import nohorjo.centsa.vo.Type;
 @Path("/types")
 public class TypesRS extends AbstractRS {
 
-	TypesDAO dao = new TypesDAO();
+	private TypesDAO dao = new TypesDAO();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

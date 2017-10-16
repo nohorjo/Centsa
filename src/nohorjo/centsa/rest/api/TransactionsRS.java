@@ -22,7 +22,7 @@ import nohorjo.centsa.vo.Transaction;
 @Path("/transactions")
 public class TransactionsRS extends AbstractRS {
 
-	TransactionsDAO dao = new TransactionsDAO();
+	private TransactionsDAO dao = new TransactionsDAO();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
