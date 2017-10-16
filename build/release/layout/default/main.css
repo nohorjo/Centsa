@@ -99,3 +99,8 @@ body {
 	background-color: #428bca;
 	color: white;
 }
+
+img {
+	width: 100%;
+	height: auto;
+}
