@@ -52,6 +52,7 @@ body {
 
 .sidebar a {
 	box-shadow: 2px 3px 20px -10px rgba(0, 0, 0, 0.75);
+	overflow: hidden;
 }
 
 .sidebar a:hover {

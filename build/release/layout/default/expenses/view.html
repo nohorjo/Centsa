@@ -17,7 +17,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr data-ng-include="'/expenses/inputRow.html'"
+							<tr data-ng-include="'expenses/inputRow.html'"
 								onload="initDatePickers()"></tr>
 						</tbody>
 					</table>
@@ -44,7 +44,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr data-ng-include="'/expenses/inputRow.html'"
+			<tr data-ng-include="'expenses/inputRow.html'"
 				onload="initDatePickers()"></tr>
 			<tr data-ng-repeat="e in expenses" data-ng-click="editExpense(e)">
 				<td>{{ e.id }}</td>
