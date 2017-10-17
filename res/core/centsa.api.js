@@ -367,6 +367,19 @@ var centsa = (function() {
 					error : error || throwError
 				});
 			},
+			importProgress : function(error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/general/import/progress",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error || throwError
+				});
+				return rtn;
+			},
 			layouts : function(error) {
 				var rtn = null;
 				ajax({

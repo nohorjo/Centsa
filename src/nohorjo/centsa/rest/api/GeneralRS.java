@@ -1,8 +1,7 @@
 package nohorjo.centsa.rest.api;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -17,10 +16,6 @@ import org.glassfish.jersey.internal.inject.PerLookup;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.Main;
@@ -28,6 +23,7 @@ import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.importer.JSCSVParser;
 import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Expense;
 
@@ -37,6 +33,7 @@ public class GeneralRS extends AbstractRS {
 
 	private TransactionsDAO tDao = new TransactionsDAO();
 	private ExpensesDAO eDao = new ExpensesDAO();
+	private static JSCSVParser parser;
 
 	@GET
 	@Path("/budget")
@@ -57,7 +54,10 @@ public class GeneralRS extends AbstractRS {
 
 	@GET
 	@Path("/import")
-	public void importFile(@QueryParam("rule") String rule) {
+	public void importFile(@QueryParam("rule") String rule) throws IOException {
+		if (parser != null) {
+			throw new IOException("Parsing already in progress");
+		}
 		Platform.runLater(() -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open CSV spreadsheet");
@@ -66,10 +66,11 @@ public class GeneralRS extends AbstractRS {
 			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
 			if (selectedFile != null) {
+				parser = new JSCSVParser();
 				new Thread(() -> {
 					try {
-						new JSCSVParser()
-								.parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))), rule);
+						parser.parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))), rule);
+						parser = null;
 						Platform.runLater(() -> {
 							Alert alert = new Alert(AlertType.INFORMATION);
 							alert.setTitle("");
@@ -78,43 +79,21 @@ public class GeneralRS extends AbstractRS {
 							alert.show();
 						});
 					} catch (Exception ex) {
-						Platform.runLater(() -> {
-							Alert alert = new Alert(AlertType.ERROR);
-							alert.setTitle("Import error");
-							alert.setHeaderText("Could not import CSV");
-							alert.setContentText(ex.getMessage());
-							alert.setResizable(true);
-
-							StringWriter sw = new StringWriter();
-							PrintWriter pw = new PrintWriter(sw);
-							ex.printStackTrace(pw);
-							String exceptionText = sw.toString();
-
-							Label label = new Label("The exception stacktrace was:");
-
-							TextArea textArea = new TextArea(exceptionText);
-							textArea.setEditable(false);
-							textArea.setWrapText(true);
-
-							textArea.setMaxWidth(Double.MAX_VALUE);
-							textArea.setMaxHeight(Double.MAX_VALUE);
-							GridPane.setVgrow(textArea, Priority.ALWAYS);
-							GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-							GridPane expContent = new GridPane();
-							expContent.setMaxWidth(Double.MAX_VALUE);
-							expContent.add(label, 0, 0);
-							expContent.add(textArea, 0, 1);
-
-							alert.getDialogPane().setExpandableContent(expContent);
-
-							alert.show();
-						});
+						Renderer.showExceptionDialog(ex, "Import error", "Could not import CSV");
 						throw new Error(ex);
 					}
 				}).start();
 			}
 		});
+	}
+
+	@GET
+	@Path("/import/progress")
+	public String importProgress() {
+		if (parser != null) {
+			return String.format("{\"processed\":%d,\"total\":%d}", parser.getProcessed(), parser.getTotal());
+		}
+		return "null";
 	}
 
 	@GET

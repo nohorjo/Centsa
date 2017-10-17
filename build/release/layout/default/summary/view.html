@@ -12,6 +12,8 @@
 			</select></td>
 			<td><input type="button" value="Import file"
 				class="btn btn-primary" data-ng-click="importFile()" /></td>
+			<td data-ng-show="importProgress"><strong>Progress</strong> {{
+				importProgress }}</td>
 		</tr>
 		<tr>
 			<td colspan="3"><p>

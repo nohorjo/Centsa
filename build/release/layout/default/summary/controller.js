@@ -3,8 +3,27 @@ app.controller("summaryCtrl", function($scope) {
 	$scope.rules = centsa.general.rules();
 	$scope.rule = "default";
 
+	$scope.importProgress = "";
+
 	$scope.importFile = function() {
-		alert("Importing may take a while");
 		centsa.general.importFile($scope.rule);
+
+		var i = setInterval((function() {
+			var started = false;
+			return function() {
+				var p = centsa.general.importProgress();
+				if (p) {
+					started = true;
+					$scope.$apply(function() {
+						$scope.importProgress = p.processed + "/" + p.total;
+					});
+				} else if (started) {
+					clearInterval(i);
+					$scope.$apply(function() {
+						$scope.importProgress = "";
+					});
+				}
+			}
+		})(), 1000);
 	}
 });
