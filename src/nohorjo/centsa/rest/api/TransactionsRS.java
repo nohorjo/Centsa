@@ -2,6 +2,7 @@ package nohorjo.centsa.rest.api;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -60,6 +61,13 @@ public class TransactionsRS extends AbstractRS {
 	@Path("/comments")
 	public List<String> getUniqueComments() throws SQLException {
 		return dao.getUniqueComments();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/sums")
+	public List<Map<String, Long>> getCumulativeSums(@QueryParam("precision") int precision) throws SQLException {
+		return dao.getCumulativeSums(precision);
 	}
 
 }

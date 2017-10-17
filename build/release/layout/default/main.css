@@ -106,11 +106,15 @@ img {
 	height: auto;
 }
 
-#chart {
+#types-chart {
 	float: right;
 	width: 60%;
 	height: 500px;
-	width: 60%;
+}
+
+#trans-chart {
+	height: 350px;
+	width: 100%;
 }
 
 #types-view>form {

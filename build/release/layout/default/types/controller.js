@@ -31,7 +31,7 @@ app.controller("typesCtrl", function($scope) {
 				});
 			}
 		});
-		AmCharts.makeChart("chart", {
+		AmCharts.makeChart("types-chart", {
 			"type" : "pie",
 			"theme" : "light",
 			"dataProvider" : data,

@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import nohorjo.centsa.vo.Transaction;
@@ -120,6 +122,37 @@ public class TransactionsDAO extends AbstractDAO {
 			}
 		}
 		return 0;
+	}
+
+	public List<Map<String, Long>> getCumulativeSums(int precision) throws SQLException {
+		List<Map<String, Long>> working = new LinkedList<>();
+		List<Map<String, Long>> rtn = new LinkedList<>();
+		long currentSum = 0;
+
+		String sql = SQLUtils.getQuery("Transactions.GetDatesAndAmounts");
+
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Long> entry = new HashMap<>();
+				entry.put("date", rs.getLong("DATE"));
+				entry.put("sum", currentSum -= rs.getInt("AMOUNT"));
+				working.add(entry);
+			}
+		}
+
+		if (precision < 1 || precision > working.size())
+			precision = working.size();
+		precision = (working.size() / precision);
+
+		for (int i = 0; i < working.size(); i++) {
+			if (i % precision == 0) {
+				rtn.add(working.get(i));
+			}
+		}
+
+		return rtn;
 	}
 
 }

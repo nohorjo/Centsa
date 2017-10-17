@@ -62,6 +62,11 @@
 		SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE EXPENSE_ID NOT IN (SELECT ID FROM EXPENSES WHERE AUTOMATIC = 1);
 		]]>
 		</SumNonAutoExpenseAmount>
+		<GetDatesAndAmounts>
+		<![CDATA[
+		SELECT DATE, AMOUNT FROM TRANSACTIONS ORDER BY DATE ASC;
+		]]>
+		</GetDatesAndAmounts>
 	</Transactions>
 	<Accounts>
 		<CreateTable>

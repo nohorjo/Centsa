@@ -163,6 +163,20 @@ var centsa = (function() {
 					error : error || throwError
 				});
 				return rtn;
+			},
+			getCumulativeSums : function(precision, error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/transactions/sums?precision="
+							+ (precision || 0),
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error || throwError
+				});
+				return rtn;
 			}
 		},
 		accounts : {
