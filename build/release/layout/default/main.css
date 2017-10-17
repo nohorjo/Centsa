@@ -107,6 +107,17 @@ img {
 }
 
 #chart {
-	width: 100%;
+	float: right;
+	width: 60%;
 	height: 500px;
+	width: 60%;
+}
+
+#types-view>form {
+	float: left;
+	width: 40%;
+}
+
+div.amcharts-chart-div>a {
+	display: none !important;
 }

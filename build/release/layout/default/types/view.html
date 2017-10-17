@@ -1,28 +1,31 @@
-<form name="Form" data-ng-submit="saveType()">
-	<h4>Manage types</h4>
-	<table id="typesTable" class="table table-condensed table-hover">
-		<thead>
-			<tr>
-				<th width="5%">ID</th>
-				<th>Name</th>
-				<th>Sum</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><input type="button" value="+" class="btn btn-primary"
-					data-ng-class="{ 'btn-warning': Form.$invalid }"
-					data-ng-disabled="Form.$invalid"></td>
-				<td><input type="text" class="form-control" required="required"
-					data-ng-model="newType.name"></td>
-			</tr>
-			<tr data-ng-repeat="t in types">
-				<td>{{ t.id }}</td>
-				<td>{{ t.name }}</td>
-				<td>{{ t.sum/100 }}</td>
-				<td><a href="" data-ng-click="deleteType(t.id)">Delete</a></td>
-			</tr>
-		</tbody>
-	</table>
-</form>
-<div id="chart"></div>
+<div id="types-view">
+	<form name="Form" data-ng-submit="saveType()">
+		<h4>Manage types</h4>
+		<table id="typesTable" class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th width="5%">ID</th>
+					<th>Name</th>
+					<th>Sum</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="button" value="+" class="btn btn-primary"
+						data-ng-class="{ 'btn-warning': Form.$invalid }"
+						data-ng-disabled="Form.$invalid"></td>
+					<td><input type="text" class="form-control"
+						required="required" data-ng-model="newType.name"></td>
+				</tr>
+				<tr data-ng-repeat="t in types">
+					<td>{{ t.id }}</td>
+					<td>{{ t.name }}</td>
+					<td>{{ t.sum/100 }}</td>
+					<td><a href="" data-ng-click="deleteType(t.id)">Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<div id="chart"></div>
+</div>
+<div id="chartdiv" style="width: 100%; height: 500px"></div>
