@@ -34,12 +34,12 @@
 	<table id="expensesTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
-				<th width="5%">ID</th>
-				<th width="30%">Name</th>
-				<th width="10%">Cost</th>
+				<th width="5%" data-ng-click="sort('id', expenses)">ID</th>
+				<th width="30%" data-ng-click="sort('name', expenses)">Name</th>
+				<th width="10%" data-ng-click="sort('cost', expenses)">Cost</th>
 				<th width="15%">Every x days</th>
-				<th width="15%">Started</th>
-				<th width="15%">Ended</th>
+				<th width="15%" data-ng-click="sort('started', expenses)">Started</th>
+				<th width="15%" data-ng-click="sort('ended', expenses)">Ended</th>
 				<th width="10%">Automatic</th>
 			</tr>
 		</thead>

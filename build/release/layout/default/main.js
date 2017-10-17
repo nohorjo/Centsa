@@ -19,6 +19,29 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		return active;
 	}
 
+	$rootScope.sort = (function() {
+		var lastProp;
+		var asc = true;
+		return function(prop, arr) {
+			if (lastProp != prop) {
+				lastProp = prop;
+				asc = false;
+			}
+			asc = !asc
+			arr.sort(function(a, b) {
+				p1 = a[prop];
+				p2 = b[prop];
+				var comp;
+				if (p1.constructor == String) {
+					comp = p1.localeCompare(p2);
+				} else {
+					comp = p1 - p2;
+				}
+				return comp * (asc ? 1 : -1);
+			});
+		};
+	})();
+
 	$scope.isActive = function(path) {
 		return $location.path() == path;
 	}

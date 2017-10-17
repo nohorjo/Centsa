@@ -121,3 +121,11 @@ img {
 div.amcharts-chart-div>a {
 	display: none !important;
 }
+
+th[data-ng-click] {
+	cursor: pointer;
+}
+
+th[data-ng-click]:after {
+	content: " \21c5"
+}

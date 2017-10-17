@@ -37,9 +37,9 @@
 	<table id="accountsTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
-				<th width="5%">ID</th>
-				<th>Name</th>
-				<th>Balance</th>
+				<th width="5%" data-ng-click="sort('id', accounts)">ID</th>
+				<th data-ng-click="sort('name', accounts)">Name</th>
+				<th data-ng-click="sort('balance', accounts)">Balance</th>
 			</tr>
 		</thead>
 		<tbody>

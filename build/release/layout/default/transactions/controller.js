@@ -152,4 +152,19 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		}
 		$('#transModal').modal("hide");
 	};
+
+	$scope.sort = (function() {
+		var lastCol;
+		var asc = true;
+		return function(col, secondary) {
+			if (lastCol != col) {
+				lastCol = col;
+				asc = false;
+			}
+			var sort = col + " " + ((asc = !asc) ? "ASC" : "DESC")
+					+ ", ID DESC" + (secondary ? ", " + secondary : "");
+			$scope.transactions = centsa.transactions.getAll(
+					$scope.currentPage, pageSize, sort);
+		};
+	})();
 });

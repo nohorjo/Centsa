@@ -36,10 +36,10 @@
 	<table id="transTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
-				<th width="5%">ID</th>
-				<th width="15%">Date</th>
-				<th width="10%">Amount</th>
-				<th width="25%">Comment</th>
+				<th width="5%" data-ng-click="sort('ID')">ID</th>
+				<th width="15%" data-ng-click="sort('DATE', 'ID DESC')">Date</th>
+				<th width="10%" data-ng-click="sort('AMOUNT', 'DATE DESC')">Amount</th>
+				<th width="25%" data-ng-click="sort('COMMENT', 'DATE DESC')">Comment</th>
 				<th width="15%">Account</th>
 				<th width="15%">Type</th>
 				<th width="15%">Expense</th>
