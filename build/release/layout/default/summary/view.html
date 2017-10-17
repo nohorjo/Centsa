@@ -1,3 +1,22 @@
+<div class="modal fade" id="progressModal" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Import progress</h4>
+			</div>
+			<div class="modal-body">
+				{{ getProgressPercentage() }}% Complete ({{ importProgress.processed
+				}}/{{ importProgress.total }})
+				<div class="progress">
+					<div
+						class="progress-bar progress-bar-success progress-bar-striped active"
+						role="progressbar"
+						data-ng-style="{ 'width' : getProgressPercentage() + '%' }"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <h4>Summary</h4>
 <div style="width: 50%;">
 	<table class="table">
@@ -12,8 +31,6 @@
 			</select></td>
 			<td><input type="button" value="Import file"
 				class="btn btn-primary" data-ng-click="importFile()" /></td>
-			<td data-ng-show="importProgress"><strong>Progress</strong> {{
-				importProgress }}</td>
 		</tr>
 		<tr>
 			<td colspan="3"><p>
