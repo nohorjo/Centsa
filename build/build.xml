@@ -158,7 +158,7 @@
 	<target name="increment-minor-version">
 		<script language="javascript">
 			<![CDATA[
-			 	project.setProperty("minor.version", parseInt(project.getProperty("major.version"))+1);
+			 	project.setProperty("minor.version", parseInt(project.getProperty("minor.version"))+1);
 			    ]]>
 		</script>
 		<antcall target="update-version-properties" />
