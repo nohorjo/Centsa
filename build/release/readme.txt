@@ -4,4 +4,4 @@ Windows:
 Linux:
 	Run install-run.sh
 
-Refer to https://github.com/nohorjo/Centsa for guides and license information.
+Refer to https://github.com/nohorjo/Centsa for guides, changelog and license information.
