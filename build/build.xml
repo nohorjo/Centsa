@@ -1,6 +1,6 @@
 <project name="Centsa - build" default="build" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant">
 
-	<property name="version.info" value="1" />
+	<property name="version.info" value="2" />
 	<property name="app.name" value="Centsa" />
 
 	<property name="build.dir" value="build" />
@@ -121,10 +121,22 @@
 		<available file="build/jacoco.exec" property="test.complete" />
 	</target>
 
-	<target name="release" depends="clean-release,build" description="Builds a release zip">
-		<replaceregexp match='org.slf4j.simpleLogger.defaultLogLevel=.*' replace='org.slf4j.simpleLogger.defaultLogLevel=info'>
-			<fileset dir="${release.dir}" includes="simplelogger.properties" />
+	<target name="release" depends="clean-release,build,reset-log-level,zip,increment-version" description="Builds a release zip">
+		<echo>Released version ${version.info}</echo>
+	</target>
+
+	<target name="increment-version">
+		<script language="javascript">
+			<![CDATA[
+		 	project.setProperty("new.version", parseInt(project.getProperty("version.info"))+1);
+		    ]]>
+		</script>
+		<replaceregexp match='name="version.info" value="\d*' replace='name="version.info" value="${new.version}'>
+			<fileset dir="${build.dir}" includes="build.xml" />
 		</replaceregexp>
+	</target>
+
+	<target name="zip">
 		<move file="${release.dir}" tofile="${build.dir}/${app.name}" />
 		<zip destfile="${build.dir}/${app.name}.v${version.info}.zip">
 			<zipfileset dir="${build.dir}">
@@ -138,13 +150,11 @@
 			</zipfileset>
 		</zip>
 		<move tofile="${release.dir}" file="${build.dir}/${app.name}" />
-		<script language="javascript">
-			<![CDATA[
-		 	project.setProperty("new.version", parseInt(project.getProperty("version.info"))+1);
-		    ]]>
-		</script>
-		<replaceregexp match='name="version.info" value="\d*' replace='name="version.info" value="${new.version}'>
-			<fileset dir="${build.dir}" includes="build.xml" />
+	</target>
+
+	<target name="reset-log-level">
+		<replaceregexp match='log4j.rootLogger=[^,]*' replace='log4j.rootLogger=INFO'>
+			<fileset dir="${release.dir}" includes="log4j.properties" />
 		</replaceregexp>
 	</target>
 
