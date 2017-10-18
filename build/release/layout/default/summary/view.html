@@ -2,8 +2,12 @@
 <div style="width: 50%;">
 	<table class="table">
 		<tr>
-			<td><label>Budget</label></td>
-			<td>{{budget/100}}</td>
+			<td><label>Budget (All expenses)</label></td>
+			<td>{{budget.afterAll/100}}</td>
+		</tr>
+		<tr>
+			<td><label>Budget (Automatic expenses)</label></td>
+			<td>{{budget.afterAuto/100}}</td>
 		</tr>
 	</table>
 </div>

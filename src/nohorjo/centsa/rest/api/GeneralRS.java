@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,19 +39,29 @@ public class GeneralRS extends AbstractRS {
 
 	@GET
 	@Path("/budget")
-	public int getBudget() throws SQLException {
+	public Map<String, Integer> getBudget() throws SQLException {
+		Map<String, Integer> rtn = new HashMap<>();
 		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
-		List<Expense> autoExpenses = eDao.getAllAuto();
+		List<Expense> es = eDao.getAll(0, 0, null);
 		int totalAuto = 0;
+		int totalNonAuto = 0;
 
-		for (Expense e : autoExpenses) {
+		for (Expense e : es) {
 			int durationDays = (int) (((e.getEnded() == null ? System.currentTimeMillis() : e.getEnded())
 					- e.getStarted()) / 8.64e+7 + 0.5);
 			int instances = durationDays / e.getFrequency_days();
-			totalAuto += instances * e.getCost();
+			int cost = instances * e.getCost();
+			if (e.isAutomatic()) {
+				totalAuto += cost;
+			} else {
+				totalNonAuto += cost;
+			}
 		}
 
-		return -totalAuto - sumNonAuto;
+		rtn.put("afterAuto", -totalAuto - sumNonAuto);
+		rtn.put("afterAll", -totalNonAuto - sumNonAuto);
+
+		return rtn;
 	}
 
 	@GET
@@ -89,11 +101,14 @@ public class GeneralRS extends AbstractRS {
 
 	@GET
 	@Path("/import/progress")
-	public String importProgress() {
+	public Map<String, Integer> importProgress() {
+		Map<String, Integer> rtn = null;
 		if (parser != null) {
-			return String.format("{\"processed\":%d,\"total\":%d}", parser.getProcessed(), parser.getTotal());
+			rtn = new HashMap<>();
+			rtn.put("processed", parser.getProcessed());
+			rtn.put("total", parser.getTotal());
 		}
-		return "null";
+		return rtn;
 	}
 
 	@GET

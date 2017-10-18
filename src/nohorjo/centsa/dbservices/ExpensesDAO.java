@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -96,29 +95,6 @@ public class ExpensesDAO extends AbstractDAO {
 			throw new SQLException("Cannot delete default expense");
 		}
 		delete(TABLE_NAME, id);
-	}
-
-	public List<Expense> getAllAuto() throws SQLException {
-		String sql = SQLUtils.getQuery("Expenses.GetAllAuto");
-		List<Expense> es = new ArrayList<>();
-
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-			while (rs.next()) {
-				Expense e = new Expense();
-				e.setId(rs.getLong("ID"));
-				e.setName(rs.getString("NAME"));
-				e.setCost(rs.getInt("COST"));
-				e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-				e.setStarted(rs.getLong("STARTED"));
-				e.setEnded((Long) rs.getObject("ENDED"));
-				e.setAutomatic(true);
-				es.add(e);
-			}
-		}
-
-		return es;
 	}
 
 	public int getTotalActive(boolean auto) throws SQLException {

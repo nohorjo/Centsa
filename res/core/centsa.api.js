@@ -388,7 +388,7 @@ var centsa = (function() {
 					method : "GET",
 					async : false,
 					success : function(data) {
-						rtn = JSON.parse(data.responseText);
+						rtn = JSON.parse(data.responseText || null);
 					},
 					error : error || throwError
 				});
