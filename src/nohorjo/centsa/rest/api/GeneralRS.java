@@ -47,10 +47,10 @@ public class GeneralRS extends AbstractRS {
 		int totalNonAuto = 0;
 
 		for (Expense e : es) {
-			int durationDays = (int) (((e.getEnded() == null ? System.currentTimeMillis() : e.getEnded())
-					- e.getStarted()) / 8.64e+7 + 0.5);
-			int instances = durationDays / e.getFrequency_days();
-			int cost = instances * e.getCost();
+			double durationDays = (((e.getEnded() == null || e.getEnded() == 0) ? System.currentTimeMillis()
+					: e.getEnded()) - e.getStarted()) / 8.64e+7;
+			double instances = durationDays / e.getFrequency_days();
+			double cost = instances * e.getCost();
 			if (e.isAutomatic()) {
 				totalAuto += cost;
 			} else {
@@ -58,8 +58,8 @@ public class GeneralRS extends AbstractRS {
 			}
 		}
 
-		rtn.put("afterAuto", -totalAuto - sumNonAuto);
-		rtn.put("afterAll", -totalNonAuto - sumNonAuto);
+		rtn.put("afterAuto", (int) (-totalAuto - sumNonAuto));
+		rtn.put("afterAll", (int) (-totalNonAuto - sumNonAuto));
 
 		return rtn;
 	}
