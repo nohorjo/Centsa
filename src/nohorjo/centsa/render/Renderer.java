@@ -1,5 +1,6 @@
 package nohorjo.centsa.render;
 
+import java.awt.Toolkit;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -12,9 +13,9 @@ import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -27,6 +28,8 @@ public class Renderer extends Region {
 
 	private static final int MIN_WIDTH = 1000;
 	private static final int MIN_HEIGHT = 500;
+	private static final double MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+	private static final double MAX_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	private final Logger log = LoggerFactory.getLogger(Renderer.class);
 
 	private final WebView browser = new WebView();
@@ -101,12 +104,12 @@ public class Renderer extends Region {
 	@Override
 	protected double computePrefWidth(double height) {
 		Double width = SystemProperties.get("width", Double.class);
-		return width > MIN_WIDTH ? width : MIN_WIDTH;
+		return width > MIN_WIDTH ? width < MAX_WIDTH ? width : MAX_WIDTH : MIN_WIDTH;
 	}
 
 	@Override
 	protected double computePrefHeight(double width) {
 		Double height = SystemProperties.get("height", Double.class);
-		return height > MIN_HEIGHT ? height : MIN_HEIGHT;
+		return height > MIN_HEIGHT ? height < MAX_HEIGHT ? height : MAX_HEIGHT : MIN_HEIGHT;
 	}
 }
