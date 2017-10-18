@@ -187,6 +187,7 @@
 			<zipfileset dir="${build.dir}">
 				<include name="${app.name}/**/**.*" />
 				<exclude name="${app.name}/log/*" />
+				<exclude name="${app.name}/**/.fuse*" />
 				<exclude name="${app.name}/data.db" />
 				<exclude name="${app.name}/rules/*.js" />
 			</zipfileset>
