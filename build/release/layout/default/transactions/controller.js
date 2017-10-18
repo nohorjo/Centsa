@@ -84,7 +84,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.saveTrans = function(updating) {
 		$scope.pagesCount = 0;
 		$scope.newTrans.date = new Date($scope.newTrans.date).getTime();
-		$scope.newTrans.amount = $scope.newTrans.amount * 100;
+		$scope.newTrans.amount = Math.round($scope.newTrans.amount * 100);
 		var newId = centsa.transactions.insert($scope.newTrans);
 		if (newId > 0) {
 			$scope.newTrans.id = newId;

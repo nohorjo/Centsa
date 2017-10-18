@@ -5,12 +5,13 @@
 	pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
 	data-ng-model="newTrans.date"></td>
 <td><input type="number" class="form-control" required="required"
-	data-ng-model="newTrans.amount"></td>
+	step="0.01" data-ng-model="newTrans.amount"></td>
 <td>
 	<div class="datalist" data-ng-keydown="navigateDataList($event)">
 		<input type="text" class="form-control" required="required"
 			placeholder="Enter a comment" data-ng-model="newTrans.comment"
-			data-ng-focus="showDataList = true" data-ng-blur="showDataList = false">
+			data-ng-focus="showDataList = true"
+			data-ng-blur="showDataList = false">
 		<div data-ng-show="showDataList">
 			<span data-ng-repeat="c in uniqueComments"
 				data-ng-if="newTrans.comment != '' && c.startsWith(newTrans.comment)"

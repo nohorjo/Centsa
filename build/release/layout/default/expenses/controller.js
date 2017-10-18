@@ -14,7 +14,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 	var newExpense = Object.assign({}, $scope.newExpense);
 
 	$scope.saveExpense = function(updating) {
-		$scope.newExpense.cost = $scope.newExpense.cost * 100;
+		$scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
 		$scope.newExpense.started = new Date($scope.newExpense.started)
 				.getTime();
 		$scope.newExpense.ended = $scope.newExpense.ended ? new Date(
