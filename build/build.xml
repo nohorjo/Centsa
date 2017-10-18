@@ -1,6 +1,5 @@
 <project name="Centsa - build" default="build" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:jacoco="antlib:org.jacoco.ant">
 
-	<property name="version.info" value="1" />
 	<property name="app.name" value="Centsa" />
 
 	<property name="build.dir" value="build" />
@@ -8,6 +7,8 @@
 	<property name="build.lib.dir" value="${build.dir}/lib" />
 	<property name="release.dir" value="${build.dir}/release" />
 	<property name="lib.dir" value="${release.dir}/lib" />
+
+	<property file="${build.dir}/version.properties" />
 
 	<path id="build.lib.path">
 		<fileset dir="${build.lib.dir}" includes="*.jar" />
@@ -61,17 +62,17 @@
 
 
 	<target name="jar" depends="compile">
-		<buildnumber />
 		<delete dir="${release.dir}/lib/">
 			<include name="${app.name}*.jar" />
 		</delete>
-		<jar destfile="${release.dir}/lib/${app.name}.v${version.info}.build-${build.number}.jar">
+		<jar destfile="${release.dir}/lib/${app.name}-v${major.version}.${minor.version}.build-${build.number}.jar">
 			<fileset dir="bin">
 				<exclude name="**/*TEST.class" />
 				<exclude name="**/*MOCK.class" />
 			</fileset>
 			<zipfileset dir="res" includes="**/*" />
 		</jar>
+		<antcall target="increment-build-number" />
 	</target>
 
 	<target name="compile" depends="resolve-dependencies,clean">
@@ -118,12 +119,13 @@
 			</junit>
 		</jacoco:coverage>
 
-		<available file="build/jacoco.exec" property="test.complete" />
+		<available file="${build.dir}/jacoco.exec" property="test.complete" />
 	</target>
 
-	<target name="release" depends="clean-release,build,zip,increment-version" description="Builds a release zip">
-		<echo>Released version ${version.info}</echo>
-	</target>
+	<target name="release-major" depends="increment-major-version,release" description="" />
+	<target name="release-minor" depends="increment-minor-version,release" description="" />
+
+	<target name="release" depends="clean-release,build,zip,commit-tag" />
 
 	<target name="commit-tag">
 		<exec executable="git">
@@ -138,26 +140,50 @@
 		<exec executable="git">
 			<arg value="tag" />
 			<arg value="-a" />
-			<arg value="v${version.info}" />
+			<arg value="v${major.version}.${minor.version}" />
 			<arg value="-m" />
-			<arg value="Release version v${version.info}" />
+			<arg value="Release version v${major.version}.${minor.version}" />
 		</exec>
 	</target>
 
-	<target name="increment-version" depends="commit-tag">
+	<target name="increment-major-version">
 		<script language="javascript">
 			<![CDATA[
-		 	project.setProperty("new.version", parseInt(project.getProperty("version.info"))+1);
+		 	project.setProperty("major.version", parseInt(project.getProperty("major.version"))+1);
 		    ]]>
 		</script>
-		<replaceregexp match='name="version.info" value="\d*' replace='name="version.info" value="${new.version}'>
-			<fileset dir="${build.dir}" includes="build.xml" />
-		</replaceregexp>
+		<antcall target="update-version-properties" />
+	</target>
+
+	<target name="increment-minor-version">
+		<script language="javascript">
+			<![CDATA[
+			 	project.setProperty("minor.version", parseInt(project.getProperty("major.version"))+1);
+			    ]]>
+		</script>
+		<antcall target="update-version-properties" />
+	</target>
+
+	<target name="increment-build-number">
+		<script language="javascript">
+			<![CDATA[
+			 	project.setProperty("build.number", parseInt(project.getProperty("build.number"))+1);
+			    ]]>
+		</script>
+		<antcall target="update-version-properties" />
+	</target>
+
+	<target name="update-version-properties">
+		<propertyfile file="${build.dir}/version.properties">
+			<entry key="major.version" value="${major.version}" />
+			<entry key="minor.version" value="${minor.version}" />
+			<entry key="build.number" value="${build.number}" />
+		</propertyfile>
 	</target>
 
 	<target name="zip" depends="reset-log-level">
 		<move file="${release.dir}" tofile="${build.dir}/${app.name}" />
-		<zip destfile="${build.dir}/${app.name}.v${version.info}.zip">
+		<zip destfile="${build.dir}/${app.name}-v${major.version}.${minor.version}.zip">
 			<zipfileset dir="${build.dir}">
 				<include name="${app.name}/**/**.*" />
 				<exclude name="${app.name}/log/*" />
