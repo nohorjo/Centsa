@@ -6,6 +6,17 @@
 	data-ng-model="newTrans.date"></td>
 <td><input type="number" class="form-control" required="required"
 	step="0.01" data-ng-model="newTrans.amount"></td>
+<td><select class="form-control"
+	data-ng-model="newTrans.account_id">
+		<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+</select></td>
+<td><select class="form-control" data-ng-model="newTrans.type_id">
+		<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+</select></td>
+<td><select class="form-control"
+	data-ng-model="newTrans.expense_id">
+		<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+</select></td>
 <td>
 	<div class="datalist" data-ng-keydown="navigateDataList($event)">
 		<input type="text" class="form-control" required="required"
@@ -19,14 +30,3 @@
 		</div>
 	</div>
 </td>
-<td><select class="form-control"
-	data-ng-model="newTrans.account_id">
-		<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-</select></td>
-<td><select class="form-control" data-ng-model="newTrans.type_id">
-		<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-</select></td>
-<td><select class="form-control"
-	data-ng-model="newTrans.expense_id">
-		<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
-</select></td>

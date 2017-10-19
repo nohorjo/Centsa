@@ -10,10 +10,10 @@
 								<th width="5%"></th>
 								<th width="15%">Date</th>
 								<th width="10%">Amount</th>
-								<th width="25%">Comment</th>
-								<th width="15%">Account</th>
-								<th width="15%">Type</th>
-								<th width="15%">Expense</th>
+								<th width="10%">Account</th>
+								<th width="10%">Type</th>
+								<th width="10%">Expense</th>
+								<th width="40%">Comment</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -54,10 +54,10 @@
 				<th width="5%" data-ng-click="sort('ID')">ID</th>
 				<th width="15%" data-ng-click="sort('DATE', 'ID DESC')">Date</th>
 				<th width="10%" data-ng-click="sort('AMOUNT', 'DATE DESC')">Amount</th>
-				<th width="25%" data-ng-click="sort('COMMENT', 'DATE DESC')">Comment</th>
-				<th width="15%">Account</th>
-				<th width="15%">Type</th>
-				<th width="15%">Expense</th>
+				<th width="10%">Account</th>
+				<th width="10%">Type</th>
+				<th width="10%">Expense</th>
+				<th width="40%" data-ng-click="sort('COMMENT', 'DATE DESC')">Comment</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -67,10 +67,10 @@
 				<td>{{ t.id }}</td>
 				<td>{{ formatDate(t.date) }}</td>
 				<td>{{ t.amount / 100 }}</td>
-				<td>{{ t.comment }}</td>
 				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
 				<td>{{ getFromArray(types, t.type_id).name }}</td>
 				<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
+				<td>{{ t.comment }}</td>
 			</tr>
 		</tbody>
 	</table>

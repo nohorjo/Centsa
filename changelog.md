@@ -4,6 +4,7 @@
 - Rounding income down and rounding outgoing expenses when calculating budget to reduce chances of overspending.
 - Made graph balloon smaller.
 - Changed expense dropdown to only list active expenses.
+- Moved comment to end to allow 'enter' to submit the form.
 
 ## v1.1
 - Fixed inserting of fractional amounts/costs.
