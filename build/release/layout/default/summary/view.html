@@ -1,13 +1,25 @@
 <h4>Summary</h4>
-<div style="width: 50%;">
+<div>
 	<table class="table">
-		<tr>
+		<thead>
+			<tr>
+				<th width="25%"></th>
+				<th width="10%"></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tr data-ng-class="{ 'warning' : budget.afterAll < 0 }">
 			<td><label>Budget (All expenses)</label></td>
 			<td>{{budget.afterAll/100}}</td>
+			<td><span data-ng-show="budget.afterAll < 0">You may need
+					to re-evaluate your <a href="#!expenses">expenses</a>
+			</span></td>
 		</tr>
-		<tr>
+		<tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }">
 			<td><label>Budget (Automatic expenses)</label></td>
 			<td>{{budget.afterAuto/100}}</td>
+			<td><span data-ng-show="budget.afterAuto < 0">You may not
+					have enough to pay for some automatic expenses</span></td>
 		</tr>
 	</table>
 </div>

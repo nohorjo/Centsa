@@ -5,6 +5,7 @@
 - Made graph balloon smaller.
 - Changed expense dropdown to only list active expenses.
 - Moved comment to end to allow 'enter' to submit the form.
+- Added warnings if budget drops below zero.
 
 ## v1.1
 - Fixed inserting of fractional amounts/costs.
