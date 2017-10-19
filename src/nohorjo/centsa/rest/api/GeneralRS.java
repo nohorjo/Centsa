@@ -44,7 +44,7 @@ public class GeneralRS extends AbstractRS {
 		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
 		List<Expense> es = eDao.getAll(0, 0, null);
 		int totalAuto = 0;
-		int totalNonAuto = 0;
+		int totalAll = 0;
 
 		for (Expense e : es) {
 			double durationDays = (((e.getEnded() == null || e.getEnded() == 0) ? System.currentTimeMillis()
@@ -53,13 +53,12 @@ public class GeneralRS extends AbstractRS {
 			double cost = instances * e.getCost();
 			if (e.isAutomatic()) {
 				totalAuto += cost;
-			} else {
-				totalNonAuto += cost;
 			}
+			totalAll += cost;
 		}
 
 		rtn.put("afterAuto", (int) (-totalAuto - sumNonAuto));
-		rtn.put("afterAll", (int) (-totalNonAuto - sumNonAuto));
+		rtn.put("afterAll", (int) (-totalAll - sumNonAuto));
 
 		return rtn;
 	}
