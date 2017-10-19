@@ -155,4 +155,16 @@ public class TransactionsDAO extends AbstractDAO {
 		return rtn;
 	}
 
+	public int sumNonExpenseAmount() throws SQLException {
+		String sql = SQLUtils.getQuery("Transactions.SumNonExpense");
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		}
+		return 0;
+	}
+
 }
