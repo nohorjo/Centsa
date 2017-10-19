@@ -1,6 +1,7 @@
 # Changelog
 ## vX.X
 - Reworked 'all' budget calculation to not exclude automatics.
+- Rounding income down and rounding outgoing expenses when calculating budget to reduce chances of overspending.
 
 ## v1.1
 - Fixed inserting of fractional amounts/costs.
