@@ -1,4 +1,6 @@
 # Changelog
+## vX.X
+- Reworked 'all' budget calculation to not exclude automatics.
 
 ## v1.1
 - Fixed inserting of fractional amounts/costs.
