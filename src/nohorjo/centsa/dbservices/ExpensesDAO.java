@@ -60,6 +60,27 @@ public class ExpensesDAO extends AbstractDAO {
 		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
 	}
 
+	public List<Expense> getAllActive(int page, int pageSize, String order) throws SQLException {
+		String sql = SQLUtils.getQuery("Expenses.GetAllActive");
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+
+			List<Expense> es = new LinkedList<>();
+			while (rs.next()) {
+				Expense e = new Expense();
+				e.setId(rs.getLong("ID"));
+				e.setName(rs.getString("NAME"));
+				e.setCost(rs.getInt("COST"));
+				e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+				e.setStarted(rs.getLong("STARTED"));
+				e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+				es.add(e);
+			}
+			return es;
+		}
+	}
+
 	@Override
 	public Expense get(long id) throws SQLException {
 		Function<ResultSet, Expense> processor = new Function<ResultSet, Expense>() {

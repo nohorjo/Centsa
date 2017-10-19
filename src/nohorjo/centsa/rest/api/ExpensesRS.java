@@ -38,6 +38,14 @@ public class ExpensesRS extends AbstractRS {
 		return dao.getAll(page, pageSize, order);
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/active")
+	public List<Expense> getAllActive(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize,
+			@QueryParam("order") String order) throws SQLException {
+		return dao.getAllActive(page, pageSize, order);
+	}
+
 	@DELETE
 	public void delete(@QueryParam("id") long id) throws SQLException {
 		dao.delete(id);

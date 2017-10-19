@@ -315,6 +315,21 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
+			getActive : function(page, pageSize, order, error) {
+				var rtn = null;
+				ajax({
+					url : apiUrl.get() + "/expenses/active?page=" + page
+							+ "&pageSize=" + pageSize + "&order="
+							+ (order || ""),
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = JSON.parse(data.responseText);
+					},
+					error : error || throwError
+				});
+				return rtn;
+			},
 			remove : function(id, error) {
 				var rtn = false;
 				ajax({
