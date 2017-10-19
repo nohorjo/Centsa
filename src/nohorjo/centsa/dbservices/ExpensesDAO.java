@@ -61,23 +61,30 @@ public class ExpensesDAO extends AbstractDAO {
 	}
 
 	public List<Expense> getAllActive(int page, int pageSize, String order) throws SQLException {
-		String sql = SQLUtils.getQuery("Expenses.GetAllActive");
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
+		order = (order != null && order.toLowerCase().matches("^(\\s*[a-z]* (asc|desc),?)+$")) ? order : "1 ASC";
+		page = (page > 0) ? page : 1;
+		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
 
-			List<Expense> es = new LinkedList<>();
-			while (rs.next()) {
-				Expense e = new Expense();
-				e.setId(rs.getLong("ID"));
-				e.setName(rs.getString("NAME"));
-				e.setCost(rs.getInt("COST"));
-				e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-				e.setStarted(rs.getLong("STARTED"));
-				e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-				es.add(e);
+		int skip = (page - 1) * pageSize;
+		String sql = SQLUtils.getQuery("Expenses.GetAllActive").replace("{orderby}", order);
+
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, skip);
+			ps.setInt(2, pageSize);
+			try (ResultSet rs = ps.executeQuery()) {
+				List<Expense> es = new LinkedList<>();
+				while (rs.next()) {
+					Expense e = new Expense();
+					e.setId(rs.getLong("ID"));
+					e.setName(rs.getString("NAME"));
+					e.setCost(rs.getInt("COST"));
+					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setStarted(rs.getLong("STARTED"));
+					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+					es.add(e);
+				}
+				return es;
 			}
-			return es;
 		}
 	}
 

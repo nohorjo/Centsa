@@ -1,5 +1,5 @@
 app.controller("expensesCtrl", function($scope, $rootScope) {
-	$scope.expenses = centsa.expenses.getAllActive(0, 0, "NAME ASC");
+	$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
 	$scope.totalActiveExpenses = centsa.expenses.totalActive();
 	$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
 

@@ -19,9 +19,9 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
 			pageSize, "DATE DESC, ID DESC");
-	$scope.accounts = centsa.accounts.getAll(0, 0);
-	$scope.types = centsa.types.getAll(0, 0);
-	$scope.expenses = centsa.expenses.getAll(0, 0);
+	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
+	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
+	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
 	$scope.uniqueComments = centsa.transactions.getUniqueComments();
 
 	$scope.showDataList = false;
