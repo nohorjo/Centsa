@@ -26,7 +26,7 @@ app.controller("summaryCtrl", function($scope) {
 			"lineThickness" : 2,
 			"useLineColorForBulletBorder" : true,
 			"valueField" : "sum",
-			"balloonText" : "<span style='font-size:18px;'>[[value]]</span>"
+			"balloonText" : "<span>[[value]]</span>"
 		} ];
 		var chartOpts = {
 			"type" : "serial",
