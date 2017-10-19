@@ -48,10 +48,14 @@ public class GeneralRS extends AbstractRS {
 		int totalAll = 0;
 
 		for (Expense e : es) {
-			double durationDays = (((e.getEnded() == null || e.getEnded() == 0) ? System.currentTimeMillis()
-					: e.getEnded()) - e.getStarted()) / 8.64e+7;
+			Long ended = e.getEnded();
+			if (ended == null || ended == 0 || ended > System.currentTimeMillis()) {
+				ended = System.currentTimeMillis();
+			}
+			double durationDays = (ended - e.getStarted()) / 8.64e+7;
 			double instances = durationDays / e.getFrequency_days();
-			// If cost is negative (is income) then we floor it so as to assume the money isn't in yet.
+			// If cost is negative (is income) then we floor it so as to assume the money
+			// isn't in yet.
 			// If it's positive we ceiling it so that we're 'saving' the money.
 			instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
 			double cost = instances * e.getCost();
