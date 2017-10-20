@@ -5,7 +5,7 @@ Extract [the latest binaries](https://github.com/nohorjo/Centsa/releases) to a d
 
 Changelog can be found [here](https://github.com/nohorjo/Centsa/wiki/Changelog)
 
-Running requires Java 8
+Running requires [Java 8 or greater](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 ## Building
 Centsa is compiled with Java 8. Building requires Apache ANT.
 To build run ant in the build directory.
