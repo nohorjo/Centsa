@@ -3,7 +3,7 @@
 ## Installing
 Extract [the latest binaries](https://github.com/nohorjo/Centsa/releases) to a desired location and run install-run.sh (linux) or install-run.bat (windows). After that you can run Centsa using either the shortcut created in the install or the sh/bat file.
 
-Changelog can be found [here](changelog.md)
+Changelog can be found [here](https://github.com/nohorjo/Centsa/wiki/Changelog)
 
 Running requires Java 8
 ## Building
