@@ -8,8 +8,17 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.function.Function;
 
+/**
+ * Base class for DAOs
+ * 
+ * @author muhammed.haque
+ *
+ */
 public abstract class AbstractDAO implements DAO {
 
+	/**
+	 * Creates DB and tables if they don't already exist
+	 */
 	static {
 		try {
 			new AccountsDAO().createTable();
@@ -21,6 +30,13 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Runs the query to create the table
+	 * 
+	 * @param query
+	 *            The name of the query to run
+	 * @throws SQLException
+	 */
 	protected void createTable(String query) throws SQLException {
 		try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
 			String sql[] = SQLUtils.getQuery(query).split(";");
@@ -32,6 +48,18 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Inserts a new record or updates an existing one
+	 * 
+	 * @param tableName
+	 *            The name of the table
+	 * @param columnsWithoutID
+	 *            An array of column names excluding ID
+	 * @param values
+	 *            The values to insert
+	 * @return The new ID or -1 if updating
+	 * @throws SQLException
+	 */
 	protected long insert(String tableName, String[] columnsWithoutID, Object[] values) throws SQLException {
 		String[] columns = addIDColumn(columnsWithoutID);
 		columns[0] = "ID";
@@ -54,10 +82,30 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Gets a list of records
+	 * 
+	 * @param tableName
+	 *            The name of the table
+	 * @param columnsWithoutID
+	 *            An array of column names excluding ID
+	 * @param orderBy
+	 *            The ORDER BY clause to sort the results, defaults to '1 ASC'
+	 * @param page
+	 *            If paginated, the page number
+	 * @param pageSize
+	 *            If paginated, the number of records per page
+	 * @param processor
+	 *            The {@link Function} to extract the data from the
+	 *            {@link ResultSet}
+	 * @return The result of the processor
+	 * @throws SQLException
+	 */
 	protected <R> R getAll(String tableName, String[] columnsWithoutID, String orderBy, int page, int pageSize,
 			Function<ResultSet, R> processor) throws SQLException {
 		String[] columns = addIDColumn(columnsWithoutID);
 
+		// Reject invalid ORDER BY clause
 		orderBy = (orderBy != null && orderBy.toLowerCase().matches("^(\\s*[a-z]* (asc|desc),?)+$")) ? orderBy
 				: "1 ASC";
 		page = (page > 0) ? page : 1;
@@ -75,6 +123,21 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Get a single record from the database
+	 * 
+	 * @param tableName
+	 *            The name of the table
+	 * @param columns
+	 *            The columns of the table
+	 * @param id
+	 *            The ID of the record to get
+	 * @param processor
+	 *            The {@link Function} to extract the data from the
+	 *            {@link ResultSet}
+	 * @return The result of the processor
+	 * @throws SQLException
+	 */
 	protected <R> R get(String tableName, String[] columns, long id, Function<ResultSet, R> processor)
 			throws SQLException {
 		String sql = SQLUtils.getQuery("Templates.Get").replace("{tablename}", tableName).replace("{columns}",
@@ -87,6 +150,15 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Deletes a record
+	 * 
+	 * @param tableName
+	 *            The name of the table
+	 * @param id
+	 *            The ID of the record to delete
+	 * @throws SQLException
+	 */
 	protected void delete(String tableName, long id) throws SQLException {
 		String sql = SQLUtils.getQuery("Templates.Delete").replace("{tablename}", tableName);
 		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -95,6 +167,14 @@ public abstract class AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Counts the number of records in the table
+	 * 
+	 * @param tableName
+	 *            The name of the table
+	 * @return The number of records
+	 * @throws SQLException
+	 */
 	protected int count(String tableName) throws SQLException {
 		String sql = SQLUtils.getQuery("Templates.Count").replace("{tablename}", tableName);
 		try (Connection conn = SQLUtils.getConnection();
@@ -107,6 +187,16 @@ public abstract class AbstractDAO implements DAO {
 		return 0;
 	}
 
+	/**
+	 * Gets the ID of a record from its name
+	 * 
+	 * @param name
+	 *            the NAME value
+	 * @param tableName
+	 *            The name of the table
+	 * @return The ID of the record or <code>null</code> if it doesn't exist
+	 * @throws SQLException
+	 */
 	protected Long getIdByName(String name, String tableName) throws SQLException {
 		String sql = SQLUtils.getQuery("Templates.GetIdByName").replace("{tablename}", tableName);
 		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -120,6 +210,13 @@ public abstract class AbstractDAO implements DAO {
 		return null;
 	}
 
+	/**
+	 * Adds 'ID' to the array of column names
+	 * 
+	 * @param columnsWithoutID
+	 *            the array to prepend
+	 * @return the new array
+	 */
 	private String[] addIDColumn(String[] columnsWithoutID) {
 		String[] columns = new String[columnsWithoutID.length + 1];
 		columns[0] = "ID";

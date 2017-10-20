@@ -10,6 +10,12 @@ import java.util.List;
 import nohorjo.centsa.vo.Type;
 import nohorjo.centsa.vo.VO;
 
+/**
+ * DAO class to handle types
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class TypesDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "NAME" };
 	private static final String TABLE_NAME = "TYPES";

@@ -11,6 +11,12 @@ import java.util.function.Function;
 import nohorjo.centsa.vo.Expense;
 import nohorjo.centsa.vo.VO;
 
+/**
+ * DAO class to handle expenses
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class ExpensesDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY_DAYS", "STARTED", "ENDED", "AUTOMATIC" };
 	private static final String TABLE_NAME = "EXPENSES";
@@ -125,6 +131,14 @@ public class ExpensesDAO extends AbstractDAO {
 		delete(TABLE_NAME, id);
 	}
 
+	/**
+	 * Gets the daily sum of active expenses
+	 * 
+	 * @param auto
+	 *            true if it should only count automatic expenses
+	 * @return The daily sum of the expenses
+	 * @throws SQLException
+	 */
 	public int getTotalActive(boolean auto) throws SQLException {
 		String sql = SQLUtils.getQuery(auto ? "Expenses.GetTotalAuto" : "Expenses.GetTotalActive");
 		try (Connection conn = SQLUtils.getConnection();

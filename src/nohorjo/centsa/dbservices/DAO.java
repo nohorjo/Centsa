@@ -5,6 +5,12 @@ import java.util.List;
 
 import nohorjo.centsa.vo.VO;
 
+/**
+ * Basic interface for DAOs
+ * 
+ * @author muhammed.haque
+ *
+ */
 public interface DAO {
 	public void createTable() throws SQLException;
 

@@ -14,6 +14,12 @@ import java.util.function.Function;
 import nohorjo.centsa.vo.Transaction;
 import nohorjo.centsa.vo.VO;
 
+/**
+ * DAO class to handle transactions
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class TransactionsDAO extends AbstractDAO {
 
 	private static final String[] COLUMNS = { "AMOUNT", "COMMENT", "ACCOUNT_ID", "TYPE_ID", "EXPENSE_ID", "DATE" };
@@ -95,10 +101,24 @@ public class TransactionsDAO extends AbstractDAO {
 		delete(TABLE_NAME, id);
 	}
 
+	/**
+	 * Counts the number of pages based on the page size
+	 * 
+	 * @param pageSize
+	 *            The number of records per page
+	 * @return The number of pages
+	 * @throws SQLException
+	 */
 	public int countPages(int pageSize) throws SQLException {
 		return (int) Math.ceil(((double) count(TABLE_NAME)) / pageSize);
 	}
 
+	/**
+	 * Gets a list of distinct comments
+	 * 
+	 * @return A list of distinct comments
+	 * @throws SQLException
+	 */
 	public List<String> getUniqueComments() throws SQLException {
 		String sql = SQLUtils.getQuery("Transactions.UniqueComments");
 		List<String> comments = new ArrayList<>();
@@ -112,6 +132,12 @@ public class TransactionsDAO extends AbstractDAO {
 		return comments;
 	}
 
+	/**
+	 * Sums the transactions that were not part of an automatic expense
+	 * 
+	 * @return The sum of non-automatic transactions
+	 * @throws SQLException
+	 */
 	public int sumNonAutoExpenseAmount() throws SQLException {
 		String sql = SQLUtils.getQuery("Transactions.SumNonAutoExpenseAmount");
 		try (Connection conn = SQLUtils.getConnection();
@@ -124,6 +150,17 @@ public class TransactionsDAO extends AbstractDAO {
 		return 0;
 	}
 
+	/**
+	 * Gets a list of cumulative sums of transactions
+	 * 
+	 * @param precision
+	 *            A number between 1 and the count of transactions, will default to
+	 *            the latter otherwise. Used to limit the number of values returned.
+	 *            1 will return the first and last value while the transactions
+	 *            count will return all.
+	 * @return A list of cumulative sums of transactions
+	 * @throws SQLException
+	 */
 	public List<Map<String, Long>> getCumulativeSums(int precision) throws SQLException {
 		List<Map<String, Long>> working = new LinkedList<>();
 		List<Map<String, Long>> rtn = new LinkedList<>();
@@ -143,7 +180,7 @@ public class TransactionsDAO extends AbstractDAO {
 		}
 
 		if (precision < 1 || precision > working.size())
-			precision = working.size();
+			precision = working.size();// default to returning all
 		precision = (working.size() / precision);
 
 		for (int i = 0; i < working.size(); i++) {
@@ -155,6 +192,12 @@ public class TransactionsDAO extends AbstractDAO {
 		return rtn;
 	}
 
+	/**
+	 * Sums the transactions that were not part of an expense
+	 * 
+	 * @return The sum of expense transactions
+	 * @throws SQLException
+	 */
 	public int sumNonExpenseAmount() throws SQLException {
 		String sql = SQLUtils.getQuery("Transactions.SumNonExpense");
 		try (Connection conn = SQLUtils.getConnection();

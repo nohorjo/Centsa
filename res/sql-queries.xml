@@ -18,7 +18,7 @@
 		</GetAll>
 		<Get>
 		<![CDATA[
-		SELECT {columns} FROM {tablename} WHERE ID = ?;
+		SELECT ID, {columns} FROM {tablename} WHERE ID = ?;
 		]]>
 		</Get>
 		<Delete>
@@ -150,11 +150,13 @@
 		]]>
 		</CreateTable>
 		<GetTotalAuto>
+		<!-- Gets the daily sum of active automatic expenses -->
 		<![CDATA[
 		SELECT SUM(COST/FREQUENCY_DAYS) FROM EXPENSES WHERE AUTOMATIC = 1 AND ENDED IS NULL;
 		]]>
 		</GetTotalAuto>
 		<GetTotalActive>
+		<!-- Gets the daily sum of active expenses -->
 		<![CDATA[
 		SELECT SUM(COST/FREQUENCY_DAYS) FROM EXPENSES WHERE ENDED IS NULL;
 		]]>

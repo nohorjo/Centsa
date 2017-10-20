@@ -10,6 +10,12 @@ import java.util.List;
 import nohorjo.centsa.vo.Account;
 import nohorjo.centsa.vo.VO;
 
+/**
+ * DAO class to handle accounts
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class AccountsDAO extends AbstractDAO {
 	private static final String[] COLUMNS = { "NAME" };
 	private static final String TABLE_NAME = "ACCOUNTS";
