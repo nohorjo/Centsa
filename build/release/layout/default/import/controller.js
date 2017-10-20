@@ -7,6 +7,10 @@ app.controller("importCtrl", function($scope) {
 		total : 1
 	};
 
+	/**
+	 * Opens file chooser to start importing a CSV. Then displays a progress bar
+	 * modal blocking the use of the UI so as to not overwhelm the database.
+	 */
 	$scope.importFile = (function() {
 		var i = null;
 		return function() {
@@ -39,7 +43,7 @@ app.controller("importCtrl", function($scope) {
 
 	$scope.getProgressPercentage = function(extra) {
 		var per = $scope.importProgress.processed * 100;
-		if (extra) {
+		if (extra) {// Two decimal places
 			per *= 100;
 		}
 		per = parseInt(per / $scope.importProgress.total);

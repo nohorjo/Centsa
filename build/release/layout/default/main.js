@@ -8,6 +8,9 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		return new Date(date).formatDate("yyyy/MM/dd");
 	};
 
+	/**
+	 * Checks if the selector matches the active element
+	 */
 	$rootScope.isActive = function(sel) {
 		var active = false;
 

@@ -22,6 +22,10 @@ app.controller("accountsCtrl", function($scope) {
 		$scope.newAccount = Object.assign({}, newAccount);
 	};
 
+	/**
+	 * Inserts two transactions to represent money going from one account to
+	 * another
+	 */
 	$scope.transferFunds = function() {
 		var from = {
 			amount : $scope.transfer.amount * 100,
@@ -41,6 +45,7 @@ app.controller("accountsCtrl", function($scope) {
 		};
 		centsa.transactions.insert(from);
 		centsa.transactions.insert(to);
+		// Reload accounts
 		$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 		$scope.transfer = Object.assign({}, transfer);
 		$('.datepicker').datepicker("update",
