@@ -2,9 +2,10 @@
  * 
  */
 var centsa = (function() {
+	// Get the unique key from the URL
 	var url = "/api/" + location.search.substr(1);
 
-	// make simple async http request
+	// Make simple async http request
 	function ajax(payload) {
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open(payload.method, payload.url,
@@ -33,10 +34,12 @@ var centsa = (function() {
 		xmlHttp.send(payload.data);
 	}
 
+	// Default throw errors
 	var throwError = function(resp) {
 		throw resp.responseText;
 	};
 
+	// Return object to handle REST calls
 	return {
 		settings : {
 			get : function(key, error) {
