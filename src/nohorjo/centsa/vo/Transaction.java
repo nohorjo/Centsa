@@ -1,5 +1,11 @@
 package nohorjo.centsa.vo;
 
+/**
+ * VO to represent transactions
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Transaction implements VO {
 	private Long id;
 	private int amount;

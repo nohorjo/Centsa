@@ -1,5 +1,11 @@
 package nohorjo.centsa.vo;
 
+/**
+ * VO to represent expenses
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Expense implements VO {
 	private Long id;
 	private String name;

@@ -1,5 +1,11 @@
 package nohorjo.centsa.vo;
 
+/**
+ * VO to represent types
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Type implements VO {
 	private Long id;
 	private String name;

@@ -18,6 +18,12 @@ import nohorjo.centsa.dbservices.TypesDAO;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Type;
 
+/**
+ * REST service for types
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/types")
 public class TypesRS extends AbstractRS {

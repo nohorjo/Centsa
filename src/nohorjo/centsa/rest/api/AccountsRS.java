@@ -18,6 +18,12 @@ import nohorjo.centsa.dbservices.AccountsDAO;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Account;
 
+/**
+ * REST service for accounts
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/accounts")
 public class AccountsRS extends AbstractRS {

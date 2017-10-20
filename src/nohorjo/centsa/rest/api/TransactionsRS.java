@@ -19,6 +19,12 @@ import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Transaction;
 
+/**
+ * REST service for transactions
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/transactions")
 public class TransactionsRS extends AbstractRS {

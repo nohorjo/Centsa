@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,12 @@ import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Expense;
 
+/**
+ * REST service for others
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/general")
 public class GeneralRS extends AbstractRS {
@@ -37,6 +44,12 @@ public class GeneralRS extends AbstractRS {
 	private ExpensesDAO eDao = new ExpensesDAO();
 	private static JSCSVParser parser;
 
+	/**
+	 * Calculates budget
+	 * 
+	 * @return The budgets considering expenses
+	 * @throws SQLException
+	 */
 	@GET
 	@Path("/budget")
 	public Map<String, Integer> getBudget() throws SQLException {
@@ -71,10 +84,17 @@ public class GeneralRS extends AbstractRS {
 		return rtn;
 	}
 
+	/**
+	 * Signals the application to open a filechooser to select a CSV to parse
+	 * 
+	 * @param rule
+	 *            The rule to parse with
+	 * @throws IOException
+	 */
 	@GET
 	@Path("/import")
 	public void importFile(@QueryParam("rule") String rule) throws IOException {
-		if (parser != null) {
+		if (parser != null) { // Only allow one parsing at a time to relieve the DB
 			throw new IOException("Parsing already in progress");
 		}
 		Platform.runLater(() -> {
@@ -106,6 +126,11 @@ public class GeneralRS extends AbstractRS {
 		});
 	}
 
+	/**
+	 * Gets the progress of a running parser
+	 * 
+	 * @return The count of the records read and the total number of records
+	 */
 	@GET
 	@Path("/import/progress")
 	public Map<String, Integer> importProgress() {
@@ -118,32 +143,40 @@ public class GeneralRS extends AbstractRS {
 		return rtn;
 	}
 
+	/**
+	 * Gets a list of layouts
+	 * 
+	 * @return An list of layouts
+	 */
 	@GET
 	@Path("/layouts")
-	public String getLayouts() {
+	public List<String> getLayouts() {
 		File layoutDir = new File(SystemProperties.get("root.dir", String.class) + "/layout");
-		String layoutsJson = "[";
+		List<String> layouts = new ArrayList<>();
 		for (File d : layoutDir.listFiles((d) -> {
-			return d.isDirectory();
+			return d.isDirectory(); // Only interested in directories
 		})) {
-			layoutsJson += String.format("\"%s\",", d.getName());
+			layouts.add(d.getName());
 		}
-		layoutsJson = layoutsJson.replaceAll(",$", "]");
-		return layoutsJson;
+		return layouts;
 	}
 
+	/**
+	 * Gets a list of parser rules
+	 * 
+	 * @return A list of parser rules
+	 */
 	@GET
 	@Path("/rules")
-	public String getRules() {
+	public List<String> getRules() {
 		File rulesDir = new File(SystemProperties.get("root.dir", String.class) + "/rules");
-		String rulesJson = "[";
+		List<String> rules = new ArrayList<>();
 		for (File d : rulesDir.listFiles((d) -> {
-			return d.getName().endsWith(".js");
+			return d.getName().endsWith(".js");// Only interested in JavaScript files
 		})) {
-			rulesJson += String.format("\"%s\",", d.getName().replaceAll("\\.js$", ""));
+			rules.add(d.getName().replaceAll("\\.js$", ""));
 		}
-		rulesJson = rulesJson.replaceAll(",$", "]");
-		return rulesJson;
+		return rules;
 	}
 
 }

@@ -6,6 +6,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Base class for REST services. Maps all exceptions to 500 errors
+ * 
+ * @author muhammed.haque
+ *
+ */
 public abstract class AbstractRS implements ExceptionMapper<Throwable> {
 
 	private Logger log = LoggerFactory.getLogger(AbstractRS.class);

@@ -14,6 +14,12 @@ import org.glassfish.jersey.internal.inject.PerLookup;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.rest.AbstractRS;
 
+/**
+ * REST service for settings
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/settings")
 public class SettingsRS extends AbstractRS {

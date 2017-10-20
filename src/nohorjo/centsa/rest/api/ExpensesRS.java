@@ -18,6 +18,12 @@ import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Expense;
 
+/**
+ * REST service for accounts
+ * 
+ * @author muhammed.haque
+ *
+ */
 @PerLookup
 @Path("/expenses")
 public class ExpensesRS extends AbstractRS {

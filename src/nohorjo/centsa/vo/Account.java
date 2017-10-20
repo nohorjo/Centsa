@@ -1,5 +1,11 @@
 package nohorjo.centsa.vo;
 
+/**
+ * VO to represent accounts
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Account implements VO {
 	private Long id;
 	private String name;

@@ -1,3 +1,10 @@
 package nohorjo.centsa.vo;
 
-public interface VO {}
+/**
+ * Basic interface for VOs
+ * 
+ * @author muhammed.haque
+ *
+ */
+public interface VO {
+}
