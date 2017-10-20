@@ -5,10 +5,20 @@ import java.io.File;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
+/**
+ * Class to handle properties thoughout the application
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class SystemProperties {
 	private static final PropertiesConfiguration systemProperties = new PropertiesConfiguration();
 	private static final PropertiesConfiguration runtimeProperties = new PropertiesConfiguration();
 
+	/**
+	 * Loads system.properties file fromt the classpath and sets the root.dir from
+	 * the system properties
+	 */
 	static {
 		try {
 			File propertiesFile = new File(ClassLoader.getSystemResource("system.properties").getPath());
@@ -24,6 +34,15 @@ public class SystemProperties {
 		}
 	}
 
+	/**
+	 * Gets a property
+	 * 
+	 * @param key
+	 *            The property
+	 * @param clazz
+	 *            The expected class of the property
+	 * @return The value
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Class<T> clazz) {
 		T prop = null;
@@ -45,16 +64,32 @@ public class SystemProperties {
 			throw new Error("Cannot get type: " + clazz.getName());
 		}
 
-		if (prop == null) {
+		if (prop == null) {// If it's not in the system.properties get it from the runtime properties
 			prop = (T) runtimeProperties.getProperty(key);
 		}
 		return prop;
 	}
 
+	/**
+	 * Set a property
+	 * 
+	 * @param key
+	 *            The property
+	 * @param value
+	 *            The value
+	 */
 	public static void set(String key, Object value) {
 		systemProperties.setProperty(key, value);
 	}
 
+	/**
+	 * Sets a property that's only persistent during runtime
+	 * 
+	 * @param key
+	 *            The property
+	 * @param value
+	 *            The value
+	 */
 	public static void setRuntime(String key, Object value) {
 		runtimeProperties.setProperty(key, value);
 	}

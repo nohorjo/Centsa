@@ -2,20 +2,7 @@
  * 
  */
 var centsa = (function() {
-	var apiUrl = (function() {
-		var url;
-		return {
-			get : function() {
-				if (!url)
-					throw "Key not set!";
-				return url;
-			},
-			set : function(key) {
-				if (key)
-					url = "/api/" + key;
-			}
-		};
-	})();
+	var url = "/api/" + location.search.substr(1);
 
 	// make simple async http request
 	function ajax(payload) {
@@ -51,14 +38,11 @@ var centsa = (function() {
 	};
 
 	return {
-		setUniqueKey : function(ukey) {
-			apiUrl.set(ukey);
-		},
 		settings : {
 			get : function(key, error) {
 				var val = null;
 				ajax({
-					url : apiUrl.get() + "/settings?key=" + key,
+					url : url + "/settings?key=" + key,
 					method : "GET",
 					async : false,
 					success : function(resp) {
@@ -70,7 +54,7 @@ var centsa = (function() {
 			},
 			set : function(key, value, success, error) {
 				ajax({
-					url : apiUrl.get() + "/settings/" + key,
+					url : url + "/settings/" + key,
 					method : "POST",
 					data : value,
 					success : success,
@@ -82,7 +66,7 @@ var centsa = (function() {
 			get : function(id, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions?id=" + id,
+					url : url + "/transactions?id=" + id,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -95,9 +79,8 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions/all?page=" + page
-							+ "&pageSize=" + pageSize + "&order="
-							+ (order || ""),
+					url : url + "/transactions/all?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -110,7 +93,7 @@ var centsa = (function() {
 			remove : function(id, error) {
 				var rtn = false;
 				ajax({
-					url : apiUrl.get() + "/transactions?id=" + id,
+					url : url + "/transactions?id=" + id,
 					method : "DELETE",
 					async : false,
 					success : function() {
@@ -123,7 +106,7 @@ var centsa = (function() {
 			insert : function(t, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions",
+					url : url + "/transactions",
 					method : "POST",
 					async : false,
 					data : JSON.stringify(t),
@@ -140,8 +123,7 @@ var centsa = (function() {
 			countPages : function(pageSize, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions/countPages?pageSize="
-							+ pageSize,
+					url : url + "/transactions/countPages?pageSize=" + pageSize,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -154,7 +136,7 @@ var centsa = (function() {
 			getUniqueComments : function(error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions/comments",
+					url : url + "/transactions/comments",
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -167,7 +149,7 @@ var centsa = (function() {
 			getCumulativeSums : function(precision, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/transactions/sums?precision="
+					url : url + "/transactions/sums?precision="
 							+ (precision || 0),
 					method : "GET",
 					async : false,
@@ -183,7 +165,7 @@ var centsa = (function() {
 			get : function(id, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/accounts?id=" + id,
+					url : url + "/accounts?id=" + id,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -196,9 +178,8 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/accounts/all?page=" + page
-							+ "&pageSize=" + pageSize + "&order="
-							+ (order || ""),
+					url : url + "/accounts/all?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -211,7 +192,7 @@ var centsa = (function() {
 			insert : function(a, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/accounts",
+					url : url + "/accounts",
 					method : "POST",
 					async : false,
 					data : JSON.stringify(a),
@@ -230,7 +211,7 @@ var centsa = (function() {
 			get : function(id, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/types?id=" + id,
+					url : url + "/types?id=" + id,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -243,9 +224,8 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/types/all?page=" + page
-							+ "&pageSize=" + pageSize + "&order="
-							+ (order || ""),
+					url : url + "/types/all?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -258,7 +238,7 @@ var centsa = (function() {
 			remove : function(id, error) {
 				var rtn = false;
 				ajax({
-					url : apiUrl.get() + "/types?id=" + id,
+					url : url + "/types?id=" + id,
 					method : "DELETE",
 					async : false,
 					success : function() {
@@ -271,7 +251,7 @@ var centsa = (function() {
 			insert : function(t, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/types",
+					url : url + "/types",
 					method : "POST",
 					async : false,
 					data : JSON.stringify(t),
@@ -290,7 +270,7 @@ var centsa = (function() {
 			get : function(id, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses?id=" + id,
+					url : url + "/expenses?id=" + id,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -303,9 +283,8 @@ var centsa = (function() {
 			getAll : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses/all?page=" + page
-							+ "&pageSize=" + pageSize + "&order="
-							+ (order || ""),
+					url : url + "/expenses/all?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -318,9 +297,8 @@ var centsa = (function() {
 			getActive : function(page, pageSize, order, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses/active?page=" + page
-							+ "&pageSize=" + pageSize + "&order="
-							+ (order || ""),
+					url : url + "/expenses/active?page=" + page + "&pageSize="
+							+ pageSize + "&order=" + (order || ""),
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -333,7 +311,7 @@ var centsa = (function() {
 			remove : function(id, error) {
 				var rtn = false;
 				ajax({
-					url : apiUrl.get() + "/expenses?id=" + id,
+					url : url + "/expenses?id=" + id,
 					method : "DELETE",
 					async : false,
 					success : function() {
@@ -346,7 +324,7 @@ var centsa = (function() {
 			insert : function(e, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses",
+					url : url + "/expenses",
 					method : "POST",
 					async : false,
 					data : JSON.stringify(e),
@@ -363,7 +341,7 @@ var centsa = (function() {
 			totalActive : function(auto, error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/expenses/totalActive?auto=" + auto,
+					url : url + "/expenses/totalActive?auto=" + auto,
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -378,7 +356,7 @@ var centsa = (function() {
 			budget : function(error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/general/budget",
+					url : url + "/general/budget",
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -390,7 +368,7 @@ var centsa = (function() {
 			},
 			importFile : function(rule, success, error) {
 				ajax({
-					url : apiUrl.get() + "/general/import?rule=" + rule,
+					url : url + "/general/import?rule=" + rule,
 					method : "GET",
 					success : success,
 					error : error || throwError
@@ -399,7 +377,7 @@ var centsa = (function() {
 			importProgress : function(error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/general/import/progress",
+					url : url + "/general/import/progress",
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -412,7 +390,7 @@ var centsa = (function() {
 			layouts : function(error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/general/layouts",
+					url : url + "/general/layouts",
 					method : "GET",
 					async : false,
 					success : function(data) {
@@ -425,7 +403,7 @@ var centsa = (function() {
 			rules : function(error) {
 				var rtn = null;
 				ajax({
-					url : apiUrl.get() + "/general/rules",
+					url : url + "/general/rules",
 					method : "GET",
 					async : false,
 					success : function(data) {

@@ -8,10 +8,21 @@ import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.server.EmbeddedServer;
 
+/**
+ * Main class of the application
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Main extends Application {
 
 	private static Stage stage;
 
+	/**
+	 * Gets the stage
+	 * 
+	 * @return The stage
+	 */
 	public static Stage getStage() {
 		return stage;
 	}

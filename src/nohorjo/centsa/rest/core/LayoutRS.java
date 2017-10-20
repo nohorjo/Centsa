@@ -1,5 +1,6 @@
 package nohorjo.centsa.rest.core;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -30,6 +31,8 @@ public class LayoutRS extends AbstractRS {
 			while ((b = in.read()) != -1) {
 				writer.write((byte) b);
 			}
+		} catch (NullPointerException e) {
+			throw new FileNotFoundException(resource);
 		}
 		return writer.toString();
 	}
@@ -45,6 +48,8 @@ public class LayoutRS extends AbstractRS {
 			while ((b = in.read()) != -1) {
 				bs.add((byte) b);
 			}
+		} catch (NullPointerException e) {
+			throw new FileNotFoundException(resource);
 		}
 		byte[] rtn = new byte[bs.size()];
 		for (int i = 0; i < rtn.length; i++) {

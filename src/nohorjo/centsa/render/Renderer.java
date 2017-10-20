@@ -24,10 +24,17 @@ import javafx.scene.web.WebView;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.server.EmbeddedServer;
 
+/**
+ * {@link Region} that provides a {@link WebView} to render the UI
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class Renderer extends Region {
 
 	private static final int MIN_WIDTH = 1000;
 	private static final int MIN_HEIGHT = 500;
+	// To not exceed screen resolution
 	private static final double MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private static final double MAX_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	private final Logger log = LoggerFactory.getLogger(Renderer.class);
@@ -39,8 +46,10 @@ public class Renderer extends Region {
 		String url = SystemProperties.get("server.root", String.class) + "core/ui.html?" + EmbeddedServer.UNIQUE_KEY;
 		log.info("UI available at {}", url);
 
+		// Load the url in the webview
 		webEngine.load(url);
 
+		// Show javafx alert on window.alert()
 		webEngine.setOnAlert((wEvent) -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("");
@@ -50,6 +59,7 @@ public class Renderer extends Region {
 			alert.showAndWait();
 		});
 
+		// Log all console messages
 		WebConsoleListener.setDefaultListener((WebView webView, String message, int lineNumber, String sourceId) -> {
 			LoggerFactory.getLogger(sourceId + ":" + lineNumber).warn(message);
 		});
@@ -57,6 +67,16 @@ public class Renderer extends Region {
 		getChildren().add(browser);
 	}
 
+	/**
+	 * Show javafx alert with the exception
+	 * 
+	 * @param ex
+	 *            The exception
+	 * @param title
+	 *            The title of the alert
+	 * @param header
+	 *            The header of the alert
+	 */
 	public static void showExceptionDialog(Throwable ex, String title, String header) {
 		Platform.runLater(() -> {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -96,6 +116,7 @@ public class Renderer extends Region {
 	protected void layoutChildren() {
 		double w = getWidth();
 		double h = getHeight();
+		// Persist dimensions
 		SystemProperties.set("width", w);
 		SystemProperties.set("height", h);
 		layoutInArea(browser, 0, 0, w, h, 0, HPos.CENTER, VPos.CENTER);

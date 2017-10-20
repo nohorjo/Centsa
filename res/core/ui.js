@@ -54,7 +54,6 @@ function applyMouseRestrictions(win) {
 
 function init() {
 	iframe = document.querySelector("iframe");
-	centsa.setUniqueKey(location.search.substr(1));
 	iframe.contentWindow.centsa = centsa;
 	settingsToggle = document.getElementById("settingsToggle");
 

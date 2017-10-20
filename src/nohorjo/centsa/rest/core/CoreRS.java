@@ -1,5 +1,6 @@
 package nohorjo.centsa.rest.core;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -25,6 +26,8 @@ public class CoreRS extends AbstractRS {
 			while ((b = in.read()) != -1) {
 				writer.write(b);
 			}
+		} catch (NullPointerException e) {
+			throw new FileNotFoundException(resource);
 		}
 		return writer.toString();
 	}
