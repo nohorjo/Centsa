@@ -6,6 +6,12 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.AccountsDAO;
 import nohorjo.centsa.vo.Account;
 
+/**
+ * JavaScript interface for accounts
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class AccountsInterface extends JSInterface {
 
 	private AccountsDAO dao = new AccountsDAO();

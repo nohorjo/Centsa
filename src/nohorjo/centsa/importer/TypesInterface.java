@@ -6,6 +6,12 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.TypesDAO;
 import nohorjo.centsa.vo.Type;
 
+/**
+ * JavaScript interface for types
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class TypesInterface extends JSInterface {
 
 	TypesDAO dao = new TypesDAO();

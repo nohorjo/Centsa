@@ -6,6 +6,12 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.vo.Expense;
 
+/**
+ * JavaScript interface for expenses
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class ExpensesInterface extends JSInterface {
 
 	private ExpensesDAO dao = new ExpensesDAO();

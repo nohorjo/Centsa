@@ -6,6 +6,12 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.vo.Transaction;
 
+/**
+ * JavaScript interface for transactions
+ * 
+ * @author muhammed.haque
+ *
+ */
 public class TransactionsInterface extends JSInterface {
 
 	private TransactionsDAO dao = new TransactionsDAO();
