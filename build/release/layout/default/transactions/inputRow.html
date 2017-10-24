@@ -25,7 +25,7 @@
 			data-ng-blur="showDataList = false">
 		<div data-ng-show="showDataList">
 			<span data-ng-repeat="c in uniqueComments"
-				data-ng-if="newTrans.comment != '' && c.startsWith(newTrans.comment)"
+				data-ng-if="newTrans.comment != '' && c.toLowerCase().startsWith(newTrans.comment.toLowerCase())"
 				data-ng-mousedown="setComment(c)">{{ c }}</span>
 		</div>
 	</div>
