@@ -356,10 +356,10 @@ var centsa = (function() {
 			}
 		},
 		general : {
-			budget : function(error) {
+			budget : function(strict, error) {
 				var rtn = null;
 				ajax({
-					url : url + "/general/budget",
+					url : url + "/general/budget?strict=" + strict,
 					method : "GET",
 					async : false,
 					success : function(data) {

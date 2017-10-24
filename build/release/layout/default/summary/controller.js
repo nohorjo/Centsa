@@ -1,7 +1,14 @@
 app.controller("summaryCtrl", function($scope) {
-	$scope.budget = centsa.general.budget();
+	$scope.strictMode = centsa.settings.get("strict.mode") == "true";
 
-	!function drawGraph() {
+	$scope.getBudget = function() {
+		centsa.settings.set("strict.mode", $scope.strictMode);
+		$scope.budget = centsa.general.budget($scope.strictMode);
+	};
+
+	$scope.getBudget();
+
+	(function() {
 		var sums = []
 		var data = centsa.transactions.getCumulativeSums();
 		$(data).each(function() {
@@ -58,5 +65,5 @@ app.controller("summaryCtrl", function($scope) {
 			"dataProvider" : sums
 		};
 		AmCharts.makeChart("trans-chart", chartOpts);
-	}();
+	})();
 });

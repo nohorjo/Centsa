@@ -27,7 +27,11 @@ public class SettingsRS extends AbstractRS {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String get(@QueryParam("key") String key) {
-		return SystemProperties.get(key, Object.class).toString();
+		Object setting = SystemProperties.get(key, Object.class);
+		if (setting == null) {
+			setting = "";
+		}
+		return setting.toString();
 	}
 
 	@POST

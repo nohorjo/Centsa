@@ -47,12 +47,14 @@ public class GeneralRS extends AbstractRS {
 	/**
 	 * Calculates budget
 	 * 
+	 * @param strict
+	 *            If true will round expenses
 	 * @return The budgets considering expenses
 	 * @throws SQLException
 	 */
 	@GET
 	@Path("/budget")
-	public Map<String, Integer> getBudget() throws SQLException {
+	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
 		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
 		int sumAll = tDao.sumNonExpenseAmount();
@@ -67,10 +69,12 @@ public class GeneralRS extends AbstractRS {
 			}
 			double durationDays = (ended - e.getStarted()) / 8.64e+7;
 			double instances = durationDays / e.getFrequency_days();
-			// If cost is negative (is income) then we floor it so as to assume the money
-			// isn't in yet.
-			// If it's positive we ceiling it so that we're 'saving' the money.
-			instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
+			if (strict) {
+				// If cost is negative (is income) then we floor it so as to assume the money
+				// isn't in yet.
+				// If it's positive we ceiling it so that we're 'saving' the money.
+				instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
+			}
 			double cost = instances * e.getCost();
 			if (e.isAutomatic()) {
 				totalAuto += cost;
