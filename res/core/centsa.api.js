@@ -82,13 +82,17 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			getAll : function(page, pageSize, order, error) {
+			getAll : function(page, pageSize, order, error, filter) {
 				var rtn = null;
 				ajax({
 					url : url + "/transactions/all?page=" + page + "&pageSize="
 							+ pageSize + "&order=" + (order || ""),
-					method : "GET",
+					method : "POST",
 					async : false,
+					data : JSON.stringify(filter || {}),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},

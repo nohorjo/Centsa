@@ -1,4 +1,6 @@
 app.controller("transCtrl", function($scope, $rootScope) {
+	$scope.filter = {};
+
 	$scope.currentPage = 1;
 	var pageSize = 15;
 
@@ -13,12 +15,13 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC");
+					$scope.currentPage, pageSize, "DATE DESC, ID DESC",
+					$scope.filter);
 		}
 	};
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, "DATE DESC, ID DESC");
+			pageSize, "DATE DESC, ID DESC", $scope.filter);
 	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
 	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
@@ -133,7 +136,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	};
 
 	$scope.initDatePickers = function() {
-		$('.datepicker').datepicker({
+		$('.datepicker, .daterangepicker').datepicker({
 			format : "yyyy/mm/dd",
 			endDate : new Date(),
 			todayBtn : "linked",
@@ -148,7 +151,8 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.pagesCount = 0;
 		if (centsa.transactions.remove(id)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC");
+					$scope.currentPage, pageSize, "DATE DESC, ID DESC",
+					$scope.filter);
 		}
 		$('#transModal').modal("hide");
 	};
@@ -164,7 +168,12 @@ app.controller("transCtrl", function($scope, $rootScope) {
 			var sort = col + " " + ((asc = !asc) ? "ASC" : "DESC")
 					+ ", ID DESC" + (secondary ? ", " + secondary : "");
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, sort);
+					$scope.currentPage, pageSize, sort, $scope.filter);
 		};
 	})();
+
+	$scope.filterTrans = function() {
+		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
+				pageSize, "DATE DESC, ID DESC", $scope.filter);
+	};
 });

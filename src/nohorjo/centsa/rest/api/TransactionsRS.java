@@ -43,12 +43,13 @@ public class TransactionsRS extends AbstractRS {
 		return dao.countPages(pageSize);
 	}
 
-	@GET
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/all")
-	public List<Transaction> getAll(@QueryParam("page") int page, @QueryParam("pageSize") int pageSize,
-			@QueryParam("order") String order) throws SQLException {
-		return dao.getAll(page, pageSize, order);
+	public List<Transaction> getAll(Map<String, Object> filter, @QueryParam("page") int page,
+			@QueryParam("pageSize") int pageSize, @QueryParam("order") String order) throws SQLException {
+		return dao.getAll(page, pageSize, order, filter);
 	}
 
 	@DELETE

@@ -75,3 +75,66 @@
 		</tbody>
 	</table>
 </form>
+<form name="FilterForm" data-ng-submit="filterTrans()">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Filter</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Dates</td>
+				<td><div class="input-group input-daterange">
+						<input type="text" class="daterangepicker form-control"
+							pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.fromDate">
+						<div class="input-group-addon">to</div>
+						<input type="text" class="daterangepicker form-control"
+							pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.toDate">
+					</div></td>
+			</tr>
+			<tr>
+				<td>Amount</td>
+				<td><div class="input-group input-daterange">
+						<input type="number" class="form-control"
+							data-ng-model="filter.fromAmount">
+						<div class="input-group-addon">to</div>
+						<input type="number" class="form-control"
+							data-ng-model="filter.toAmount">
+					</div></td>
+			</tr>
+			<tr>
+				<td>Account</td>
+				<td><select class="form-control"
+					data-ng-model="filter.account_id">
+						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td>Type</td>
+				<td><select class="form-control" data-ng-model="filter.type_id">
+						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td>Expense</td>
+				<td><select class="form-control"
+					data-ng-model="filter.expense_id">
+						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td>Comment</td>
+				<td><input type="text" class="form-control"
+					data-ng-model="filter.comment"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="submit"
+					class="btn btn-primary float-right" value="Apply"
+					data-ng-class="{ 'btn-warning': FilterForm.$invalid }"
+					data-ng-disabled="FilterForm.$invalid"></td>
+			</tr>
+		</tbody>
+	</table>
+</form>

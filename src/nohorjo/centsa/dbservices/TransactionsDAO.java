@@ -38,8 +38,9 @@ public class TransactionsDAO extends AbstractDAO {
 				t.getType_id(), t.getExpense_id(), t.getDate() });
 	}
 
-	@Override
-	public List<Transaction> getAll(int page, int pageSize, String order) throws SQLException {
+	public List<Transaction> getAll(int page, int pageSize, String order, Map<String, Object> filter)
+			throws SQLException {
+		// TODO implement filter
 		Function<ResultSet, List<Transaction>> processor = new Function<ResultSet, List<Transaction>>() {
 
 			@Override
@@ -208,6 +209,11 @@ public class TransactionsDAO extends AbstractDAO {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List<? extends VO> getAll(int page, int pageSize, String order) throws SQLException {
+		return getAll(page, pageSize, order, new HashMap<>());
 	}
 
 }
