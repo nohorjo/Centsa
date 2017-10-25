@@ -26,11 +26,6 @@
 		DELETE FROM {tablename} WHERE ID = ?;
 		]]>
 		</Delete>
-		<Count>
-		<![CDATA[
-		SELECT COUNT(*) FROM {tablename};
-		]]>
-		</Count>
 		<GetIdByName>
 		<![CDATA[
 		SELECT ID FROM {tablename} WHERE NAME = ?;
@@ -72,6 +67,16 @@
 		SELECT DATE, AMOUNT FROM TRANSACTIONS ORDER BY DATE ASC;
 		]]>
 		</GetDatesAndAmounts>
+		<GetAll>
+		<![CDATA[
+		SELECT ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, EXPENSE_ID, DATE FROM TRANSACTIONS {filter} ORDER BY {orderby} LIMIT ?, ?;
+		]]>
+		</GetAll>
+		<Count>
+		<![CDATA[
+		SELECT COUNT(*) FROM TRANSACTIONS {filter};
+		]]>
+		</Count>
 	</Transactions>
 	<Accounts>
 		<CreateTable>

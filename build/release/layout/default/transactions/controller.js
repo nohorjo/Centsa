@@ -1,179 +1,228 @@
-app.controller("transCtrl", function($scope, $rootScope) {
-	$scope.filter = {};
+app
+		.controller(
+				"transCtrl",
+				function($scope, $rootScope) {
+					function getFilter() {
+						var filter = Object.assign({}, $rootScope.filter);
 
-	$scope.currentPage = 1;
-	var pageSize = 15;
+						filter.fromDate = $rootScope.filter.fromDate ? new Date(
+								$rootScope.filter.fromDate).getTime()
+								: undefined;
+						filter.toDate = $rootScope.filter.toDate ? new Date(
+								$rootScope.filter.toDate).getTime() : undefined;
+						filter.fromAmount = $rootScope.filter.fromAmount ? $rootScope.filter.fromAmount * 100
+								: undefined;
+						filter.toAmount = $rootScope.filter.toAmount ? $rootScope.filter.toAmount * 100
+								: undefined;
 
-	$scope.pagesCount = 0;
+						return filter;
+					}
 
-	$scope.countPages = function() {
-		return $scope.pagesCount
-				|| ($scope.pagesCount = centsa.transactions
-						.countPages(pageSize));
-	};
+					$scope.currentPage = 1;
+					var pageSize = 15;
 
-	$scope.goToPage = function(n) {
-		if ($scope.currentPage != ($scope.currentPage = n)) {
-			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC",
-					$scope.filter);
-		}
-	};
+					$scope.pagesCount = 0;
 
-	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, "DATE DESC, ID DESC", $scope.filter);
-	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
-	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
-	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
-	$scope.uniqueComments = centsa.transactions.getUniqueComments();
+					$scope.countPages = function() {
+						return $scope.pagesCount
+								|| ($scope.pagesCount = centsa.transactions
+										.countPages(pageSize, null, getFilter()));
+					};
 
-	$scope.showDataList = false;
+					$scope.goToPage = function(n) {
+						if ($scope.currentPage != ($scope.currentPage = n)) {
+							$scope.transactions = centsa.transactions.getAll(
+									$scope.currentPage, pageSize,
+									"DATE DESC, ID DESC", null, getFilter());
+						}
+					};
 
-	$scope.setComment = function(c) {
-		$scope.showDataList = false;
-		$scope.newTrans.comment = c;
-	};
+					$scope.transactions = centsa.transactions.getAll(
+							$scope.currentPage, pageSize, "DATE DESC, ID DESC",
+							null, getFilter());
+					$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
+					$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
+					$scope.expenses = centsa.expenses.getActive(0, 0,
+							"NAME ASC");
+					$scope.uniqueComments = centsa.transactions
+							.getUniqueComments();
 
-	$scope.navigateDataList = (function() {
+					$scope.showDataList = false;
 
-		var index = -1;
-		var dataListItems;
+					$scope.setComment = function(c) {
+						$scope.showDataList = false;
+						$scope.newTrans.comment = c;
+					};
 
-		return function($event) {
+					$scope.navigateDataList = (function() {
 
-			var temp = $(".datalist:first span");
-			dataListItems = temp.length > 0 ? temp : (dataListItems || temp);
+						var index = -1;
+						var dataListItems;
 
-			switch ($event.keyCode) {
-			case 38:
-				if (index > 0) {
-					index--;
-				}
-				break;
-			case 40:
-				if (index < dataListItems.length - 1) {
-					index++;
-				}
-				break;
-			case 9:
-			case 13:
-				if (index != -1) {
-					$scope.setComment(dataListItems[index].innerText.trim());
-				}
-			default:
-				index = -1;
-				break;
-			}
-			$(".datalist").each(function() {
-				var dataListItems = $(this).find("span");
-				dataListItems.removeClass("hover");
-				$(dataListItems[index]).addClass("hover");
-				$(dataListItems[index]).focus();
-			});
-		}
-	})();
+						return function($event) {
 
-	$scope.newTrans = {
-		amount : 0.0,
-		comment : "",
-		account_id : "1",
-		type_id : "1",
-		expense_id : "1",
-		date : new Date().formatDate("yyyy/MM/dd")
-	};
+							var temp = $(".datalist:first span");
+							dataListItems = temp.length > 0 ? temp
+									: (dataListItems || temp);
 
-	var newTrans = Object.assign({}, $scope.newTrans);
+							switch ($event.keyCode) {
+							case 38:
+								if (index > 0) {
+									index--;
+								}
+								break;
+							case 40:
+								if (index < dataListItems.length - 1) {
+									index++;
+								}
+								break;
+							case 9:
+							case 13:
+								if (index != -1) {
+									$scope
+											.setComment(dataListItems[index].innerText
+													.trim());
+								}
+							default:
+								index = -1;
+								break;
+							}
+							$(".datalist").each(function() {
+								var dataListItems = $(this).find("span");
+								dataListItems.removeClass("hover");
+								$(dataListItems[index]).addClass("hover");
+								$(dataListItems[index]).focus();
+							});
+						}
+					})();
 
-	$scope.saveTrans = function(updating) {
-		$scope.pagesCount = 0;
-		$scope.newTrans.date = new Date($scope.newTrans.date).getTime();
-		$scope.newTrans.amount = Math.round($scope.newTrans.amount * 100);
-		var newId = centsa.transactions.insert($scope.newTrans);
-		if (newId > 0) {
-			$scope.newTrans.id = newId;
-		}
-		if ($scope.currentPage == 1 && !updating) {
-			$scope.transactions.unshift($scope.newTrans);
-			if ($scope.transactions.length > pageSize) {
-				$scope.transactions.pop();
-			}
-		} else if (updating) {
-			for (var i = 0; i < $scope.transactions.length; i++) {
-				if ($scope.transactions[i].id == $scope.newTrans.id) {
-					$scope.transactions[i] = $scope.newTrans;
-				}
-			}
-			$('#transModal').modal('hide');
-		}
-		$scope.newTrans = Object.assign({}, newTrans);
-		$('.datepicker').datepicker("update",
-				new Date().formatDate("yyyy/MM/dd"));
-	};
+					$scope.newTrans = {
+						amount : 0.0,
+						comment : "",
+						account_id : "1",
+						type_id : "1",
+						expense_id : "1",
+						date : new Date().formatDate("yyyy/MM/dd")
+					};
 
-	$scope.getFromArray = function(arr, id) {
-		return arr.filter(function(item) {
-			return item.id == id;
-		})[0];
-	};
+					var newTrans = Object.assign({}, $scope.newTrans);
 
-	$scope.editTrans = function(trans) {
-		var t = Object.assign({}, trans);
-		t.date = $rootScope.formatDate(t.date);
-		$('.datepicker').datepicker("update", t.date);
-		t.amount = t.amount / 100;
-		t.account_id = t.account_id.toString();
-		t.type_id = t.type_id.toString();
-		t.expense_id = t.expense_id.toString();
-		$scope.newTrans = t;
-		$('#transModal').modal("show");
-		$('#transModal').on(
-				'hidden.bs.modal',
-				function(e) {
-					$scope.newTrans = Object.assign({}, newTrans);
-					$('.datepicker').datepicker("update",
-							new Date().formatDate("yyyy/MM/dd"));
-				})
-	};
+					$scope.saveTrans = function(updating) {
+						$scope.pagesCount = 0;
+						$scope.newTrans.date = new Date($scope.newTrans.date)
+								.getTime();
+						$scope.newTrans.amount = Math
+								.round($scope.newTrans.amount * 100);
+						var newId = centsa.transactions.insert($scope.newTrans);
+						if (newId > 0) {
+							$scope.newTrans.id = newId;
+						}
+						if ($scope.currentPage == 1 && !updating) {
+							$scope.transactions.unshift($scope.newTrans);
+							if ($scope.transactions.length > pageSize) {
+								$scope.transactions.pop();
+							}
+						} else if (updating) {
+							for (var i = 0; i < $scope.transactions.length; i++) {
+								if ($scope.transactions[i].id == $scope.newTrans.id) {
+									$scope.transactions[i] = $scope.newTrans;
+								}
+							}
+							$('#transModal').modal('hide');
+						}
+						$scope.newTrans = Object.assign({}, newTrans);
+						$('.datepicker').datepicker("update",
+								new Date().formatDate("yyyy/MM/dd"));
+					};
 
-	$scope.initDatePickers = function() {
-		$('.datepicker, .daterangepicker').datepicker({
-			format : "yyyy/mm/dd",
-			endDate : new Date(),
-			todayBtn : "linked",
-			autoclose : true,
-			todayHighlight : true
-		});
-		$('.datepicker').datepicker("update",
-				new Date().formatDate("yyyy/MM/dd"));
-	};
+					$scope.getFromArray = function(arr, id) {
+						return arr.filter(function(item) {
+							return item.id == id;
+						})[0];
+					};
 
-	$scope.deleteTrans = function(id) {
-		$scope.pagesCount = 0;
-		if (centsa.transactions.remove(id)) {
-			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC",
-					$scope.filter);
-		}
-		$('#transModal').modal("hide");
-	};
+					$scope.editTrans = function(trans) {
+						var t = Object.assign({}, trans);
+						t.date = $rootScope.formatDate(t.date);
+						$('.datepicker').datepicker("update", t.date);
+						t.amount = t.amount / 100;
+						t.account_id = t.account_id.toString();
+						t.type_id = t.type_id.toString();
+						t.expense_id = t.expense_id.toString();
+						$scope.newTrans = t;
+						$('#transModal').modal("show");
+						$('#transModal')
+								.on(
+										'hidden.bs.modal',
+										function(e) {
+											$scope.newTrans = Object.assign({},
+													newTrans);
+											$('.datepicker')
+													.datepicker(
+															"update",
+															new Date()
+																	.formatDate("yyyy/MM/dd"));
+										})
+					};
 
-	$scope.sort = (function() {
-		var lastCol;
-		var asc = true;
-		return function(col, secondary) {
-			if (lastCol != col) {
-				lastCol = col;
-				asc = false;
-			}
-			var sort = col + " " + ((asc = !asc) ? "ASC" : "DESC")
-					+ ", ID DESC" + (secondary ? ", " + secondary : "");
-			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, sort, $scope.filter);
-		};
-	})();
+					$scope.initDatePickers = function() {
+						$('.datepicker, .daterangepicker').datepicker({
+							format : "yyyy/mm/dd",
+							endDate : new Date(),
+							todayBtn : "linked",
+							autoclose : true,
+							todayHighlight : true
+						});
+						$('.datepicker').datepicker("update",
+								new Date().formatDate("yyyy/MM/dd"));
+					};
 
-	$scope.filterTrans = function() {
-		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-				pageSize, "DATE DESC, ID DESC", $scope.filter);
-	};
-});
+					$scope.deleteTrans = function(id) {
+						$scope.pagesCount = 0;
+						if (centsa.transactions.remove(id)) {
+							$scope.transactions = centsa.transactions.getAll(
+									$scope.currentPage, pageSize,
+									"DATE DESC, ID DESC", null, getFilter());
+						}
+						$('#transModal').modal("hide");
+					};
+
+					$scope.sort = (function() {
+						var lastCol;
+						var asc = true;
+						return function(col, secondary) {
+							if (lastCol != col) {
+								lastCol = col;
+								asc = false;
+							}
+							var sort = col + " "
+									+ ((asc = !asc) ? "ASC" : "DESC")
+									+ ", ID DESC"
+									+ (secondary ? ", " + secondary : "");
+							$scope.transactions = centsa.transactions.getAll(
+									$scope.currentPage, pageSize, sort, null,
+									getFilter());
+						};
+					})();
+
+					$scope.filterTrans = function() {
+						$scope.transactions = centsa.transactions.getAll(
+								$scope.currentPage, pageSize,
+								"DATE DESC, ID DESC", null, getFilter());
+						$scope.currentPage = 1;
+						$scope.pagesCount = centsa.transactions.countPages(
+								pageSize, null, getFilter());
+					};
+
+					$scope.clearFilter = (function() {
+						var filter = Object.assign({}, $rootScope.filter);
+						return function() {
+							$rootScope.filter = Object.assign({}, filter);
+							$scope.filterTrans();
+						};
+					})();
+
+					$scope.getExtraRows = function() {
+						return pageSize - $scope.transactions.length;
+					};
+				});

@@ -18,6 +18,7 @@ import org.glassfish.jersey.internal.inject.PerLookup;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.vo.TransactionFilter;
 
 /**
  * REST service for transactions
@@ -37,17 +38,17 @@ public class TransactionsRS extends AbstractRS {
 		return dao.get(id);
 	}
 
-	@GET
+	@POST
 	@Path("/countPages")
-	public int countPages(@QueryParam("pageSize") int pageSize) throws SQLException {
-		return dao.countPages(pageSize);
+	public int countPages(TransactionFilter filter, @QueryParam("pageSize") int pageSize) throws SQLException {
+		return dao.countPages(pageSize, filter);
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/all")
-	public List<Transaction> getAll(Map<String, Object> filter, @QueryParam("page") int page,
+	public List<Transaction> getAll(TransactionFilter filter, @QueryParam("page") int page,
 			@QueryParam("pageSize") int pageSize, @QueryParam("order") String order) throws SQLException {
 		return dao.getAll(page, pageSize, order, filter);
 	}

@@ -31,50 +31,7 @@
 		</div>
 	</div>
 </div>
-<ul class="pagination float-right">
-	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
-		data-ng-click="goToPage(1)">First</a></li>
-	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
-		data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a></li>
-	<li data-ng-class="{ 'active':currentPage==(n+1) }"
-		data-ng-repeat="n in [] | range:countPages()"
-		data-ng-if="(n+1) > (currentPage-6) && (n+1) < (currentPage+6) "><a
-		href="" data-ng-click="goToPage(n+1)">{{ n + 1 }}</a></li>
-	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
-		href=""
-		data-ng-click="goToPage((currentPage+1 <= pagesCount) ? currentPage+1 : currentPage )">&raquo;</a></li>
-	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
-		href="" data-ng-click="goToPage(pagesCount)">Last</a></li>
-</ul>
-<form name="Form" data-ng-submit="saveTrans()">
-	<h4>Manage transactions</h4>
-	<table id="transTable" class="table table-condensed table-hover">
-		<thead>
-			<tr>
-				<th width="5%" data-ng-click="sort('ID')">ID</th>
-				<th width="15%" data-ng-click="sort('DATE', 'ID DESC')">Date</th>
-				<th width="10%" data-ng-click="sort('AMOUNT', 'DATE DESC')">Amount</th>
-				<th width="10%">Account</th>
-				<th width="10%">Type</th>
-				<th width="10%">Expense</th>
-				<th width="40%" data-ng-click="sort('COMMENT', 'DATE DESC')">Comment</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr data-ng-include="'transactions/inputRow.html'"
-				onload="initDatePickers()"></tr>
-			<tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
-				<td>{{ t.id }}</td>
-				<td>{{ formatDate(t.date) }}</td>
-				<td>{{ t.amount / 100 }}</td>
-				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
-				<td>{{ getFromArray(types, t.type_id).name }}</td>
-				<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
-				<td>{{ t.comment }}</td>
-			</tr>
-		</tbody>
-	</table>
-</form>
+<h4>Manage transactions</h4>
 <form name="FilterForm" data-ng-submit="filterTrans()">
 	<table class="table">
 		<thead>
@@ -108,12 +65,14 @@
 				<td>Account</td>
 				<td><select class="form-control"
 					data-ng-model="filter.account_id">
+						<option value="0"></option>
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
 				</select></td>
 			</tr>
 			<tr>
 				<td>Type</td>
 				<td><select class="form-control" data-ng-model="filter.type_id">
+						<option value="0"></option>
 						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
 				</select></td>
 			</tr>
@@ -121,6 +80,7 @@
 				<td>Expense</td>
 				<td><select class="form-control"
 					data-ng-model="filter.expense_id">
+						<option value="0"></option>
 						<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
 				</select></td>
 			</tr>
@@ -130,10 +90,59 @@
 					data-ng-model="filter.comment"></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit"
-					class="btn btn-primary float-right" value="Apply"
-					data-ng-class="{ 'btn-warning': FilterForm.$invalid }"
-					data-ng-disabled="FilterForm.$invalid"></td>
+				<td colspan="2"><div id="filterButtons" class="float-right">
+						<input type="button" class="btn btn-default" value="Clear"
+							data-ng-click="clearFilter()"><input type="submit"
+							class="btn btn-primary" value="Apply"
+							data-ng-class="{ 'btn-warning': FilterForm.$invalid }"
+							data-ng-disabled="FilterForm.$invalid">
+					</div></td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+<ul class="pagination float-right">
+	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
+		data-ng-click="goToPage(1)">First</a></li>
+	<li data-ng-class="{ 'disabled':currentPage==1 }"><a href=""
+		data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a></li>
+	<li data-ng-class="{ 'active':currentPage==(n+1) }"
+		data-ng-repeat="n in [] | range:countPages()"
+		data-ng-if="(n+1) > (currentPage-6) && (n+1) < (currentPage+6) "><a
+		href="" data-ng-click="goToPage(n+1)">{{ n + 1 }}</a></li>
+	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
+		href=""
+		data-ng-click="goToPage((currentPage+1 <= pagesCount) ? currentPage+1 : currentPage )">&raquo;</a></li>
+	<li data-ng-class="{ 'disabled':currentPage==pagesCount }"><a
+		href="" data-ng-click="goToPage(pagesCount)">Last</a></li>
+</ul>
+<form name="Form" data-ng-submit="saveTrans()">
+	<table id="transTable" class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th width="5%" data-ng-click="sort('ID')">ID</th>
+				<th width="15%" data-ng-click="sort('DATE', 'ID DESC')">Date</th>
+				<th width="10%" data-ng-click="sort('AMOUNT', 'DATE DESC')">Amount</th>
+				<th width="10%">Account</th>
+				<th width="10%">Type</th>
+				<th width="10%">Expense</th>
+				<th width="40%" data-ng-click="sort('COMMENT', 'DATE DESC')">Comment</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-ng-include="'transactions/inputRow.html'"
+				onload="initDatePickers()"></tr>
+			<tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
+				<td>{{ t.id }}</td>
+				<td>{{ formatDate(t.date) }}</td>
+				<td>{{ t.amount / 100 }}</td>
+				<td>{{ getFromArray(accounts, t.account_id).name }}</td>
+				<td>{{ getFromArray(types, t.type_id).name }}</td>
+				<td>{{ getFromArray(expenses, t.expense_id).name }}</td>
+				<td>{{ t.comment }}</td>
+			</tr>
+			<tr data-ng-repeat="t in [] | range:getExtraRows()">
+				<td colspan="7">-</td>
 			</tr>
 		</tbody>
 	</table>

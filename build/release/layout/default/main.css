@@ -133,3 +133,7 @@ th[data-ng-click] {
 th[data-ng-click]:after {
 	content: " \21c5"
 }
+
+#filterButtons>input {
+	margin-left: 1em;
+}

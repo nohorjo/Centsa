@@ -130,12 +130,16 @@ var centsa = (function() {
 				});
 				return rtn;
 			},
-			countPages : function(pageSize, error) {
+			countPages : function(pageSize, error, filter) {
 				var rtn = null;
 				ajax({
 					url : url + "/transactions/countPages?pageSize=" + pageSize,
-					method : "GET",
+					method : "POST",
 					async : false,
+					data : JSON.stringify(filter || {}),
+					headers : {
+						"Content-Type" : "application/json"
+					},
 					success : function(data) {
 						rtn = JSON.parse(data.responseText);
 					},

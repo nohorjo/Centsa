@@ -71,4 +71,10 @@ public class Transaction implements VO {
 		this.expense_id = expense_id;
 	}
 
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", amount=" + amount + ", comment=" + comment + ", account_id=" + account_id
+				+ ", type_id=" + type_id + ", date=" + date + ", expense_id=" + expense_id + "]";
+	}
+
 }

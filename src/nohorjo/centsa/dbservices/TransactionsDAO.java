@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.vo.TransactionFilter;
 import nohorjo.centsa.vo.VO;
 
 /**
@@ -38,34 +39,50 @@ public class TransactionsDAO extends AbstractDAO {
 				t.getType_id(), t.getExpense_id(), t.getDate() });
 	}
 
-	public List<Transaction> getAll(int page, int pageSize, String order, Map<String, Object> filter)
+	/**
+	 * Gets all trasactions
+	 * 
+	 * @param page
+	 *            The page number if paginated
+	 * @param pageSize
+	 *            The size of each page if paginated
+	 * @param order
+	 *            The order clause
+	 * @param filter
+	 *            Used to filter the results
+	 * @return A list of transactions
+	 * @throws SQLException
+	 */
+	public List<Transaction> getAll(int page, int pageSize, String order, TransactionFilter filter)
 			throws SQLException {
-		// TODO implement filter
-		Function<ResultSet, List<Transaction>> processor = new Function<ResultSet, List<Transaction>>() {
+		List<Transaction> ts = new LinkedList<>();
 
-			@Override
-			public List<Transaction> apply(ResultSet rs) {
-				List<Transaction> ts = new LinkedList<>();
-				try {
-					while (rs.next()) {
-						Transaction t = new Transaction();
-						t.setId(rs.getLong("ID"));
-						t.setAmount(rs.getInt("AMOUNT"));
-						t.setComment(rs.getString("COMMENT"));
-						t.setAccount_id(rs.getLong("ACCOUNT_ID"));
-						t.setType_id(rs.getLong("TYPE_ID"));
-						t.setDate(rs.getLong("DATE"));
-						t.setExpense_id(rs.getLong("EXPENSE_ID"));
-						ts.add(t);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new Error(e);
+		// Reject invalid ORDER BY clause
+		order = (order != null && order.toLowerCase().matches("^(\\s*[a-z]* (asc|desc),?)+$")) ? order : "1 ASC";
+		page = (page > 0) ? page : 1;
+		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
+
+		int skip = (page - 1) * pageSize;
+		String sql = SQLUtils.getQuery("Transactions.GetAll").replace("{orderby}", order).replace("{filter}",
+				filter.getFilterClause());
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, skip);
+			ps.setInt(2, pageSize);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Transaction t = new Transaction();
+					t.setId(rs.getLong("ID"));
+					t.setAmount(rs.getInt("AMOUNT"));
+					t.setComment(rs.getString("COMMENT"));
+					t.setAccount_id(rs.getLong("ACCOUNT_ID"));
+					t.setType_id(rs.getLong("TYPE_ID"));
+					t.setDate(rs.getLong("DATE"));
+					t.setExpense_id(rs.getLong("EXPENSE_ID"));
+					ts.add(t);
 				}
-				return ts;
 			}
-		};
-		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
+		}
+		return ts;
 	}
 
 	@Override
@@ -107,11 +124,22 @@ public class TransactionsDAO extends AbstractDAO {
 	 * 
 	 * @param pageSize
 	 *            The number of records per page
+	 * @param filter
+	 *            Used to filter the results
 	 * @return The number of pages
 	 * @throws SQLException
 	 */
-	public int countPages(int pageSize) throws SQLException {
-		return (int) Math.ceil(((double) count(TABLE_NAME)) / pageSize);
+	public int countPages(int pageSize, TransactionFilter filter) throws SQLException {
+		String sql = SQLUtils.getQuery("Transactions.Count").replace("{filter}", filter.getFilterClause());
+		double pages = 0;
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				pages = rs.getInt(1);
+			}
+		}
+		return (int) Math.ceil(pages / pageSize);
 	}
 
 	/**
@@ -213,7 +241,7 @@ public class TransactionsDAO extends AbstractDAO {
 
 	@Override
 	public List<? extends VO> getAll(int page, int pageSize, String order) throws SQLException {
-		return getAll(page, pageSize, order, new HashMap<>());
+		return getAll(page, pageSize, order, new TransactionFilter());
 	}
 
 }

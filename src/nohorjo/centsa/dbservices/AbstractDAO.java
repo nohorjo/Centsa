@@ -168,26 +168,6 @@ public abstract class AbstractDAO implements DAO {
 	}
 
 	/**
-	 * Counts the number of records in the table
-	 * 
-	 * @param tableName
-	 *            The name of the table
-	 * @return The number of records
-	 * @throws SQLException
-	 */
-	protected int count(String tableName) throws SQLException {
-		String sql = SQLUtils.getQuery("Templates.Count").replace("{tablename}", tableName);
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		}
-		return 0;
-	}
-
-	/**
 	 * Gets the ID of a record from its name
 	 * 
 	 * @param name
