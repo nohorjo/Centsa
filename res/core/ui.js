@@ -2,37 +2,10 @@
  * 
  */
 var iframe;
-var settingsToggle;
-var currentSettingsVal;
 
 // keep iframe the same size as the body
 function resizeIframe() {
 	iframe.height = document.body.scrollHeight - 10;
-}
-
-function hideSettings() {
-	function shouldHide() {
-		var activeEl = document.activeElement;
-		do {
-			if (activeEl == settingsToggle) {
-				return false
-			}
-		} while (activeEl = activeEl.parentElement);
-		return true;
-	}
-
-	if (shouldHide()) {
-		settingsToggle.style.transition = "0.4s";
-		settingsToggle.style.right = "-250px";
-		iframe.focus();
-	} else {
-		setTimeout(hideSettings, 200);
-	}
-}
-
-function showSettings() {
-	settingsToggle.style.transition = "0.4s";
-	settingsToggle.style.right = "0px";
 }
 
 function applyMouseRestrictions(win) {
@@ -55,10 +28,6 @@ function applyMouseRestrictions(win) {
 function init() {
 	iframe = document.querySelector("iframe");
 	iframe.contentWindow.centsa = centsa;
-	settingsToggle = document.getElementById("settingsToggle");
-
-	showSettings();
-	setTimeout(hideSettings, 400);
 
 	resizeIframe();
 	applyMouseRestrictions(window);
@@ -70,25 +39,5 @@ function init() {
 		option.value = layouts[i];
 		option.text = layouts[i];
 		layoutsSelect.appendChild(option);
-	}
-}
-
-function prepareSetting(val) {
-	currentSettingsVal = val;
-}
-
-function setSetting(key, e) {
-	var loader = document.getElementById("loader");
-	var success = function() {
-		setTimeout(function() {
-			loader.style.display = "none";
-		}, 200);
-		currentSettingsVal = e.value;
-	}
-	if (e.value != currentSettingsVal) {
-		loader.style.display = "block";
-		centsa.settings.set(key, e.value, success, function(x) {
-			alert(x);
-		});
 	}
 }
