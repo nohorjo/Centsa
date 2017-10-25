@@ -62,11 +62,7 @@ function init() {
 
 	resizeIframe();
 	applyMouseRestrictions(window);
-	document.getElementById("serverIP").value = centsa.settings
-			.get("server.ip");
-	document.getElementById("serverPort").value = centsa.settings
-			.get("server.port");
-
+	
 	var layoutsSelect = document.getElementById("layout");
 	var layouts = centsa.general.layouts();
 	for (var i = 0; i < layouts.length; i++) {

@@ -59,6 +59,9 @@ var centsa = (function() {
 				ajax({
 					url : url + "/settings/" + key,
 					method : "POST",
+					headers : {
+						"Content-Type" : "text/plain"
+					},
 					data : value,
 					success : success,
 					error : error || throwError
