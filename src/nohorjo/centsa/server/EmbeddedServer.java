@@ -1,6 +1,5 @@
 package nohorjo.centsa.server;
 
-import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import org.eclipse.jetty.server.Server;
@@ -24,16 +23,11 @@ public class EmbeddedServer {
 	/**
 	 * Starts the server
 	 * 
-	 * @param ip
-	 *            Requested IP/hostname
-	 * @param port
-	 *            Requested port, or 0 for any available port
 	 * @return The actual IP the server is bound to
 	 * @throws Exception
 	 */
-	public static int startServer(String ip, int port) throws Exception {
-		InetSocketAddress addr = new InetSocketAddress(ip, port);
-		server = new Server(addr);
+	public static int startServer() throws Exception {
+		server = new Server(0);
 
 		// Set up jersey REST
 		ResourceConfig coreREST = new ResourceConfig().packages("nohorjo.centsa.rest.core");

@@ -42,14 +42,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String ip = SystemProperties.get("server.ip", String.class);
 		int port = (int) SystemProperties.get("server.port", Integer.class);
 
-		// start the server and obtain the running port (in the case of port set to 0)
-		port = EmbeddedServer.startServer(ip, port);
+		port = EmbeddedServer.startServer();
 
-		SystemProperties.setRuntime("server.root",
-				String.format("%s://%s:%d/", SystemProperties.get("server.protocol", String.class), ip, port));
+		SystemProperties.setRuntime("server.root", String.format("http://127.0.0.1:%d/", port));
 
 		launch(args);
 	}
