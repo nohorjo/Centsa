@@ -52,6 +52,14 @@ app.controller("accountsCtrl", function($scope) {
 				new Date().formatDate("yyyy/MM/dd"));
 	};
 
+	$scope.sumAccountBalances = function() {
+		var sum = 0;
+		$($scope.accounts).each(function() {
+			sum += this.balance;
+		});
+		return sum / 100;
+	};
+
 	$('.datepicker').datepicker({
 		format : "yyyy/mm/dd",
 		endDate : new Date(),

@@ -55,6 +55,11 @@
 				<td>{{ a.name }}</td>
 				<td>{{ a.balance/100 }}</td>
 			</tr>
+			<tr>
+				<td></td>
+				<td>Total</td>
+				<td>{{ sumAccountBalances() }}</td>
+			</tr>
 		</tbody>
 	</table>
 </form>
