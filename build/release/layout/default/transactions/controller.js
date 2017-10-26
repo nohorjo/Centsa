@@ -33,16 +33,17 @@ app.controller("transCtrl", function($scope, $rootScope) {
 						pageSize, null, getFilter()));
 	};
 
+	var sort = "DATE DESC, ID DESC";
+
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC", null,
-					getFilter());
+					$scope.currentPage, pageSize, sort, null, getFilter());
 		}
 	};
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, "DATE DESC, ID DESC", null, getFilter());
+			pageSize, sort, null, getFilter());
 	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
 	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
@@ -172,8 +173,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.pagesCount = 0;
 		if (centsa.transactions.remove(id)) {
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, "DATE DESC, ID DESC", null,
-					getFilter());
+					$scope.currentPage, pageSize, sort, null, getFilter());
 		}
 		$('#transModal').modal("hide");
 	};
@@ -186,8 +186,8 @@ app.controller("transCtrl", function($scope, $rootScope) {
 				lastCol = col;
 				asc = false;
 			}
-			var sort = col + " " + ((asc = !asc) ? "ASC" : "DESC")
-					+ ", ID DESC" + (secondary ? ", " + secondary : "");
+			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", ID DESC"
+					+ (secondary ? ", " + secondary : "");
 			$scope.transactions = centsa.transactions.getAll(
 					$scope.currentPage, pageSize, sort, null, getFilter());
 		};
@@ -195,7 +195,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	$scope.filterTrans = function() {
 		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-				pageSize, "DATE DESC, ID DESC", null, getFilter());
+				pageSize, sort, null, getFilter());
 		$scope.currentPage = 1;
 		$scope.pagesCount = centsa.transactions.countPages(pageSize, null,
 				getFilter());
