@@ -185,6 +185,8 @@
 	</target>
 
 	<target name="update-version-properties">
+		<replaceregexp file="src/nohorjo/centsa/updater/UpdateChecker.java" match="MAJOR_VERSION = \d*;" replace="MAJOR_VERSION = ${major.version};" byline="true" />
+		<replaceregexp file="src/nohorjo/centsa/updater/UpdateChecker.java" match="MINOR_VERSION = \d*;" replace="MINOR_VERSION = ${minor.version};" byline="true" />
 		<propertyfile file="${build.dir}/version.properties">
 			<entry key="major.version" value="${major.version}" />
 			<entry key="minor.version" value="${minor.version}" />
