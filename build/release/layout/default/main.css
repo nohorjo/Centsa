@@ -137,3 +137,11 @@ th[data-ng-click]:after {
 #filterButtons>input {
 	margin-left: 1em;
 }
+
+form#FilterForm th:first-child {
+	text-align: left;
+}
+
+form#FilterForm th {
+	text-align: right;
+}

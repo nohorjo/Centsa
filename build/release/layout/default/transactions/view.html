@@ -32,28 +32,25 @@
 	</div>
 </div>
 <h4>Manage transactions</h4>
-<form name="FilterForm" data-ng-submit="filterTrans()">
-	<table class="table">
+<form id="FilterForm" name="FilterForm" data-ng-submit="filterTrans()">
+	<table class="table table-condensed">
 		<thead>
 			<tr>
-				<th>Filter</th>
-				<th></th>
+				<th colspan="6">Filter</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td>Dates</td>
-				<td><div class="input-group input-daterange">
+				<th>Dates</th>
+				<td colspan="2"><div class="input-group input-daterange">
 						<input type="text" class="daterangepicker form-control"
 							pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.fromDate">
 						<div class="input-group-addon">to</div>
 						<input type="text" class="daterangepicker form-control"
 							pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.toDate">
 					</div></td>
-			</tr>
-			<tr>
-				<td>Amount</td>
-				<td><div class="input-group input-daterange">
+				<th>Amount</th>
+				<td colspan="2"><div class="input-group input-daterange">
 						<input type="number" class="form-control"
 							data-ng-model="filter.fromAmount">
 						<div class="input-group-addon">to</div>
@@ -62,22 +59,18 @@
 					</div></td>
 			</tr>
 			<tr>
-				<td>Account</td>
+				<th>Account</th>
 				<td><select class="form-control"
 					data-ng-model="filter.account_id">
 						<option value="0"></option>
 						<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
 				</select></td>
-			</tr>
-			<tr>
-				<td>Type</td>
+				<th>Type</th>
 				<td><select class="form-control" data-ng-model="filter.type_id">
 						<option value="0"></option>
 						<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
 				</select></td>
-			</tr>
-			<tr>
-				<td>Expense</td>
+				<th>Expense</th>
 				<td><select class="form-control"
 					data-ng-model="filter.expense_id">
 						<option value="0"></option>
@@ -85,12 +78,10 @@
 				</select></td>
 			</tr>
 			<tr>
-				<td>Comment</td>
-				<td><input type="text" class="form-control"
+				<th>Comment</th>
+				<td colspan="4"><input type="text" class="form-control"
 					data-ng-model="filter.comment"></td>
-			</tr>
-			<tr>
-				<td colspan="2"><div id="filterButtons" class="float-right">
+				<td><div id="filterButtons" class="float-right">
 						<input type="button" class="btn btn-default" value="Clear"
 							data-ng-click="clearFilter()"><input type="submit"
 							class="btn btn-primary" value="Apply"
