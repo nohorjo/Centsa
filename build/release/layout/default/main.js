@@ -45,10 +45,6 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		};
 	})();
 
-	$scope.isActive = function(path) {
-		return $location.path() == path;
-	};
-
 	/**
 	 * Used to filter transactions. Available in the rootscope so that other
 	 * pages can set it if needed
@@ -57,6 +53,18 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		account_id : '0',
 		type_id : '0',
 		expense_id : '0'
+	};
+
+	$rootScope.resetFilter = function() {
+		$rootScope.filter = {
+			account_id : '0',
+			type_id : '0',
+			expense_id : '0'
+		};
+	};
+
+	$scope.isActive = function(path) {
+		return $location.path() == path;
 	};
 });
 

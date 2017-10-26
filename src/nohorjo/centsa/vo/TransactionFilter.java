@@ -23,16 +23,16 @@ public class TransactionFilter {
 	 */
 	public String getFilterClause() {
 		String clause = String.format(
-				"WHERE DATE >= %d AND DATE <= %d AND AMOUNT >= %d AND AMOUNT <= %d AND COMMENT LIKE '%%%s%%' ",
+				"WHERE DATE >= %d AND DATE <= %d AND AMOUNT >= %d AND AMOUNT <= %d AND COMMENT LIKE '%%%s%%'",
 				fromDate, toDate, fromAmount, toAmount, comment);
 		if (account_id != 0) {
-			clause += "AND ACCOUNT_ID=" + account_id;
+			clause += " AND ACCOUNT_ID=" + account_id;
 		}
 		if (type_id != 0) {
-			clause += "AND TYPE_ID=" + type_id;
+			clause += " AND TYPE_ID=" + type_id;
 		}
 		if (expense_id != 0) {
-			clause += "AND EXPENSE_ID=" + expense_id;
+			clause += " AND EXPENSE_ID=" + expense_id;
 		}
 		return clause;
 	}
