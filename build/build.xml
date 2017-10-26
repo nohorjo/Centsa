@@ -32,7 +32,7 @@
 		<mkdir dir="${lib.dir}" />
 		<property name="packaging.type" value="jar" />
 		<ivy:retrieve pathid="lib.path.id" pattern="${lib.dir}/[artifact].[ext]" conf="rt" />
-		<ivy:retrieve pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
+		<ivy:retrieve pathid="build.lib.path" pattern="${build.lib.dir}/[artifact].[ext]" conf="build" />
 	</target>
 
 	<target name="prepare-eclipse-classpath" depends="resolve-dependencies">
@@ -76,7 +76,11 @@
 	</target>
 
 	<target name="compile" depends="resolve-dependencies,clean">
-		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="lib.path.id" />
+		<path id="path.id.all">
+			<path refid="lib.path.id" />
+			<path refid="build.lib.path" />
+		</path>
+		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="path.id.all" />
 	</target>
 
 	<target name="test-report" depends="test" if="test.complete">
@@ -102,9 +106,7 @@
 		</jacoco:report>
 	</target>
 
-	<target name="test" depends="resolve-dependencies">
-		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
-		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="build.lib.path" />
+	<target name="test" depends="resolve-dependencies, junit-jacoco-taskdef">
 		<jacoco:coverage destfile="${build.dir}/jacoco.exec">
 			<junit dir="." fork="true" showoutput="true" printsummary="withOutAndErr" haltonerror="true" haltonfailure="true" failureproperty="test.failed">
 				<formatter type="plain" usefile="false" />
@@ -167,8 +169,17 @@
 	<target name="increment-build-number">
 		<script language="javascript">
 			<![CDATA[
-			 	project.setProperty("build.number", parseInt(project.getProperty("build.number"))+1);
-			    ]]>
+				 	project.setProperty("build.number", parseInt(project.getProperty("build.number"))+1);
+				    ]]>
+		</script>
+		<antcall target="update-version-properties" />
+	</target>
+
+	<target name="increment-updater-build-number">
+		<script language="javascript">
+			<![CDATA[
+				 	project.setProperty("updater.build.number", parseInt(project.getProperty("updater.build.number"))+1);
+				    ]]>
 		</script>
 		<antcall target="update-version-properties" />
 	</target>
@@ -178,6 +189,7 @@
 			<entry key="major.version" value="${major.version}" />
 			<entry key="minor.version" value="${minor.version}" />
 			<entry key="build.number" value="${build.number}" />
+			<entry key="updater.build.number" value="${updater.build.number}" />
 		</propertyfile>
 	</target>
 
@@ -223,7 +235,80 @@
 		</java>
 	</target>
 
-	<target name="build-run" depends="jar,run" description="">
+	<target name="build-run" depends="jar,run" description="" />
+
+	<target name="build-updater" depends="updater-jar,updater-test-report" description="" />
+
+	<target name="compile-updater" depends="resolve-dependencies,clean-updater">
+		<path id="path.id.all">
+			<path refid="lib.path.id" />
+			<path refid="build.lib.path" />
+		</path>
+		<javac srcdir="updater_src" destdir="updater_bin" target="1.8" source="1.8" debug="on" classpathref="path.id.all" />
 	</target>
+
+	<target name="clean-updater">
+		<delete dir="updater_bin" />
+		<mkdir dir="updater_bin" />
+	</target>
+
+	<target name="updater-test-report" depends="updater-test" if="updater.test.complete">
+		<jacoco:report xmlns:jacoco="antlib:org.jacoco.ant">
+			<executiondata>
+				<file file="${build.dir}/jacoco-updater.exec" />
+			</executiondata>
+			<structure name="${app.name}">
+				<classfiles>
+					<fileset dir="updater_bin">
+						<exclude name="**/*TEST*" />
+						<exclude name="**/*MOCK*" />
+					</fileset>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="updater_src">
+						<exclude name="**/*TEST*" />
+						<exclude name="**/*MOCK*" />
+					</fileset>
+				</sourcefiles>
+			</structure>
+			<html destdir="${build.dir}/updater_report" />
+		</jacoco:report>
+	</target>
+
+
+	<target name="updater-jar" depends="compile-updater">
+		<delete dir="${release.dir}/updater" />
+		<mkdir dir="${release.dir}/updater" />
+		<jar destfile="${release.dir}/updater/${app.name}-updater.build-${updater.build.number}.jar">
+			<fileset dir="updater_bin">
+				<exclude name="**/*TEST.class" />
+				<exclude name="**/*MOCK.class" />
+			</fileset>
+		</jar>
+		<antcall target="increment-updater-build-number" />
+	</target>
+
+	<target name="updater-test" depends="resolve-dependencies,junit-jacoco-taskdef">
+		<jacoco:coverage destfile="${build.dir}/jacoco-updater.exec">
+			<junit dir="." fork="true" showoutput="true" printsummary="withOutAndErr" haltonerror="true" haltonfailure="true" failureproperty="test.failed">
+				<formatter type="plain" usefile="false" />
+				<classpath>
+					<pathelement location="updater_bin" />
+					<fileset dir="${build.lib.dir}" />
+				</classpath>
+				<batchtest>
+					<fileset dir="updater_bin" includes="**/*TEST.class" />
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+
+		<available file="${build.dir}/jacoco-updater.exec" property="updater.test.complete" />
+	</target>
+
+	<target name="junit-jacoco-taskdef">
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="build.lib.path" />
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="build.lib.path" />
+	</target>
+
 
 </project>

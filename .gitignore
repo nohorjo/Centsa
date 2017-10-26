@@ -95,3 +95,4 @@ build/release/log/*
 
 /importer_bin/
 build/release/rules/MyCustomRule.js
+/updater_bin/
