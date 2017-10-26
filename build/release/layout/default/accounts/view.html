@@ -50,7 +50,8 @@
 				<td><input type="text" class="form-control" required="required"
 					data-ng-model="newAccount.name"></td>
 			</tr>
-			<tr data-ng-repeat="a in accounts">
+			<tr data-ng-repeat="a in accounts"
+				data-ng-click="setFilter({account_id:a.id.toString()})">
 				<td>{{ a.id }}</td>
 				<td>{{ a.name }}</td>
 				<td>{{ a.balance/100 }}</td>

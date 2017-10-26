@@ -63,6 +63,11 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		};
 	};
 
+	$rootScope.setFilter = function(f) {
+		$rootScope.filter = f;
+		$location.path("transactions");
+	};
+
 	$scope.isActive = function(path) {
 		return $location.path() == path;
 	};

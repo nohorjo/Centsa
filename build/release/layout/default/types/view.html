@@ -17,7 +17,8 @@
 					<td><input type="text" class="form-control"
 						required="required" data-ng-model="newType.name"></td>
 				</tr>
-				<tr data-ng-repeat="t in types">
+				<tr data-ng-repeat="t in types"
+					data-ng-click="setFilter({type_id:t.id.toString()})">
 					<td>{{ t.id }}</td>
 					<td>{{ t.name }}</td>
 					<td>{{ t.sum/100 }}</td>
