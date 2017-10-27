@@ -3,10 +3,8 @@ package nohorjo.centsa;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.server.EmbeddedServer;
-import nohorjo.centsa.updater.UpdateChecker;
 
 /**
  * Main class of the application
@@ -39,13 +37,7 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			UpdateChecker.launchUpdater(false);
-		}));
-
-		int port = EmbeddedServer.startServer();
-		SystemProperties.setRuntime("server.root", String.format("http://127.0.0.1:%d/", port));
-
+		EmbeddedServer.startServer();
 		launch(args);
 	}
 }

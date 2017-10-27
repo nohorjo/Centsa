@@ -226,8 +226,8 @@ public class GeneralRS extends AbstractRS {
 				try {
 					Renderer.showAlert(
 							"Update is being downloaded in the background. Once complete this program will shut down");
-					UpdateChecker.launchUpdater(true);
 					UpdateChecker.downloadUpdate(info);
+					UpdateChecker.launchUpdaterAndRestart();
 				} catch (IOException e) {
 					e.printStackTrace();
 					Renderer.showExceptionDialog(e, "Download error", "Failed to download update");

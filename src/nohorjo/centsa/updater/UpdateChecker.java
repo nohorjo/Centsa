@@ -30,10 +30,20 @@ import nohorjo.centsa.properties.SystemProperties;
 public class UpdateChecker {
 
 	private static final PropertiesConfiguration updateProperties = new PropertiesConfiguration();
+	private static final String UPDATER_DIR = SystemProperties.get("root.dir", String.class) + "/updater";
 
-	private static boolean updaterLaunched = false; // Only launch once
+	private static boolean shouldRestart;
 
 	static {
+		// Adds shutdown hook to launch updater
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (new File(UPDATER_DIR).listFiles((f) -> {
+				return f.getName().endsWith(".zip");
+			}).length > 0) {
+				// Zip file exists - run updater
+				// TODO run updater
+			}
+		}));
 		try (InputStream in = ClassLoader.getSystemResourceAsStream("update.properties")) {
 			updateProperties.load(in);
 		} catch (IOException | ConfigurationException e) {
@@ -97,7 +107,7 @@ public class UpdateChecker {
 	 * @throws IOException
 	 */
 	public static void downloadUpdate(UpdateInfo info) throws IOException {
-		File zip = new File(SystemProperties.get("root.dir", String.class) + "/updater/" + info.getAssetName());
+		File zip = new File(UPDATER_DIR + "/" + info.getAssetName());
 		if (zip.createNewFile()) {
 			HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
 			conn.setRequestMethod("GET");
@@ -116,16 +126,12 @@ public class UpdateChecker {
 	}
 
 	/**
-	 * Lauches updater
-	 * 
-	 * @param restart
-	 *            Specifies if application should be restarted
+	 * Sets restart flag and kills the application
 	 */
-	public static void launchUpdater(boolean restart) {
-		if (!updaterLaunched) {
-			Platform.exit();
-			// TODO launch updater
-		}
-		updaterLaunched = true;
+	public static void launchUpdaterAndRestart() {
+		shouldRestart = true;
+		Platform.exit();
+		System.exit(0);
 	}
+
 }

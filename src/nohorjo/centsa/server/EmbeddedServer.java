@@ -9,6 +9,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import nohorjo.centsa.properties.SystemProperties;
+
 /**
  * Class to handle embedded jetty server
  * 
@@ -23,10 +25,9 @@ public class EmbeddedServer {
 	/**
 	 * Starts the server
 	 * 
-	 * @return The actual IP the server is bound to
 	 * @throws Exception
 	 */
-	public static int startServer() throws Exception {
+	public static void startServer() throws Exception {
 		server = new Server(0);
 
 		// Set up jersey REST
@@ -39,7 +40,8 @@ public class EmbeddedServer {
 		context.addServlet(new ServletHolder(new ServletContainer(apiREST)), "/api/" + UNIQUE_KEY + "/*");
 
 		server.start();
-		return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
+		SystemProperties.setRuntime("server.root",
+				String.format("http://127.0.0.1:%d/", ((ServerConnector) server.getConnectors()[0]).getLocalPort()));
 	}
 
 	/**
