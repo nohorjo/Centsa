@@ -1,9 +1,13 @@
 package nohorjo.centsa.updater;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.application.Platform;
+import nohorjo.centsa.properties.SystemProperties;
+
 /**
  * Class to handle checking for and initating updates
  * 
@@ -23,6 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UpdateChecker {
 
 	private static final PropertiesConfiguration updateProperties = new PropertiesConfiguration();
+
+	private static boolean updaterLaunched = false; // Only launch once
 
 	static {
 		try (InputStream in = ClassLoader.getSystemResourceAsStream("update.properties")) {
@@ -69,5 +78,54 @@ public class UpdateChecker {
 			info.setAsset((((List<Map<String, ?>>) resp.get("assets")).get(0)).get("browser_download_url").toString());
 		}
 		return info;
+	}
+
+	/**
+	 * Gets the current version
+	 * 
+	 * @return v[major].[minor]
+	 */
+	public static String getCurrentVersion() {
+		return "v" + updateProperties.getInt("major.version") + "." + updateProperties.getInt("minor.version");
+	}
+
+	/**
+	 * Downloads new zip and deletes old ones
+	 * 
+	 * @param info
+	 *            The update to download
+	 * @throws IOException
+	 */
+	public static void downloadUpdate(UpdateInfo info) throws IOException {
+		File zip = new File(SystemProperties.get("root.dir", String.class) + "/updater/" + info.getAssetName());
+		if (zip.createNewFile()) {
+			HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
+			conn.setRequestMethod("GET");
+			try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(zip)) {
+				int b;
+				while ((b = in.read()) != -1) {
+					out.write(b);
+				}
+			}
+			for (File old : zip.getParentFile().listFiles((f) -> {
+				return f.getName().endsWith(".zip") && !f.getName().equals(zip.getName());
+			})) {
+				Files.delete(old.toPath());
+			}
+		}
+	}
+
+	/**
+	 * Lauches updater
+	 * 
+	 * @param restart
+	 *            Specifies if application should be restarted
+	 */
+	public static void launchUpdater(boolean restart) {
+		if (!updaterLaunched) {
+			Platform.exit();
+			// TODO launch updater
+		}
+		updaterLaunched = true;
 	}
 }

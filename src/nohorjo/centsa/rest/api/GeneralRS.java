@@ -7,12 +7,15 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.inject.PerLookup;
 
@@ -28,6 +31,8 @@ import nohorjo.centsa.importer.JSCSVParser;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.rest.AbstractRS;
+import nohorjo.centsa.updater.UpdateChecker;
+import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
 
 /**
@@ -53,6 +58,7 @@ public class GeneralRS extends AbstractRS {
 	 * @throws SQLException
 	 */
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/budget")
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
@@ -136,6 +142,7 @@ public class GeneralRS extends AbstractRS {
 	 * @return The count of the records read and the total number of records
 	 */
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/import/progress")
 	public Map<String, Integer> importProgress() {
 		Map<String, Integer> rtn = null;
@@ -153,6 +160,7 @@ public class GeneralRS extends AbstractRS {
 	 * @return An list of layouts
 	 */
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/layouts")
 	public List<String> getLayouts() {
 		File layoutDir = new File(SystemProperties.get("root.dir", String.class) + "/layout");
@@ -171,6 +179,7 @@ public class GeneralRS extends AbstractRS {
 	 * @return A list of parser rules
 	 */
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/rules")
 	public List<String> getRules() {
 		File rulesDir = new File(SystemProperties.get("root.dir", String.class) + "/rules");
@@ -181,6 +190,59 @@ public class GeneralRS extends AbstractRS {
 			rules.add(d.getName().replaceAll("\\.js$", ""));
 		}
 		return rules;
+	}
+
+	/**
+	 * Gets the current version
+	 * 
+	 * @return The current version
+	 * @throws IOException
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/version")
+	public String getVersion() throws IOException {
+		return UpdateChecker.getCurrentVersion();
+	}
+
+	/**
+	 * Checks for any updates
+	 * 
+	 * @return Info on the latest version or <code>null</code> if this is the latest
+	 * @throws IOException
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/update")
+	public void checkUpdate() throws IOException {
+		UpdateInfo info = UpdateChecker.checkNewVersion();
+		if (info != null) {
+			Map<String, Runnable> buttons = new LinkedHashMap<>();
+			buttons.put("Yes", () -> {
+				try {
+					Renderer.showAlert(
+							"Update is being downloaded in the background. Once complete this program will shut down");
+					UpdateChecker.launchUpdater(true);
+					UpdateChecker.downloadUpdate(info);
+				} catch (IOException e) {
+					e.printStackTrace();
+					Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
+				}
+			});
+			buttons.put("Download", () -> {
+				try {
+					Renderer.showAlert("Update is being downloaded in the background");
+					UpdateChecker.downloadUpdate(info);
+				} catch (IOException e) {
+					e.printStackTrace();
+					Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
+				}
+			});
+			Renderer.showConfirm("Update available", "New version found!", "Do you wish to update?", buttons,
+					"- " + String.join("\n- ", info.getChangelog()));
+		} else {
+			Renderer.showAlert("You have the latest version!");
+		}
 	}
 
 }

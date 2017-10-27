@@ -22,3 +22,7 @@ img {
 	cursor: pointer;
 	opacity: 0.4;
 }
+
+.modal-body>table td {
+	padding: 0.5em 0;
+}
