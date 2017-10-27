@@ -1,6 +1,6 @@
 <td><input type="submit" value="+" class="btn btn-primary"
-	data-ng-class="{ 'btn-warning': Form.$invalid }"
-	data-ng-disabled="Form.$invalid"></td>
+	data-ng-class="{ 'btn-warning': Form.$invalid || (newExpense.ended && newExpense.started > newExpense.ended) }"
+	data-ng-disabled="Form.$invalid || (newExpense.ended && newExpense.started > newExpense.ended)"></td>
 <td><input type="text" class="form-control" required="required"
 	data-ng-model="newExpense.name"></td>
 <td><input type="number" class="form-control" required="required"

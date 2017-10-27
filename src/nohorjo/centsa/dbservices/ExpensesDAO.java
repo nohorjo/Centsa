@@ -32,6 +32,9 @@ public class ExpensesDAO extends AbstractDAO {
 		if (e.getId() != null && e.getId() == 1) {
 			throw new SQLException("Cannot edit default expense");
 		}
+		if (e.getEnded() != null && e.getEnded() < e.getStarted()) {
+			throw new SQLException("Started cannot be after ended");
+		}
 
 		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequency_days(),
 				e.getStarted(), e.getEnded(), e.isAutomatic() ? 1 : 0 });

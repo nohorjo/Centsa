@@ -244,4 +244,22 @@ public class TransactionsDAO extends AbstractDAO {
 		return getAll(page, pageSize, order, new TransactionFilter());
 	}
 
+	/**
+	 * Sums all transactions
+	 * 
+	 * @return The total amount of money
+	 * @throws SQLException
+	 */
+	public int sumAll() throws SQLException {
+		String sql = SQLUtils.getQuery("Transactions.SumAll");
+		try (Connection conn = SQLUtils.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		}
+		return 0;
+	}
+
 }

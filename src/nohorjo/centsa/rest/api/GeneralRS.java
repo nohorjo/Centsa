@@ -56,34 +56,38 @@ public class GeneralRS extends AbstractRS {
 	@Path("/budget")
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
-		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
-		int sumAll = tDao.sumNonExpenseAmount();
 		List<Expense> es = eDao.getAll(0, 0, null);
+		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
+		int sumAllNonExpense = tDao.sumNonExpenseAmount();
+		int sumAll = tDao.sumAll();
 		int totalAuto = 0;
 		int totalAll = 0;
 
 		for (Expense e : es) {
 			Long ended = e.getEnded();
-			if (ended == null || ended == 0 || ended > System.currentTimeMillis()) {
-				ended = System.currentTimeMillis();
+			// Only ones that have started
+			if (e.getStarted() < System.currentTimeMillis()) {
+				if (ended == null || ended == 0 || ended > System.currentTimeMillis()) {
+					ended = System.currentTimeMillis();
+				}
+				double durationDays = (ended - e.getStarted()) / 8.64e+7;
+				double instances = durationDays / e.getFrequency_days();
+				if (strict) {
+					// If cost is negative (is income) then we floor it so as to assume the money
+					// isn't in yet.
+					// If it's positive we ceiling it so that we're 'saving' the money.
+					instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
+				}
+				double cost = instances * e.getCost();
+				if (e.isAutomatic()) {
+					totalAuto += cost;
+				}
+				totalAll += cost;
 			}
-			double durationDays = (ended - e.getStarted()) / 8.64e+7;
-			double instances = durationDays / e.getFrequency_days();
-			if (strict) {
-				// If cost is negative (is income) then we floor it so as to assume the money
-				// isn't in yet.
-				// If it's positive we ceiling it so that we're 'saving' the money.
-				instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
-			}
-			double cost = instances * e.getCost();
-			if (e.isAutomatic()) {
-				totalAuto += cost;
-			}
-			totalAll += cost;
 		}
 
-		rtn.put("afterAuto", (int) (-totalAuto - sumNonAuto));
-		rtn.put("afterAll", (int) (-totalAll - sumAll));
+		rtn.put("afterAuto", Math.min(sumAll, -totalAuto - sumNonAuto));
+		rtn.put("afterAll", Math.min(sumAll, -totalAll - sumAllNonExpense));
 
 		return rtn;
 	}
