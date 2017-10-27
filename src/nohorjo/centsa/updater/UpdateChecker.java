@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -19,9 +22,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class UpdateChecker {
 
-	// Updated by ANT build
-	public static final int MAJOR_VERSION = 0;
-	public static final int MINOR_VERSION = 2;
+	private static final PropertiesConfiguration updateProperties = new PropertiesConfiguration();
+
+	static {
+		try (InputStream in = ClassLoader.getSystemResourceAsStream("update.properties")) {
+			updateProperties.load(in);
+		} catch (IOException | ConfigurationException e) {
+			throw new Error(e);
+		}
+	}
 
 	/**
 	 * Checks Github for a new release
@@ -33,8 +42,7 @@ public class UpdateChecker {
 	public static UpdateInfo checkNewVersion() throws IOException {
 		UpdateInfo info;
 		// Connect to Github's REST API
-		HttpURLConnection conn = (HttpURLConnection) new URL(
-				"https://api.github.com/repos/nohorjo/Centsa/releases/latest").openConnection();
+		HttpURLConnection conn = (HttpURLConnection) new URL(updateProperties.getString("latest.url")).openConnection();
 		conn.setRequestMethod("GET");
 		try (InputStream in = conn.getInputStream()) {
 			info = new UpdateInfo();
@@ -45,7 +53,8 @@ public class UpdateChecker {
 			info.setMajorVersion(Integer.parseInt(versionInfo[0]));
 			info.setMinorVersion(Integer.parseInt(versionInfo[1]));
 
-			if (info.getMajorVersion() == MAJOR_VERSION && info.getMajorVersion() == MAJOR_VERSION) {
+			if (info.getMajorVersion() == updateProperties.getInt("major.version")
+					&& info.getMinorVersion() == updateProperties.getInt("minor.version")) {
 				return null; // This is the latest
 			}
 
