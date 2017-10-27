@@ -46,10 +46,18 @@ public class UpdateInfo {
 		this.asset = asset;
 	}
 
+	/**
+	 * Gets the name of the file denoted by the asset url
+	 * 
+	 * @return The name of the file
+	 */
+	public String getAssetName() {
+		return asset.substring(asset.lastIndexOf('/') + 1);
+	}
+
 	@Override
 	public String toString() {
 		return "UpdateInfo [majorVersion=" + majorVersion + ", minorVersion=" + minorVersion + ", changelog="
 				+ Arrays.toString(changelog) + ", asset=" + asset + "]";
 	}
-
 }

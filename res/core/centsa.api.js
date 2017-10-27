@@ -426,6 +426,29 @@ var centsa = (function() {
 					error : error || throwError
 				});
 				return rtn;
+			},
+			update : function(success, error) {
+				var rtn = null;
+				ajax({
+					url : url + "/general/update",
+					method : "GET",
+					success : success,
+					error : error || throwError
+				});
+				return rtn;
+			},
+			version : function(error) {
+				var rtn = null;
+				ajax({
+					url : url + "/general/version",
+					method : "GET",
+					async : false,
+					success : function(data) {
+						rtn = data.responseText;
+					},
+					error : error || throwError
+				});
+				return rtn;
 			}
 		}
 	}

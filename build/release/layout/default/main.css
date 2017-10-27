@@ -126,7 +126,7 @@ div.amcharts-chart-div>a {
 	display: none !important;
 }
 
-th[data-ng-click] {
+th[data-ng-click], table.table-hover tr {
 	cursor: pointer;
 }
 

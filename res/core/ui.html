@@ -23,23 +23,17 @@
 				</div>
 				<div class="modal-body">
 					<table>
-						<thead>
-							<tr>
-								<th width="40%"></th>
-								<th width="60%"></th>
-							<tr>
-						</thead>
 						<tbody>
 							<tr>
 								<td>Layout</td>
-								<td>
-									<table>
-										<tr>
-											<td><select id="layout" class="form-control"
-												onchange="centsa.settings.set('layout', this.value, function(){iframe.contentWindow.location.reload();},function(x){alert(x);});"></select></td>
-										</tr>
-									</table>
+								<td><select id="layout" class="form-control"
+									onchange="centsa.settings.set('layout', this.value, function(){iframe.contentWindow.location.reload();},function(x){alert(x);});"></select>
 								</td>
+							</tr>
+							<tr>
+								<td>Current version</td>
+								<td><span id="version"></span> <a href="#"
+									onclick="checkForUpdates()">Check for new version</a></td>
 							</tr>
 						</tbody>
 					</table>

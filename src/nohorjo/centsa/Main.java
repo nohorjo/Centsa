@@ -2,11 +2,11 @@ package nohorjo.centsa;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.server.EmbeddedServer;
+import nohorjo.centsa.updater.UpdateChecker;
 
 /**
  * Main class of the application
@@ -30,10 +30,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 		Main.stage = stage;
-		stage.setTitle("Centsa");
-		stage.setScene(new Scene(new Renderer()));
-		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("icon.png")));
-		stage.show();
+		stage.setScene(new Scene(new Renderer(stage)));
 	}
 
 	@Override
@@ -42,8 +39,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int port = EmbeddedServer.startServer();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			UpdateChecker.launchUpdater(false);
+		}));
 
+		int port = EmbeddedServer.startServer();
 		SystemProperties.setRuntime("server.root", String.format("http://127.0.0.1:%d/", port));
 
 		launch(args);
