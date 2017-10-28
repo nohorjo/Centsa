@@ -30,7 +30,8 @@ import nohorjo.centsa.properties.SystemProperties;
 public class UpdateChecker {
 
 	private static final PropertiesConfiguration updateProperties = new PropertiesConfiguration();
-	private static final String UPDATER_DIR = SystemProperties.get("root.dir", String.class) + "/updater";
+	private static final String UPDATER_DIR = SystemProperties.get("root.dir", String.class) + File.separator
+			+ "updater";
 
 	private static boolean shouldRestart;
 
@@ -42,11 +43,12 @@ public class UpdateChecker {
 			}).length > 0) {
 				try {
 					// Zip file exists - run updater
-					ProcessBuilder builder = new ProcessBuilder(System.getProperty("java.home") + "/bin/java", "-cp",
-							UPDATER_DIR + "/*", "nohorjo.centsa.updater.Updater",
+					ProcessBuilder builder = new ProcessBuilder(
+							(System.getProperty("java.home") + "/bin/java").replace('/', File.separatorChar), "-cp",
+							UPDATER_DIR + File.separator + "*", "nohorjo.centsa.updater.Updater",
 							SystemProperties.get("root.dir", String.class), Boolean.toString(shouldRestart));
 					builder.redirectErrorStream(true);
-					builder.redirectOutput(new File(UPDATER_DIR + "/update.log"));
+					builder.redirectOutput(new File(UPDATER_DIR + File.separator + "update.log"));
 					builder.start();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -116,7 +118,7 @@ public class UpdateChecker {
 	 * @throws IOException
 	 */
 	public static void downloadUpdate(UpdateInfo info) throws IOException {
-		File zip = new File(UPDATER_DIR + "/" + info.getAssetName());
+		File zip = new File(UPDATER_DIR + File.separator + info.getAssetName());
 		if (zip.createNewFile()) {
 			HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
 			conn.setRequestMethod("GET");
