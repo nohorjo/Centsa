@@ -218,12 +218,18 @@ public class GeneralRS extends AbstractRS {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/update")
-	public void checkUpdate() throws IOException {
-		UpdateInfo info = UpdateChecker.checkNewVersion();
-		if (info != null) {
-			UpdateChecker.requestUpdate(info);
-		} else {
-			Renderer.showAlert("You have the latest version!");
+	public void checkUpdate() {
+		UpdateInfo info;
+		try {
+			info = UpdateChecker.checkNewVersion();
+			if (info != null) {
+				UpdateChecker.requestUpdate(info);
+			} else {
+				Renderer.showAlert("You have the latest version!");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			Renderer.showExceptionDialog(e, "Network error", "Failed to check for updates");
 		}
 	}
 

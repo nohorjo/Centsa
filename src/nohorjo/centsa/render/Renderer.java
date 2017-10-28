@@ -162,7 +162,7 @@ public class Renderer extends Region {
 			((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(ICON);
 			alert.setTitle(title);
 			alert.setHeaderText(header);
-			alert.setContentText(ex.getMessage());
+			alert.setContentText(ex.getClass().getName() + ": " + ex.getMessage());
 			alert.setResizable(true);
 
 			StringWriter sw = new StringWriter();
