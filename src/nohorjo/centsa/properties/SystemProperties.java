@@ -27,7 +27,7 @@ public class SystemProperties {
 			systemProperties.setFile(propertiesFile);
 			systemProperties.setAutoSave(true);
 
-			runtimeProperties.setProperty("root.dir", System.getProperty("root.dir"));
+			runtimeProperties.setProperty("root.dir", new File(System.getProperty("root.dir")).getAbsolutePath());
 
 		} catch (ConfigurationException e) {
 			throw new Error(e);

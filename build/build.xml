@@ -80,7 +80,7 @@
 			<path refid="lib.path.id" />
 			<path refid="build.lib.path" />
 		</path>
-		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="path.id.all" />
+		<javac srcdir="src" destdir="bin" target="1.8" source="1.8" debug="on" classpathref="path.id.all" includeantruntime="false" />
 	</target>
 
 	<target name="test-report" depends="test" if="test.complete">
@@ -244,11 +244,7 @@
 	<target name="build-updater" depends="updater-jar,updater-test-report" description="" />
 
 	<target name="compile-updater" depends="resolve-dependencies,clean-updater">
-		<path id="path.id.all">
-			<path refid="lib.path.id" />
-			<path refid="build.lib.path" />
-		</path>
-		<javac srcdir="updater_src" destdir="updater_bin" target="1.8" source="1.8" debug="on" classpathref="path.id.all" />
+		<javac srcdir="updater_src" destdir="updater_bin" target="1.8" source="1.8" debug="on" classpathref="build.lib.path" includeantruntime="false" />
 	</target>
 
 	<target name="clean-updater">

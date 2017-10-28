@@ -40,8 +40,17 @@ public class UpdateChecker {
 			if (new File(UPDATER_DIR).listFiles((f) -> {
 				return f.getName().endsWith(".zip");
 			}).length > 0) {
-				// Zip file exists - run updater
-				// TODO run updater
+				try {
+					// Zip file exists - run updater
+					ProcessBuilder builder = new ProcessBuilder(System.getProperty("java.home") + "/bin/java", "-cp",
+							UPDATER_DIR + "/*", "nohorjo.centsa.updater.Updater",
+							SystemProperties.get("root.dir", String.class), Boolean.toString(shouldRestart));
+					builder.redirectErrorStream(true);
+					builder.redirectOutput(new File(UPDATER_DIR + "/update.log"));
+					builder.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}));
 		try (InputStream in = ClassLoader.getSystemResourceAsStream("update.properties")) {
