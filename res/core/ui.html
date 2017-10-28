@@ -35,6 +35,12 @@
 								<td><span id="version"></span> <a href="#"
 									onclick="checkForUpdates()">Check for new version</a></td>
 							</tr>
+							<tr>
+								<td></td>
+								<td><input id="autoUpdate" type="checkbox"
+									onchange="centsa.settings.set('auto.update',this.checked)">
+									Auto update enabled</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>

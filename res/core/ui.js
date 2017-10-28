@@ -36,6 +36,8 @@ function init() {
 	});
 
 	$("#version").text(centsa.general.version());
+	$("#autoUpdate").prop("checked",
+			centsa.settings.get("auto.update") == "true");
 }
 
 function checkForUpdates() {
