@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,29 +221,7 @@ public class GeneralRS extends AbstractRS {
 	public void checkUpdate() throws IOException {
 		UpdateInfo info = UpdateChecker.checkNewVersion();
 		if (info != null) {
-			Map<String, Runnable> buttons = new LinkedHashMap<>();
-			buttons.put("Yes", () -> {
-				try {
-					Renderer.showAlert(
-							"Update is being downloaded in the background. Once complete this program will shut down");
-					UpdateChecker.downloadUpdate(info);
-					UpdateChecker.launchUpdaterAndRestart();
-				} catch (IOException e) {
-					e.printStackTrace();
-					Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
-				}
-			});
-			buttons.put("Download", () -> {
-				try {
-					Renderer.showAlert("Update is being downloaded in the background");
-					UpdateChecker.downloadUpdate(info);
-				} catch (IOException e) {
-					e.printStackTrace();
-					Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
-				}
-			});
-			Renderer.showConfirm("Update available", "New version found!", "Do you wish to update?", buttons,
-					"- " + String.join("\n- ", info.getChangelog()));
+			UpdateChecker.requestUpdate(info);
 		} else {
 			Renderer.showAlert("You have the latest version!");
 		}

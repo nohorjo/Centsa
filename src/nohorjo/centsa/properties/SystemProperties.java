@@ -1,6 +1,9 @@
 package nohorjo.centsa.properties;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -17,19 +20,30 @@ public class SystemProperties {
 
 	/**
 	 * Loads system.properties file fromt the classpath and sets the root.dir from
-	 * the system properties
+	 * the system properties. Also loads a set of default properties should any be
+	 * missing
 	 */
 	static {
 		try {
 			File propertiesFile = new File(ClassLoader.getSystemResource("system.properties").getPath());
-
 			systemProperties.load(propertiesFile);
 			systemProperties.setFile(propertiesFile);
 			systemProperties.setAutoSave(true);
 
 			runtimeProperties.setProperty("root.dir", new File(System.getProperty("root.dir")).getAbsolutePath());
 
-		} catch (ConfigurationException e) {
+			try (InputStream in = ClassLoader.getSystemResourceAsStream("default.properties")) {
+				PropertiesConfiguration defaultProperties = new PropertiesConfiguration();
+				defaultProperties.load(in);
+				Iterator<String> keys = defaultProperties.getKeys();
+				while (keys.hasNext()) {
+					String key = keys.next();
+					if (!systemProperties.containsKey(key)) {
+						systemProperties.setProperty(key, defaultProperties.getProperty(key));
+					}
+				}
+			}
+		} catch (ConfigurationException | IOException e) {
 			throw new Error(e);
 		}
 	}
@@ -59,6 +73,9 @@ public class SystemProperties {
 			break;
 		case "java.lang.Object":
 			prop = (T) systemProperties.getProperty(key);
+			break;
+		case "java.lang.Boolean":
+			prop = (T) (Boolean) systemProperties.getBoolean(key);
 			break;
 		default:
 			throw new Error("Cannot get type: " + clazz.getName());

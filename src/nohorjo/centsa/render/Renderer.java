@@ -115,6 +115,7 @@ public class Renderer extends Region {
 			alert.setTitle(title);
 			alert.setHeaderText(header);
 			alert.setContentText(body);
+			alert.setResizable(true);
 			alert.getButtonTypes().setAll();
 
 			for (String button : buttons.keySet()) {

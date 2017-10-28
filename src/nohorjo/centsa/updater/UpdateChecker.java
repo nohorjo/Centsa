@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Platform;
 import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.centsa.render.Renderer;
 
 /**
  * Class to handle checking for and initating updates
@@ -57,6 +59,19 @@ public class UpdateChecker {
 		}));
 		try (InputStream in = ClassLoader.getSystemResourceAsStream("update.properties")) {
 			updateProperties.load(in);
+			if (SystemProperties.get("auto.update", Boolean.class)) {
+				// Check for updates in new thread
+				new Thread(() -> {
+					try {
+						UpdateInfo info = checkNewVersion();
+						if (info != null) {
+							requestUpdate(info);
+						}
+					} catch (IOException e) {
+						throw new Error(e);
+					}
+				}).start();
+			}
 		} catch (IOException | ConfigurationException e) {
 			throw new Error(e);
 		}
@@ -115,35 +130,61 @@ public class UpdateChecker {
 	 * 
 	 * @param info
 	 *            The update to download
-	 * @throws IOException
+	 * @param applyUpdate
+	 *            If true application will shutdown to apply update
 	 */
-	public static void downloadUpdate(UpdateInfo info) throws IOException {
-		File zip = new File(UPDATER_DIR + File.separator + info.getAssetName());
-		if (zip.createNewFile()) {
-			HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
-			conn.setRequestMethod("GET");
-			try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(zip)) {
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = in.read(buffer)) > 0) {
-					out.write(buffer, 0, len);
+	public static void downloadUpdate(UpdateInfo info, boolean applyUpdate) {
+		// Run in new thread
+		new Thread(() -> {
+			try {
+				File zip = new File(UPDATER_DIR + File.separator + info.getAssetName());
+				if (zip.createNewFile()) {
+					HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
+					conn.setRequestMethod("GET");
+					try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(zip)) {
+						byte[] buffer = new byte[1024];
+						int len;
+						while ((len = in.read(buffer)) > 0) {
+							out.write(buffer, 0, len);
+						}
+					}
+					for (File old : zip.getParentFile().listFiles((f) -> {
+						return f.getName().endsWith(".zip") && !f.getName().equals(zip.getName());
+					})) {
+						Files.delete(old.toPath());
+					}
 				}
+				if (applyUpdate) {
+					shouldRestart = true;
+					Platform.exit();
+					System.exit(0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
 			}
-			for (File old : zip.getParentFile().listFiles((f) -> {
-				return f.getName().endsWith(".zip") && !f.getName().equals(zip.getName());
-			})) {
-				Files.delete(old.toPath());
-			}
-		}
+		}).start();
 	}
 
 	/**
-	 * Sets restart flag and kills the application
+	 * Request user to update or download
+	 * 
+	 * @param info
+	 *            Update info
 	 */
-	public static void launchUpdaterAndRestart() {
-		shouldRestart = true;
-		Platform.exit();
-		System.exit(0);
+	public static void requestUpdate(UpdateInfo info) {
+		Map<String, Runnable> buttons = new LinkedHashMap<>();
+		buttons.put("Yes", () -> {
+			Renderer.showAlert(
+					"Update is being downloaded in the background. Once complete this program will shut down");
+			UpdateChecker.downloadUpdate(info, true);
+		});
+		buttons.put("Download", () -> {
+			Renderer.showAlert("Update is being downloaded in the background");
+			UpdateChecker.downloadUpdate(info, false);
+		});
+		Renderer.showConfirm("Update available", "New version found!", "Do you wish to update?", buttons,
+				"- " + String.join("\n- ", info.getChangelog()));
 	}
 
 }
