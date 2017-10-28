@@ -1,5 +1,6 @@
 package nohorjo.centsa.rest.core;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,17 +37,19 @@ public class LayoutRS extends AbstractRS {
 	@GET
 	@Path("/{resource:.*}")
 	public String getResource(@PathParam("resource") String resource) throws IOException {
-		StringWriter writer = new StringWriter();
 		try (InputStream in = ClassLoader
-				.getSystemResourceAsStream("layout/" + SystemProperties.get("layout", String.class) + "/" + resource)) {
-			int b;
-			while ((b = in.read()) != -1) {
-				writer.write((byte) b);
+				.getSystemResourceAsStream("layout/" + SystemProperties.get("layout", String.class) + "/" + resource);
+				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = in.read(buffer)) > 0) {
+				out.write(buffer, 0, len);
 			}
+
+			return out.toString();
 		} catch (NullPointerException e) {
 			throw new FileNotFoundException(resource);
 		}
-		return writer.toString();
 	}
 
 	/**
@@ -62,10 +65,15 @@ public class LayoutRS extends AbstractRS {
 	@Produces("image/png")
 	public byte[] getImage(@PathParam("resource") String resource) throws IOException {
 		try (InputStream in = ClassLoader
-				.getSystemResourceAsStream("layout/" + SystemProperties.get("layout", String.class) + "/" + resource)) {
-			byte imageData[] = new byte[in.available()];
-			in.read(imageData);
-			return imageData;
+				.getSystemResourceAsStream("layout/" + SystemProperties.get("layout", String.class) + "/" + resource);
+				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = in.read(buffer)) > 0) {
+				out.write(buffer, 0, len);
+			}
+
+			return out.toByteArray();
 		} catch (NullPointerException e) {
 			throw new FileNotFoundException(resource);
 		}

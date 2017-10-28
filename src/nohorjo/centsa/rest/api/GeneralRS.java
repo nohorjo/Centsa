@@ -92,6 +92,7 @@ public class GeneralRS extends AbstractRS {
 			}
 		}
 
+		// Never give more than absolute amount
 		rtn.put("afterAuto", Math.min(sumAll, sumNonAuto - totalAuto));
 		rtn.put("afterAll", Math.min(sumAll, sumAllNonExpense - totalAll));
 

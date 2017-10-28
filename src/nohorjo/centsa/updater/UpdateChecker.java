@@ -38,7 +38,7 @@ public class UpdateChecker {
 		// Adds shutdown hook to launch updater
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			if (new File(UPDATER_DIR).listFiles((f) -> {
-				return f.getName().endsWith(".zip");
+				return f.getName().matches("^Centsa.*\\.zip$");
 			}).length > 0) {
 				try {
 					// Zip file exists - run updater
@@ -121,9 +121,10 @@ public class UpdateChecker {
 			HttpURLConnection conn = (HttpURLConnection) new URL(info.getAsset()).openConnection();
 			conn.setRequestMethod("GET");
 			try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(zip)) {
-				int b;
-				while ((b = in.read()) != -1) {
-					out.write(b);
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = in.read(buffer)) > 0) {
+					out.write(buffer, 0, len);
 				}
 			}
 			for (File old : zip.getParentFile().listFiles((f) -> {
