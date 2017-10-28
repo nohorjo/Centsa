@@ -63,9 +63,9 @@ public class GeneralRS extends AbstractRS {
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
 		List<Expense> es = eDao.getAll(0, 0, null);
-		int sumNonAuto = tDao.sumNonAutoExpenseAmount();
-		int sumAllNonExpense = tDao.sumNonExpenseAmount();
-		int sumAll = tDao.sumAll();
+		int sumNonAuto = -tDao.sumNonAutoExpenseAmount();
+		int sumAllNonExpense = -tDao.sumNonExpenseAmount();
+		int sumAll = -tDao.sumAll();
 		int totalAuto = 0;
 		int totalAll = 0;
 
@@ -92,8 +92,8 @@ public class GeneralRS extends AbstractRS {
 			}
 		}
 
-		rtn.put("afterAuto", Math.min(sumAll, -totalAuto - sumNonAuto));
-		rtn.put("afterAll", Math.min(sumAll, -totalAll - sumAllNonExpense));
+		rtn.put("afterAuto", Math.min(sumAll, sumNonAuto - totalAuto));
+		rtn.put("afterAll", Math.min(sumAll, sumAllNonExpense - totalAll));
 
 		return rtn;
 	}
