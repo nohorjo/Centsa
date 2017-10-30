@@ -116,12 +116,7 @@ public class UpdateChecker {
 				return null; // This is the latest
 			}
 
-			String[] changelog = resp.get("body").toString().split("\\r\\n");
-
-			for (int i = 0; i < changelog.length; i++) {
-				// Remove the '- ' at the beginning as this was used for markdown
-				changelog[i] = changelog[i].replaceAll("^- ", "");
-			}
+			String changelog = resp.get("body").toString();
 
 			info.setChangelog(changelog);
 			info.setAsset((((List<Map<String, ?>>) resp.get("assets")).get(0)).get("browser_download_url").toString());
@@ -197,7 +192,7 @@ public class UpdateChecker {
 			UpdateChecker.downloadUpdate(info, false);
 		});
 		Renderer.showConfirm("Update available", "New version found!", "Do you wish to update?", buttons,
-				"- " + String.join("\n- ", info.getChangelog()));
+				info.getChangelog());
 	}
 
 }
