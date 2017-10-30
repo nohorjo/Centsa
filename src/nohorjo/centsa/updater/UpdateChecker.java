@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -72,6 +73,18 @@ public class UpdateChecker {
 					}
 				}).start();
 			}
+
+			// Delete all but the latest updater jar
+			File[] updaterJars = new File(UPDATER_DIR).listFiles((f) -> {
+				return f.getName().matches("^Centsa.*\\.jar$");
+			});
+			Arrays.sort(updaterJars, (a, b) -> {
+				return Integer.parseInt(b.getName().replaceAll("[^\\d]", ""))
+						- Integer.parseInt(a.getName().replaceAll("[^\\d]", ""));
+			});
+			for (int i = 1; i < updaterJars.length; i++) {
+				Files.delete(updaterJars[i].toPath());
+			}
 		} catch (IOException | ConfigurationException e) {
 			throw new Error(e);
 		}
@@ -103,12 +116,7 @@ public class UpdateChecker {
 				return null; // This is the latest
 			}
 
-			String[] changelog = resp.get("body").toString().split("\\r\\n");
-
-			for (int i = 0; i < changelog.length; i++) {
-				// Remove the '- ' at the beginning as this was used for markdown
-				changelog[i] = changelog[i].replaceAll("^- ", "");
-			}
+			String changelog = resp.get("body").toString();
 
 			info.setChangelog(changelog);
 			info.setAsset((((List<Map<String, ?>>) resp.get("assets")).get(0)).get("browser_download_url").toString());
@@ -184,7 +192,7 @@ public class UpdateChecker {
 			UpdateChecker.downloadUpdate(info, false);
 		});
 		Renderer.showConfirm("Update available", "New version found!", "Do you wish to update?", buttons,
-				"- " + String.join("\n- ", info.getChangelog()));
+				info.getChangelog());
 	}
 
 }

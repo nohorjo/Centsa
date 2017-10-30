@@ -1,7 +1,5 @@
 package nohorjo.centsa.updater;
 
-import java.util.Arrays;
-
 /**
  * VO class to hold update information
  * 
@@ -11,7 +9,7 @@ import java.util.Arrays;
 public class UpdateInfo {
 	private int majorVersion;
 	private int minorVersion;
-	private String[] changelog;
+	private String changelog;
 	private String asset;
 
 	public int getMajorVersion() {
@@ -30,11 +28,11 @@ public class UpdateInfo {
 		this.minorVersion = minorVersion;
 	}
 
-	public String[] getChangelog() {
+	public String getChangelog() {
 		return changelog;
 	}
 
-	public void setChangelog(String[] changelog) {
+	public void setChangelog(String changelog) {
 		this.changelog = changelog;
 	}
 
@@ -58,6 +56,6 @@ public class UpdateInfo {
 	@Override
 	public String toString() {
 		return "UpdateInfo [majorVersion=" + majorVersion + ", minorVersion=" + minorVersion + ", changelog="
-				+ Arrays.toString(changelog) + ", asset=" + asset + "]";
+				+ changelog + ", asset=" + asset + "]";
 	}
 }
