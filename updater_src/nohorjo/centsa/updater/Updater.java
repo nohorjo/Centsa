@@ -73,6 +73,8 @@ public class Updater {
 		if (Boolean.parseBoolean(args[1])) {
 			restart(rootDir);
 		}
+
+		SimpleLogger.log("Update complete");
 	}
 
 	/**

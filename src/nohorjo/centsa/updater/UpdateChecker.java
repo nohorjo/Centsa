@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -71,6 +72,18 @@ public class UpdateChecker {
 						throw new Error(e);
 					}
 				}).start();
+			}
+
+			// Delete all but the latest updater jar
+			File[] updaterJars = new File(UPDATER_DIR).listFiles((f) -> {
+				return f.getName().matches("^Centsa.*\\.jar$");
+			});
+			Arrays.sort(updaterJars, (a, b) -> {
+				return Integer.parseInt(b.getName().replaceAll("[^\\d]", ""))
+						- Integer.parseInt(a.getName().replaceAll("[^\\d]", ""));
+			});
+			for (int i = 1; i < updaterJars.length; i++) {
+				Files.delete(updaterJars[i].toPath());
 			}
 		} catch (IOException | ConfigurationException e) {
 			throw new Error(e);
