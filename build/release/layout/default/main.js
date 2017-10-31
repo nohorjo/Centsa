@@ -68,6 +68,14 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 		$location.path("transactions");
 	};
 
+	/**
+	 * Rounds a number
+	 */
+	$rootScope.roundTo = function(x, dp) {
+		var mult = Math.pow(10, dp);
+		return Math.round(x * mult) / mult;
+	}
+
 	$scope.isActive = function(path) {
 		return $location.path() == path;
 	};

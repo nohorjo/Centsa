@@ -14,6 +14,8 @@ public class Expense implements VO {
 	private long started;
 	private Long ended;
 	private boolean automatic;
+	
+	private int instances;
 
 	public Long getId() {
 		return id;
@@ -70,4 +72,19 @@ public class Expense implements VO {
 	public void setAutomatic(boolean automatic) {
 		this.automatic = automatic;
 	}
+
+	public int getInstances() {
+		return instances;
+	}
+
+	public void setInstances(int instances) {
+		this.instances = instances;
+	}
+
+	@Override
+	public String toString() {
+		return "Expense [id=" + id + ", name=" + name + ", cost=" + cost + ", frequency_days=" + frequency_days
+				+ ", started=" + started + ", ended=" + ended + ", automatic=" + automatic + "]";
+	}
+
 }

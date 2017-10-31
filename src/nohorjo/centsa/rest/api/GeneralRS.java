@@ -44,6 +44,8 @@ import nohorjo.centsa.vo.Expense;
 @Path("/general")
 public class GeneralRS extends AbstractRS {
 
+	private static final double DAY = 8.64e+7;
+
 	private TransactionsDAO tDao = new TransactionsDAO();
 	private ExpensesDAO eDao = new ExpensesDAO();
 	private static JSCSVParser parser;
@@ -68,21 +70,25 @@ public class GeneralRS extends AbstractRS {
 		int totalAuto = 0;
 		int totalAll = 0;
 
+		double currentTime = System.currentTimeMillis();
+
 		for (Expense e : es) {
 			Long ended = e.getEnded();
 			// Only ones that have started
-			if (e.getStarted() < System.currentTimeMillis()) {
-				if (ended == null || ended == 0 || ended > System.currentTimeMillis()) {
-					ended = System.currentTimeMillis();
+			if (e.getStarted() <= currentTime) {
+				if (ended == null || ended == 0 || ended > currentTime) {
+					ended = (long) currentTime;
 				}
-				double durationDays = (ended - e.getStarted()) / 8.64e+7;
+				double durationDays = (ended - e.getStarted()) / DAY;
 				double instances = durationDays / e.getFrequency_days();
-				if (strict) {
+			//	if (e.getCost() < 0) {
 					// If cost is negative (is income) then we floor it so as to assume the money
 					// isn't in yet.
+					instances = Math.floor(instances);
+		//		} else if (strict) {
 					// If it's positive we ceiling it so that we're 'saving' the money.
-					instances = e.getCost() > 0 ? Math.ceil(instances) : Math.floor(instances);
-				}
+		//			instances = Math.ceil(instances);
+		//		}
 				double cost = instances * e.getCost();
 				if (e.isAutomatic()) {
 					totalAuto += cost;
@@ -92,8 +98,8 @@ public class GeneralRS extends AbstractRS {
 		}
 
 		// Never give more than absolute amount
-		rtn.put("afterAuto", Math.min(sumAll, sumNonAuto - totalAuto));
-		rtn.put("afterAll", Math.min(sumAll, sumAllNonExpense - totalAll));
+		rtn.put("afterAuto", Math.min(sumAll * 9999, sumNonAuto - totalAuto));
+		rtn.put("afterAll", Math.min(sumAll * 9999, sumAllNonExpense - totalAll));
 
 		return rtn;
 	}

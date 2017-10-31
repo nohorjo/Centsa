@@ -35,12 +35,14 @@
 		<thead>
 			<tr>
 				<th width="5%" data-ng-click="sort('id', expenses)">ID</th>
-				<th width="30%" data-ng-click="sort('name', expenses)">Name</th>
+				<th width="20%" data-ng-click="sort('name', expenses)">Name</th>
 				<th width="10%" data-ng-click="sort('cost', expenses)">Cost</th>
-				<th width="15%">Every x days</th>
+				<th width="10%">Every x days</th>
 				<th width="15%" data-ng-click="sort('started', expenses)">Started</th>
 				<th width="15%" data-ng-click="sort('ended', expenses)">Ended</th>
 				<th width="10%">Automatic</th>
+				<th width="5%">Instances</th>
+				<th width="5%">Expected</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -55,6 +57,9 @@
 				<td>{{ e.ended ? formatDate(e.ended) : '' }}</td>
 				<td><input type="checkbox" disabled="disabled"
 					data-ng-checked="e.automatic"></td>
+				<td>{{ e.instances }}</td>
+				<td>{{ roundTo(((e.started -
+					(e.ended||Date.now()))/8.64e7)/e.frequency_days,2) }}</td>
 			</tr>
 		</tbody>
 	</table>

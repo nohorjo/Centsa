@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 import nohorjo.centsa.vo.Expense;
 import nohorjo.centsa.vo.VO;
@@ -42,31 +41,32 @@ public class ExpensesDAO extends AbstractDAO {
 
 	@Override
 	public List<Expense> getAll(int page, int pageSize, String order) throws SQLException {
-		Function<ResultSet, List<Expense>> processor = new Function<ResultSet, List<Expense>>() {
+		order = (order != null && order.toLowerCase().matches("^(\\s*[a-z]* (asc|desc),?)+$")) ? order : "1 ASC";
+		page = (page > 0) ? page : 1;
+		pageSize = (pageSize > 0) ? pageSize : Integer.MAX_VALUE;
 
-			@Override
-			public List<Expense> apply(ResultSet rs) {
+		int skip = (page - 1) * pageSize;
+		String sql = SQLUtils.getQuery("Expenses.GetAll").replace("{orderby}", order);
+
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, skip);
+			ps.setInt(2, pageSize);
+			try (ResultSet rs = ps.executeQuery()) {
 				List<Expense> es = new LinkedList<>();
-				try {
-					while (rs.next()) {
-						Expense e = new Expense();
-						e.setId(rs.getLong("ID"));
-						e.setName(rs.getString("NAME"));
-						e.setCost(rs.getInt("COST"));
-						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-						e.setStarted(rs.getLong("STARTED"));
-						e.setEnded(rs.getLong("ENDED"));
-						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-						es.add(e);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new Error(e);
+				while (rs.next()) {
+					Expense e = new Expense();
+					e.setId(rs.getLong("ID"));
+					e.setName(rs.getString("NAME"));
+					e.setCost(rs.getInt("COST"));
+					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setStarted(rs.getLong("STARTED"));
+					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+					e.setInstances(rs.getInt("INSTANCES"));
+					es.add(e);
 				}
 				return es;
 			}
-		};
-		return getAll(TABLE_NAME, COLUMNS, order, page, pageSize, processor);
+		}
 	}
 
 	public List<Expense> getAllActive(int page, int pageSize, String order) throws SQLException {
@@ -90,6 +90,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+					e.setInstances(rs.getInt("INSTANCES"));
 					es.add(e);
 				}
 				return es;
@@ -99,31 +100,25 @@ public class ExpensesDAO extends AbstractDAO {
 
 	@Override
 	public Expense get(long id) throws SQLException {
-		Function<ResultSet, Expense> processor = new Function<ResultSet, Expense>() {
+		String sql = SQLUtils.getQuery("Expenses.Get");
 
-			@Override
-			public Expense apply(ResultSet rs) {
-				try {
-					if (rs.next()) {
-						Expense e = new Expense();
-						e.setId(rs.getLong("ID"));
-						e.setName(rs.getString("NAME"));
-						e.setCost(rs.getInt("COST"));
-						e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
-						e.setStarted(rs.getLong("STARTED"));
-						e.setEnded(rs.getLong("ENDED"));
-						e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-						return e;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new Error(e);
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Expense e = new Expense();
+					e.setId(rs.getLong("ID"));
+					e.setName(rs.getString("NAME"));
+					e.setCost(rs.getInt("COST"));
+					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setStarted(rs.getLong("STARTED"));
+					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
+					e.setInstances(rs.getInt("INSTANCES"));
+					return e;
 				}
 				return null;
 			}
-		};
-
-		return get(TABLE_NAME, COLUMNS, id, processor);
+		}
 	}
 
 	@Override

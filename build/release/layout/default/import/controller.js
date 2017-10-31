@@ -42,14 +42,7 @@ app.controller("importCtrl", function($scope) {
 	})();
 
 	$scope.getProgressPercentage = function(extra) {
-		var per = $scope.importProgress.processed * 100;
-		if (extra) {// Two decimal places
-			per *= 100;
-		}
-		per = parseInt(per / $scope.importProgress.total);
-		if (extra) {
-			per /= 100;
-		}
-		return per;
+		return $rootScope.roundTo($scope.importProgress.processed
+				/ $scope.importProgress.total, extra ? 2 : 0);
 	};
 });
