@@ -1,4 +1,4 @@
-app.controller("importCtrl", function($scope) {
+app.controller("importCtrl", function($scope, $rootScope) {
 	$scope.rules = centsa.general.rules();
 	$scope.rule = "default";
 

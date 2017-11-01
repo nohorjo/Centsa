@@ -207,14 +207,16 @@ public class TransactionsDAO extends AbstractDAO {
 				working.add(entry);
 			}
 		}
+		if (!working.isEmpty()) {
+			if (precision < 1 || precision > working.size()) {
+				precision = working.size();// default to returning all
+			}
+			precision = (working.size() / precision);
 
-		if (precision < 1 || precision > working.size())
-			precision = working.size();// default to returning all
-		precision = (working.size() / precision);
-
-		for (int i = 0; i < working.size(); i++) {
-			if (i % precision == 0) {
-				rtn.add(working.get(i));
+			for (int i = 0; i < working.size(); i++) {
+				if (i % precision == 0) {
+					rtn.add(working.get(i));
+				}
 			}
 		}
 

@@ -14,4 +14,4 @@ String.prototype.startsWith = String.prototype.startsWith || function(s) {
 		return true;
 	}
 	return false;
-}
+};

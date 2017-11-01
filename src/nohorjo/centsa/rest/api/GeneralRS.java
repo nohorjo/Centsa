@@ -81,14 +81,14 @@ public class GeneralRS extends AbstractRS {
 				}
 				double durationDays = (ended - e.getStarted()) / DAY;
 				double instances = durationDays / e.getFrequency_days();
-			//	if (e.getCost() < 0) {
+				if (e.getCost() < 0) {
 					// If cost is negative (is income) then we floor it so as to assume the money
 					// isn't in yet.
 					instances = Math.floor(instances);
-		//		} else if (strict) {
+				} else if (strict) {
 					// If it's positive we ceiling it so that we're 'saving' the money.
-		//			instances = Math.ceil(instances);
-		//		}
+					instances = Math.ceil(instances);
+				}
 				double cost = instances * e.getCost();
 				if (e.isAutomatic()) {
 					totalAuto += cost;
@@ -97,6 +97,12 @@ public class GeneralRS extends AbstractRS {
 			}
 		}
 
+		System.out.println(sumNonAuto);
+		System.out.println(totalAuto);
+		System.out.println(sumAllNonExpense);
+		System.out.println(totalAll);
+		System.out.println();
+		System.out.println(totalAll-totalAuto);
 		// Never give more than absolute amount
 		rtn.put("afterAuto", Math.min(sumAll * 9999, sumNonAuto - totalAuto));
 		rtn.put("afterAll", Math.min(sumAll * 9999, sumAllNonExpense - totalAll));

@@ -72,6 +72,10 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		});
 		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
 				"update", new Date().formatDate("yyyy/MM/dd"));
-	}
+	};
+	
+	$scope.getNow = function() {
+		return Date.now();
+	};
 
 });
