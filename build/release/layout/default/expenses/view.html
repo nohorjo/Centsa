@@ -57,7 +57,7 @@
 				<td>{{ e.ended ? formatDate(e.ended) : '' }}</td>
 				<td><input type="checkbox" disabled="disabled"
 					data-ng-checked="e.automatic"></td>
-				<td>{{ e.instances }}</td>
+				<td>{{ e.instance_count }}</td>
 				<td>{{
 					roundTo((((e.ended||getNow())-e.started)/8.64e7)/e.frequency_days,2)
 					}}</td>

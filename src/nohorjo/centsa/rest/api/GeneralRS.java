@@ -64,11 +64,12 @@ public class GeneralRS extends AbstractRS {
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
 		List<Expense> es = eDao.getAll(0, 0, null);
-		int sumNonAuto = -tDao.sumNonAutoExpenseAmount();
-		int sumAllNonExpense = -tDao.sumNonExpenseAmount();
+//		int sumNonAuto = -tDao.sumNonAutoExpenseAmount();
+//		int sumAllNonExpense = -tDao.sumNonExpenseAmount();
 		int sumAll = -tDao.sumAll();
-		int totalAuto = 0;
-		int totalAll = 0;
+		
+		int autoExpenseReduction = sumAll;
+		int allExpenseReduction = sumAll;
 
 		double currentTime = System.currentTimeMillis();
 
@@ -80,32 +81,30 @@ public class GeneralRS extends AbstractRS {
 					ended = (long) currentTime;
 				}
 				double durationDays = (ended - e.getStarted()) / DAY;
-				double instances = durationDays / e.getFrequency_days();
+				double expectedInstances = durationDays / e.getFrequency_days();
+				double leftToTransfer = expectedInstances - e.getInstance_count();
+				if (leftToTransfer < 0) {
+					leftToTransfer = 0;
+				}
 				if (e.getCost() < 0) {
 					// If cost is negative (is income) then we floor it so as to assume the money
 					// isn't in yet.
-					instances = Math.floor(instances);
+					leftToTransfer = Math.floor(leftToTransfer);
 				} else if (strict) {
 					// If it's positive we ceiling it so that we're 'saving' the money.
-					instances = Math.ceil(instances);
+					leftToTransfer = Math.ceil(leftToTransfer);
 				}
-				double cost = instances * e.getCost();
+				double cost = leftToTransfer * e.getCost();
 				if (e.isAutomatic()) {
-					totalAuto += cost;
+					autoExpenseReduction -= cost;
 				}
-				totalAll += cost;
+				allExpenseReduction -= cost;
 			}
 		}
 
-		System.out.println(sumNonAuto);
-		System.out.println(totalAuto);
-		System.out.println(sumAllNonExpense);
-		System.out.println(totalAll);
-		System.out.println();
-		System.out.println(totalAll-totalAuto);
 		// Never give more than absolute amount
-		rtn.put("afterAuto", Math.min(sumAll * 9999, sumNonAuto - totalAuto));
-		rtn.put("afterAll", Math.min(sumAll * 9999, sumAllNonExpense - totalAll));
+		rtn.put("afterAuto", Math.min(sumAll * 9999, autoExpenseReduction));
+		rtn.put("afterAll", Math.min(sumAll * 9999, allExpenseReduction));
 
 		return rtn;
 	}

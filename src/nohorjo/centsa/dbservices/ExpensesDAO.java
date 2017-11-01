@@ -61,7 +61,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-					e.setInstances(rs.getInt("INSTANCES"));
+					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));
 					es.add(e);
 				}
 				return es;
@@ -90,7 +90,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-					e.setInstances(rs.getInt("INSTANCES"));
+					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));
 					es.add(e);
 				}
 				return es;
@@ -113,7 +113,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
-					e.setInstances(rs.getInt("INSTANCES"));
+					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));
 					return e;
 				}
 				return null;

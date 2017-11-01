@@ -15,7 +15,7 @@ public class Expense implements VO {
 	private Long ended;
 	private boolean automatic;
 	
-	private int instances;
+	private int instance_count;
 
 	public Long getId() {
 		return id;
@@ -73,12 +73,12 @@ public class Expense implements VO {
 		this.automatic = automatic;
 	}
 
-	public int getInstances() {
-		return instances;
+	public int getInstance_count() {
+		return instance_count;
 	}
 
-	public void setInstances(int instances) {
-		this.instances = instances;
+	public void setInstance_count(int instance_count) {
+		this.instance_count = instance_count;
 	}
 
 	@Override
