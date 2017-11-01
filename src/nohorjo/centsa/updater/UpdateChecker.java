@@ -39,9 +39,13 @@ public class UpdateChecker {
 	private static boolean shouldRestart;
 
 	static {
+		File updateDir = new File(UPDATER_DIR);
+		if (!updateDir.exists()) {
+			updateDir.mkdirs();
+		}
 		// Adds shutdown hook to launch updater
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			if (new File(UPDATER_DIR).listFiles((f) -> {
+			if (updateDir.listFiles((f) -> {
 				return f.getName().matches("^Centsa.*\\.zip$");
 			}).length > 0) {
 				try {
@@ -75,7 +79,7 @@ public class UpdateChecker {
 			}
 
 			// Delete all but the latest updater jar
-			File[] updaterJars = new File(UPDATER_DIR).listFiles((f) -> {
+			File[] updaterJars = updateDir.listFiles((f) -> {
 				return f.getName().matches("^Centsa.*\\.jar$");
 			});
 			Arrays.sort(updaterJars, (a, b) -> {
