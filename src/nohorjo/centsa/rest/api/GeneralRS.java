@@ -44,8 +44,6 @@ import nohorjo.centsa.vo.Expense;
 @Path("/general")
 public class GeneralRS extends AbstractRS {
 
-	private static final double DAY = 8.64e+7;
-
 	private TransactionsDAO tDao = new TransactionsDAO();
 	private ExpensesDAO eDao = new ExpensesDAO();
 	private static JSCSVParser parser;
@@ -64,24 +62,15 @@ public class GeneralRS extends AbstractRS {
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		Map<String, Integer> rtn = new HashMap<>();
 		List<Expense> es = eDao.getAll(0, 0, null);
-//		int sumNonAuto = -tDao.sumNonAutoExpenseAmount();
-//		int sumAllNonExpense = -tDao.sumNonExpenseAmount();
 		int sumAll = -tDao.sumAll();
-		
+
 		int autoExpenseReduction = sumAll;
 		int allExpenseReduction = sumAll;
 
-		double currentTime = System.currentTimeMillis();
-
 		for (Expense e : es) {
-			Long ended = e.getEnded();
 			// Only ones that have started
-			if (e.getStarted() <= currentTime) {
-				if (ended == null || ended == 0 || ended > currentTime) {
-					ended = (long) currentTime;
-				}
-				double durationDays = (ended - e.getStarted()) / DAY;
-				double expectedInstances = durationDays / e.getFrequency_days();
+			if (e.getId() != 1 && e.getStarted() <= System.currentTimeMillis()) {
+				double expectedInstances = e.get_expected_instances_count();
 				double leftToTransfer = expectedInstances - e.getInstance_count();
 				if (leftToTransfer < 0) {
 					leftToTransfer = 0;
@@ -102,9 +91,8 @@ public class GeneralRS extends AbstractRS {
 			}
 		}
 
-		// Never give more than absolute amount
-		rtn.put("afterAuto", Math.min(sumAll * 9999, autoExpenseReduction));
-		rtn.put("afterAll", Math.min(sumAll * 9999, allExpenseReduction));
+		rtn.put("afterAuto", autoExpenseReduction);
+		rtn.put("afterAll", allExpenseReduction);
 
 		return rtn;
 	}

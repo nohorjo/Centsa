@@ -17,7 +17,7 @@ import nohorjo.centsa.vo.VO;
  *
  */
 public class ExpensesDAO extends AbstractDAO {
-	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY_DAYS", "STARTED", "ENDED", "AUTOMATIC" };
+	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY_DAYS", "STARTED", "AUTOMATIC" };
 	private static final String TABLE_NAME = "EXPENSES";
 
 	@Override
@@ -28,15 +28,12 @@ public class ExpensesDAO extends AbstractDAO {
 	@Override
 	public long insert(VO _vo) throws SQLException {
 		Expense e = (Expense) _vo;
-		if (e.getId() != null && e.getId() == 1) {
-			throw new SQLException("Cannot edit default expense");
-		}
-		if (e.getEnded() != null && e.getEnded() < e.getStarted()) {
-			throw new SQLException("Started cannot be after ended");
+		if (e.getId() != null) {
+			throw new SQLException("Cannot edit expense");
 		}
 
 		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequency_days(),
-				e.getStarted(), e.getEnded(), e.isAutomatic() ? 1 : 0 });
+				e.getStarted(), e.isAutomatic() });
 	}
 
 	@Override
@@ -125,6 +122,11 @@ public class ExpensesDAO extends AbstractDAO {
 	public void delete(long id) throws SQLException {
 		if (id == 1) {
 			throw new SQLException("Cannot delete default expense");
+		}
+		String sql = SQLUtils.getQuery("Expenses.ConvertToNA");
+		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			ps.executeUpdate();
 		}
 		delete(TABLE_NAME, id);
 	}

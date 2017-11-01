@@ -8,7 +8,6 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		cost : 0.0,
 		frequency_days : 1,
 		started : new Date().formatDate("yyyy/MM/dd"),
-		ended : "",
 		automatic : false
 	};
 	var newExpense = Object.assign({}, $scope.newExpense);
@@ -17,8 +16,6 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		$scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
 		$scope.newExpense.started = new Date($scope.newExpense.started)
 				.getTime();
-		$scope.newExpense.ended = $scope.newExpense.ended ? new Date(
-				$scope.newExpense.ended).getTime() : null;
 		var newId = centsa.expenses.insert($scope.newExpense);
 		if (updating) {
 			for (var i = 0; i < $scope.expenses.length; i++) {
@@ -26,7 +23,6 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 					$scope.expenses[i] = $scope.newExpense;
 				}
 			}
-			$('#expenseModal').modal('hide');
 		} else {
 			$scope.newExpense.id = newId;
 			$scope.expenses.unshift($scope.newExpense);
@@ -38,32 +34,17 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 				"update", new Date().formatDate("yyyy/MM/dd"));
 	};
 
-	$scope.editExpense = function(e) {
-		var e = Object.assign({}, e);
-		e.started = $rootScope.formatDate(e.started);
-		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
-				"update", e.started);
-		if (e.ended) {
-			e.ended = $rootScope.formatDate(e.ended);
-			$('.datepicker[data-ng-model="newExpense.ended"]').datepicker(
-					"update", e.ended);
-		} else {
-			e.ended = "";
-		}
-		e.cost = e.cost / 100;
-		$scope.newExpense = e;
-		$('#expenseModal').modal("show");
-		$('#expenseModal').on(
-				'hidden.bs.modal',
-				function(e) {
-					$scope.newExpense = Object.assign({}, newExpense);
-					$('.datepicker[data-ng-model="newExpense.started"]')
-							.datepicker("update",
-									new Date().formatDate("yyyy/MM/dd"));
-				});
+	$scope.getNow = function() {
+		return Date.now();
 	};
 
-	$scope.initDatePickers = function() {
+	$scope.deleteExpense = function(id) {
+		if (centsa.expenses.remove(id)) {
+			$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
+		}
+	};
+
+	(function() {
 		$('.datepicker').datepicker({
 			format : "yyyy/mm/dd",
 			todayBtn : "linked",
@@ -72,10 +53,6 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		});
 		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
 				"update", new Date().formatDate("yyyy/MM/dd"));
-	};
-	
-	$scope.getNow = function() {
-		return Date.now();
-	};
+	})();
 
 });

@@ -27,7 +27,6 @@ public class ExpensesInterface extends JSInterface {
 			e.setCost(cast(o.get("cost"), Integer.class));
 			e.setFrequency_days(cast(o.get("frequency_days"), Integer.class));
 			e.setStarted(cast(o.get("started"), Long.class));
-			e.setEnded(cast(o.get("ended"), Long.class));
 			e.setAutomatic((boolean) o.get("automatic"));
 
 			id = dao.insert(e);

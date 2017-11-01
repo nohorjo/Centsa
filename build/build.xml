@@ -151,8 +151,9 @@
 	<target name="increment-major-version">
 		<script language="javascript">
 			<![CDATA[
-		 	project.setProperty("major.version", parseInt(project.getProperty("major.version"))+1);
-		    ]]>
+			 	project.setProperty("major.version", parseInt(project.getProperty("major.version"))+1);
+				project.setProperty("minor.version", 0);
+			]]>
 		</script>
 		<antcall target="update-version-properties" />
 	</target>
@@ -161,7 +162,7 @@
 		<script language="javascript">
 			<![CDATA[
 			 	project.setProperty("minor.version", parseInt(project.getProperty("minor.version"))+1);
-			    ]]>
+			]]>
 		</script>
 		<antcall target="update-version-properties" />
 	</target>
@@ -169,8 +170,8 @@
 	<target name="increment-build-number">
 		<script language="javascript">
 			<![CDATA[
-				 	project.setProperty("build.number", parseInt(project.getProperty("build.number"))+1);
-				    ]]>
+				 project.setProperty("build.number", parseInt(project.getProperty("build.number"))+1);
+			]]>
 		</script>
 		<antcall target="update-version-properties" />
 	</target>
@@ -178,8 +179,8 @@
 	<target name="increment-updater-build-number">
 		<script language="javascript">
 			<![CDATA[
-				 	project.setProperty("updater.build.number", parseInt(project.getProperty("updater.build.number"))+1);
-				    ]]>
+				 project.setProperty("updater.build.number", parseInt(project.getProperty("updater.build.number"))+1);
+			]]>
 		</script>
 		<antcall target="update-version-properties" />
 	</target>

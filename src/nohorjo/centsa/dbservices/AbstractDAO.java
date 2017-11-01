@@ -1,5 +1,8 @@
 package nohorjo.centsa.dbservices;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.function.Function;
+
+import nohorjo.centsa.properties.SystemProperties;
 
 /**
  * Base class for DAOs
@@ -25,8 +30,53 @@ public abstract class AbstractDAO implements DAO {
 			new ExpensesDAO().createTable();
 			new TransactionsDAO().createTable();
 			new TypesDAO().createTable();
-		} catch (SQLException e) {
+
+			int dbVersion = SystemProperties.get("db.version", Integer.class);
+
+			while (runUpdateScript(++dbVersion)) {
+				// Set to the last run successfully
+				SystemProperties.set("db.version", dbVersion);
+			}
+
+		} catch (SQLException | IOException e) {
 			throw new Error(e);
+		}
+	}
+
+	/**
+	 * Runs the update scripts in the db
+	 * 
+	 * @param Version
+	 *            version of the script to run
+	 * @return <code>true</code> if the update was found, else <code>false</code>
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	private static boolean runUpdateScript(int version) throws IOException, SQLException {
+		try (InputStream in = ClassLoader
+				.getSystemResourceAsStream(String.format("dbupgrade/update_%d.sql", version))) {
+
+			if (in != null) {
+				try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+					byte[] buff = new byte[1024];
+					int len;
+					while ((len = in.read(buff)) > 0) {
+						out.write(buff, 0, len);
+					}
+					String sqlFile = out.toString();
+					try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
+						String sql[] = sqlFile.split(";");
+						for (String part : sql) {
+							if (!part.equals(""))
+								ps.addBatch(part);
+						}
+						ps.executeBatch();
+					}
+
+				}
+				return true;
+			}
+			return false;
 		}
 	}
 

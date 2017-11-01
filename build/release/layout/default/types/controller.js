@@ -21,7 +21,7 @@ app.controller("typesCtrl", function($scope) {
 		}
 	};
 
-	!function drawPie() {
+	function drawPie() {
 		var data = [];
 		$($scope.types).each(function() {
 			if (this.sum >= 0) {
@@ -41,5 +41,7 @@ app.controller("typesCtrl", function($scope) {
 				"fixedPosition" : true
 			}
 		});
-	}();
+	}
+
+	drawPie();
 });

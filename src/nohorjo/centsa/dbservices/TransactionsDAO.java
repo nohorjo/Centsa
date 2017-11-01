@@ -162,24 +162,6 @@ public class TransactionsDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Sums the transactions that were not part of an automatic expense
-	 * 
-	 * @return The sum of non-automatic transactions
-	 * @throws SQLException
-	 */
-	public int sumNonAutoExpenseAmount() throws SQLException {
-		String sql = SQLUtils.getQuery("Transactions.SumNonAutoExpenseAmount");
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		}
-		return 0;
-	}
-
-	/**
 	 * Gets a list of cumulative sums of transactions
 	 * 
 	 * @param precision
@@ -221,24 +203,6 @@ public class TransactionsDAO extends AbstractDAO {
 		}
 
 		return rtn;
-	}
-
-	/**
-	 * Sums the transactions that were not part of an expense
-	 * 
-	 * @return The sum of expense transactions
-	 * @throws SQLException
-	 */
-	public int sumNonExpenseAmount() throws SQLException {
-		String sql = SQLUtils.getQuery("Transactions.SumNonExpense");
-		try (Connection conn = SQLUtils.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		}
-		return 0;
 	}
 
 	@Override
