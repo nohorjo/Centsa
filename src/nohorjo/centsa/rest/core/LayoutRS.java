@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import org.glassfish.jersey.internal.inject.PerLookup;
+import org.glassfish.hk2.api.PerLookup;
 
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.rest.AbstractRS;

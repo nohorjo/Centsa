@@ -9,7 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.glassfish.jersey.internal.inject.PerLookup;
+import org.glassfish.hk2.api.PerLookup;
 
 import nohorjo.centsa.rest.AbstractRS;
 

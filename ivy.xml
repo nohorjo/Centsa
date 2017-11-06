@@ -18,11 +18,11 @@
 		<dependency org="org.eclipse.jetty" name="jetty-io" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-util" rev="9.4.7.v20170914" conf="rt" />
 		<dependency org="org.eclipse.jetty" name="jetty-servlet" rev="9.4.7.v20170914" conf="rt" />
-		<dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="2.26" conf="rt" />
-		<dependency org="org.glassfish.jersey.containers" name="jersey-container-jetty-http" rev="2.26" conf="rt" />
-		<dependency org="org.glassfish.jersey.media" name="jersey-media-json-jackson" rev="2.26" conf="rt" />
-		<dependency org="org.glassfish.jersey.core" name="jersey-client" rev="2.26" conf="rt" />
-		<dependency org="org.glassfish.jersey.bundles" name="jaxrs-ri" rev="2.26" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="2.25.1" conf="rt" />
+		<dependency org="org.glassfish.jersey.containers" name="jersey-container-jetty-http" rev="2.25.1" conf="rt" />
+		<dependency org="org.glassfish.jersey.media" name="jersey-media-json-jackson" rev="2.25.1" conf="rt" />
+		<dependency org="org.glassfish.jersey.core" name="jersey-client" rev="2.25.1" conf="rt" />
+		<dependency org="org.glassfish.jersey.bundles" name="jaxrs-ri" rev="2.25.1" conf="rt" />
 		<dependency org="org.apache.commons" name="commons-csv" rev="1.1" conf="rt"/>
 		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.9.1" conf="rt"/>
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.25" conf="rt"/>

@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.internal.inject.PerLookup;
+import org.glassfish.hk2.api.PerLookup;
 
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.rest.AbstractRS;
