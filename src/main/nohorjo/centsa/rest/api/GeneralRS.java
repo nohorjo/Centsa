@@ -16,7 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.jersey.internal.inject.PerLookup;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
