@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+
+<link href="main.css" rel="stylesheet" />
+<link href="style/bootstrap.min.css" rel="stylesheet" />
+<link href="style/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+<script src="lib/jquery-3.1.0.min.js" type="text/javascript"></script>
+<script src="lib/popper.js" type="text/javascript"></script>
+<script src="lib/bootstrap.min.js" type="text/javascript"></script>
+<script src="lib/bootstrap-datepicker.min.js" type="text/javascript"></script>
+
+<script src="lib/util/dateFormat.js"></script>
+<script src="lib/util/compatibility.js"></script>
+
+<script src="lib/angular.min.js"></script>
+<script src="lib/angular-route.min.js"></script>
+
+<script src="lib/amcharts/amcharts.js"></script>
+<script src="lib/amcharts/pie.js"></script>
+<script src="lib/amcharts/serial.js"></script>
+<script src="lib/amcharts/themes/light.js"></script>
+
+<script src="main.js"></script>
+<script src="routes.js"></script>
+
+<script src="summary/controller.js"></script>
+<script src="transactions/controller.js"></script>
+<script src="accounts/controller.js"></script>
+<script src="types/controller.js"></script>
+<script src="expenses/controller.js"></script>
+<script src="import/controller.js"></script>
+</head>
+
+<body data-ng-app="app" data-ng-controller="mainCtrl">
+	<div class="sidebar">
+		<div class="logo">
+			<img alt="logo" data-ng-src="logo.png">
+		</div>
+		<div>
+			<a href="#!summary" data-ng-class="{'active':isActive('/summary')}">Summary</a>
+			<a href="#!transactions"
+				data-ng-class="{'active':isActive('/transactions')}"
+				data-ng-click="resetFilter()">Transactions</a> <a href="#!accounts"
+				data-ng-class="{'active':isActive('/accounts')}">Accounts</a> <a
+				href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
+			<a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}">Expenses</a>
+			<a href="#!import" data-ng-class="{'active':isActive('/import')}">Import</a>
+		</div>
+	</div>
+	<div class="main-panel">
+		<div class="content" data-ng-view autoscroll="true"></div>
+	</div>
+</body>
+
+</html>
