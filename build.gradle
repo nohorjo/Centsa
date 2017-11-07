@@ -97,15 +97,19 @@ jar {
     }
 }
 
-clean {
-	delete 'application/lib'
-}
-
 compileUpdaterTestJava {
 	classpath += configurations.testCompile
 }
 
-task copyToLib {
+task cleanLib {
+	doLast {
+		delete fileTree('application/lib') {
+			exclude '**/' + jar.baseName + '.jar'
+		}
+	}
+}
+
+task copyToLib(dependsOn: cleanLib) {
 	doLast {
 	    copy {
 	        into "application/lib"
@@ -206,13 +210,9 @@ task major(dependsOn: ['incrementMajor', 'release'])
 
 task minor(dependsOn: ['incrementMinor', 'release'])
 
-ext.saveProperties = { props, filename ->
-	def writer = new FileWriter(file(filename))
-	try {
-		props.store(writer, "")
-		writer.flush()
-	} finally {
-		writer.close()
+task updaterClean {
+	doLast {
+		delete fileTree('application/updater')
 	}
 }
 
@@ -221,7 +221,7 @@ task updaterTest(type:Test) {
     classpath += sourceSets.updaterTest.runtimeClasspath
 }
 
-task updaterBuild(type: Jar, dependsOn: updaterTest) {
+task updaterBuild(type: Jar, dependsOn: ['updaterClean', 'updaterTest']) {
 		def bn = versionInfo.getProperty("updater.build.number") as Integer
 	    destinationDir = file('application/updater')
 	    baseName 'Centsa-updater.build-' + ++bn
@@ -233,6 +233,16 @@ task updaterBuild(type: Jar, dependsOn: updaterTest) {
 	    }
 }
 
-build.dependsOn clean, copyToLib, jacocoTestReport
+ext.saveProperties = { props, filename ->
+	def writer = new FileWriter(file(filename))
+	try {
+		props.store(writer, "")
+		writer.flush()
+	} finally {
+		writer.close()
+	}
+}
+
+build.dependsOn copyToLib, jacocoTestReport
 
 
