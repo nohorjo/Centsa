@@ -37,7 +37,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['src/main']
-            output.classesDir = file("bin/main")
+            outputDir = file("bin/main")
         }
         resources {
             srcDirs = ['res']
@@ -46,19 +46,19 @@ sourceSets {
     test {
         java {
             srcDirs = ['src/test']
-            output.classesDir = file("bin/test")
+            outputDir = file("bin/test")
         }
     }
     updater {
         java {
             srcDirs = ['src/updater']
-            output.classesDir = file("bin/updater")
+            outputDir = file("bin/updater")
         }
     }
     updaterTest {
         java {
             srcDirs = ['src/updaterTest']
-            output.classesDir = file("bin/updaterTest")
+            outputDir = file("bin/updaterTest")
         }
     }
 }
@@ -129,7 +129,7 @@ task eclipseClasspath(dependsOn: copyToLib) {
 	    if(libDir.exists()) {
 	        libDir.eachFile() {
 	        	if(jars.add(it.name)) {
-	            	cp += '<classpathentry kind="lib" path="' + it.path + '"/>\n'
+	            	cp += '<classpathentry kind="lib" path="' + it.path.replace("\\","/") + '"/>\n'
 	        	}
 	        }
 	    }
@@ -137,7 +137,7 @@ task eclipseClasspath(dependsOn: copyToLib) {
 	    if(libDir.exists()) {
 	        libDir.eachFile() {
 	        	if(jars.add(it.name)) {
-	            	cp += '<classpathentry kind="lib" path="' + it.path + '"/>\n'
+	            	cp += '<classpathentry kind="lib" path="' + it.path.replace("\\","/") + '"/>\n'
 	        	}
 	        }
 	    }
