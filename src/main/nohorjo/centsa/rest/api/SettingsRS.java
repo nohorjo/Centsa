@@ -6,7 +6,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.inject.PerLookup;
@@ -26,7 +25,8 @@ public class SettingsRS extends AbstractRS {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String get(@QueryParam("key") String key) {
+	@Path("/{key}")
+	public String get(@PathParam("key") String key) {
 		Object setting = SystemProperties.get(key, Object.class);
 		if (setting == null) {
 			setting = "";

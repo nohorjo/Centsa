@@ -45,7 +45,7 @@ var centsa = (function() {
 			get : function(key, error) {
 				var val = null;
 				ajax({
-					url : url + "/settings?key=" + key,
+					url : url + "/settings/" + key,
 					method : "GET",
 					async : false,
 					success : function(resp) {
