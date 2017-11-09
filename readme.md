@@ -1,4 +1,4 @@
-![Centsa](build/release/layout/default/logo.png)
+![Centsa](application/layout/default/logo.png)
 # Centsa money managing solution
 Centsa is a simple personal budgeting application to help you manage your money.
 
