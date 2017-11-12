@@ -54,4 +54,8 @@ public class TypesRS extends AbstractRS {
 	public long insert(Type t) throws SQLException {
 		return dao.insert(t);
 	}
+	
+	public void setDao(TypesDAO dao) {
+		this.dao = dao;
+	}
 }
