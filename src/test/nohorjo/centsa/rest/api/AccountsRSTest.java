@@ -13,12 +13,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import nohorjo.centsa.dbservices.AbstractDAO;
 import nohorjo.centsa.rest.api.mock.DAOOption;
+import nohorjo.centsa.rest.api.mock.MockAccountsDAO;
 import nohorjo.centsa.rest.api.mock.MockDAO;
-import nohorjo.centsa.rest.api.mock.MockTypesDAO;
-import nohorjo.centsa.vo.Type;
+import nohorjo.centsa.vo.Account;
 
 /**
- * Test class for {@link TypesRS}
+ * Test class for {@link AccountsRS}
  * 
  * @author muhammed
  *
@@ -26,11 +26,11 @@ import nohorjo.centsa.vo.Type;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(AbstractDAO.class)
 @SuppressStaticInitializationFor("nohorjo.centsa.dbservices.AbstractDAO")
-public class TypesRSTest {
+public class AccountsRSTest {
 
 	@Test
 	public void get_returnType() throws SQLException {
-		checkType(getRS(DAOOption.FINE).get(MockDAO.ID));
+		checkAccount(getRS(DAOOption.FINE).get(MockDAO.ID));
 	}
 
 	@Test
@@ -45,10 +45,10 @@ public class TypesRSTest {
 
 	@Test
 	public void getAll_returnList() throws SQLException {
-		List<Type> ts = getRS(DAOOption.FINE).getAll(MockDAO.PAGE, MockDAO.PAGE_SIZE, MockDAO.ORDER);
+		List<Account> ts = getRS(DAOOption.FINE).getAll(MockDAO.PAGE, MockDAO.PAGE_SIZE, MockDAO.ORDER);
 
 		assertEquals(1, ts.size());
-		checkType(ts.get(0));
+		checkAccount(ts.get(0));
 	}
 
 	@Test(expected = SQLException.class)
@@ -73,12 +73,12 @@ public class TypesRSTest {
 
 	@Test
 	public void insert_inserts() throws SQLException {
-		assertEquals(MockDAO.ID, getRS(DAOOption.FINE).insert(MockTypesDAO.TYPE));
+		assertEquals(MockDAO.ID, getRS(DAOOption.FINE).insert(MockAccountsDAO.ACCOUNT));
 	}
 
 	@Test(expected = SQLException.class)
 	public void insert_throws() throws SQLException {
-		getRS(DAOOption.ERROR).insert(MockTypesDAO.TYPE);
+		getRS(DAOOption.ERROR).insert(MockAccountsDAO.ACCOUNT);
 	}
 
 	/**
@@ -88,15 +88,15 @@ public class TypesRSTest {
 	 *            DAO cofig
 	 * @return Test RS
 	 */
-	private TypesRS getRS(DAOOption option) {
-		TypesRS rs = new TypesRS();
-		rs.setDao(new MockTypesDAO(option));
+	private AccountsRS getRS(DAOOption option) {
+		AccountsRS rs = new AccountsRS();
+		rs.setDao(new MockAccountsDAO(option));
 		return rs;
 	}
 
-	private void checkType(Type t) {
-		assertEquals(MockDAO.ID, t.getId().longValue());
-		assertEquals(MockDAO.NAME, t.getName());
-		assertEquals(MockTypesDAO.SUM, t.getSum());
+	private void checkAccount(Account a) {
+		assertEquals(MockDAO.ID, a.getId().longValue());
+		assertEquals(MockDAO.NAME, a.getName());
+		assertEquals(MockAccountsDAO.BALANCE, a.getBalance());
 	}
 }

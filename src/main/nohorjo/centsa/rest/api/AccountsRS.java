@@ -54,4 +54,8 @@ public class AccountsRS extends AbstractRS {
 	public long insert(Account a) throws SQLException {
 		return dao.insert(a);
 	}
+
+	public void setDao(AccountsDAO dao) {
+		this.dao = dao;
+	}
 }
