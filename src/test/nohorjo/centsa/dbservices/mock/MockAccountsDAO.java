@@ -1,4 +1,4 @@
-package nohorjo.centsa.rest.api.mock;
+package nohorjo.centsa.dbservices.mock;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -45,8 +45,4 @@ public class MockAccountsDAO extends AccountsDAO {
 		return mock.handleInsert((Account) _vo);
 	}
 
-	@Override
-	public Long getIdByName(String name) throws SQLException {
-		throw new Error("unimplemented");
-	}
 }

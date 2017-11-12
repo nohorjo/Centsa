@@ -228,4 +228,10 @@ public class TransactionsDAO extends AbstractDAO {
 		return 0;
 	}
 
+	public List<Transaction> getAll(TransactionFilter filter, int page, int pageSize, String orderBy)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

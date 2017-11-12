@@ -12,9 +12,9 @@ import org.powermock.core.classloader.annotations.SuppressStaticInitializationFo
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import nohorjo.centsa.dbservices.AbstractDAO;
-import nohorjo.centsa.rest.api.mock.DAOOption;
-import nohorjo.centsa.rest.api.mock.MockDAO;
-import nohorjo.centsa.rest.api.mock.MockTypesDAO;
+import nohorjo.centsa.dbservices.mock.DAOOption;
+import nohorjo.centsa.dbservices.mock.MockDAO;
+import nohorjo.centsa.dbservices.mock.MockTypesDAO;
 import nohorjo.centsa.vo.Type;
 
 /**

@@ -1,4 +1,4 @@
-package nohorjo.centsa.rest.api.mock;
+package nohorjo.centsa.dbservices.mock;
 
 /**
  * Enum to determine the behaviour of mock DAOs

@@ -77,5 +77,9 @@ public class TransactionsRS extends AbstractRS {
 	public List<Map<String, Long>> getCumulativeSums(@QueryParam("precision") int precision) throws SQLException {
 		return dao.getCumulativeSums(precision);
 	}
+	
+	public void setDao(TransactionsDAO dao) {
+		this.dao = dao;
+	}
 
 }
