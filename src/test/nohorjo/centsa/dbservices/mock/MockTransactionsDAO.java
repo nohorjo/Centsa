@@ -64,7 +64,7 @@ public class MockTransactionsDAO extends TransactionsDAO {
 
 	public MockTransactionsDAO(DAOOption option) {
 		this.option = option;
-		mock = new MockDAO<Transaction>(option, TRANSACTION);
+		mock = new MockDAO<>(option, TRANSACTION);
 	}
 
 	@Override

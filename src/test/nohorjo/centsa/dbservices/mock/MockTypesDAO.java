@@ -29,7 +29,7 @@ public class MockTypesDAO extends TypesDAO {
 	private MockDAO<Type> mock;
 
 	public MockTypesDAO(DAOOption option) {
-		mock = new MockDAO<Type>(option, TYPE);
+		mock = new MockDAO<>(option, TYPE);
 	}
 
 	@Override

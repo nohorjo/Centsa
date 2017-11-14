@@ -69,4 +69,8 @@ public class ExpensesRS extends AbstractRS {
 	public int getTotalActive(@QueryParam("auto") boolean auto) throws SQLException {
 		return dao.getTotalActive(auto);
 	}
+	
+	public void setDao(ExpensesDAO dao) {
+		this.dao = dao;
+	}
 }

@@ -22,7 +22,7 @@ public class MockAccountsDAO extends AccountsDAO {
 	private MockDAO<Account> mock;
 
 	public MockAccountsDAO(DAOOption option) {
-		mock = new MockDAO<Account>(option, ACCOUNT);
+		mock = new MockDAO<>(option, ACCOUNT);
 	}
 
 	@Override
