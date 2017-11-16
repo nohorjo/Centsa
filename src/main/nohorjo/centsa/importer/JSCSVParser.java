@@ -27,6 +27,14 @@ public class JSCSVParser {
 	private int processed;
 	private int total;
 
+	private JSCSVParser() {
+		// Made private for mocking
+	}
+
+	public static JSCSVParser createParser() {
+		return new JSCSVParser();
+	}
+
 	/**
 	 * Parse the CSV file
 	 * 

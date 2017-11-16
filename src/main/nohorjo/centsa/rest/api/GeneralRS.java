@@ -24,6 +24,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.Main;
+import nohorjo.centsa.datahandlers.BudgetHandler;
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.importer.JSCSVParser;
@@ -52,7 +53,7 @@ public class GeneralRS extends AbstractRS {
 	 * Calculates budget
 	 * 
 	 * @param strict
-	 *            If true will round expenses
+	 * 
 	 * @return The budgets considering expenses
 	 * @throws SQLException
 	 */
@@ -60,41 +61,10 @@ public class GeneralRS extends AbstractRS {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/budget")
 	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
-		Map<String, Integer> rtn = new HashMap<>();
 		List<Expense> es = eDao.getAll(0, 0, null);
 		int sumAll = -tDao.sumAll();
 
-		int autoExpenseReduction = sumAll;
-		int allExpenseReduction = sumAll;
-
-		for (Expense e : es) {
-			// Only ones that have started
-			if (e.getId() != 1 && e.getStarted() <= System.currentTimeMillis()) {
-				double expectedInstances = e.get_expected_instances_count();
-				double leftToTransfer = expectedInstances - e.getInstance_count();
-				if (leftToTransfer < 0) {
-					leftToTransfer = 0;
-				}
-				if (e.getCost() < 0) {
-					// If cost is negative (is income) then we floor it so as to assume the money
-					// isn't in yet.
-					leftToTransfer = Math.floor(leftToTransfer);
-				} else if (strict) {
-					// If it's positive we ceiling it so that we're 'saving' the money.
-					leftToTransfer = Math.ceil(leftToTransfer);
-				}
-				double cost = leftToTransfer * e.getCost();
-				if (e.isAutomatic()) {
-					autoExpenseReduction -= cost;
-				}
-				allExpenseReduction -= cost;
-			}
-		}
-
-		rtn.put("afterAuto", autoExpenseReduction);
-		rtn.put("afterAll", allExpenseReduction);
-
-		return rtn;
+		return BudgetHandler.getBudget(strict, es, sumAll);
 	}
 
 	/**
@@ -118,7 +88,7 @@ public class GeneralRS extends AbstractRS {
 			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
 			if (selectedFile != null) {
-				parser = new JSCSVParser();
+				parser = JSCSVParser.createParser();
 				new Thread(() -> {
 					try {
 						parser.parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))), rule);
@@ -230,6 +200,11 @@ public class GeneralRS extends AbstractRS {
 			e.printStackTrace();
 			Renderer.showExceptionDialog(e, "Network error", "Failed to check for updates");
 		}
+	}
+
+	public void set(ExpensesDAO eDao, TransactionsDAO tDao) {
+		this.eDao = eDao;
+		this.tDao = tDao;
 	}
 
 }
