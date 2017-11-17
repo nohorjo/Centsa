@@ -24,6 +24,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.Main;
+import nohorjo.centsa.datahandlers.Budget;
 import nohorjo.centsa.datahandlers.BudgetHandler;
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.dbservices.TransactionsDAO;
@@ -60,7 +61,7 @@ public class GeneralRS extends AbstractRS {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/budget")
-	public Map<String, Integer> getBudget(@QueryParam("strict") boolean strict) throws SQLException {
+	public Budget getBudget(@QueryParam("strict") boolean strict) throws SQLException {
 		List<Expense> es = eDao.getAll(0, 0, null);
 		int sumAll = -tDao.sumAll();
 

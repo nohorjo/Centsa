@@ -25,8 +25,8 @@ public class BudgetHandler {
 	 *            Absolute amount of funds available
 	 * @return The budgets considering expenses
 	 */
-	public static Map<String, Integer> getBudget(boolean strict, List<Expense> expenses, int sumAll) {
-		Map<String, Integer> rtn = new HashMap<>();
+	public static Budget getBudget(boolean strict, List<Expense> expenses, int sumAll) {
+		Budget budget = new Budget();
 
 		int autoExpenseReduction = sumAll;
 		int allExpenseReduction = sumAll;
@@ -55,9 +55,9 @@ public class BudgetHandler {
 			}
 		}
 
-		rtn.put("afterAuto", autoExpenseReduction);
-		rtn.put("afterAll", allExpenseReduction);
+		budget.setAfterAuto(autoExpenseReduction);
+		budget.setAfterAll(allExpenseReduction);
 
-		return rtn;
+		return budget;
 	}
 }
