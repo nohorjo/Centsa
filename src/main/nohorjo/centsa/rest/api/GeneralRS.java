@@ -3,7 +3,6 @@ package nohorjo.centsa.rest.api;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.inject.PerLookup;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import nohorjo.centsa.Main;
 import nohorjo.centsa.datahandlers.Budget;
 import nohorjo.centsa.datahandlers.BudgetHandler;
 import nohorjo.centsa.dbservices.ExpensesDAO;
@@ -35,6 +29,7 @@ import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.updater.UpdateChecker;
 import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
+import nohorjo.util.ThreadExecutor;
 
 /**
  * REST service for others
@@ -48,7 +43,7 @@ public class GeneralRS extends AbstractRS {
 
 	private TransactionsDAO tDao = new TransactionsDAO();
 	private ExpensesDAO eDao = new ExpensesDAO();
-	private static JSCSVParser parser;
+	private static JSCSVParser parser = new JSCSVParser();
 
 	/**
 	 * Calculates budget
@@ -78,36 +73,23 @@ public class GeneralRS extends AbstractRS {
 	@GET
 	@Path("/import")
 	public void importFile(@QueryParam("rule") String rule) throws IOException {
-		if (parser != null) { // Only allow one parsing at a time to relieve the DB
+		if (parser.isInProgress()) { // Only allow one parsing at a time to relieve the DB
 			throw new IOException("Parsing already in progress");
 		}
-		Platform.runLater(() -> {
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open CSV spreadsheet");
-			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV spreadsheets", "*.csv"));
-			fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
 
+		Renderer.showFileChooser("Open CSV spreadsheet", new File(System.getProperty("user.home")), (selectedFile) -> {
 			if (selectedFile != null) {
-				parser = JSCSVParser.createParser();
-				new Thread(() -> {
+				ThreadExecutor.start(() -> {
 					try {
-						parser.parse(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))), rule);
-						parser = null;
-						Platform.runLater(() -> {
-							Alert alert = new Alert(AlertType.INFORMATION);
-							alert.setTitle("");
-							alert.setHeaderText("");
-							alert.setContentText("Import complete!");
-							alert.show();
-						});
+						parser.parse(new String(Files.readAllBytes(selectedFile.toPath())), rule);
+						Renderer.showAlert("Import complete!");
 					} catch (Exception ex) {
 						Renderer.showExceptionDialog(ex, "Import error", "Could not import CSV");
-						throw new Error(ex);
+						throw new RuntimeException(ex);
 					}
-				}).start();
+				});
 			}
-		});
+		}, new ExtensionFilter("CSV spreadsheets", "*.csv"));
 	}
 
 	/**
@@ -206,6 +188,10 @@ public class GeneralRS extends AbstractRS {
 	public void set(ExpensesDAO eDao, TransactionsDAO tDao) {
 		this.eDao = eDao;
 		this.tDao = tDao;
+	}
+
+	public static void setParser(JSCSVParser parser) {
+		GeneralRS.parser = parser;
 	}
 
 }

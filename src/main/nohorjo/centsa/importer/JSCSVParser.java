@@ -27,13 +27,7 @@ public class JSCSVParser {
 	private int processed;
 	private int total;
 
-	private JSCSVParser() {
-		// Made private for mocking
-	}
-
-	public static JSCSVParser createParser() {
-		return new JSCSVParser();
-	}
+	private boolean inProgress;
 
 	/**
 	 * Parse the CSV file
@@ -47,6 +41,7 @@ public class JSCSVParser {
 	 * @throws IOException
 	 */
 	public void parse(String csv, String rule) throws ScriptException, NoSuchMethodException, IOException {
+		inProgress = true;
 		StringBuilder sb = new StringBuilder();
 		try (InputStream is = ClassLoader.getSystemResourceAsStream(String.format("rules/%s.js", rule));
 				Reader r = new StringReader(csv)) {
@@ -66,25 +61,9 @@ public class JSCSVParser {
 					sb.toString()));
 			((Invocable) engine).invokeFunction("parse", iterator, new AccountsInterface(), new TransactionsInterface(),
 					new TypesInterface(), new ExpensesInterface());
+		} finally {
+			inProgress = false;
 		}
-	}
-
-	/**
-	 * Starts a new thread to watch the progress of the iterator
-	 * 
-	 * @param iterator
-	 *            The iterator to watch
-	 */
-	private void watchProgress(ListIterator<CSVRecord> iterator) {
-		new Thread(() -> {
-			while (processed < total) {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-				}
-				processed = iterator.nextIndex();
-			}
-		}).start();
 	}
 
 	/**
@@ -105,4 +84,25 @@ public class JSCSVParser {
 		return total;
 	}
 
+	public boolean isInProgress() {
+		return inProgress;
+	}
+
+	/**
+	 * Starts a new thread to watch the progress of the iterator
+	 * 
+	 * @param iterator
+	 *            The iterator to watch
+	 */
+	private void watchProgress(ListIterator<CSVRecord> iterator) {
+		new Thread(() -> {
+			while (processed < total) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+				}
+				processed = iterator.nextIndex();
+			}
+		}).start();
+	}
 }

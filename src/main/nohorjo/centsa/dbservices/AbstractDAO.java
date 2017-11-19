@@ -39,7 +39,7 @@ public abstract class AbstractDAO implements DAO {
 			}
 
 		} catch (SQLException | IOException e) {
-			throw new Error(e);
+			throw new RuntimeException(e);
 		}
 	}
 

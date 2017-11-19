@@ -44,7 +44,7 @@ public class SystemProperties {
 				}
 			}
 		} catch (ConfigurationException | IOException e) {
-			throw new Error(e);
+			throw new RuntimeException(e);
 		}
 	}
 

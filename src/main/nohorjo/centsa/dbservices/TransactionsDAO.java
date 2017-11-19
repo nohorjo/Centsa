@@ -105,7 +105,7 @@ public class TransactionsDAO extends AbstractDAO {
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
-					throw new Error(e);
+					throw new RuntimeException(e);
 				}
 				return null;
 			}

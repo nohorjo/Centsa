@@ -18,7 +18,7 @@ public class MockTransactionsDAO extends TransactionsDAO {
 
 	public static final Transaction TRANSACTION;
 	public static final int AMMOUNT = MockDAO.random.nextInt(), PAGE_COUNT = MockDAO.random.nextInt(),
-			PRECISION = MockDAO.random.nextInt();
+			PRECISION = MockDAO.random.nextInt(), SUM = MockDAO.random.nextInt();
 	public static final String COMMENT = Long.toHexString(MockDAO.random.nextLong());
 	public static final long ACCOUNT_ID = MockDAO.random.nextLong(), TYPE_ID = MockDAO.random.nextLong(),
 			DATE = MockDAO.random.nextLong(), EXPENSE_ID = MockDAO.random.nextLong();
@@ -123,6 +123,18 @@ public class MockTransactionsDAO extends TransactionsDAO {
 			throw new SQLException();
 		case FINE:
 			return SUMS;
+		case NONE:
+		}
+		throw new IllegalStateException("Invalid option: " + option);
+	}
+
+	@Override
+	public int sumAll() throws SQLException {
+		switch (option) {
+		case ERROR:
+			throw new SQLException();
+		case FINE:
+			return SUM;
 		case NONE:
 		}
 		throw new IllegalStateException("Invalid option: " + option);

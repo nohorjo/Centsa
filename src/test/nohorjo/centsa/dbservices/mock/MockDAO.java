@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class MockDAO<T> {
 
-	static Random random = new Random();
+	public static final Random random = new Random();
 
 	public static final long ID = random.nextLong();
 	public static final String ORDER = Long.toHexString(random.nextLong()), NAME = Long.toHexString(random.nextLong());

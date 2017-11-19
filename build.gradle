@@ -30,11 +30,12 @@ dependencies {
 	compile group: 'org.glassfish.jersey.bundles', name: 'jaxrs-ri', version: '2.26'
 	compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
 	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.13'
+
 	testCompile 'junit:junit:4.12'
 	testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
 	testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
-	
-	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.13'
+
 }
 
 sourceSets {

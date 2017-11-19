@@ -73,7 +73,7 @@ public class UpdateChecker {
 							requestUpdate(info);
 						}
 					} catch (IOException e) {
-						throw new Error(e);
+						throw new RuntimeException(e);
 					}
 				}).start();
 			}
@@ -90,7 +90,7 @@ public class UpdateChecker {
 				Files.delete(updaterJars[i].toPath());
 			}
 		} catch (IOException | ConfigurationException e) {
-			throw new Error(e);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -30,7 +30,7 @@ public class SQLUtils {
 		try {
 			QUERIES = new XMLConfiguration(ClassLoader.getSystemResource("sql-queries.xml").toURI().toURL());
 		} catch (ConfigurationException | MalformedURLException | URISyntaxException e) {
-			throw new Error(e);
+			throw new RuntimeException(e);
 		}
 	}
 

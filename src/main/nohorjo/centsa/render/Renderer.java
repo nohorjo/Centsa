@@ -1,6 +1,7 @@
 package nohorjo.centsa.render;
 
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
@@ -17,18 +18,22 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import nohorjo.centsa.Main;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.server.EmbeddedServer;
+import nohorjo.util.Procedure;
 
 /**
  * {@link Region} that provides a {@link WebView} to render the UI
@@ -189,6 +194,31 @@ public class Renderer extends Region {
 			alert.getDialogPane().setExpandableContent(expContent);
 
 			alert.show();
+		});
+	}
+
+	/**
+	 * Show a file chooser
+	 * 
+	 * @param title
+	 *            The title
+	 * @param initDir
+	 *            The directory to start in
+	 * @param fileProcessor
+	 *            Callback to process the selected file
+	 * @param extensionFilters
+	 *            File extension filters
+	 */
+	public static void showFileChooser(String title, File initDir, Procedure<File> fileProcessor,
+			ExtensionFilter... extensionFilters) {
+		Platform.runLater(() -> {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle(title);
+			fileChooser.getExtensionFilters().addAll(extensionFilters);
+			fileChooser.setInitialDirectory(initDir);
+
+			File selectedFile = fileChooser.showOpenDialog(Main.getStage());
+			fileProcessor.call(selectedFile);
 		});
 	}
 
