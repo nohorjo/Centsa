@@ -49,7 +49,11 @@ public class Renderer extends Region {
 	private static final double MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	private static final double MAX_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 
-	private static final Image ICON = new Image(ClassLoader.getSystemResourceAsStream("icon.png"));
+	private static final Image ICON;
+
+	static {
+		ICON = new Image(ClassLoader.getSystemResourceAsStream("icon.png"));
+	}
 
 	private final Logger log = LoggerFactory.getLogger(Renderer.class);
 

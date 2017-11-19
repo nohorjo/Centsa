@@ -33,8 +33,8 @@ dependencies {
 	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.13'
 
 	testCompile 'junit:junit:4.12'
-	testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
-	testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
+	testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
+	testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '1.7.3'
 
 }
 
@@ -69,6 +69,7 @@ sourceSets {
 }
 
 jacoco {
+ 	toolVersion = "0.7.9"
     reportsDir = file("$buildDir/customJacocoReportDir")
 }
 

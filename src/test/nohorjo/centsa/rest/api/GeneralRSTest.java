@@ -42,7 +42,7 @@ import nohorjo.util.ThreadExecutor;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BudgetHandler.class, Renderer.class, GeneralRS.class, ThreadExecutor.class })
-@SuppressStaticInitializationFor("nohorjo.centsa.dbservices.AbstractDAO")
+@SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer" })
 public class GeneralRSTest {
 
 	private static final int AFTER_ALL = MockDAO.random.nextInt(), AFTER_AUTO = MockDAO.random.nextInt();
@@ -51,13 +51,14 @@ public class GeneralRSTest {
 
 	private Boolean strictCheck;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void init() throws Exception {
 		PowerMockito.mockStatic(BudgetHandler.class);
 		PowerMockito.when(BudgetHandler.getBudget(any(Boolean.class), any(), any(Integer.class))).then((i) -> {
-			assertEquals(strictCheck, i.getArgumentAt(0, Boolean.class));
-			assertEquals(MockExpensesDAO.EXPENSE, i.getArgumentAt(1, List.class).get(0));
-			assertEquals(MockTransactionsDAO.SUM, -i.getArgumentAt(2, Integer.class));
+			assertEquals(strictCheck, i.getArgument(0));
+			assertEquals(MockExpensesDAO.EXPENSE, ((List<Expense>) i.getArgument(1)).get(0));
+			assertEquals(MockTransactionsDAO.SUM, -((int) i.getArgument(2)));
 
 			Budget b = new Budget();
 			b.setAfterAll(AFTER_ALL);
@@ -70,11 +71,11 @@ public class GeneralRSTest {
 		PowerMockito.when(Renderer.class, "showFileChooser", any(String.class), any(File.class), any(Procedure.class),
 				any(ExtensionFilter[].class)).then((i) -> {
 					Object lambda = i.getArguments()[2];
-					ExtensionFilter filter = i.getArgumentAt(3, ExtensionFilter.class);
+					ExtensionFilter filter = i.getArgument(3);
 					List<String> extensions = filter.getExtensions();
 
-					assertEquals("Open CSV spreadsheet", i.getArgumentAt(0, String.class));
-					assertEquals(new File(System.getProperty("user.home")), i.getArgumentAt(1, File.class));
+					assertEquals("Open CSV spreadsheet", i.getArgument(0));
+					assertEquals(new File(System.getProperty("user.home")), i.getArgument(1));
 					assertEquals("CSV spreadsheets", filter.getDescription());
 					assertEquals(1, extensions.size());
 					assertEquals("*.csv", extensions.get(0));

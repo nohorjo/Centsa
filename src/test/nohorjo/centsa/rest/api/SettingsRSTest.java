@@ -42,7 +42,7 @@ public class SettingsRSTest {
 
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
-				String key = invocation.getArgumentAt(0, String.class);
+				String key = invocation.getArgument(0);
 				switch (key) {
 				case "return":
 					return "returned";
@@ -56,8 +56,7 @@ public class SettingsRSTest {
 
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
-				added = invocation.getArgumentAt(0, String.class).equals("setting")
-						&& invocation.getArgumentAt(1, String.class).equals("property");
+				added = invocation.getArgument(0).equals("setting") && invocation.getArgument(1).equals("property");
 				return null;
 			}
 		});
