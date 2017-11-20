@@ -2,7 +2,6 @@ package nohorjo.centsa.rest.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.internal.inject.PerLookup;
 
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -81,7 +81,7 @@ public class GeneralRS extends AbstractRS {
 			if (selectedFile != null) {
 				ThreadExecutor.start(() -> {
 					try {
-						parser.parse(new String(Files.readAllBytes(selectedFile.toPath())), rule);
+						parser.parse(FileUtils.readFileToString(selectedFile), rule);
 						Renderer.showAlert("Import complete!");
 					} catch (Exception ex) {
 						Renderer.showExceptionDialog(ex, "Import error", "Could not import CSV");

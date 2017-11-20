@@ -1,18 +1,17 @@
 package nohorjo.centsa.rest.api;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.script.ScriptException;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +40,7 @@ import nohorjo.util.ThreadExecutor;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ BudgetHandler.class, Renderer.class, GeneralRS.class, ThreadExecutor.class })
+@PrepareForTest({ BudgetHandler.class, Renderer.class, FileUtils.class, ThreadExecutor.class })
 @SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer" })
 public class GeneralRSTest {
 
@@ -91,8 +90,8 @@ public class GeneralRSTest {
 			return lambda.getClass().getMethod("run").invoke(lambda);
 		});
 
-		PowerMockito.mockStatic(Files.class);
-		PowerMockito.when(Files.readAllBytes(any(Path.class))).then((i) -> {
+		PowerMockito.mockStatic(FileUtils.class);
+		PowerMockito.when(FileUtils.readFileToString(any(File.class))).then((i) -> {
 			return CSV.getBytes();
 		});
 
