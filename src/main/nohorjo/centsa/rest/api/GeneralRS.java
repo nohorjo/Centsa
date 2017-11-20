@@ -102,7 +102,7 @@ public class GeneralRS extends AbstractRS {
 	@Path("/import/progress")
 	public Map<String, Integer> importProgress() {
 		Map<String, Integer> rtn = null;
-		if (parser != null) {
+		if (parser.isInProgress()) {
 			rtn = new HashMap<>();
 			rtn.put("processed", parser.getProcessed());
 			rtn.put("total", parser.getTotal());
@@ -119,7 +119,7 @@ public class GeneralRS extends AbstractRS {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/layouts")
 	public List<String> getLayouts() {
-		File layoutDir = new File(SystemProperties.get("root.dir", String.class) + "/layout");
+		File layoutDir = FileUtils.getFile(SystemProperties.get("root.dir", String.class) + "/layout");
 		List<String> layouts = new ArrayList<>();
 		for (File d : layoutDir.listFiles((d) -> {
 			return d.isDirectory(); // Only interested in directories
@@ -138,7 +138,7 @@ public class GeneralRS extends AbstractRS {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/rules")
 	public List<String> getRules() {
-		File rulesDir = new File(SystemProperties.get("root.dir", String.class) + "/rules");
+		File rulesDir = FileUtils.getFile(SystemProperties.get("root.dir", String.class) + "/rules");
 		List<String> rules = new ArrayList<>();
 		for (File d : rulesDir.listFiles((d) -> {
 			return d.getName().endsWith(".js");// Only interested in JavaScript files

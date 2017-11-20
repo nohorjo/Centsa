@@ -2,14 +2,17 @@ package nohorjo.centsa.rest.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.script.ScriptException;
 
@@ -44,11 +47,36 @@ import nohorjo.util.ThreadExecutor;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BudgetHandler.class, Renderer.class, FileUtils.class, ThreadExecutor.class })
 @SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer" })
+@SuppressWarnings("serial")
 public class GeneralRSTest {
 
-	private static final int AFTER_ALL = MockDAO.random.nextInt(), AFTER_AUTO = MockDAO.random.nextInt();
+	private static final int AFTER_ALL = MockDAO.random.nextInt(), AFTER_AUTO = MockDAO.random.nextInt(),
+			PROCESSED = MockDAO.random.nextInt(), TOTAL = MockDAO.random.nextInt();
 	private static final String CSV = Long.toHexString(MockDAO.random.nextLong()),
-			RULE = Long.toHexString(MockDAO.random.nextLong());
+			RULE = Long.toHexString(MockDAO.random.nextLong()), DIR_NAME = Long.toHexString(MockDAO.random.nextLong()),
+			JS_NAME = Long.toHexString(MockDAO.random.nextLong()) + ".js",
+			NON_JS_NAME = Long.toHexString(MockDAO.random.nextLong());
+	private static final File[] DIR_LIST = { new File(".") {
+		@Override
+		public boolean isDirectory() {
+			return true;
+		};
+
+		@Override
+		public String getName() {
+			return DIR_NAME;
+		};
+	} }, FILE_LIST = { new File(".") {
+		@Override
+		public String getName() {
+			return JS_NAME;
+		};
+	}, new File(".") {
+		@Override
+		public String getName() {
+			return NON_JS_NAME;
+		};
+	} };
 
 	private Boolean strictCheck, parsed, parseThrow;
 	private JSCSVParser parser;
@@ -104,6 +132,14 @@ public class GeneralRSTest {
 		PowerMockito.when(FileUtils.readFileToString(any(File.class))).then((i) -> {
 			return CSV;
 		});
+		PowerMockito.when(FileUtils.getFile(any(String.class))).then((i) -> {
+			return new File(".") {
+				@Override
+				public File[] listFiles(FileFilter f) {
+					return i.getArgument(0).toString().endsWith("/layouts") ? DIR_LIST : FILE_LIST;
+				}
+			};
+		});
 
 		GeneralRS.setParser(parser = new JSCSVParser() {
 			@Override
@@ -118,6 +154,16 @@ public class GeneralRSTest {
 			@Override
 			public void setInProgress(boolean inProgress) {
 				this.inProgress = inProgress;
+			}
+
+			@Override
+			public int getProcessed() {
+				return PROCESSED;
+			}
+
+			@Override
+			public int getTotal() {
+				return TOTAL;
 			}
 		});
 
@@ -178,6 +224,19 @@ public class GeneralRSTest {
 	public void importFile_throws() throws IOException {
 		parser.setInProgress(true);
 		new GeneralRS().importFile(RULE);
+	}
+
+	@Test
+	public void importProgress_get() {
+		parser.setInProgress(true);
+		Map<String, Integer> p = new GeneralRS().importProgress();
+		assertEquals(TOTAL, (int) p.get("total"));
+		assertEquals(PROCESSED, (int) p.get("processed"));
+	}
+
+	@Test
+	public void importProgress_null() {
+		assertNull(new GeneralRS().importProgress());
 	}
 
 	/**
