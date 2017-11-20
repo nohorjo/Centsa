@@ -1,6 +1,8 @@
 package nohorjo.centsa.rest.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.io.File;
@@ -48,7 +50,10 @@ public class GeneralRSTest {
 	private static final String CSV = Long.toHexString(MockDAO.random.nextLong()),
 			RULE = Long.toHexString(MockDAO.random.nextLong());
 
-	private Boolean strictCheck;
+	private Boolean strictCheck, parsed, parseThrow;
+	private JSCSVParser parser;
+	private File selectedFile;
+	private String alertMessage;
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -68,7 +73,7 @@ public class GeneralRSTest {
 
 		PowerMockito.mockStatic(Renderer.class);
 		PowerMockito.when(Renderer.class, "showFileChooser", any(String.class), any(File.class), any(Procedure.class),
-				any(ExtensionFilter[].class)).then((i) -> {
+				any(ExtensionFilter.class)).then((i) -> {
 					Object lambda = i.getArguments()[2];
 					ExtensionFilter filter = i.getArgument(3);
 					List<String> extensions = filter.getExtensions();
@@ -79,31 +84,47 @@ public class GeneralRSTest {
 					assertEquals(1, extensions.size());
 					assertEquals("*.csv", extensions.get(0));
 
-					return lambda.getClass().getMethod("call", Object.class).invoke(lambda,
-							new File(".").listFiles()[0]);
+					lambda.getClass().getMethod("call", Object.class).invoke(lambda, selectedFile);
+					return null;
 				});
+		PowerMockito.when(Renderer.class, "showAlert", any(String.class)).then((i) -> {
+			alertMessage = i.getArgument(0);
+			return null;
+		});
 
 		PowerMockito.mockStatic(ThreadExecutor.class);
 		PowerMockito.when(ThreadExecutor.start(any(Runnable.class))).then((i) -> {
 			// Force single threaded operation
 			Object lambda = i.getArguments()[0];
-			return lambda.getClass().getMethod("run").invoke(lambda);
+			lambda.getClass().getMethod("run").invoke(lambda);
+			return null;
 		});
 
 		PowerMockito.mockStatic(FileUtils.class);
 		PowerMockito.when(FileUtils.readFileToString(any(File.class))).then((i) -> {
-			return CSV.getBytes();
+			return CSV;
 		});
 
-		GeneralRS.setParser(new JSCSVParser() {
+		GeneralRS.setParser(parser = new JSCSVParser() {
 			@Override
 			public void parse(String csv, String rule) throws ScriptException, NoSuchMethodException, IOException {
+				parsed = true;
 				assertEquals(RULE, rule);
 				assertEquals(CSV, csv);
+				if (parseThrow)
+					throw new IOException();
+			}
+
+			@Override
+			public void setInProgress(boolean inProgress) {
+				this.inProgress = inProgress;
 			}
 		});
 
+		selectedFile = null;
 		strictCheck = null;
+		parsed = parseThrow = false;
+		alertMessage = null;
 	}
 
 	@Test
@@ -133,7 +154,29 @@ public class GeneralRSTest {
 	}
 
 	@Test
-	public void importFile() throws IOException {
+	public void importFile_ignoresNotSelected() throws IOException {
+		new GeneralRS().importFile(RULE);
+		assertFalse(parsed);
+	}
+
+	@Test
+	public void importFile_parses() throws IOException {
+		selectedFile = new File(".");
+		new GeneralRS().importFile(RULE);
+		assertTrue(parsed);
+		assertEquals("Import complete!", alertMessage);
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void importFile_errorParsing() throws IOException {
+		parseThrow = true;
+		selectedFile = new File(".");
+		new GeneralRS().importFile(RULE);
+	}
+
+	@Test(expected = IOException.class)
+	public void importFile_throws() throws IOException {
+		parser.setInProgress(true);
 		new GeneralRS().importFile(RULE);
 	}
 

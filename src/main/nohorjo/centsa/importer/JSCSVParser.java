@@ -27,7 +27,7 @@ public class JSCSVParser {
 	private int processed;
 	private int total;
 
-	private boolean inProgress;
+	protected boolean inProgress;
 
 	/**
 	 * Parse the CSV file
@@ -104,5 +104,14 @@ public class JSCSVParser {
 				processed = iterator.nextIndex();
 			}
 		}).start();
+	}
+
+	/**
+	 * Throws an {@link IllegalAccessError}. Can be overridden for testing purposes
+	 * 
+	 * @param inProgress
+	 */
+	public void setInProgress(boolean inProgress) {
+		throw new IllegalAccessError("Cannot set progress state");
 	}
 }
