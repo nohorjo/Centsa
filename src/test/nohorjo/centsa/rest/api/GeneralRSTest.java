@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -34,7 +35,10 @@ import nohorjo.centsa.dbservices.mock.MockDAO;
 import nohorjo.centsa.dbservices.mock.MockExpensesDAO;
 import nohorjo.centsa.dbservices.mock.MockTransactionsDAO;
 import nohorjo.centsa.importer.JSCSVParser;
+import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.render.Renderer;
+import nohorjo.centsa.updater.UpdateChecker;
+import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
 import nohorjo.util.Procedure;
 import nohorjo.util.ThreadExecutor;
@@ -46,16 +50,21 @@ import nohorjo.util.ThreadExecutor;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ BudgetHandler.class, Renderer.class, FileUtils.class, ThreadExecutor.class })
-@SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer" })
+@PrepareForTest({ BudgetHandler.class, Renderer.class, FileUtils.class, ThreadExecutor.class, SystemProperties.class,
+		UpdateChecker.class })
+@SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer",
+		"nohorjo.centsa.properties.SystemProperties", "nohorjo.centsa.updater.UpdateChecker" })
 @SuppressWarnings("serial")
 public class GeneralRSTest {
 
 	private static final int AFTER_ALL = MockDAO.random.nextInt(), AFTER_AUTO = MockDAO.random.nextInt(),
-			PROCESSED = MockDAO.random.nextInt(), TOTAL = MockDAO.random.nextInt();
+			PROCESSED = MockDAO.random.nextInt(), TOTAL = MockDAO.random.nextInt(), MAJOR = MockDAO.random.nextInt(),
+			MINOR = MockDAO.random.nextInt();
 	private static final String CSV = Long.toHexString(MockDAO.random.nextLong()),
 			RULE = Long.toHexString(MockDAO.random.nextLong()), DIR_NAME = Long.toHexString(MockDAO.random.nextLong()),
-			FILE_NAME = Long.toHexString(MockDAO.random.nextLong());
+			FILE_NAME = Long.toHexString(MockDAO.random.nextLong()),
+			VERSION = Long.toHexString(MockDAO.random.nextLong()), ASSET = Long.toHexString(MockDAO.random.nextLong()),
+			CHANGELOG = Long.toHexString(MockDAO.random.nextLong());
 	private static final File[] FILE_LIST = { new File(".") {
 		@Override
 		public boolean isDirectory() {
@@ -88,10 +97,12 @@ public class GeneralRSTest {
 		};
 	} };
 
-	private Boolean strictCheck, parsed, parseThrow;
+	private Boolean strictCheck, passed, doThrow, doThrow2;
 	private JSCSVParser parser;
 	private File selectedFile;
 	private String alertMessage;
+	private Exception thrown;
+	private UpdateInfo update;
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -129,6 +140,12 @@ public class GeneralRSTest {
 			alertMessage = i.getArgument(0);
 			return null;
 		});
+		PowerMockito
+				.when(Renderer.class, "showExceptionDialog", any(Exception.class), any(String.class), any(String.class))
+				.then((i) -> {
+					thrown = i.getArgument(0);
+					return null;
+				});
 
 		PowerMockito.mockStatic(ThreadExecutor.class);
 		PowerMockito.when(ThreadExecutor.start(any(Runnable.class))).then((i) -> {
@@ -157,13 +174,42 @@ public class GeneralRSTest {
 			};
 		});
 
+		PowerMockito.mockStatic(SystemProperties.class);
+		PowerMockito.when(SystemProperties.get(anyString(), any(Class.class))).then((i) -> {
+			return null;
+		});
+
+		PowerMockito.mockStatic(UpdateChecker.class);
+		PowerMockito.when(UpdateChecker.getCurrentVersion()).then((i) -> {
+			if (doThrow)
+				throw new IOException();
+			return VERSION;
+		});
+		PowerMockito.when(UpdateChecker.checkNewVersion()).then((i) -> {
+			if (doThrow)
+				throw new IOException("checkNewVersion");
+			return update;
+		});
+		PowerMockito.when(UpdateChecker.class, "requestUpdate", any(UpdateInfo.class)).then((i) -> {
+			UpdateInfo info = i.getArgument(0);
+			assertEquals(ASSET, info.getAsset());
+			assertEquals(CHANGELOG, info.getChangelog());
+			assertEquals(MAJOR, info.getMajorVersion());
+			assertEquals(MINOR, info.getMinorVersion());
+			if (doThrow2)
+				throw new IOException("requestUpdate");
+			passed = true;
+			return null;
+		});
+
 		GeneralRS.setParser(parser = new JSCSVParser() {
+
 			@Override
 			public void parse(String csv, String rule) throws ScriptException, NoSuchMethodException, IOException {
-				parsed = true;
+				passed = true;
 				assertEquals(RULE, rule);
 				assertEquals(CSV, csv);
-				if (parseThrow)
+				if (doThrow)
 					throw new IOException();
 			}
 
@@ -181,12 +227,19 @@ public class GeneralRSTest {
 			public int getTotal() {
 				return TOTAL;
 			}
+
 		});
 
 		selectedFile = null;
 		strictCheck = null;
-		parsed = parseThrow = false;
+		passed = doThrow = doThrow2 = false;
 		alertMessage = null;
+		thrown = null;
+		update = new UpdateInfo();
+		update.setAsset(ASSET);
+		update.setChangelog(CHANGELOG);
+		update.setMajorVersion(MAJOR);
+		update.setMinorVersion(MINOR);
 	}
 
 	@Test
@@ -218,20 +271,20 @@ public class GeneralRSTest {
 	@Test
 	public void importFile_ignoresNotSelected() throws IOException {
 		new GeneralRS().importFile(RULE);
-		assertFalse(parsed);
+		assertFalse(passed);
 	}
 
 	@Test
 	public void importFile_parses() throws IOException {
 		selectedFile = new File(".");
 		new GeneralRS().importFile(RULE);
-		assertTrue(parsed);
+		assertTrue(passed);
 		assertEquals("Import complete!", alertMessage);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void importFile_errorParsing() throws IOException {
-		parseThrow = true;
+		doThrow = true;
 		selectedFile = new File(".");
 		new GeneralRS().importFile(RULE);
 	}
@@ -264,9 +317,47 @@ public class GeneralRSTest {
 
 	@Test
 	public void getRules_getsJSFiles() {
-		List<String> rules = new GeneralRS().getLayouts();
+		List<String> rules = new GeneralRS().getRules();
 		assertEquals(1, rules.size());
 		assertEquals(FILE_NAME, rules.get(0));
+	}
+
+	@Test
+	public void getVersion_returns() throws IOException {
+		assertEquals(VERSION, new GeneralRS().getVersion());
+	}
+
+	@Test(expected = IOException.class)
+	public void getVersion_throws() throws IOException {
+		doThrow = true;
+		assertEquals(VERSION, new GeneralRS().getVersion());
+	}
+
+	@Test
+	public void checkUpdate_updateAvailable() {
+		new GeneralRS().checkUpdate();
+		assertTrue(passed);
+	}
+
+	@Test
+	public void checkUpdate_noUpdate() {
+		update = null;
+		new GeneralRS().checkUpdate();
+		assertEquals("You have the latest version!", alertMessage);
+	}
+
+	@Test
+	public void checkUpdate_checkThrows() {
+		doThrow = true;
+		new GeneralRS().checkUpdate();
+		assertEquals(thrown.getMessage(), "checkNewVersion");
+	}
+
+	@Test
+	public void checkUpdate_updateThrows() {
+		doThrow2 = true;
+		new GeneralRS().checkUpdate();
+		assertEquals(thrown.getMessage(), "requestUpdate");
 	}
 
 	/**

@@ -2,14 +2,12 @@ package nohorjo.centsa.rest.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -35,30 +33,23 @@ public class SettingsRSTest {
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@Before
 	public void init() throws Exception {
 		PowerMockito.mockStatic(SystemProperties.class);
-		PowerMockito.when(SystemProperties.class, "get", anyString(), any(Class.class)).then(new Answer<Object>() {
-
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				String key = invocation.getArgument(0);
-				switch (key) {
-				case "return":
-					return "returned";
-				case "object":
-					return 123;
-				}
-				return null;
+		PowerMockito.when(SystemProperties.get(anyString(), any(Class.class))).then((i) -> {
+			String key = i.getArgument(0);
+			switch (key) {
+			case "return":
+				return "returned";
+			case "object":
+				return 123;
 			}
+			return null;
 		});
-		PowerMockito.when(SystemProperties.class, "set", anyString(), anyString()).then(new Answer<Void>() {
-
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				added = invocation.getArgument(0).equals("setting") && invocation.getArgument(1).equals("property");
-				return null;
-			}
+		PowerMockito.when(SystemProperties.class, "set", anyString(), anyString()).then((i) -> {
+			added = i.getArgument(0).equals("setting") && i.getArgument(1).equals("property");
+			return null;
 		});
 
 	}

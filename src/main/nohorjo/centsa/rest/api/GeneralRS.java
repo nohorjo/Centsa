@@ -171,9 +171,8 @@ public class GeneralRS extends AbstractRS {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/update")
 	public void checkUpdate() {
-		UpdateInfo info;
 		try {
-			info = UpdateChecker.checkNewVersion();
+			UpdateInfo info = UpdateChecker.checkNewVersion();
 			if (info != null) {
 				UpdateChecker.requestUpdate(info);
 			} else {
