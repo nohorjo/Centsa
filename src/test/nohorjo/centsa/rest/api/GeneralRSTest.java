@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -54,9 +55,8 @@ public class GeneralRSTest {
 			PROCESSED = MockDAO.random.nextInt(), TOTAL = MockDAO.random.nextInt();
 	private static final String CSV = Long.toHexString(MockDAO.random.nextLong()),
 			RULE = Long.toHexString(MockDAO.random.nextLong()), DIR_NAME = Long.toHexString(MockDAO.random.nextLong()),
-			JS_NAME = Long.toHexString(MockDAO.random.nextLong()) + ".js",
-			NON_JS_NAME = Long.toHexString(MockDAO.random.nextLong());
-	private static final File[] DIR_LIST = { new File(".") {
+			FILE_NAME = Long.toHexString(MockDAO.random.nextLong());
+	private static final File[] FILE_LIST = { new File(".") {
 		@Override
 		public boolean isDirectory() {
 			return true;
@@ -66,15 +66,25 @@ public class GeneralRSTest {
 		public String getName() {
 			return DIR_NAME;
 		};
-	} }, FILE_LIST = { new File(".") {
+	}, new File(".") {
+		@Override
+		public boolean isDirectory() {
+			return false;
+		};
+
 		@Override
 		public String getName() {
-			return JS_NAME;
+			return FILE_NAME + ".js";
 		};
 	}, new File(".") {
 		@Override
+		public boolean isDirectory() {
+			return false;
+		};
+
+		@Override
 		public String getName() {
-			return NON_JS_NAME;
+			return Long.toHexString(MockDAO.random.nextLong());
 		};
 	} };
 
@@ -136,7 +146,13 @@ public class GeneralRSTest {
 			return new File(".") {
 				@Override
 				public File[] listFiles(FileFilter f) {
-					return i.getArgument(0).toString().endsWith("/layouts") ? DIR_LIST : FILE_LIST;
+					List<File> rtn = new ArrayList<>();
+					for (File file : FILE_LIST) {
+						if (f.accept(file)) {
+							rtn.add(file);
+						}
+					}
+					return rtn.toArray(new File[] {});
 				}
 			};
 		});
@@ -237,6 +253,20 @@ public class GeneralRSTest {
 	@Test
 	public void importProgress_null() {
 		assertNull(new GeneralRS().importProgress());
+	}
+
+	@Test
+	public void getLayouts_getsDirs() {
+		List<String> layouts = new GeneralRS().getLayouts();
+		assertEquals(1, layouts.size());
+		assertEquals(DIR_NAME, layouts.get(0));
+	}
+
+	@Test
+	public void getRules_getsJSFiles() {
+		List<String> rules = new GeneralRS().getLayouts();
+		assertEquals(1, rules.size());
+		assertEquals(FILE_NAME, rules.get(0));
 	}
 
 	/**
