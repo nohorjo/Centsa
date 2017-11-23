@@ -1,9 +1,6 @@
 package nohorjo.centsa.rest.core;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,6 +9,7 @@ import javax.ws.rs.PathParam;
 import org.glassfish.jersey.internal.inject.PerLookup;
 
 import nohorjo.centsa.rest.AbstractRS;
+import nohorjo.util.ClasspathUtils;
 
 /**
  * REST service for core UI resources
@@ -34,18 +32,7 @@ public class CoreRS extends AbstractRS {
 	@GET
 	@Path("/{resource:.*}")
 	public String getResource(@PathParam("resource") String resource) throws IOException {
-		try (InputStream in = ClassLoader.getSystemResourceAsStream("core/" + resource);
-				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			byte[] buffer = new byte[1024];
-			int len;
-			while ((len = in.read(buffer)) > 0) {
-				out.write(buffer, 0, len);
-			}
-
-			return out.toString();
-		} catch (NullPointerException e) {
-			throw new FileNotFoundException(resource);
-		}
+		return new String(ClasspathUtils.getFile("core/" + resource));
 	}
 
 }
