@@ -5,15 +5,16 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 
 public class MockDAO<T> {
 
-	public static final Random random = new Random();
-
-	public static final long ID = random.nextLong();
-	public static final String ORDER = Long.toHexString(random.nextLong()), NAME = Long.toHexString(random.nextLong());
-	public static final int PAGE = random.nextInt(), PAGE_SIZE = random.nextInt();
+	public static final long ID = RandomUtils.nextLong();
+	public static final String ORDER = RandomStringUtils.randomAlphabetic(10),
+			NAME = RandomStringUtils.randomAlphabetic(10);
+	public static final int PAGE = RandomUtils.nextInt(), PAGE_SIZE = RandomUtils.nextInt();
 
 	private DAOOption option;
 	private T toReturn;

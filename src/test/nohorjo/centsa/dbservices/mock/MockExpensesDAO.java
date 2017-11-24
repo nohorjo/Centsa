@@ -6,17 +6,19 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
+
 import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.vo.Expense;
 import nohorjo.centsa.vo.VO;
 
 public class MockExpensesDAO extends ExpensesDAO {
 
-	public static final int COST = MockDAO.random.nextInt(), FREQUENCY_DAYS = MockDAO.random.nextInt(),
-			INSTANCES_COUNT = MockDAO.random.nextInt(), TOTAL_ACTIVE_AUTO = MockDAO.random.nextInt(),
-			TOTAL_ACTIVE_NON_AUTO = MockDAO.random.nextInt();
-	public static final long STARTED = MockDAO.random.nextLong(), STARTED_2 = MockDAO.random.nextLong();
-	public static final boolean AUTO = MockDAO.random.nextBoolean();
+	public static final int COST = RandomUtils.nextInt(), FREQUENCY_DAYS = RandomUtils.nextInt(),
+			INSTANCES_COUNT = RandomUtils.nextInt(), TOTAL_ACTIVE_AUTO = RandomUtils.nextInt(),
+			TOTAL_ACTIVE_NON_AUTO = RandomUtils.nextInt();
+	public static final long STARTED = RandomUtils.nextLong(), STARTED_2 = RandomUtils.nextLong();
+	public static final boolean AUTO = RandomUtils.nextBoolean();
 
 	public static final Expense EXPENSE;
 

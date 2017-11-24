@@ -3,12 +3,14 @@ package nohorjo.centsa.dbservices.mock;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
+
 import nohorjo.centsa.dbservices.AccountsDAO;
 import nohorjo.centsa.vo.Account;
 import nohorjo.centsa.vo.VO;
 
 public class MockAccountsDAO extends AccountsDAO {
-	public static final int BALANCE = MockDAO.random.nextInt();
+	public static final int BALANCE = RandomUtils.nextInt();
 
 	public static final Account ACCOUNT;
 

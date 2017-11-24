@@ -19,6 +19,8 @@ import java.util.Map;
 import javax.script.ScriptException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +33,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.datahandlers.Budget;
 import nohorjo.centsa.datahandlers.BudgetHandler;
 import nohorjo.centsa.dbservices.mock.DAOOption;
-import nohorjo.centsa.dbservices.mock.MockDAO;
 import nohorjo.centsa.dbservices.mock.MockExpensesDAO;
 import nohorjo.centsa.dbservices.mock.MockTransactionsDAO;
 import nohorjo.centsa.importer.JSCSVParser;
@@ -57,14 +58,13 @@ import nohorjo.util.ThreadExecutor;
 @SuppressWarnings("serial")
 public class GeneralRSTest {
 
-	private static final int AFTER_ALL = MockDAO.random.nextInt(), AFTER_AUTO = MockDAO.random.nextInt(),
-			PROCESSED = MockDAO.random.nextInt(), TOTAL = MockDAO.random.nextInt(), MAJOR = MockDAO.random.nextInt(),
-			MINOR = MockDAO.random.nextInt();
-	private static final String CSV = Long.toHexString(MockDAO.random.nextLong()),
-			RULE = Long.toHexString(MockDAO.random.nextLong()), DIR_NAME = Long.toHexString(MockDAO.random.nextLong()),
-			FILE_NAME = Long.toHexString(MockDAO.random.nextLong()),
-			VERSION = Long.toHexString(MockDAO.random.nextLong()), ASSET = Long.toHexString(MockDAO.random.nextLong()),
-			CHANGELOG = Long.toHexString(MockDAO.random.nextLong());
+	private static final int AFTER_ALL = RandomUtils.nextInt(), AFTER_AUTO = RandomUtils.nextInt(),
+			PROCESSED = RandomUtils.nextInt(), TOTAL = RandomUtils.nextInt(), MAJOR = RandomUtils.nextInt(),
+			MINOR = RandomUtils.nextInt();
+	private static final String CSV = RandomStringUtils.randomAlphabetic(10),
+			RULE = RandomStringUtils.randomAlphabetic(10), DIR_NAME = RandomStringUtils.randomAlphabetic(10),
+			FILE_NAME = RandomStringUtils.randomAlphabetic(10), VERSION = RandomStringUtils.randomAlphabetic(10),
+			ASSET = RandomStringUtils.randomAlphabetic(10), CHANGELOG = RandomStringUtils.randomAlphabetic(10);
 	private static final File[] FILE_LIST = { new File(".") {
 		@Override
 		public boolean isDirectory() {
@@ -93,7 +93,7 @@ public class GeneralRSTest {
 
 		@Override
 		public String getName() {
-			return Long.toHexString(MockDAO.random.nextLong());
+			return RandomStringUtils.randomAlphabetic(10);
 		};
 	} };
 
@@ -108,7 +108,7 @@ public class GeneralRSTest {
 	@Before
 	public void init() throws Exception {
 		PowerMockito.mockStatic(BudgetHandler.class, Renderer.class, ThreadExecutor.class, FileUtils.class);
-		
+
 		PowerMockito.when(BudgetHandler.getBudget(any(Boolean.class), any(), any(Integer.class))).then((i) -> {
 			assertEquals(strictCheck, i.getArgument(0));
 			assertEquals(MockExpensesDAO.EXPENSE, ((List<Expense>) i.getArgument(1)).get(0));

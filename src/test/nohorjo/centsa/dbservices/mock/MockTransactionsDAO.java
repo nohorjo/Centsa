@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+
 import nohorjo.centsa.dbservices.TransactionsDAO;
 import nohorjo.centsa.vo.Transaction;
 import nohorjo.centsa.vo.TransactionFilter;
@@ -17,13 +20,13 @@ import nohorjo.centsa.vo.VO;
 public class MockTransactionsDAO extends TransactionsDAO {
 
 	public static final Transaction TRANSACTION;
-	public static final int AMMOUNT = MockDAO.random.nextInt(), PAGE_COUNT = MockDAO.random.nextInt(),
-			PRECISION = MockDAO.random.nextInt(), SUM = MockDAO.random.nextInt();
-	public static final String COMMENT = Long.toHexString(MockDAO.random.nextLong());
-	public static final long ACCOUNT_ID = MockDAO.random.nextLong(), TYPE_ID = MockDAO.random.nextLong(),
-			DATE = MockDAO.random.nextLong(), EXPENSE_ID = MockDAO.random.nextLong();
-	public static final List<String> COMMENTS = Arrays.asList(Long.toHexString(MockDAO.random.nextLong()),
-			Long.toHexString(MockDAO.random.nextLong()), Long.toHexString(MockDAO.random.nextLong()));
+	public static final int AMMOUNT = RandomUtils.nextInt(), PAGE_COUNT = RandomUtils.nextInt(),
+			PRECISION = RandomUtils.nextInt(), SUM = RandomUtils.nextInt();
+	public static final String COMMENT = RandomStringUtils.randomAlphabetic(10);
+	public static final long ACCOUNT_ID = RandomUtils.nextLong(), TYPE_ID = RandomUtils.nextLong(),
+			DATE = RandomUtils.nextLong(), EXPENSE_ID = RandomUtils.nextLong();
+	public static final List<String> COMMENTS = Arrays.asList(RandomStringUtils.random(10),
+			RandomStringUtils.random(10), RandomStringUtils.random(10));
 	public static final List<Map<String, Long>> SUMS;
 	public static final TransactionFilter FILTER = new TransactionFilter();
 
@@ -40,19 +43,19 @@ public class MockTransactionsDAO extends TransactionsDAO {
 		SUMS = new ArrayList<>();
 
 		Map<String, Long> sum1 = new HashMap<>();
-		sum1.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum1.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum1.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
+		sum1.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum1.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum1.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
 
 		Map<String, Long> sum2 = new HashMap<>();
-		sum2.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum2.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum2.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
+		sum2.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum2.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum2.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
 
 		Map<String, Long> sum3 = new HashMap<>();
-		sum3.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum3.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
-		sum3.put(Long.toHexString(MockDAO.random.nextLong()), MockDAO.random.nextLong());
+		sum3.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum3.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
+		sum3.put(RandomStringUtils.randomAlphabetic(10), RandomUtils.nextLong());
 
 		SUMS.add(sum1);
 		SUMS.add(sum2);

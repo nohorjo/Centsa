@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.io.IOException;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import nohorjo.centsa.dbservices.mock.MockDAO;
 import nohorjo.centsa.rest.core.CoreRS;
 import nohorjo.util.ClasspathUtils;
 
@@ -22,8 +22,8 @@ public class CoreRSTest {
 
 	private boolean doThrow;
 
-	private static final String RESOURCE = Long.toHexString(MockDAO.random.nextLong()),
-			PATH = Long.toHexString(MockDAO.random.nextLong());
+	private static final String RESOURCE = RandomStringUtils.randomAlphabetic(10),
+			PATH = RandomStringUtils.randomAlphabetic(10);
 
 	@Before
 	public void init() throws IOException {

@@ -3,6 +3,8 @@ package nohorjo.centsa.dbservices.mock;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
+
 import nohorjo.centsa.dbservices.TypesDAO;
 import nohorjo.centsa.vo.Type;
 import nohorjo.centsa.vo.VO;
@@ -15,7 +17,7 @@ import nohorjo.centsa.vo.VO;
  */
 public class MockTypesDAO extends TypesDAO {
 
-	public static final int SUM = MockDAO.random.nextInt();
+	public static final int SUM = RandomUtils.nextInt();
 
 	public static final Type TYPE;
 

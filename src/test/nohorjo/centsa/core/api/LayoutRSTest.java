@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import nohorjo.centsa.dbservices.mock.MockDAO;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.rest.core.LayoutRS;
 import nohorjo.util.ClasspathUtils;
@@ -27,13 +27,13 @@ public class LayoutRSTest {
 
 	private boolean doThrow;
 
-	private static final String RESOURCE = Long.toHexString(MockDAO.random.nextLong()),
-			PATH = Long.toHexString(MockDAO.random.nextLong()), LAYOUT = Long.toHexString(MockDAO.random.nextLong());
+	private static final String RESOURCE = RandomStringUtils.randomAlphabetic(10),
+			PATH = RandomStringUtils.randomAlphabetic(10), LAYOUT = RandomStringUtils.randomAlphabetic(10);
 
 	@Before
 	public void init() throws IOException {
 		PowerMockito.mockStatic(ClasspathUtils.class, SystemProperties.class);
-		
+
 		PowerMockito.when(ClasspathUtils.getFile(any(String.class))).then((i) -> {
 			assertEquals("layout/" + LAYOUT + "/" + PATH, i.getArgument(0));
 			if (doThrow)

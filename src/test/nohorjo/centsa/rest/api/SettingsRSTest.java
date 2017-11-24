@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,10 @@ import nohorjo.centsa.properties.SystemProperties;
 @SuppressStaticInitializationFor("nohorjo.centsa.properties.SystemProperties")
 public class SettingsRSTest {
 
+	public static final String RETURN_STRING = RandomStringUtils.random(10),
+			NEW_SETTING_KEY = RandomStringUtils.random(10), NEW_SETTING_VALUE = RandomStringUtils.random(10);
+	public static final long RETURN_LONG = RandomUtils.nextLong();
+
 	private boolean added;
 
 	/**
@@ -41,14 +47,14 @@ public class SettingsRSTest {
 			String key = i.getArgument(0);
 			switch (key) {
 			case "return":
-				return "returned";
+				return RETURN_STRING;
 			case "object":
-				return 123;
+				return RETURN_LONG;
 			}
 			return null;
 		});
 		PowerMockito.when(SystemProperties.class, "set", anyString(), anyString()).then((i) -> {
-			added = i.getArgument(0).equals("setting") && i.getArgument(1).equals("property");
+			added = i.getArgument(0).equals(NEW_SETTING_KEY) && i.getArgument(1).equals(NEW_SETTING_VALUE);
 			return null;
 		});
 
@@ -59,7 +65,7 @@ public class SettingsRSTest {
 	 */
 	@Test
 	public void getSetting_returnSetting() {
-		assertEquals("returned", new SettingsRS().get("return"));
+		assertEquals(RETURN_STRING, new SettingsRS().get("return"));
 	}
 
 	/**
@@ -67,7 +73,7 @@ public class SettingsRSTest {
 	 */
 	@Test
 	public void getSetting_returnObject() {
-		assertEquals("123", new SettingsRS().get("object"));
+		assertEquals(Long.toString(RETURN_LONG), new SettingsRS().get("object"));
 	}
 
 	/**
@@ -83,7 +89,7 @@ public class SettingsRSTest {
 	 */
 	@Test
 	public void setSetting_adds() {
-		new SettingsRS().set("setting", "property");
+		new SettingsRS().set(NEW_SETTING_KEY, NEW_SETTING_VALUE);
 		assertTrue(added);
 	}
 
