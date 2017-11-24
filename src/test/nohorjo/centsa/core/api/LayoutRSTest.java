@@ -32,7 +32,8 @@ public class LayoutRSTest {
 
 	@Before
 	public void init() throws IOException {
-		PowerMockito.mockStatic(ClasspathUtils.class);
+		PowerMockito.mockStatic(ClasspathUtils.class, SystemProperties.class);
+		
 		PowerMockito.when(ClasspathUtils.getFile(any(String.class))).then((i) -> {
 			assertEquals("layout/" + LAYOUT + "/" + PATH, i.getArgument(0));
 			if (doThrow)
@@ -40,7 +41,6 @@ public class LayoutRSTest {
 			return RESOURCE.getBytes();
 		});
 
-		PowerMockito.mockStatic(SystemProperties.class);
 		PowerMockito.when(SystemProperties.get("layout", String.class)).then((i) -> {
 			return LAYOUT;
 		});

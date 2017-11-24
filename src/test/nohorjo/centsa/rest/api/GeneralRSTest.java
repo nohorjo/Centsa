@@ -107,7 +107,8 @@ public class GeneralRSTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void init() throws Exception {
-		PowerMockito.mockStatic(BudgetHandler.class);
+		PowerMockito.mockStatic(BudgetHandler.class, Renderer.class, ThreadExecutor.class, FileUtils.class);
+		
 		PowerMockito.when(BudgetHandler.getBudget(any(Boolean.class), any(), any(Integer.class))).then((i) -> {
 			assertEquals(strictCheck, i.getArgument(0));
 			assertEquals(MockExpensesDAO.EXPENSE, ((List<Expense>) i.getArgument(1)).get(0));
@@ -120,7 +121,6 @@ public class GeneralRSTest {
 			return b;
 		});
 
-		PowerMockito.mockStatic(Renderer.class);
 		PowerMockito.when(Renderer.class, "showFileChooser", any(String.class), any(File.class), any(Procedure.class),
 				any(ExtensionFilter.class)).then((i) -> {
 					Object lambda = i.getArguments()[2];
@@ -147,7 +147,6 @@ public class GeneralRSTest {
 					return null;
 				});
 
-		PowerMockito.mockStatic(ThreadExecutor.class);
 		PowerMockito.when(ThreadExecutor.start(any(Runnable.class))).then((i) -> {
 			// Force single threaded operation
 			Object lambda = i.getArguments()[0];
@@ -155,7 +154,6 @@ public class GeneralRSTest {
 			return null;
 		});
 
-		PowerMockito.mockStatic(FileUtils.class);
 		PowerMockito.when(FileUtils.readFileToString(any(File.class))).then((i) -> {
 			return CSV;
 		});
