@@ -49,7 +49,7 @@ public class LayoutRS extends AbstractRS {
 	@Path("/{resource:.*\\.png}")
 	@Produces("image/png")
 	public byte[] getFile(@PathParam("resource") String resource) throws IOException {
-		return ClasspathUtils.getFile("layout/" + SystemProperties.get("layout", String.class) + "/" + resource);
+		return ClasspathUtils.getFileData("layout/" + SystemProperties.get("layout", String.class) + "/" + resource);
 	}
 
 }

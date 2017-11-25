@@ -21,7 +21,7 @@ public abstract class ClasspathUtils {
 	 * @return The file data
 	 * @throws IOException
 	 */
-	public static byte[] getFile(String path) throws IOException {
+	public static byte[] getFileData(String path) throws IOException {
 		try (InputStream in = ClassLoader.getSystemResourceAsStream(path);
 				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			byte[] buffer = new byte[1024];

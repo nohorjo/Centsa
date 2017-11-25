@@ -32,7 +32,7 @@ public class CoreRS extends AbstractRS {
 	@GET
 	@Path("/{resource:.*}")
 	public String getResource(@PathParam("resource") String resource) throws IOException {
-		return new String(ClasspathUtils.getFile("core/" + resource));
+		return new String(ClasspathUtils.getFileData("core/" + resource));
 	}
 
 }

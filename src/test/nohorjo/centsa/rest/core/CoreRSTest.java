@@ -34,7 +34,7 @@ public class CoreRSTest {
 	@Before
 	public void init() throws IOException {
 		PowerMockito.mockStatic(ClasspathUtils.class);
-		PowerMockito.when(ClasspathUtils.getFile(any(String.class))).then((i) -> {
+		PowerMockito.when(ClasspathUtils.getFileData(any(String.class))).then((i) -> {
 			assertEquals("core/" + PATH, i.getArgument(0));
 			if (doThrow)
 				throw new IOException();

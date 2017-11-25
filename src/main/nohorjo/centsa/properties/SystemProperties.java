@@ -1,11 +1,10 @@
 package nohorjo.centsa.properties;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.Iterator;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
@@ -43,7 +42,7 @@ public class SystemProperties {
 					}
 				}
 			}
-		} catch (ConfigurationException | IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -78,7 +77,7 @@ public class SystemProperties {
 			prop = (T) (Boolean) systemProperties.getBoolean(key);
 			break;
 		default:
-			throw new Error("Cannot get type: " + clazz.getName());
+			throw new InvalidParameterException("Cannot get type: " + clazz.getName());
 		}
 
 		if (prop == null) {// If it's not in the system.properties get it from the runtime properties
