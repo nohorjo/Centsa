@@ -22,17 +22,29 @@ public abstract class ClasspathUtils {
 	 * @throws IOException
 	 */
 	public static byte[] getFileData(String path) throws IOException {
-		try (InputStream in = ClassLoader.getSystemResourceAsStream(path);
-				ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+		try (InputStream in = getFileAsStream(path); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			byte[] buffer = new byte[1024];
 			int len;
 			while ((len = in.read(buffer)) > 0) {
 				out.write(buffer, 0, len);
 			}
-
 			return out.toByteArray();
-		}catch (NullPointerException e) {
+		}
+	}
+
+	/**
+	 * Gets a file as an {@link InputStream} from the classpath
+	 * 
+	 * @param path
+	 *            The path to the file
+	 * @return The file as a stream
+	 * @throws FileNotFoundException
+	 */
+	public static InputStream getFileAsStream(String path) throws FileNotFoundException {
+		InputStream in = ClassLoader.getSystemResourceAsStream(path);
+		if (in == null) {
 			throw new FileNotFoundException(path);
 		}
+		return in;
 	}
 }

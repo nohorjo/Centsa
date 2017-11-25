@@ -2,6 +2,7 @@ package nohorjo.centsa.render;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 import nohorjo.centsa.Main;
 import nohorjo.centsa.properties.SystemProperties;
 import nohorjo.centsa.server.EmbeddedServer;
+import nohorjo.util.ClasspathUtils;
 import nohorjo.util.Procedure;
 
 /**
@@ -52,7 +54,11 @@ public class Renderer extends Region {
 	private static final Image ICON;
 
 	static {
-		ICON = new Image(ClassLoader.getSystemResourceAsStream("icon.png"));
+		try {
+			ICON = new Image(ClasspathUtils.getFileAsStream("icon.png"));
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private final Logger log = LoggerFactory.getLogger(Renderer.class);
