@@ -121,9 +121,8 @@ public class GeneralRS extends AbstractRS {
 	public List<String> getLayouts() {
 		File layoutDir = FileUtils.getFile(SystemProperties.get("root.dir", String.class) + "/layout");
 		List<String> layouts = new ArrayList<>();
-		for (File d : layoutDir.listFiles((d) -> {
-			return d.isDirectory(); // Only interested in directories
-		})) {
+		for (File d : layoutDir.listFiles((d) -> d.isDirectory() // Only interested in directories
+		)) {
 			layouts.add(d.getName());
 		}
 		return layouts;
@@ -140,9 +139,8 @@ public class GeneralRS extends AbstractRS {
 	public List<String> getRules() {
 		File rulesDir = FileUtils.getFile(SystemProperties.get("root.dir", String.class) + "/rules");
 		List<String> rules = new ArrayList<>();
-		for (File d : rulesDir.listFiles((d) -> {
-			return d.getName().endsWith(".js");// Only interested in JavaScript files
-		})) {
+		for (File d : rulesDir.listFiles((d) -> d.getName().endsWith(".js")// Only interested in JavaScript files
+		)) {
 			rules.add(d.getName().replaceAll("\\.js$", ""));
 		}
 		return rules;

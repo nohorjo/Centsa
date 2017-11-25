@@ -5,6 +5,12 @@ import static org.junit.Assert.assertEquals;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 
+/**
+ * Test class for {@link AbstractRS}
+ * 
+ * @author muhammed
+ *
+ */
 public class AbstractRSTest {
 
 	private static final String MESSAGE = RandomStringUtils.random(10);

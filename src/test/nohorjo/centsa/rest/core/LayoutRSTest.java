@@ -1,4 +1,4 @@
-package nohorjo.centsa.core.api;
+package nohorjo.centsa.rest.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,9 +17,14 @@ import org.powermock.core.classloader.annotations.SuppressStaticInitializationFo
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import nohorjo.centsa.properties.SystemProperties;
-import nohorjo.centsa.rest.core.LayoutRS;
 import nohorjo.util.ClasspathUtils;
 
+/**
+ * Test class for {@link LayoutRS}
+ * 
+ * @author muhammed
+ *
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ClasspathUtils.class, SystemProperties.class })
 @SuppressStaticInitializationFor("nohorjo.centsa.properties.SystemProperties")

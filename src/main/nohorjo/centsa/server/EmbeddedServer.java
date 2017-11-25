@@ -4,10 +4,6 @@ import java.util.UUID;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.servlet.ServletContainer;
 
 import nohorjo.centsa.properties.SystemProperties;
 
@@ -31,13 +27,10 @@ public class EmbeddedServer {
 		server = new Server(0);
 
 		// Set up jersey REST
-		ResourceConfig coreREST = new ResourceConfig().packages("nohorjo.centsa.rest.core");
-		ResourceConfig apiREST = new ResourceConfig().packages("nohorjo.centsa.rest.api");
+		RESTContextHandler context = RESTContextHandler.getHandler(server, "/");
 
-		ServletContextHandler context = new ServletContextHandler(server, "/");
-
-		context.addServlet(new ServletHolder(new ServletContainer(coreREST)), "/*");
-		context.addServlet(new ServletHolder(new ServletContainer(apiREST)), "/api/" + UNIQUE_KEY + "/*");
+		context.addRESTServices("/*", "nohorjo.centsa.rest.core");
+		context.addRESTServices("/api/" + UNIQUE_KEY + "/*", "nohorjo.centsa.rest.api");
 
 		server.start();
 		SystemProperties.setRuntime("server.root",

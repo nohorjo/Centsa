@@ -1,4 +1,4 @@
-package nohorjo.centsa.core.api;
+package nohorjo.centsa.rest.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,9 +13,15 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import nohorjo.centsa.rest.core.CoreRS;
 import nohorjo.util.ClasspathUtils;
 
+
+/**
+ * Test class for {@link CoreRS}
+ * 
+ * @author muhammed
+ *
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClasspathUtils.class)
 public class CoreRSTest {
