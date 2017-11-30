@@ -29,6 +29,7 @@ import nohorjo.centsa.rest.AbstractRS;
 import nohorjo.centsa.updater.UpdateChecker;
 import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
+import nohorjo.util.ClasspathUtils;
 import nohorjo.util.ThreadExecutor;
 
 /**
@@ -81,7 +82,7 @@ public class GeneralRS extends AbstractRS {
 			if (selectedFile != null) {
 				ThreadExecutor.start(() -> {
 					try {
-						parser.parse(FileUtils.readFileToString(selectedFile), rule);
+						parser.parse(FileUtils.readFileToString(selectedFile), ClasspathUtils.getFileAsString(String.format("rules/%s.js", rule)));
 						Renderer.showAlert("Import complete!");
 					} catch (Exception ex) {
 						Renderer.showExceptionDialog(ex, "Import error", "Could not import CSV");

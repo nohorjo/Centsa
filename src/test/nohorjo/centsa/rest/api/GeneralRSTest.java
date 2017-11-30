@@ -41,6 +41,7 @@ import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.updater.UpdateChecker;
 import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
+import nohorjo.util.ClasspathUtils;
 import nohorjo.util.Procedure;
 import nohorjo.util.ThreadExecutor;
 
@@ -52,7 +53,7 @@ import nohorjo.util.ThreadExecutor;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BudgetHandler.class, Renderer.class, FileUtils.class, ThreadExecutor.class, SystemProperties.class,
-		UpdateChecker.class })
+		UpdateChecker.class, ClasspathUtils.class })
 @SuppressStaticInitializationFor({ "nohorjo.centsa.dbservices.AbstractDAO", "nohorjo.centsa.render.Renderer",
 		"nohorjo.centsa.properties.SystemProperties", "nohorjo.centsa.updater.UpdateChecker" })
 @SuppressWarnings("serial")
@@ -107,7 +108,8 @@ public class GeneralRSTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void init() throws Exception {
-		PowerMockito.mockStatic(BudgetHandler.class, Renderer.class, ThreadExecutor.class, FileUtils.class);
+		PowerMockito.mockStatic(BudgetHandler.class, Renderer.class, ThreadExecutor.class, FileUtils.class,
+				SystemProperties.class, UpdateChecker.class, ClasspathUtils.class);
 
 		PowerMockito.when(BudgetHandler.getBudget(any(Boolean.class), any(), any(Integer.class))).then((i) -> {
 			assertEquals(strictCheck, i.getArgument(0));
@@ -172,12 +174,10 @@ public class GeneralRSTest {
 			};
 		});
 
-		PowerMockito.mockStatic(SystemProperties.class);
 		PowerMockito.when(SystemProperties.get(anyString(), any(Class.class))).then((i) -> {
 			return null;
 		});
 
-		PowerMockito.mockStatic(UpdateChecker.class);
 		PowerMockito.when(UpdateChecker.getCurrentVersion()).then((i) -> {
 			if (doThrow)
 				throw new IOException();
@@ -199,6 +199,8 @@ public class GeneralRSTest {
 			passed = true;
 			return null;
 		});
+
+		PowerMockito.when(ClasspathUtils.getFileAsString(any(String.class))).thenReturn(RULE);
 
 		GeneralRS.setParser(parser = new JSCSVParser() {
 

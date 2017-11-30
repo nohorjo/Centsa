@@ -1,7 +1,6 @@
 package nohorjo.centsa.importer;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
@@ -15,6 +14,8 @@ import javax.script.ScriptException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
+import nohorjo.util.ThreadExecutor;
+
 /**
  * Class to parse CSV files
  * 
@@ -23,7 +24,7 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class JSCSVParser {
 
-	private ScriptEngine engine = new ScriptEngineManager(null).getEngineByName("nashorn");
+	private ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 	private int processed;
 	private int total;
 
@@ -35,21 +36,14 @@ public class JSCSVParser {
 	 * @param csv
 	 *            The CSV
 	 * @param rule
-	 *            The rule
+	 *            The rule js
 	 * @throws ScriptException
 	 * @throws NoSuchMethodException
 	 * @throws IOException
 	 */
 	public void parse(String csv, String rule) throws ScriptException, NoSuchMethodException, IOException {
 		inProgress = true;
-		StringBuilder sb = new StringBuilder();
-		try (InputStream is = ClassLoader.getSystemResourceAsStream(String.format("rules/%s.js", rule));
-				Reader r = new StringReader(csv)) {
-			int b;
-			// Load the rule
-			while ((b = is.read()) != -1) {
-				sb.append((char) b);
-			}
+		try (Reader r = new StringReader(csv)) {
 			// Load the CSV
 			List<CSVRecord> records = CSVFormat.RFC4180.parse(r).getRecords();
 			ListIterator<CSVRecord> iterator = records.listIterator();
@@ -57,8 +51,8 @@ public class JSCSVParser {
 			watchProgress(iterator);
 			// Create and invoke the function with the JavaScript interfaces and CSV record
 			// iterator
-			engine.eval(String.format("function parse($records, $accounts, $transactions, $types, $expenses) {%s}",
-					sb.toString()));
+			engine.eval(
+					String.format("function parse($records, $accounts, $transactions, $types, $expenses) {%s}", rule));
 			((Invocable) engine).invokeFunction("parse", iterator, new AccountsInterface(), new TransactionsInterface(),
 					new TypesInterface(), new ExpensesInterface());
 		} finally {
@@ -95,7 +89,7 @@ public class JSCSVParser {
 	 *            The iterator to watch
 	 */
 	private void watchProgress(ListIterator<CSVRecord> iterator) {
-		new Thread(() -> {
+		ThreadExecutor.start(() -> {
 			while (processed < total) {
 				try {
 					Thread.sleep(200);
@@ -103,7 +97,7 @@ public class JSCSVParser {
 				}
 				processed = iterator.nextIndex();
 			}
-		}).start();
+		});
 	}
 
 	/**

@@ -47,4 +47,16 @@ public abstract class ClasspathUtils {
 		}
 		return in;
 	}
+
+	/**
+	 * Gets a file as a String
+	 * 
+	 * @param path
+	 *            The path to the file
+	 * @return The file as a String
+	 * @throws IOException
+	 */
+	public static String getFileAsString(String path) throws IOException {
+		return new String(getFileData(path));
+	}
 }
