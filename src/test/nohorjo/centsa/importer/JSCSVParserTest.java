@@ -17,6 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.AbstractDAO;
 import nohorjo.util.ClasspathUtils;
 import nohorjo.util.Procedure;
@@ -31,8 +32,20 @@ public class JSCSVParserTest {
 
 	public static boolean wait;
 
-	public static Procedure<Double> assertProgress = (i) -> {
-		assertEquals(i, parser.getProcessed(), 0);
+	public static Procedure<Double> assertProcessed = (expected) -> {
+		int actual;
+		if (expected != (actual = parser.getProcessed())) {
+			throw new RuntimeException(String.format("Expected %s, but was %s", expected, actual));
+		}
+	};
+
+	public static Procedure<ScriptObjectMirror> assertParams = (test) -> {
+		Object actual = test.get(0+"");
+		Object expectedClass = test.get(1+"");
+		if (!expectedClass.equals(actual.getClass().getName())) {
+			throw new RuntimeException(
+					String.format("Expected %s, but was %s", expectedClass, actual.getClass().getName()));
+		}
 	};
 
 	private Throwable thrown;
@@ -42,6 +55,8 @@ public class JSCSVParserTest {
 		parser = new JSCSVParser();
 		wait = false;
 		thrown = null;
+
+		JSCSVParser.WATCH_SLEEP = 10;
 	}
 
 	@Test
@@ -63,7 +78,7 @@ public class JSCSVParserTest {
 		assertFalse(parser.isInProgress());
 		wait = true;
 
-		ThreadExecutor.start(() -> {
+		Thread t = ThreadExecutor.start(() -> {
 			try {
 				parser.parse(getCSV(RandomUtils.nextInt(100) + 10), ClasspathUtils.getFileAsString("test.js"));
 			} catch (Exception e) {
@@ -73,7 +88,7 @@ public class JSCSVParserTest {
 		Thread.sleep(500);
 		assertTrue(parser.isInProgress());
 		wait = false;
-		Thread.sleep(500);
+		t.join();
 
 		assertFalse(parser.isInProgress());
 		if (thrown != null) {

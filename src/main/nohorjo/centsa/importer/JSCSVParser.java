@@ -27,6 +27,8 @@ public class JSCSVParser {
 	private ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 	private int processed;
 	private int total;
+	
+	public static int WATCH_SLEEP = 200;
 
 	protected boolean inProgress;
 
@@ -92,7 +94,7 @@ public class JSCSVParser {
 		ThreadExecutor.start(() -> {
 			while (processed < total) {
 				try {
-					Thread.sleep(200);
+					Thread.sleep(WATCH_SLEEP);
 				} catch (InterruptedException e) {
 				}
 				processed = iterator.nextIndex();
@@ -108,4 +110,5 @@ public class JSCSVParser {
 	public void setInProgress(boolean inProgress) {
 		throw new IllegalAccessError("Cannot set progress state");
 	}
+	
 }

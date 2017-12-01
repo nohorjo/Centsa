@@ -1,12 +1,25 @@
 var test = Java.type("nohorjo.centsa.importer.JSCSVParserTest");
+var parser = Java.type("nohorjo.centsa.importer.JSCSVParser");
 
-while (test.wait) {
-	java.lang.Thread.sleep(200);
+function sleep() {
+	java.lang.Thread.sleep(parser.WATCH_SLEEP);
 }
 
-var i = 0;
+while (test.wait) {
+	sleep();
+}
 
-for (var j = 0; j < 10; j++) {
-	test.assertProgress.call(i++);
+test.assertParams.call([ $records, "java.util.ArrayList$ListItr" ]);
+test.assertParams
+		.call([ $accounts, "nohorjo.centsa.importer.AccountsInterface" ]);
+test.assertParams.call([ $transactions,
+		"nohorjo.centsa.importer.TransactionsInterface" ]);
+test.assertParams.call([ $types, "nohorjo.centsa.importer.TypesInterface" ]);
+test.assertParams
+		.call([ $expenses, "nohorjo.centsa.importer.ExpensesInterface" ]);
+
+for (var i = 0; i < 10; i++) {
+	sleep();
+	test.assertProcessed.call(i);
 	$records.next();
 }
