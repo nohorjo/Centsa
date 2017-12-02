@@ -32,8 +32,12 @@ public class DirectoryUtils {
 				moveDir(toMove, subDest);
 				Files.delete(toMove.toPath());
 			} else {
-				Files.move(toMove.toPath(), destFile.toPath().resolve(toMove.getName()),
-						StandardCopyOption.REPLACE_EXISTING);
+				try {
+					Files.move(toMove.toPath(), destFile.toPath().resolve(toMove.getName()),
+							StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
