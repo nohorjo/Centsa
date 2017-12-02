@@ -51,7 +51,7 @@
 							pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.toDate">
 					</div></td>
 				<td colspan="3"
-					data-ng-class="{'success' : filter.fromAmount || filter.toAmount }"><label>Amount</label>
+					data-ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }"><label>Amount</label>
 					<div class="input-group input-daterange">
 						<input type="number" class="form-control"
 							data-ng-model="filter.fromAmount">
