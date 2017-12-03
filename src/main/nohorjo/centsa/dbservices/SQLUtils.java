@@ -1,7 +1,6 @@
 package nohorjo.centsa.dbservices;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,6 +10,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import nohorjo.centsa.properties.SystemProperties;
+import nohorjo.util.ClasspathUtils;
 
 /**
  * Class to provide utiliy methods to DAOs
@@ -20,7 +20,7 @@ import nohorjo.centsa.properties.SystemProperties;
  */
 public class SQLUtils {
 
-	private static final XMLConfiguration QUERIES;
+	private static final XMLConfiguration QUERIES = new XMLConfiguration();
 
 	/**
 	 * Loads sql-queries.cml from the classpath
@@ -28,8 +28,8 @@ public class SQLUtils {
 	static {
 		AbstractConfiguration.setDefaultListDelimiter((char) 0);
 		try {
-			QUERIES = new XMLConfiguration(ClassLoader.getSystemResource("sql-queries.xml").toURI().toURL());
-		} catch (ConfigurationException | MalformedURLException | URISyntaxException e) {
+			QUERIES.load(ClasspathUtils.getFileAsStream("sql-queries.xml"));
+		} catch (ConfigurationException | IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
