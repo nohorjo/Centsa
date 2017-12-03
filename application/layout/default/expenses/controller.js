@@ -1,7 +1,12 @@
 app.controller("expensesCtrl", function($scope, $rootScope) {
 	$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
-	$scope.totalActiveExpenses = centsa.expenses.totalActive();
-	$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
+
+	function getActiveTotals() {
+		$scope.totalActiveExpenses = centsa.expenses.totalActive();
+		$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
+	}
+	
+	getActiveTotals();
 
 	$scope.newExpense = {
 		name : "",
@@ -27,8 +32,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 			$scope.newExpense.id = newId;
 			$scope.expenses.unshift($scope.newExpense);
 		}
-		$scope.totalActiveExpenses = centsa.expenses.totalActive();
-		$scope.totalAutoExpenses = centsa.expenses.totalActive(true);
+		getActiveTotals();
 		$scope.newExpense = Object.assign({}, newExpense);
 		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
 				"update", new Date().formatDate("yyyy/MM/dd"));
@@ -41,6 +45,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 	$scope.deleteExpense = function(id) {
 		if (centsa.expenses.remove(id)) {
 			$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
+			getActiveTotals();
 		}
 	};
 
