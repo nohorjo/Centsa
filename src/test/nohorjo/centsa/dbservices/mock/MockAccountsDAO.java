@@ -47,4 +47,8 @@ public class MockAccountsDAO extends AccountsDAO {
 		return mock.handleInsert((Account) _vo);
 	}
 
+    @Override
+    public Long getIdByName(String name) throws SQLException {
+        return mock.handleGetIdByName(name);
+    }
 }

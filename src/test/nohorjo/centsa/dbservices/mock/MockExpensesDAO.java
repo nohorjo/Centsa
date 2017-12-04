@@ -98,4 +98,9 @@ public class MockExpensesDAO extends ExpensesDAO {
 		throw new IllegalStateException("Invalid option: " + option);
 	}
 
+    @Override
+    public Long getIdByName(String name) throws SQLException {
+        return mock.handleGetIdByName(name);
+    }
+
 }

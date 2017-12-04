@@ -4,7 +4,8 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.AbstractDAO;
 import nohorjo.centsa.dbservices.mock.DAOOption;
 import nohorjo.centsa.dbservices.mock.MockDAO;
-import nohorjo.centsa.dbservices.mock.MockTransactionsDAO;
+import nohorjo.centsa.dbservices.mock.MockTypesDAO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -15,20 +16,34 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 
 /**
- * Test class for {@link TransactionsInterface}
+ * Test class for {@link TypesInterface}
  *
  * @author muhammed
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ScriptObjectMirror.class, AbstractDAO.class})
 @SuppressStaticInitializationFor("nohorjo.centsa.dbservices.AbstractDAO")
-public class TransactionsInterfaceTest {
+public class TypesInterfaceTest {
+
+    private boolean createNew;
+
+    @Before
+    public void init() {
+        createNew = false;
+    }
 
     @Test
     public void insert_inserts() throws SQLException {
+        ScriptObjectMirror o = getTrans();
+        assertEquals(MockDAO.ID, getInterface(DAOOption.FINE).insert(o));
+    }
+
+    @Test
+    public void insert_createInserts() throws SQLException {
+        createNew = true;
         ScriptObjectMirror o = getTrans();
         assertEquals(MockDAO.ID, getInterface(DAOOption.FINE).insert(o));
     }
@@ -38,9 +53,9 @@ public class TransactionsInterfaceTest {
         assertEquals(MockDAO.ID, getInterface(DAOOption.ERROR).insert(getTrans()));
     }
 
-    private TransactionsInterface getInterface(DAOOption option) {
-        TransactionsInterface i = new TransactionsInterface();
-        i.setDao(new MockTransactionsDAO(option));
+    private TypesInterface getInterface(DAOOption option) {
+        TypesInterface i = new TypesInterface();
+        i.setDao(new MockTypesDAO(option));
         return i;
     }
 
@@ -50,18 +65,8 @@ public class TransactionsInterfaceTest {
         PowerMockito.when(o.get(any(String.class))).then((i) -> {
             String prop = i.getArgument(0);
             switch (prop) {
-                case "amount":
-                    return MockTransactionsDAO.AMMOUNT;
-                case "comment":
-                    return MockTransactionsDAO.COMMENT;
-                case "account_id":
-                    return MockTransactionsDAO.ACCOUNT_ID;
-                case "type_id":
-                    return MockTransactionsDAO.TYPE_ID;
-                case "expense_id":
-                    return MockTransactionsDAO.EXPENSE_ID;
-                case "date":
-                    return MockTransactionsDAO.DATE;
+                case "name":
+                    return createNew ? MockDAO.NAME_2 : MockDAO.NAME;
             }
             throw new NullPointerException(prop);
         });

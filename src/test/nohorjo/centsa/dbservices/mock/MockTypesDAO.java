@@ -11,47 +11,51 @@ import nohorjo.centsa.vo.VO;
 
 /**
  * A mock of {@link TypesDAO}
- * 
- * @author muhammed
  *
+ * @author muhammed
  */
 public class MockTypesDAO extends TypesDAO {
 
-	public static final int SUM = RandomUtils.nextInt();
+    public static final int SUM = RandomUtils.nextInt();
 
-	public static final Type TYPE;
+    public static final Type TYPE;
 
-	static {
-		TYPE = new Type();
-		TYPE.setId(MockDAO.ID);
-		TYPE.setName(MockDAO.NAME);
-		TYPE.setSum(SUM);
-	}
+    static {
+        TYPE = new Type();
+        TYPE.setId(MockDAO.ID);
+        TYPE.setName(MockDAO.NAME);
+        TYPE.setSum(SUM);
+    }
 
-	private MockDAO<Type> mock;
+    private MockDAO<Type> mock;
 
-	public MockTypesDAO(DAOOption option) {
-		mock = new MockDAO<>(option, TYPE);
-	}
+    public MockTypesDAO(DAOOption option) {
+        mock = new MockDAO<>(option, TYPE);
+    }
 
-	@Override
-	public Type get(long id) throws SQLException {
-		return mock.handleGet(id);
-	}
+    @Override
+    public Type get(long id) throws SQLException {
+        return mock.handleGet(id);
+    }
 
-	@Override
-	public List<Type> getAll(int page, int pageSize, String orderBy) throws SQLException {
-		return mock.handleGetAll(page, pageSize, orderBy);
-	}
+    @Override
+    public List<Type> getAll(int page, int pageSize, String orderBy) throws SQLException {
+        return mock.handleGetAll(page, pageSize, orderBy);
+    }
 
-	@Override
-	public void delete(long id) throws SQLException {
-		mock.handleDelete();
-	}
+    @Override
+    public void delete(long id) throws SQLException {
+        mock.handleDelete();
+    }
 
-	@Override
-	public long insert(VO _vo) throws SQLException {
-		return mock.handleInsert((Type) _vo);
-	}
+    @Override
+    public long insert(VO _vo) throws SQLException {
+        return mock.handleInsert((Type) _vo);
+    }
+
+    @Override
+    public Long getIdByName(String name) throws SQLException {
+        return mock.handleGetIdByName(name);
+    }
 
 }
