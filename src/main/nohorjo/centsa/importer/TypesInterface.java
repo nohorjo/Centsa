@@ -29,4 +29,8 @@ public class TypesInterface extends JSInterface {
 
 		return id;
 	}
+
+	public void setDao(TypesDAO dao) {
+		this.dao = dao;
+	}
 }

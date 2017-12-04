@@ -29,4 +29,8 @@ public class AccountsInterface extends JSInterface {
 
 		return id;
 	}
+
+	public void setDao(AccountsDAO dao) {
+		this.dao = dao;
+	}
 }

@@ -35,4 +35,8 @@ public class ExpensesInterface extends JSInterface {
 		return id;
 	}
 
+	public void setDao(ExpensesDAO dao) {
+		this.dao = dao;
+	}
+
 }
