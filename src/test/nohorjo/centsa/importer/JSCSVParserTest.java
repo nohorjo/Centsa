@@ -4,7 +4,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import nohorjo.centsa.dbservices.AbstractDAO;
 import nohorjo.util.ClasspathUtils;
 import nohorjo.util.Procedure;
-import nohorjo.util.ThreadExecutor;
+import nohorjo.util.JavaSystemUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Before;
@@ -75,7 +75,7 @@ public class JSCSVParserTest {
         assertFalse(parser.isInProgress());
         wait = true;
 
-        Thread t = ThreadExecutor.start(() -> {
+        Thread t = JavaSystemUtils.startThread(() -> {
             try {
                 parser.parse(getCSV(RandomUtils.nextInt(100) + 10), ClasspathUtils.getFileAsString("test.js"));
             } catch (Exception e) {

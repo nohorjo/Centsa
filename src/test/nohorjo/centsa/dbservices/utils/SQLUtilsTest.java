@@ -1,4 +1,4 @@
-package nohorjo.centsa.dbservices;
+package nohorjo.centsa.dbservices.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 
+import nohorjo.centsa.dbservices.SQLUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;

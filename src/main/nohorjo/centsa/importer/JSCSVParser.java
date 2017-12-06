@@ -1,20 +1,18 @@
 package nohorjo.centsa.importer;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.List;
-import java.util.ListIterator;
+import nohorjo.util.JavaSystemUtils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-
-import nohorjo.util.ThreadExecutor;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Class to parse CSV files
@@ -91,7 +89,7 @@ public class JSCSVParser {
 	 *            The iterator to watch
 	 */
 	private void watchProgress(ListIterator<CSVRecord> iterator) {
-		ThreadExecutor.start(() -> {
+        JavaSystemUtils.startThread(() -> {
 			while (processed < total) {
 				try {
 					Thread.sleep(WATCH_SLEEP);

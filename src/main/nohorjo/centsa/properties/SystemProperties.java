@@ -8,7 +8,7 @@ import java.util.Iterator;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
- * Class to handle properties thoughout the application
+ * Class to handle properties throughout the application
  * 
  * @author muhammed.haque
  *

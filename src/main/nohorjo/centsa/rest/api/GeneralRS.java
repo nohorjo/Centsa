@@ -1,22 +1,5 @@
 package nohorjo.centsa.rest.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.internal.inject.PerLookup;
-
 import javafx.stage.FileChooser.ExtensionFilter;
 import nohorjo.centsa.datahandlers.Budget;
 import nohorjo.centsa.datahandlers.BudgetHandler;
@@ -30,7 +13,22 @@ import nohorjo.centsa.updater.UpdateChecker;
 import nohorjo.centsa.updater.UpdateInfo;
 import nohorjo.centsa.vo.Expense;
 import nohorjo.util.ClasspathUtils;
-import nohorjo.util.ThreadExecutor;
+import nohorjo.util.JavaSystemUtils;
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.internal.inject.PerLookup;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * REST service for others
@@ -80,7 +78,7 @@ public class GeneralRS extends AbstractRS {
 
 		Renderer.showFileChooser("Open CSV spreadsheet", new File(System.getProperty("user.home")), (selectedFile) -> {
 			if (selectedFile != null) {
-				ThreadExecutor.start(() -> {
+                JavaSystemUtils.startThread(() -> {
 					try {
 						parser.parse(FileUtils.readFileToString(selectedFile), ClasspathUtils.getFileAsString(String.format("rules/%s.js", rule)));
 						Renderer.showAlert("Import complete!");
