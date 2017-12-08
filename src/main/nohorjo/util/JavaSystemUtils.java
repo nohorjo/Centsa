@@ -1,9 +1,9 @@
 package nohorjo.util;
 
-import nohorjo.centsa.properties.SystemProperties;
-
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Class that calls system classes. Can be mocked for testing
@@ -25,11 +25,15 @@ public class JavaSystemUtils {
         Runtime.getRuntime().addShutdownHook(t);
     }
 
-    public static void runProcess(File dir, String... command) throws IOException {
+    public static void runProcess(File logFile, String... command) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
-        builder.redirectOutput(dir);
+        builder.redirectOutput(logFile);
         builder.start();
+    }
+
+    public static HttpURLConnection getHttpConnection(String url) throws IOException {
+        return (HttpURLConnection) new URL(url).openConnection();
     }
 
 }

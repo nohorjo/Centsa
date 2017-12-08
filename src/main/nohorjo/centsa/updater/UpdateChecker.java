@@ -31,6 +31,14 @@ public class UpdateChecker extends Thread {
 
     private static boolean shouldRestart;
 
+    /**
+     * <ul>
+     * <li>Adds the shutdown hook to apply updates</li>
+     * <li>Deletes old updaters</li>
+     * <li>Loads properties</li>
+     * <li>Checks updates</li>
+     * </ul>
+     */
     public static void initialise() {
         // Adds shutdown hook to launch updater
         JavaSystemUtils.addShutdownHook(new UpdateChecker());
@@ -38,6 +46,18 @@ public class UpdateChecker extends Thread {
         try (InputStream in = ClasspathUtils.getFileAsStream("update.properties")) {
             if (!UPDATER_DIR.exists() && !UPDATER_DIR.mkdirs()) {
                 throw new IOException("Failed to create updater directory");
+            }
+
+            // Delete all but the latest updater jar
+            File[] updaterJars = UPDATER_DIR.listFiles((f) -> f.getName().matches("^Centsa.*\\.jar$"));
+            if (updaterJars != null) {
+                Arrays.sort(updaterJars, (a, b) ->
+                        Integer.parseInt(b.getName().replaceAll("[^\\d]", ""))
+                                - Integer.parseInt(a.getName().replaceAll("[^\\d]", ""))
+                );
+                for (int i = 1; i < updaterJars.length; i++) {
+                    FileUtils.forceDelete(updaterJars[i]);
+                }
             }
 
             updateProperties.load(in);
@@ -56,22 +76,14 @@ public class UpdateChecker extends Thread {
                 });
             }
 
-            // Delete all but the latest updater jar
-            File[] updaterJars = UPDATER_DIR.listFiles((f) -> f.getName().matches("^Centsa.*\\.jar$"));
-            if (updaterJars != null) {
-                Arrays.sort(updaterJars, (a, b) ->
-                        Integer.parseInt(b.getName().replaceAll("[^\\d]", ""))
-                                - Integer.parseInt(a.getName().replaceAll("[^\\d]", ""))
-                );
-                for (int i = 1; i < updaterJars.length; i++) {
-                    FileUtils.forceDelete(updaterJars[i]);
-                }
-            }
         } catch (IOException | ConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Starts a process for updater
+     */
     @Override
     public void run() {
         if (UPDATER_DIR.listFiles((f) -> f.getName().matches("^Centsa.*\\.zip$")).length > 0) {
@@ -100,7 +112,7 @@ public class UpdateChecker extends Thread {
     public static UpdateInfo checkNewVersion() throws IOException {
         UpdateInfo info;
         // Connect to Github's REST API
-        HttpURLConnection conn = (HttpURLConnection) new URL(updateProperties.getString("latest.url")).openConnection();
+        HttpURLConnection conn = JavaSystemUtils.getHttpConnection(updateProperties.getString("latest.url"));
         conn.setRequestMethod("GET");
         try (InputStream in = conn.getInputStream()) {
             info = new UpdateInfo();
@@ -141,7 +153,7 @@ public class UpdateChecker extends Thread {
      */
     public static void downloadUpdate(UpdateInfo info, boolean applyUpdate) {
         // Run in new thread
-        new Thread(() -> {
+        JavaSystemUtils.startThread(() -> {
             try {
                 File zip = new File(UPDATER_DIR_NAME + File.separator + info.getAssetName());
                 if (zip.createNewFile()) {
@@ -154,9 +166,7 @@ public class UpdateChecker extends Thread {
                             out.write(buffer, 0, len);
                         }
                     }
-                    for (File old : zip.getParentFile().listFiles((f) -> {
-                        return f.getName().endsWith(".zip") && !f.getName().equals(zip.getName());
-                    })) {
+                    for (File old : zip.getParentFile().listFiles((f) -> f.getName().endsWith(".zip") && !f.getName().equals(zip.getName()))) {
                         Files.delete(old.toPath());
                     }
                 }
