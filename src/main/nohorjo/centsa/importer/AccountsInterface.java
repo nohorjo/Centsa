@@ -1,6 +1,5 @@
 package nohorjo.centsa.importer;
 
-import java.io.File;
 import java.sql.SQLException;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;

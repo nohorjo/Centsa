@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
@@ -23,10 +22,10 @@ public class SQLUtils {
 	private static final XMLConfiguration QUERIES = new XMLConfiguration();
 
 	/**
-	 * Loads sql-queries.cml from the classpath
+	 * Loads sql-queries.xml from the classpath
 	 */
 	static {
-		AbstractConfiguration.setDefaultListDelimiter((char) 0);
+		QUERIES.setDelimiterParsingDisabled(true);
 		try {
 			QUERIES.load(ClasspathUtils.getFileAsStream("sql-queries.xml"));
 		} catch (ConfigurationException | IOException e) {
