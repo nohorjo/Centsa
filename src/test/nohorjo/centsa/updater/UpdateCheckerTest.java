@@ -192,6 +192,7 @@ public class UpdateCheckerTest {
 
     @Test
     public void getCurrentVersion() {
+    	UpdateChecker.initialise();
         assertEquals("v" + MAJOR_OLD + "." + MINOR_OLD, UpdateChecker.getCurrentVersion());
     }
 }
