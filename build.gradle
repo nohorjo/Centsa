@@ -142,7 +142,7 @@ task copyToLib(dependsOn: cleanLib) {
 
 task eclipseClasspath(dependsOn: copyToLib) {
     doLast {
-        def cp = "";
+        def cp = ""
         Set jars = []
         def libDir = file("application/lib")
         if (libDir.exists()) {
@@ -251,6 +251,12 @@ task updaterBuild(type: Jar, dependsOn: ['updaterClean', 'updaterTest']) {
         versionInfo.setProperty("updater.build.number", bn as String)
         saveProperties(versionInfo, "res/update.properties")
     }
+}
+
+task run(type: JavaExec) {
+    main = "nohorjo.centsa.Main"
+    classpath = files("application","application/lib/*")
+    jvmArgs "-Droot.dir=application"
 }
 
 ext.saveProperties = { props, filename ->
