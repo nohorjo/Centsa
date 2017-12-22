@@ -2,7 +2,8 @@ app.controller("accountsCtrl", function($scope) {
 	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 
 	$scope.newAccount = {
-		name : ""
+		name : "",
+		balance : 0
 	};
 	var newAccount = Object.assign({}, $scope.newAccount);
 
@@ -10,17 +11,27 @@ app.controller("accountsCtrl", function($scope) {
 		date : new Date().formatDate("yyyy/MM/dd"),
 		to : "1",
 		from : "1",
-		ammount : 0,
+		amount : 0,
 		comment : ""
 	};
 	var transfer = Object.assign({}, $scope.transfer);
 
-	$scope.saveAccount = function() {
-		$scope.newAccount.id = centsa.accounts.insert($scope.newAccount);
-		$scope.newAccount.balance = 0;
-		$scope.accounts.unshift($scope.newAccount);
-		$scope.newAccount = Object.assign({}, newAccount);
-	};
+    $scope.saveAccount = function() {
+        $scope.newAccount.balance *= 100;
+        $scope.newAccount.id = centsa.accounts.insert($scope.newAccount);
+        $scope.accounts.unshift($scope.newAccount);
+        if($scope.newAccount.balance) {
+            centsa.transactions.insert({
+                amount : -$scope.newAccount.balance,
+                comment : "Initial value",
+                account_id : $scope.newAccount.id,
+                type_id : "1",
+                expense_id : "1",
+                date : new Date().getTime()
+            });
+        }
+        $scope.newAccount = Object.assign({}, newAccount);
+    };
 
 	/**
 	 * Inserts two transactions to represent money going from one account to
@@ -68,4 +79,33 @@ app.controller("accountsCtrl", function($scope) {
 		todayHighlight : true
 	});
 	$('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
+
+	$scope.adjustAccount = function(acc) {
+	    var diff = acc.balanceOld-acc.balance;
+	    if(diff) {
+            centsa.transactions.insert({
+                amount : diff,
+                comment : "Adjustment",
+                account_id : acc.id,
+                type_id : "1",
+                expense_id : "1",
+                date : new Date().getTime()
+            });
+            acc.balanceOld = acc.balance;
+	    }
+	}
+});
+
+app.directive("numberDivide", function ($filter, $parse) {
+    return {
+        require: "ngModel",
+        link: function($scope, $elem, $attrs, $controller){
+            $controller.$formatters.push(function (val) {
+                return val/$attrs.numberDivide;
+            });
+            $controller.$parsers.push(function(val){
+                return val*$attrs.numberDivide;
+            });
+        }
+    };
 });
