@@ -26,3 +26,11 @@ img {
 .modal-body>table td {
 	padding: 0.5em 0;
 }
+
+.refresh:after {
+    content: ' \21ba';
+}
+
+.refresh {
+    cursor: pointer;
+}

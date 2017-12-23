@@ -20,7 +20,7 @@ import nohorjo.centsa.vo.VO;
 public class MockTransactionsDAO extends TransactionsDAO {
 
 	public static final Transaction TRANSACTION;
-	public static final int AMMOUNT = RandomUtils.nextInt(), PAGE_COUNT = RandomUtils.nextInt(),
+	public static final int AMOUNT = RandomUtils.nextInt(), PAGE_COUNT = RandomUtils.nextInt(),
 			PRECISION = RandomUtils.nextInt(), SUM = RandomUtils.nextInt();
 	public static final String COMMENT = RandomStringUtils.randomAlphabetic(10);
 	public static final long ACCOUNT_ID = RandomUtils.nextLong(), TYPE_ID = RandomUtils.nextLong(),
@@ -33,7 +33,7 @@ public class MockTransactionsDAO extends TransactionsDAO {
 	static {
 		TRANSACTION = new Transaction();
 		TRANSACTION.setId(MockDAO.ID);
-		TRANSACTION.setAmount(AMMOUNT);
+		TRANSACTION.setAmount(AMOUNT);
 		TRANSACTION.setComment(COMMENT);
 		TRANSACTION.setAccount_id(ACCOUNT_ID);
 		TRANSACTION.setType_id(TYPE_ID);

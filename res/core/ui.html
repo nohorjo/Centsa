@@ -25,7 +25,7 @@
 					<table>
 						<tbody>
 							<tr>
-								<td>Layout</td>
+								<td class="refresh" onclick="window.location.reload()">Layout</td>
 								<td><select id="layout" class="form-control"
 									onchange="centsa.settings.set('layout', this.value, function(){iframe.contentWindow.location.reload();},function(x){alert(x);});"></select>
 								</td>

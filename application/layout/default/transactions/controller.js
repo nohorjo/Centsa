@@ -14,10 +14,14 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		}
 		if ($rootScope.filter.fromAmount) {
 			filter.fromAmount = $rootScope.filter.fromAmount * 100;
+		} else if($rootScope.filter.fromAmount == null) {
+		    delete filter.fromAmount;
 		}
 		if ($rootScope.filter.toAmount) {
 			filter.toAmount = $rootScope.filter.toAmount * 100;
-		}
+		} else if($rootScope.filter.toAmount == null) {
+            delete filter.toAmount;
+        }
 
 		return filter;
 	}
@@ -44,6 +48,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
 			pageSize, sort, null, getFilter());
+	$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
 	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
@@ -114,6 +119,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		var newId = centsa.transactions.insert($scope.newTrans);
 		if (newId > 0) {
 			$scope.newTrans.id = newId;
+			$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 		}
 		if ($scope.currentPage == 1 && !updating) {
 			$scope.transactions.unshift($scope.newTrans);
@@ -175,6 +181,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		if (centsa.transactions.remove(id)) {
 			$scope.transactions = centsa.transactions.getAll(
 					$scope.currentPage, pageSize, sort, null, getFilter());
+			$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 		}
 		$('#transModal').modal("hide");
 	};
@@ -200,6 +207,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.currentPage = 1;
 		$scope.pagesCount = centsa.transactions.countPages(pageSize, null,
 				getFilter());
+		$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 	};
 
 	$scope.clearFilter = function() {

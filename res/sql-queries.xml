@@ -54,7 +54,7 @@
 		</UniqueComments>
 		<SumAll>
 		<![CDATA[
-		SELECT SUM(AMOUNT) FROM TRANSACTIONS;
+		SELECT SUM(AMOUNT) FROM TRANSACTIONS {filter};
 		]]>
 		</SumAll>
 		<GetDatesAndAmounts>

@@ -173,6 +173,23 @@ var centsa = (function() {
 					error : error || throwError
 				});
 				return rtn;
+			},
+			getSummary : function(filter, error) {
+			    var rtn = null;
+                ajax({
+                    url : url + "/transactions/summary",
+                    method : "POST",
+                    data : JSON.stringify(filter || {}),
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    async : false,
+                    success : function(data) {
+                        rtn = JSON.parse(data.responseText);
+                    },
+                    error : error || throwError
+                });
+                return rtn;
 			}
 		},
 		accounts : {

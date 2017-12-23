@@ -51,7 +51,7 @@ public class TransactionsInterfaceTest {
             String prop = i.getArgument(0);
             switch (prop) {
                 case "amount":
-                    return MockTransactionsDAO.AMMOUNT;
+                    return MockTransactionsDAO.AMOUNT;
                 case "comment":
                     return MockTransactionsDAO.COMMENT;
                 case "account_id":

@@ -130,7 +130,7 @@ public class TransactionsRSTest {
 	private void checkTransaction(Transaction t) {
 		assertEquals(MockDAO.ID, t.getId().longValue());
 		assertEquals(MockTransactionsDAO.ACCOUNT_ID, t.getAccount_id());
-		assertEquals(MockTransactionsDAO.AMMOUNT, t.getAmount());
+		assertEquals(MockTransactionsDAO.AMOUNT, t.getAmount());
 		assertEquals(MockTransactionsDAO.COMMENT, t.getComment());
 		assertEquals(MockTransactionsDAO.TYPE_ID, t.getType_id());
 		assertEquals(MockTransactionsDAO.EXPENSE_ID, t.getExpense_id());
