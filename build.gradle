@@ -190,22 +190,16 @@ task tag {
 }
 
 task zip(type: Zip) {
-    doFirst {
-        file("application").renameTo("Centsa")
-    }
-    from '.'
-    include 'Centsa'
-    include 'Centsa/**/*'
-    exclude '*/data.db'
-    exclude '*/Centsa.desktop'
-    exclude '*/fuse*'
-    exclude '*/log/*'
+    from 'application'
+    include '**/*'
+    exclude 'data.db'
+    exclude 'Centsa.desktop'
+    exclude 'fuse*'
+    exclude 'log/*'
+    into "Centsa"
     archiveName 'Centsa-v' + versionInfo.getProperty("major.version") +
             "." + versionInfo.getProperty("minor.version") + '.zip'
     destinationDir(file('build'))
-    doLast {
-        file("Centsa").renameTo("application")
-    }
 }
 
 task release(dependsOn: ['clean', 'build', 'zip', 'tag'])
