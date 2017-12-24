@@ -247,10 +247,10 @@ task updaterBuild(type: Jar, dependsOn: ['updaterClean', 'updaterTest']) {
     }
 }
 
-task run(type: JavaExec, dependsOn: [cleanLib, jar, copyToLib]) {
+task run(type: JavaExec) {
     main = "nohorjo.centsa.Main"
-    classpath = files("application","application/lib/*")
-    jvmArgs "-Droot.dir=application"
+    classpath = files("application", "res", "bin/main", "lib/*")
+    jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n", "-Droot.dir=application"
 }
 
 ext.saveProperties = { props, filename ->

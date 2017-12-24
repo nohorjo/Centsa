@@ -75,7 +75,10 @@ public class TransactionsRS extends AbstractRS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/summary")
     public TransactionsSummary getSummary(TransactionFilter filter) throws SQLException {
-        return new TransactionsSummary(dao.sumAll(filter), dao.count(filter));
+        TransactionsSummary summ = new TransactionsSummary();
+        summ.setCount(dao.count(filter));
+        summ.setSum(dao.sumAll(filter));
+        return summ;
     }
 
 
