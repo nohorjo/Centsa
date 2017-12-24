@@ -225,4 +225,27 @@ public class TransactionsDAO extends AbstractDAO {
         return 0;
     }
 
+    public int getMin(TransactionFilter filter) throws SQLException {
+        String sql = SQLUtils.getQuery("Transactions.Min").replace("{filter}", filter.getFilterClause());
+        try (Connection conn = SQLUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public int getMax(TransactionFilter filter) throws SQLException {
+        String sql = SQLUtils.getQuery("Transactions.Max").replace("{filter}", filter.getFilterClause());
+        try (Connection conn = SQLUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
 }

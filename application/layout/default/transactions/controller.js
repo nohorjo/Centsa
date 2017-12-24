@@ -218,4 +218,16 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.getExtraRows = function() {
 		return pageSize - $scope.transactions.length;
 	};
+
+	$scope.getHighlight = function(amount){
+	    var range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
+
+        var hl = "hsl(";
+        hl += amount > 0 ? 0 : 100;
+        hl += ",50%,";
+        hl += 100 - Math.abs(amount / range) * 40;
+        hl += "%)";
+
+        return hl;
+    }
 });

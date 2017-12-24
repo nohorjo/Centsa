@@ -78,6 +78,8 @@ public class TransactionsRS extends AbstractRS {
         TransactionsSummary summ = new TransactionsSummary();
         summ.setCount(dao.count(filter));
         summ.setSum(dao.sumAll(filter));
+        summ.setMin(dao.getMin(filter));
+        summ.setMax(dao.getMax(filter));
         return summ;
     }
 

@@ -134,7 +134,8 @@
         <tbody>
         <tr data-ng-include="'transactions/inputRow.html'"
             onload="initDatePickers()"></tr>
-        <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
+        <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)"
+                style="background-color:{{ getHighlight(t.amount) }};">
             <td>{{ t.id }}</td>
             <td>{{ formatDate(t.date) }}</td>
             <td>{{ t.amount / 100 }}</td>

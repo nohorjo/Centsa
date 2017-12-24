@@ -72,6 +72,16 @@
 		SELECT COUNT(*) FROM TRANSACTIONS {filter};
 		]]>
 		</Count>
+		<Min>
+		<![CDATA[
+		SELECT MIN(AMOUNT) FROM TRANSACTIONS {filter};
+		]]>
+		</Min>
+		<Max>
+		<![CDATA[
+		SELECT MAX(AMOUNT) FROM TRANSACTIONS {filter};
+		]]>
+		</Max>
 	</Transactions>
 	<Accounts>
 		<CreateTable>
