@@ -247,7 +247,7 @@ task updaterBuild(type: Jar, dependsOn: ['updaterClean', 'updaterTest']) {
     }
 }
 
-task run(type: JavaExec) {
+task run(type: JavaExec, dependsOn: 'classes') {
     main = "nohorjo.centsa.Main"
     classpath = files("application", "res", "bin/main", "lib/*")
     jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n", "-Droot.dir=application"

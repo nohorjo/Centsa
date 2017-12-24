@@ -62,13 +62,18 @@ public class UpdateChecker extends Thread {
 
             updateProperties.load(in);
 
-            if (SystemProperties.get("auto.update", Boolean.class)) {
+            int autoUpdate = SystemProperties.get("auto.update.check", Integer.class);
+            if (autoUpdate > 0) {
                 // Check for updates in new thread
                 JavaSystemUtils.startThread(() -> {
                     try {
                         UpdateInfo info = checkNewVersion();
                         if (info != null) {
-                            requestUpdate(info);
+                            if (autoUpdate == 1) {
+                                requestUpdate(info);
+                            } else {
+                                UpdateChecker.downloadUpdate(info, false);
+                            }
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
