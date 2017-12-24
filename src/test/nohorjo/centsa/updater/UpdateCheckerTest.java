@@ -76,12 +76,12 @@ public class UpdateCheckerTest {
         });
 
         StringBuilder props = new StringBuilder();
-        props.append("\nlatest.url=" + LATEST_URL);
-        props.append("\nmajor.version=" + MAJOR_OLD);
-        props.append("\nminor.version=" + MINOR_OLD);
+        props.append("\nlatest.url=").append(LATEST_URL);
+        props.append("\nmajor.version=").append(MAJOR_OLD);
+        props.append("\nminor.version=").append(MINOR_OLD);
 
         when(ClasspathUtils.getFileAsStream(any(String.class))).thenReturn(new ByteArrayInputStream(props.toString().getBytes()));
-        when(SystemProperties.get("auto.update", Boolean.class)).thenReturn(false);
+        when(SystemProperties.get("auto.update.check", Integer.class)).thenReturn(0);
         when(JavaSystemUtils.startThread(any(Runnable.class))).thenThrow(new IllegalStateException("Checking for updates"));
 
         new File(TEST_ROOT).mkdirs();
@@ -142,7 +142,7 @@ public class UpdateCheckerTest {
             assertEquals(LATEST_URL, i.getArgument(0));
             return conn;
         });
-        when(SystemProperties.get("auto.update", Boolean.class)).thenReturn(true);
+        when(SystemProperties.get("auto.update.check", Integer.class)).thenReturn(1);
         when(JavaSystemUtils.startThread(any(Runnable.class))).then((i) -> {
             ((Runnable) i.getArgument(0)).run();
             checking.set(true);

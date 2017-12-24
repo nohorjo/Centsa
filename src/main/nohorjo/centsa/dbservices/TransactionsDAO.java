@@ -133,7 +133,7 @@ public class TransactionsDAO extends AbstractDAO {
      * @throws SQLException
      */
     public int countPages(int pageSize, TransactionFilter filter) throws SQLException {
-        return (int) Math.ceil(count(filter) / pageSize);
+        return (int) Math.ceil((float) count(filter) / pageSize);
     }
 
     /**

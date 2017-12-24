@@ -27,27 +27,26 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	}
 
 	$scope.currentPage = 1;
-	var pageSize = 15;
+	$scope.pageSize = centsa.settings.get("trans.page.size");
 
 	$scope.pagesCount = 0;
 
 	$scope.countPages = function() {
 		return $scope.pagesCount
-				|| ($scope.pagesCount = centsa.transactions.countPages(
-						pageSize, null, getFilter()));
+				|| ($scope.pagesCount = centsa.transactions.countPages($scope.pageSize, null, getFilter()));
 	};
 
 	var sort = "DATE DESC, ID DESC";
 
 	$scope.goToPage = function(n) {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
-			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, sort, null, getFilter());
+			$scope.transactions
+			    = centsa.transactions.getAll($scope.currentPage, $scope.pageSize, sort, null, getFilter());
 		}
 	};
 
 	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			pageSize, sort, null, getFilter());
+			$scope.pageSize, sort, null, getFilter());
 	$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
 	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
@@ -123,7 +122,7 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		}
 		if ($scope.currentPage == 1 && !updating) {
 			$scope.transactions.unshift($scope.newTrans);
-			if ($scope.transactions.length > pageSize) {
+			if ($scope.transactions.length > $scope.pageSize) {
 				$scope.transactions.pop();
 			}
 		} else if (updating) {
@@ -156,12 +155,12 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.newTrans = t;
 		$('#transModal').modal("show");
 		$('#transModal').on(
-				'hidden.bs.modal',
-				function(e) {
-					$scope.newTrans = Object.assign({}, newTrans);
-					$('.datepicker').datepicker("update",
-							new Date().formatDate("yyyy/MM/dd"));
-				})
+            'hidden.bs.modal',
+            function(e) {
+                $scope.newTrans = Object.assign({}, newTrans);
+                $('.datepicker').datepicker("update",
+                        new Date().formatDate("yyyy/MM/dd"));
+            })
 	};
 
 	$scope.initDatePickers = function() {
@@ -179,8 +178,8 @@ app.controller("transCtrl", function($scope, $rootScope) {
 	$scope.deleteTrans = function(id) {
 		$scope.pagesCount = 0;
 		if (centsa.transactions.remove(id)) {
-			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, sort, null, getFilter());
+			$scope.transactions
+			    = centsa.transactions.getAll($scope.currentPage, $scope.pageSize, sort, null, getFilter());
 			$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 		}
 		$('#transModal').modal("hide");
@@ -195,28 +194,31 @@ app.controller("transCtrl", function($scope, $rootScope) {
 				asc = false;
 			}
 			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", ID DESC"
-					+ (secondary ? ", " + secondary : "");
+				+ (secondary ? ", " + secondary : "");
 			$scope.transactions = centsa.transactions.getAll(
-					$scope.currentPage, pageSize, sort, null, getFilter());
+				$scope.currentPage, $scope.pageSize, sort, null, getFilter());
 		};
 	})();
 
-	$scope.filterTrans = function() {
+	$scope.reloadTrans = function() {
+	    centsa.settings.set("trans.page.size", $scope.pageSize);
 		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-				pageSize, sort, null, getFilter());
+			$scope.pageSize, sort, null, getFilter());
 		$scope.currentPage = 1;
-		$scope.pagesCount = centsa.transactions.countPages(pageSize, null,
-				getFilter());
+		$scope.pagesCount = centsa.transactions.countPages($scope.pageSize, null, getFilter());
 		$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
 	};
 
 	$scope.clearFilter = function() {
 		$rootScope.resetFilter();
-		$scope.filterTrans();
+		$scope.reloadTrans();
 	};
 
 	$scope.getExtraRows = function() {
-		return pageSize - $scope.transactions.length;
+	    if($scope.pageSize > 100) {
+	        return 0;
+	    }
+		return $scope.pageSize - $scope.transactions.length;
 	};
 
 	$scope.getHighlight = function(amount){
