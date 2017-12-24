@@ -28,18 +28,17 @@ function init() {
 	resizeIframe();
 	applyMouseRestrictions(window);
 
-	$(centsa.general.layouts()).each(function() {
-		$('#layout').append($('<option>', {
-			value : this,
-			text : this
-		}));
-	});
-
 	$("#version").text(centsa.general.version());
 	$("#update" + centsa.settings.get("auto.update.check")).prop("checked", "true");
 
 }
 
-function checkForUpdates() {
-	centsa.general.update();
+function initLayouts() {
+    $('#layout').children().remove();
+	$(centsa.general.layouts()).each(function() {
+        $('#layout').append($('<option>', {
+            value : this,
+            text : this
+        }));
+    });
 }

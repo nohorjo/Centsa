@@ -21,11 +21,11 @@
 <h4>Import CSV</h4>
 <table class="table">
 	<tr>
-		<td><label>Parse rule</label></td>
-		<td><select class="form-control" data-ng-model="rule">
+		<td width="30%"><label>Parse rule</label></td>
+		<td width="40%"><select class="form-control" data-ng-model="rule" data-ng-mouseover="loadRules()">
 				<option data-ng-repeat="r in rules" value="{{ r }}">{{ r }}</option>
 		</select></td>
-		<td><input type="button" value="Import file"
+		<td width="30%"><input type="button" value="Import file"
 			class="btn btn-primary" data-ng-click="importFile()" /></td>
 	</tr>
 	<tr>

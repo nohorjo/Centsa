@@ -32,8 +32,9 @@
                     </tr>
                     <tr>
                         <td>Current version</td>
-                        <td><span id="version"></span> <a href="#"
-                                                          onclick="checkForUpdates()">Check for new version</a></td>
+                        <td><span id="version"></span>
+                            <a href="#" onclick="centsa.general.update()">Check for new version</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>Auto update</td>
@@ -59,7 +60,7 @@
         </div>
     </div>
 </div>
-<img data-toggle="modal" data-target="#settingsModal"/>
+<img data-toggle="modal" data-target="#settingsModal" onclick="initLayouts()"/>
 <iframe name="main_frame" src="/layout/main.html" seamless></iframe>
 </body>
 

@@ -45,4 +45,8 @@ app.controller("importCtrl", function($scope, $rootScope) {
 		return $rootScope.roundTo(($scope.importProgress.processed * 100)
 				/ $scope.importProgress.total, extra ? 2 : 0);
 	};
+
+	$scope.loadRules = function() {
+	    $scope.rules = centsa.general.rules();
+	};
 });
