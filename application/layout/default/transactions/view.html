@@ -41,8 +41,8 @@
         </thead>
         <tbody>
         <tr>
-            <td colspan="3"
-                data-ng-class="{'success' : filter.fromDate || filter.toDate }"><label>Dates</label>
+            <td colspan="3" data-ng-class="{'success' : filter.fromDate || filter.toDate }">
+                <label>Dates</label>
                 <div class="input-group input-daterange">
                     <input type="text" class="daterangepicker form-control"
                            pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.fromDate">
@@ -64,21 +64,19 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"
-                data-ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
-                <label>Account</label><select
-                    class="form-control" data-ng-model="filter.account_id">
-                <option value="0"></option>
-                <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-            </select></td>
-            <td colspan="2"
-                data-ng-class="{'success' : filter.type_id && filter.type_id != '0' }"><label>Type</label><select
-                    class="form-control" data-ng-model="filter.type_id">
-                <option value="0"></option>
-                <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-            </select></td>
-            <td colspan="2"
-                data-ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
+            <td colspan="2" data-ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
+                <label>Account</label>
+                <select class="form-control" data-ng-model="filter.account_id">
+                    <option value="0"></option>
+                    <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+                </select></td>
+            <td colspan="2" data-ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
+                <label>Type</label>
+                <select class="form-control" data-ng-model="filter.type_id">
+                    <option value="0"></option>
+                    <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+                </select></td>
+            <td colspan="2" data-ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
                 <label>Expense</label><select
                     class="form-control" data-ng-model="filter.expense_id">
                 <option value="0"></option>
@@ -86,12 +84,14 @@
             </select></td>
         </tr>
         <tr>
-            <td colspan="4" data-ng-class="{'success' : filter.comment }"><label>Comment</label><input
-                    type="text" class="form-control" data-ng-model="filter.comment"></td>
+            <td colspan="4" data-ng-class="{'success' : filter.comment }">
+                <label>Comment</label>
+                <input type="text" class="form-control" data-ng-model="filter.comment">
+                <input type="checkbox" data-ng-model="filter.regex"> Regular expression
+            </td>
             <td colspan="2">
                 <div id="filterButtons" class="float-right">
-                    <input type="button" class="btn btn-default" value="Clear"
-                           data-ng-click="clearFilter()">
+                    <input type="button" class="btn btn-default" value="Clear" data-ng-click="clearFilter()">
                     <input type="submit" class="btn btn-primary" value="Apply"
                            data-ng-class="{ 'btn-warning': FilterForm.$invalid }"
                            data-ng-disabled="FilterForm.$invalid">
