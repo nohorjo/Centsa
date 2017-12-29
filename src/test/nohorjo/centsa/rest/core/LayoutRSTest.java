@@ -32,8 +32,8 @@ public class LayoutRSTest {
 
 	private boolean doThrow;
 
-	private static final String RESOURCE = RandomStringUtils.randomAlphabetic(10),
-			PATH = RandomStringUtils.randomAlphabetic(10), LAYOUT = RandomStringUtils.randomAlphabetic(10);
+	private static final byte[] RESOURCE = RandomStringUtils.randomAlphabetic(10).getBytes();
+	private static final String PATH = RandomStringUtils.randomAlphabetic(10), LAYOUT = RandomStringUtils.randomAlphabetic(10);
 
 	@Before
 	public void init() throws IOException {
@@ -43,7 +43,7 @@ public class LayoutRSTest {
 			assertEquals("layout/" + LAYOUT + "/" + PATH, i.getArgument(0));
 			if (doThrow)
 				throw new IOException();
-			return RESOURCE.getBytes();
+			return RESOURCE;
 		});
 
 		PowerMockito.when(SystemProperties.get("layout", String.class)).then((i) -> {
@@ -65,14 +65,14 @@ public class LayoutRSTest {
 	}
 
 	@Test
-	public void getImage_returns() throws IOException {
-		assertTrue(Arrays.equals(new LayoutRS().getFile(PATH), RESOURCE.getBytes()));
+	public void getPNGImage_returns() throws IOException {
+		assertTrue(Arrays.equals(new LayoutRS().getPNGImage(PATH), RESOURCE));
 	}
 
 	@Test(expected = IOException.class)
-	public void getImage_throws() throws IOException {
+	public void getPNGImage_throws() throws IOException {
 		doThrow = true;
-		new LayoutRS().getFile(PATH);
+		new LayoutRS().getPNGImage(PATH);
 	}
 
 }

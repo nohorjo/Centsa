@@ -33,23 +33,53 @@ public class LayoutRS extends AbstractRS {
 	 */
 	@GET
 	@Path("/{resource:.*}")
-	public String getResource(@PathParam("resource") String resource) throws IOException {
-		return new String(getFile(resource));
-	}
-
-	/**
-	 * Gets PNG images
-	 * 
-	 * @param resource
-	 *            The path to the image
-	 * @return The image data
-	 * @throws IOException
-	 */
-	@GET
-	@Path("/{resource:.*\\.png}")
-	@Produces("image/png")
-	public byte[] getFile(@PathParam("resource") String resource) throws IOException {
+	public byte[] getResource(@PathParam("resource") String resource) throws IOException {
 		return ClasspathUtils.getFileData("layout/" + SystemProperties.get("layout", String.class) + "/" + resource);
 	}
+
+    /**
+     * Gets PNG images
+     *
+     * @param resource
+     *            The path to the image
+     * @return The image data
+     * @throws IOException
+     */
+    @GET
+    @Path("/{resource:.*\\.png}")
+    @Produces("image/png")
+    public byte[] getPNGImage(@PathParam("resource") String resource) throws IOException {
+        return getResource(resource);
+    }
+
+    /**
+     * Gets JPEG images
+     *
+     * @param resource
+     *            The path to the image
+     * @return The image data
+     * @throws IOException
+     */
+    @GET
+    @Path("/{resource:.*\\.jpeg}")
+    @Produces("image/jpeg")
+    public byte[] getJpegImage(@PathParam("resource") String resource) throws IOException {
+        return getResource(resource);
+    }
+
+    /**
+     * Gets SVG images
+     *
+     * @param resource
+     *            The path to the image
+     * @return The image data
+     * @throws IOException
+     */
+    @GET
+    @Path("/{resource:.*\\.svg}")
+    @Produces("image/svg+xml")
+    public byte[] getSvg(@PathParam("resource") String resource) throws IOException {
+        return getResource(resource);
+    }
 
 }
