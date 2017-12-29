@@ -177,3 +177,4 @@ fabric.properties
 .fuse*
 
 build/*
+application/log/*
