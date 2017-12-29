@@ -13,7 +13,7 @@ public class Expense implements VO {
     private Long id;
     private String name;
     private int cost;
-    private int frequency_days;
+    private String frequency;
     private long started;
     private boolean automatic;
 
@@ -43,12 +43,12 @@ public class Expense implements VO {
         this.cost = cost;
     }
 
-    public int getFrequency_days() {
-        return frequency_days;
+    public String getFrequency() {
+        return frequency;
     }
 
-    public void setFrequency_days(int frequency_days) {
-        this.frequency_days = frequency_days;
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
     }
 
     public long getStarted() {
@@ -81,28 +81,13 @@ public class Expense implements VO {
      * @return The expected number of instances
      */
     public double get_expected_instances_count() {
-        double expected = ((System.currentTimeMillis() - started) / DAY) / frequency_days;
+        double expected = ((System.currentTimeMillis() - started) / DAY) / Integer.parseInt(frequency);
         return ++expected > 0 ? expected : 0;
-    }
-
-    /**
-     * Calculates the number of days until the next transaction is due
-     *
-     * @return Days until the next transaction
-     */
-    public long get_eta_days() {
-        long currentTime = System.currentTimeMillis();
-        if (started > currentTime) {
-            return Math.round((started - currentTime) / DAY);
-        } else {
-            double daysSinceLast = (currentTime - (started + ((instance_count - 1) * frequency_days * DAY))) / DAY;
-            return Math.round(frequency_days - daysSinceLast);
-        }
     }
 
     @Override
     public String toString() {
-        return "Expense [id=" + id + ", name=" + name + ", cost=" + cost + ", frequency_days=" + frequency_days
+        return "Expense [id=" + id + ", name=" + name + ", cost=" + cost + ", frequency=" + frequency
                 + ", started=" + started + ", automatic=" + automatic + "]";
     }
 
@@ -112,7 +97,7 @@ public class Expense implements VO {
         if (o == null || getClass() != o.getClass()) return false;
         Expense expense = (Expense) o;
         return cost == expense.cost &&
-                frequency_days == expense.frequency_days &&
+                Objects.equals(frequency, expense.frequency) &&
                 started == expense.started &&
                 automatic == expense.automatic &&
                 Objects.equals(name, expense.name);
@@ -121,6 +106,6 @@ public class Expense implements VO {
     @Override
     public int hashCode() {
 
-        return Objects.hash(name, cost, frequency_days, started, automatic);
+        return Objects.hash(name, cost, frequency, started, automatic);
     }
 }

@@ -2,19 +2,18 @@
 <p>Total daily active expenses ( total | auto ): {{
 	totalActiveExpenses/100}} | {{ totalAutoExpenses/100 }}</p>
 <form name="Form" data-ng-submit="saveExpense()">
-	<h4>Manage expenses</h4>
+	<h4>Manage expenses (incomes are negative)</h4>
 	<table id="expensesTable" class="table table-condensed table-hover">
 		<thead>
 			<tr>
 				<th width="5%" data-ng-click="sort('id', expenses)">ID</th>
-				<th width="20%" data-ng-click="sort('name', expenses)">Name</th>
+				<th width="25%" data-ng-click="sort('name', expenses)">Name</th>
 				<th width="10%" data-ng-click="sort('cost', expenses)">Cost</th>
 				<th width="10%">Every x days</th>
 				<th width="15%" data-ng-click="sort('started', expenses)">Started</th>
 				<th width="10%">Automatic</th>
 				<th width="10%">Instances</th>
-				<th width="10%">ETA (days)</th>
-				<th width="5%"></th>
+				<th width="10%"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -27,7 +26,7 @@
 				<td><input type="number" class="form-control"
 					required="required" step="0.01" data-ng-model="newExpense.cost"></td>
 				<td><input type="number" class="form-control" min="1"
-					required="required" data-ng-model="newExpense.frequency_days"></td>
+					required="required" data-ng-model="newExpense.frequency"></td>
 				<td><input type="text" class="datepicker form-control"
 					pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
 					data-ng-model="newExpense.started"></td>
@@ -38,12 +37,11 @@
 				<td>{{ e.id }}</td>
 				<td>{{ e.name }}</td>
 				<td>{{ e.cost / 100 }}</td>
-				<td>{{ e.frequency_days }}</td>
+				<td>{{ e.frequency }}</td>
 				<td>{{ formatDate(e.started) }}</td>
 				<td><input type="checkbox" disabled="disabled"
 					data-ng-checked="e.automatic"></td>
 				<td>{{ e.instance_count }}</td>
-				<td>{{ e._eta_days }}</td>
 				<td><a href="" data-ng-click="deleteExpense(e.id)">Delete</a></td>
 			</tr>
 		</tbody>

@@ -17,7 +17,7 @@ import nohorjo.centsa.vo.VO;
  *
  */
 public class ExpensesDAO extends AbstractDAO {
-	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY_DAYS", "STARTED", "AUTOMATIC" };
+	private static final String[] COLUMNS = { "NAME", "COST", "FREQUENCY", "STARTED", "AUTOMATIC" };
 	private static final String TABLE_NAME = "EXPENSES";
 
 	@Override
@@ -32,7 +32,7 @@ public class ExpensesDAO extends AbstractDAO {
 			throw new SQLException("Cannot edit expense");
 		}
 
-		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequency_days(),
+		return insert(TABLE_NAME, COLUMNS, new Object[] { e.getId(), e.getName(), e.getCost(), e.getFrequency(),
 				e.getStarted(), e.isAutomatic() });
 	}
 
@@ -55,7 +55,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setId(rs.getLong("ID"));
 					e.setName(rs.getString("NAME"));
 					e.setCost(rs.getInt("COST"));
-					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setFrequency(rs.getString("FREQUENCY"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
 					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));
@@ -84,7 +84,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setId(rs.getLong("ID"));
 					e.setName(rs.getString("NAME"));
 					e.setCost(rs.getInt("COST"));
-					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setFrequency(rs.getString("FREQUENCY"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
 					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));
@@ -107,7 +107,7 @@ public class ExpensesDAO extends AbstractDAO {
 					e.setId(rs.getLong("ID"));
 					e.setName(rs.getString("NAME"));
 					e.setCost(rs.getInt("COST"));
-					e.setFrequency_days(rs.getInt("FREQUENCY_DAYS"));
+					e.setFrequency(rs.getString("FREQUENCY"));
 					e.setStarted(rs.getLong("STARTED"));
 					e.setAutomatic(rs.getBoolean("AUTOMATIC"));
 					e.setInstance_count(rs.getInt("INSTANCE_COUNT"));

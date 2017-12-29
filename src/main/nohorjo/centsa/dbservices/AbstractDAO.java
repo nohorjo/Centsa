@@ -38,6 +38,15 @@ public abstract class AbstractDAO implements DAO {
 				SystemProperties.set("db.version", dbVersion);
 			}
 
+			try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
+				String sql[] = SQLUtils.getQuery("Defaults").split(";");
+				for (String part : sql) {
+					if (!part.equals(""))
+						ps.addBatch(part);
+				}
+				ps.executeBatch();
+			}
+
 		} catch (SQLException | IOException e) {
 			throw new RuntimeException(e);
 		}

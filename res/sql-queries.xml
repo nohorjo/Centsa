@@ -1,197 +1,201 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Queries>
-	<Templates>
-		<Insert>
-		<![CDATA[
-		INSERT INTO {tablename} ({columns}) VALUES ({placeholders});
-		]]>
-		</Insert>
-		<Update>
-		<![CDATA[
-		REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
-		]]>
-		</Update>
-		<GetAll>
-		<![CDATA[
-		SELECT {columns} FROM {tablename} ORDER BY {orderby} LIMIT ?, ?;
-		]]>
-		</GetAll>
-		<Get>
-		<![CDATA[
-		SELECT ID, {columns} FROM {tablename} WHERE ID = ?;
-		]]>
-		</Get>
-		<Delete>
-		<![CDATA[
-		DELETE FROM {tablename} WHERE ID = ?;
-		]]>
-		</Delete>
-		<GetIdByName>
-		<![CDATA[
-		SELECT ID FROM {tablename} WHERE NAME = ?;
-		]]>
-		</GetIdByName>
-	</Templates>
-	<Transactions>
-		<CreateTable>
-		<![CDATA[
-		CREATE TABLE IF NOT EXISTS TRANSACTIONS
-		(
-			ID INTEGER PRIMARY KEY AUTOINCREMENT, 
-			AMOUNT INTEGER NOT NULL, 
-			COMMENT VARCHAR,
-			ACCOUNT_ID INTEGER NOT NULL REFERENCES ACCOUNTS(ID), 
-			TYPE_ID INTEGER NOT NULL REFERENCES TYPES(ID),
-			EXPENSE_ID INTEGER REFERENCES EXPENSES(ID),
-			DATE INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'NOW')*1000)
-		);
-		]]>
-		</CreateTable>
-		<UniqueComments>
-		<![CDATA[
-		SELECT DISTINCT COMMENT FROM TRANSACTIONS;
-		]]>
-		</UniqueComments>
-		<SumAll>
-		<![CDATA[
-		SELECT SUM(AMOUNT) FROM TRANSACTIONS {filter};
-		]]>
-		</SumAll>
-		<GetDatesAndAmounts>
-		<![CDATA[
-		SELECT DATE, AMOUNT FROM TRANSACTIONS ORDER BY DATE ASC;
-		]]>
-		</GetDatesAndAmounts>
-		<GetAll>
-		<![CDATA[
-		SELECT ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, EXPENSE_ID, DATE FROM TRANSACTIONS {filter} ORDER BY {orderby} LIMIT ?, ?;
-		]]>
-		</GetAll>
-		<Count>
-		<![CDATA[
-		SELECT COUNT(*) FROM TRANSACTIONS {filter};
-		]]>
-		</Count>
-		<Min>
-		<![CDATA[
-		SELECT MIN(AMOUNT) FROM TRANSACTIONS {filter};
-		]]>
-		</Min>
-		<Max>
-		<![CDATA[
-		SELECT MAX(AMOUNT) FROM TRANSACTIONS {filter};
-		]]>
-		</Max>
-	</Transactions>
-	<Accounts>
-		<CreateTable>
-		<![CDATA[
-		CREATE TABLE IF NOT EXISTS ACCOUNTS
-	    (
-	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR UNIQUE NOT NULL
-	    );
-	    INSERT INTO ACCOUNTS (ID, NAME) SELECT 1, 'Default' WHERE NOT EXISTS
-	    (SELECT 1 FROM ACCOUNTS WHERE ID = 1);
-		]]>
-		</CreateTable>
-		<Get>
-		<![CDATA[
-		SELECT a.ID, a.NAME,
-		(SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID)	AS BALANCE
-		FROM ACCOUNTS a WHERE a.ID = ?;
-		]]>
-		</Get>
-		<GetAll>
-		<![CDATA[
-		SELECT a.ID, a.NAME,
-		(SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID)	AS BALANCE
-		FROM ACCOUNTS a ORDER BY {orderby} LIMIT ?, ?;	
-		]]>
-		</GetAll>
-	</Accounts>
-	<Types>
-		<CreateTable>
-		<![CDATA[
-		CREATE TABLE IF NOT EXISTS TYPES 
-	    (
-	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR UNIQUE NOT NULL
-	    );
-	    INSERT INTO TYPES (ID, NAME) SELECT 1, 'Other' WHERE NOT EXISTS
-	    (SELECT 1 FROM TYPES WHERE ID = 1);
-		]]>
-		</CreateTable>
-		<Get>
-		<![CDATA[
-		SELECT ty.ID, ty.NAME,
-		(SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
-		FROM TYPES ty WHERE ty.ID = ?;
-		]]>
-		</Get>
-		<GetAll>
-		<![CDATA[
-		SELECT ty.ID, ty.NAME,
-		(SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
-		FROM TYPES ty ORDER BY {orderby} LIMIT ?, ?;	
-		]]>
-		</GetAll>
-		<ConvertToOther>
-		<![CDATA[
-		UPDATE TRANSACTIONS SET TYPE_ID = 1 WHERE TYPE_ID = ?;
-		]]>
-		</ConvertToOther>
-	</Types>
-	<Expenses>
-		<CreateTable>
-		<![CDATA[
-		CREATE TABLE IF NOT EXISTS EXPENSES
-	    (
-	        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-	        NAME VARCHAR UNIQUE NOT NULL,
-	        COST INTEGER NOT NULL,
-	        FREQUENCY_DAYS INT NOT NULL,
-	        STARTED INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'NOW')*1000),
-	        AUTOMATIC TINYINT NOT NULL DEFAULT 0
-	    );
-	    INSERT INTO EXPENSES (ID, NAME, COST, FREQUENCY_DAYS) SELECT 1, 'N/A', 0, 1 WHERE NOT EXISTS
-	    (SELECT 1 FROM EXPENSES WHERE ID = 1);
-		]]>
-		</CreateTable>
-		<GetTotalAuto>
-			<!-- Gets the daily sum of active automatic expenses -->
-		<![CDATA[
-		SELECT SUM(COST/FREQUENCY_DAYS) FROM EXPENSES WHERE AUTOMATIC = 1 AND STARTED < (STRFTIME('%s', 'NOW')*1000);
-		]]>
-		</GetTotalAuto>
-		<GetTotalActive>
-			<!-- Gets the daily sum of active expenses -->
-		<![CDATA[
-		SELECT SUM(COST/FREQUENCY_DAYS) FROM EXPENSES WHERE STARTED < (STRFTIME('%s', 'NOW')*1000);
-		]]>
-		</GetTotalActive>
-		<GetAllActive>
-		<![CDATA[
-		SELECT ID, NAME, COST, FREQUENCY_DAYS, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT 
-		FROM EXPENSES e WHERE STARTED < (STRFTIME('%s', 'NOW')*1000) ORDER BY {orderby} LIMIT ?, ?;
-		]]>
-		</GetAllActive>
-		<GetAll>
-		<![CDATA[
-		SELECT ID, NAME, COST, FREQUENCY_DAYS, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT
-		FROM EXPENSES e ORDER BY {orderby} LIMIT ?, ?;
-		]]>
-		</GetAll>
-		<Get>
-		<![CDATA[
-		SELECT ID, NAME, COST, FREQUENCY_DAYS, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT 
-		FROM EXPENSES WHERE ID = ?;
-		]]>
-		</Get>
-		<ConvertToNA>
-		<![CDATA[
-		UPDATE TRANSACTIONS SET EXPENSE_ID = 1 WHERE EXPENSE_ID = ?;
-		]]>
-		</ConvertToNA>
-	</Expenses>
+    <Templates>
+        <Insert>
+        <![CDATA[
+        INSERT INTO {tablename} ({columns}) VALUES ({placeholders});
+        ]]>
+        </Insert>
+        <Update>
+        <![CDATA[
+        REPLACE INTO {tablename} ({columns}) VALUES ({placeholders});
+        ]]>
+        </Update>
+        <GetAll>
+        <![CDATA[
+        SELECT {columns} FROM {tablename} ORDER BY {orderby} LIMIT ?, ?;
+        ]]>
+        </GetAll>
+        <Get>
+        <![CDATA[
+        SELECT ID, {columns} FROM {tablename} WHERE ID = ?;
+        ]]>
+        </Get>
+        <Delete>
+        <![CDATA[
+        DELETE FROM {tablename} WHERE ID = ?;
+        ]]>
+        </Delete>
+        <GetIdByName>
+        <![CDATA[
+        SELECT ID FROM {tablename} WHERE NAME = ?;
+        ]]>
+        </GetIdByName>
+    </Templates>
+    <Transactions>
+        <CreateTable>
+        <![CDATA[
+        CREATE TABLE IF NOT EXISTS TRANSACTIONS
+        (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            AMOUNT INTEGER NOT NULL, 
+            COMMENT VARCHAR,
+            ACCOUNT_ID INTEGER NOT NULL REFERENCES ACCOUNTS(ID), 
+            TYPE_ID INTEGER NOT NULL REFERENCES TYPES(ID),
+            EXPENSE_ID INTEGER REFERENCES EXPENSES(ID),
+            DATE INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'NOW')*1000)
+        );
+        ]]>
+        </CreateTable>
+        <UniqueComments>
+        <![CDATA[
+        SELECT DISTINCT COMMENT FROM TRANSACTIONS;
+        ]]>
+        </UniqueComments>
+        <SumAll>
+        <![CDATA[
+        SELECT SUM(AMOUNT) FROM TRANSACTIONS {filter};
+        ]]>
+        </SumAll>
+        <GetDatesAndAmounts>
+        <![CDATA[
+        SELECT DATE, AMOUNT FROM TRANSACTIONS ORDER BY DATE ASC;
+        ]]>
+        </GetDatesAndAmounts>
+        <GetAll>
+        <![CDATA[
+        SELECT ID, AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, EXPENSE_ID, DATE FROM TRANSACTIONS {filter} ORDER BY {orderby} LIMIT ?, ?;
+        ]]>
+        </GetAll>
+        <Count>
+        <![CDATA[
+        SELECT COUNT(*) FROM TRANSACTIONS {filter};
+        ]]>
+        </Count>
+        <Min>
+        <![CDATA[
+        SELECT MIN(AMOUNT) FROM TRANSACTIONS {filter};
+        ]]>
+        </Min>
+        <Max>
+        <![CDATA[
+        SELECT MAX(AMOUNT) FROM TRANSACTIONS {filter};
+        ]]>
+        </Max>
+    </Transactions>
+    <Accounts>
+        <CreateTable>
+        <![CDATA[
+        CREATE TABLE IF NOT EXISTS ACCOUNTS
+        (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            NAME VARCHAR UNIQUE NOT NULL
+        );
+        ]]>
+        </CreateTable>
+        <Get>
+        <![CDATA[
+        SELECT a.ID, a.NAME,
+        (SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID) AS BALANCE
+        FROM ACCOUNTS a WHERE a.ID = ?;
+        ]]>
+        </Get>
+        <GetAll>
+        <![CDATA[
+        SELECT a.ID, a.NAME,
+        (SELECT -SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.ACCOUNT_ID = a.ID) AS BALANCE
+        FROM ACCOUNTS a ORDER BY {orderby} LIMIT ?, ?;    
+        ]]>
+        </GetAll>
+    </Accounts>
+    <Types>
+        <CreateTable>
+        <![CDATA[
+        CREATE TABLE IF NOT EXISTS TYPES 
+        (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            NAME VARCHAR UNIQUE NOT NULL
+        );
+        ]]>
+        </CreateTable>
+        <Get>
+        <![CDATA[
+        SELECT ty.ID, ty.NAME,
+        (SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
+        FROM TYPES ty WHERE ty.ID = ?;
+        ]]>
+        </Get>
+        <GetAll>
+        <![CDATA[
+        SELECT ty.ID, ty.NAME,
+        (SELECT SUM(AMOUNT) FROM TRANSACTIONS t WHERE t.TYPE_ID = ty.ID) AS SUM
+        FROM TYPES ty ORDER BY {orderby} LIMIT ?, ?;    
+        ]]>
+        </GetAll>
+        <ConvertToOther>
+        <![CDATA[
+        UPDATE TRANSACTIONS SET TYPE_ID = 1 WHERE TYPE_ID = ?;
+        ]]>
+        </ConvertToOther>
+    </Types>
+    <Expenses>
+        <CreateTable>
+        <![CDATA[
+        CREATE TABLE IF NOT EXISTS EXPENSES
+        (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            NAME VARCHAR UNIQUE NOT NULL,
+            COST INTEGER NOT NULL,
+            FREQUENCY VARCHAR NOT NULL,
+            STARTED INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'NOW')*1000),
+            AUTOMATIC TINYINT NOT NULL DEFAULT 0
+        );
+        ]]>
+        </CreateTable>
+        <GetTotalAuto>
+            <!-- Gets the daily sum of active automatic expenses -->
+        <![CDATA[
+        SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE AUTOMATIC = 1 AND STARTED < (STRFTIME('%s', 'NOW')*1000);
+        ]]>
+        </GetTotalAuto>
+        <GetTotalActive>
+            <!-- Gets the daily sum of active expenses -->
+        <![CDATA[
+        SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE STARTED < (STRFTIME('%s', 'NOW')*1000);
+        ]]>
+        </GetTotalActive>
+        <GetAllActive>
+        <![CDATA[
+        SELECT ID, NAME, COST, FREQUENCY, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT
+        FROM EXPENSES e WHERE STARTED < (STRFTIME('%s', 'NOW')*1000) ORDER BY {orderby} LIMIT ?, ?;
+        ]]>
+        </GetAllActive>
+        <GetAll>
+        <![CDATA[
+        SELECT ID, NAME, COST, FREQUENCY, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT
+        FROM EXPENSES e ORDER BY {orderby} LIMIT ?, ?;
+        ]]>
+        </GetAll>
+        <Get>
+        <![CDATA[
+        SELECT ID, NAME, COST, FREQUENCY, STARTED, AUTOMATIC, (SELECT COUNT(*) FROM TRANSACTIONS t WHERE t.EXPENSE_ID = e.ID) AS INSTANCE_COUNT
+        FROM EXPENSES WHERE ID = ?;
+        ]]>
+        </Get>
+        <ConvertToNA>
+        <![CDATA[
+        UPDATE TRANSACTIONS SET EXPENSE_ID = 1 WHERE EXPENSE_ID = ?;
+        ]]>
+        </ConvertToNA>
+    </Expenses>
+    <Defaults>
+        <![CDATA[
+        INSERT INTO ACCOUNTS (ID, NAME) SELECT 1, 'Default' WHERE NOT EXISTS
+            (SELECT 1 FROM ACCOUNTS WHERE ID = 1);
+        INSERT INTO TYPES (ID, NAME) SELECT 1, 'Other' WHERE NOT EXISTS
+            (SELECT 1 FROM TYPES WHERE ID = 1);
+        INSERT INTO EXPENSES (ID, NAME, COST, FREQUENCY) SELECT 1, 'N/A', 0, '1' WHERE NOT EXISTS
+            (SELECT 1 FROM EXPENSES WHERE ID = 1);
+        ]]>
+    </Defaults>
 </Queries>

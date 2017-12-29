@@ -11,7 +11,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 	$scope.newExpense = {
 		name : "",
 		cost : 0.0,
-		frequency_days : 1,
+		frequency : 1,
 		started : new Date().formatDate("yyyy/MM/dd"),
 		automatic : false
 	};
