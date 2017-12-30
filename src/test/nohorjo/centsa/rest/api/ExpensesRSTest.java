@@ -137,7 +137,7 @@ public class ExpensesRSTest {
 		assertEquals(MockDAO.ID, e.getId().longValue());
 		assertEquals(MockDAO.NAME, e.getName());
 		assertEquals(MockExpensesDAO.COST, e.getCost());
-		assertEquals(MockExpensesDAO.FREQUENCY_DAYS, e.getFrequency_days());
+		assertEquals(MockExpensesDAO.FREQUENCY, e.getFrequency());
 		assertEquals(active ? MockExpensesDAO.STARTED_2 : MockExpensesDAO.STARTED, e.getStarted());
 		assertEquals(MockExpensesDAO.INSTANCES_COUNT, e.getInstance_count());
 		assertEquals(MockExpensesDAO.AUTO, e.isAutomatic());

@@ -69,8 +69,8 @@ public class ExpensesInterfaceTest {
                     return createNew ? MockDAO.NAME_2 : MockDAO.NAME;
                 case "cost":
                     return MockExpensesDAO.COST;
-                case "frequency_days":
-                    return MockExpensesDAO.FREQUENCY_DAYS;
+                case "frequency":
+                    return MockExpensesDAO.FREQUENCY;
                 case "started":
                     return MockExpensesDAO.STARTED;
                 case "automatic":

@@ -10,10 +10,10 @@
             <th width="15%" data-ng-click="sort('name', expenses)">Name</th>
             <th width="10%" data-ng-click="sort('cost', expenses)">Cost</th>
             <th width="10%">Type</th>
-            <th width="10%">Every x days</th>
-            <th width="10%">Automatic</th>
+            <th width="20%">Frequency</th>
+            <th width="5%">Automatic</th>
             <th width="10%">Account</th>
-            <th width="15%" data-ng-click="sort('started', expenses)">Started</th>
+            <th width="10%" data-ng-click="sort('started', expenses)">Started</th>
             <th width="5%">Instances</th>
             <th width="5%"></th>
         </tr>
@@ -22,8 +22,8 @@
         <tr>
             <td>
                 <input type="submit" value="+" class="btn btn-primary"
-                       data-ng-class="{ 'btn-warning': Form.$invalid || (newExpense.ended && newExpense.started > newExpense.ended) }"
-                       data-ng-disabled="Form.$invalid || (newExpense.ended && newExpense.started > newExpense.ended)">
+                       data-ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
+                       data-ng-disabled="Form.$invalid || !newExpense.frequency">
             </td>
             <td><input type="text" class="form-control" required="required" data-ng-model="newExpense.name"></td>
             <td>
@@ -36,8 +36,84 @@
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control" min="1" required="required"
-                       data-ng-model="newExpense.frequency">
+                <div class="dropdown" id="frequencySelect">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <span data-ng-bind-html="trust(frequencyDisplayText(newExpense.frequency) || 'Set')"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'basic' }">
+                            <input type="radio" name="frequency" value="basic" data-ng-model="frequency.type">
+                            Every <input type="number" class="form-control" min="1" data-ng-model="frequency.date">
+                            day(s)
+                        </li>
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'date' }">
+                            <input type="radio" name="frequency" value="date" data-ng-model="frequency.type">
+                            On the <input type="number" class="form-control" min="1" data-ng-model="frequency.date"
+                                          data-ng-max="getDateMax(getMaxDaysInMonth(),frequency.type == 'date')">
+                            <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup> of
+                            <select class="form-control" data-ng-model="frequency.month">
+                                <option value="0">Every month</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </li>
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'day' }">
+                            <input type="radio" name="frequency" value="day" data-ng-model="frequency.type">
+                            On the <input type="number" class="form-control" min="1"
+                                          data-ng-max="getDateMax(5, frequency.type == 'day')"
+                                          data-ng-model="frequency.date">
+                            <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
+                            (last <input type="checkbox" data-ng-model="frequency.last">)
+                            <select class="form-control">
+                                <option value="MO">Monday</option>
+                                <option value="TU">Tuesday</option>
+                                <option value="WE">Wednesday</option>
+                                <option value="TH">Thursday</option>
+                                <option value="FR">Friday</option>
+                                <option value="SA">Saturday</option>
+                                <option value="SU">Sunday</option>
+                            </select>
+                            of the month
+                        </li>
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'monthday' }">
+                            <input type="radio" name="frequency" value="monthday" data-ng-model="frequency.type">
+                            On the <input type="number" class="form-control" min="1"
+                                          data-ng-max="getDateMax(31, frequency.type == 'monthday')"
+                                          data-ng-model="frequency.date">
+                            <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
+                            (last <input type="checkbox" data-ng-model="frequency.last">) day of the month
+                        </li>
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'workday' }">
+                            <input type="radio" name="frequency" value="workday" data-ng-model="frequency.type">
+                            On the <input type="number" class="form-control" min="1"
+                                          data-ng-max="getDateMax(23, frequency.type == 'workday')"
+                                          data-ng-model="frequency.date">
+                            <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
+                            (last <input type="checkbox" data-ng-model="frequency.last">) work-day of the month
+                        </li>
+                        <li data-ng-class="{ 'disabled' : frequency.type != 'restday' }">
+                            <input type="radio" name="frequency" value="restday" data-ng-model="frequency.type">
+                            On the <input type="number" class="form-control" min="1"
+                                          data-ng-max="getDateMax(12, frequency.type == 'restday')"
+                                          data-ng-model="frequency.date">
+                            <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
+                            (last <input type="checkbox" data-ng-model="frequency.last">) rest-day of the month
+                        </li>
+                    </ul>
+                </div>
+
+
             </td>
             <td><input type="checkbox" data-ng-model="newExpense.automatic"></td>
             <td>
@@ -57,7 +133,7 @@
             <td>{{ e.name }}</td>
             <td>{{ e.cost / 100 }}</td>
             <td>{{ getFromArray(types, e.type_id).name }}</td>
-            <td>{{ e.frequency }}</td>
+            <td data-ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
             <td><input type="checkbox" disabled="disabled" data-ng-checked="e.automatic"></td>
             <td>{{ getFromArray(accounts, e.account_id).name }}</td>
             <td>{{ formatDate(e.started) }}</td>

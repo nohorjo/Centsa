@@ -25,7 +25,7 @@ public class ExpensesInterface extends JSInterface {
 
 		if (id == null) {
 			e.setCost(cast(o.get("cost"), Integer.class));
-			e.setFrequency_days(cast(o.get("frequency_days"), Integer.class));
+			e.setFrequency(cast(o.get("frequency"), String.class));
 			e.setStarted(cast(o.get("started"), Long.class));
 			e.setAutomatic((boolean) o.get("automatic"));
 

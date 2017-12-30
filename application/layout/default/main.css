@@ -141,3 +141,41 @@ th[data-ng-click]:after {
 .no-border-inactive:not(:focus) {
     border: 0;
 }
+
+#frequencySelect > .dropdown-menu {
+    width: 300%;
+}
+
+#frequencySelect > .btn {
+    white-space: normal;
+}
+
+.dropdown-menu li {
+    padding: 0 0.5em;
+}
+
+.dropdown-menu li:hover {
+    background: #f5f5f5;
+}
+
+.dropdown > button {
+    width: 100%;
+}
+
+.dropdown-menu input[type="number"] {
+    display: inline;
+    width: 5em;
+}
+
+.dropdown-menu select {
+    display: inline;
+    width: 10em;
+}
+
+li.disabled :not([type="radio"]) {
+    pointer-events: none;
+}
+
+li.disabled {
+    opacity: 0.5;
+}

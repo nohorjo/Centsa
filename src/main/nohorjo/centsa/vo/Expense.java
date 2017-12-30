@@ -107,8 +107,13 @@ public class Expense implements VO {
      * @return The expected number of instances
      */
     public double get_expected_instances_count() {
-        double expected = ((System.currentTimeMillis() - started) / DAY) / Integer.parseInt(frequency);
-        return ++expected > 0 ? expected : 0;
+        try {
+            double expected = ((System.currentTimeMillis() - started) / DAY) / Integer.parseInt(frequency);
+            return ++expected > 0 ? expected : 0;
+        } catch (NumberFormatException e) {
+            // FIXME
+            return 0;
+        }
     }
 
     @Override
@@ -191,7 +196,7 @@ public class Expense implements VO {
             return d < 23 && d >= -23;
         } else if (frequency.matches("^RDAY -?\\d+$")) {
             int d = Integer.parseInt(frequency.substring(5));
-            return d < 10 && d >= -10;
+            return d < 12 && d >= -12;
         }
         return false;
     }
