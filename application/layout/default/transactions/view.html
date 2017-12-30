@@ -20,9 +20,10 @@
                         <tr data-ng-include="'transactions/inputRow.html'"
                             onload="initDatePickers()"></tr>
                         <tr>
-                            <td colspan="2"><input type="button"
-                                                   value="Delete transaction" class="btn btn-danger"
-                                                   data-ng-click="deleteTrans(newTrans.id)"></td>
+                            <td colspan="2">
+                                <input type="button" value="Delete transaction" class="btn btn-danger"
+                                       data-ng-click="deleteTrans(newTrans.id)">
+                            </td>
                         </tr>
                         </tbody>
                     </table>

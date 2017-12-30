@@ -70,7 +70,13 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 	$rootScope.roundTo = function(x, dp) {
 		var mult = Math.pow(10, dp);
 		return Math.round(x * mult) / mult;
-	}
+	};
+
+	$rootScope.getFromArray = function(arr, id) {
+        return arr.filter(function(item) {
+            return item.id == id;
+        })[0];
+    };
 
 	$scope.isActive = function(path) {
 		return $location.path() == path;

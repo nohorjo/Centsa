@@ -138,12 +138,6 @@ app.controller("transCtrl", function($scope, $rootScope) {
 				new Date().formatDate("yyyy/MM/dd"));
 	};
 
-	$scope.getFromArray = function(arr, id) {
-		return arr.filter(function(item) {
-			return item.id == id;
-		})[0];
-	};
-
 	$scope.editTrans = function(trans) {
 		var t = Object.assign({}, trans);
 		t.date = $rootScope.formatDate(t.date);

@@ -1,32 +1,35 @@
-<td><input type="submit" value="+" class="btn btn-primary"
-	data-ng-class="{ 'btn-warning': Form.$invalid }"
-	data-ng-disabled="Form.$invalid"></td>
-<td><input type="text" class="datepicker form-control"
-	pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
-	data-ng-model="newTrans.date"></td>
-<td><input type="number" class="form-control" required="required"
-	step="0.01" data-ng-model="newTrans.amount"></td>
-<td><select class="form-control"
-	data-ng-model="newTrans.account_id">
-		<option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-</select></td>
-<td><select class="form-control" data-ng-model="newTrans.type_id">
-		<option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-</select></td>
-<td><select class="form-control"
-	data-ng-model="newTrans.expense_id">
-		<option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
-</select></td>
 <td>
-	<div class="datalist" data-ng-keydown="navigateDataList($event)">
-		<input type="text" class="form-control" required="required"
-			placeholder="Enter a comment" data-ng-model="newTrans.comment"
-			data-ng-focus="showDataList = true"
-			data-ng-blur="showDataList = false">
-		<div data-ng-show="showDataList">
+    <input type="submit" value="+" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }"
+           data-ng-disabled="Form.$invalid">
+</td>
+<td>
+    <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required"
+           data-ng-model="newTrans.date">
+</td>
+<td><input type="number" class="form-control" required="required" step="0.01" data-ng-model="newTrans.amount"></td>
+<td>
+    <select class="form-control" data-ng-model="newTrans.account_id">
+        <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+    </select>
+</td>
+<td>
+    <select class="form-control" data-ng-model="newTrans.type_id">
+        <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+    </select>
+</td>
+<td>
+    <select class="form-control" data-ng-model="newTrans.expense_id">
+        <option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+    </select>
+</td>
+<td>
+    <div class="datalist" data-ng-keydown="navigateDataList($event)">
+        <input type="text" class="form-control" required="required" placeholder="Enter a comment"
+               data-ng-model="newTrans.comment" data-ng-focus="showDataList = true" data-ng-blur="showDataList = false">
+        <div data-ng-show="showDataList">
 			<span data-ng-repeat="c in uniqueComments"
-				data-ng-if="newTrans.comment != '' && c.toLowerCase().startsWith(newTrans.comment.toLowerCase())"
-				data-ng-mousedown="setComment(c)">{{ c }}</span>
-		</div>
-	</div>
+                  data-ng-if="newTrans.comment != '' && c.toLowerCase().startsWith(newTrans.comment.toLowerCase())"
+                  data-ng-mousedown="setComment(c)">{{ c }}</span>
+        </div>
+    </div>
 </td>

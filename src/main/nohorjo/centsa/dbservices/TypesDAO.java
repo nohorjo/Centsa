@@ -1,14 +1,11 @@
 package nohorjo.centsa.dbservices;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-
 import nohorjo.centsa.vo.Type;
 import nohorjo.centsa.vo.VO;
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * DAO class to handle types
@@ -84,10 +81,14 @@ public class TypesDAO extends AbstractDAO {
 		if (id == 1) {
 			throw new SQLException("Cannot delete default type");
 		}
-		String sql = SQLUtils.getQuery("Types.ConvertToOther");
-		try (Connection conn = SQLUtils.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-			ps.setLong(1, id);
-			ps.executeUpdate();
+		String convertQueries = SQLUtils.getQuery("Types.ConvertToOther");
+		try (Connection conn = SQLUtils.getConnection(); Statement ps = conn.createStatement()) {
+			String sql[] = SQLUtils.getQuery(convertQueries).split(";");
+			for (String part : sql) {
+				if (!part.equals(""))
+					ps.addBatch(part);
+			}
+			ps.executeBatch();
 		}
 		delete(TABLE_NAME, id);
 	}

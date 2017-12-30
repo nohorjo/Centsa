@@ -256,7 +256,7 @@ public abstract class AbstractDAO implements DAO {
 	 *            the array to prepend
 	 * @return the new array
 	 */
-	private String[] addIDColumn(String[] columnsWithoutID) {
+	protected String[] addIDColumn(String[] columnsWithoutID) {
 		String[] columns = new String[columnsWithoutID.length + 1];
 		columns[0] = "ID";
 		for (int i = 1; i < columns.length; i++) {

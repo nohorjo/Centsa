@@ -1,5 +1,7 @@
 app.controller("expensesCtrl", function($scope, $rootScope) {
 	$scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
+    $scope.accounts = centsa.accounts.getAll(0, 0);
+    $scope.types = centsa.types.getAll(0, 0);
 
 	function getActiveTotals() {
 		$scope.totalActiveExpenses = centsa.expenses.totalActive();
@@ -13,14 +15,18 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		cost : 0.0,
 		frequency : 1,
 		started : new Date().formatDate("yyyy/MM/dd"),
-		automatic : false
+		automatic : false,
+		account_id : "",
+		type_id : "1"
 	};
 	var newExpense = Object.assign({}, $scope.newExpense);
 
 	$scope.saveExpense = function(updating) {
 		$scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
-		$scope.newExpense.started = new Date($scope.newExpense.started)
-				.getTime();
+		$scope.newExpense.started = new Date($scope.newExpense.started).getTime();
+		if(!$scope.newExpense.account_id) {
+		    delete $scope.newExpense.account_id;
+		}
 		var newId = centsa.expenses.insert($scope.newExpense);
 		if (updating) {
 			for (var i = 0; i < $scope.expenses.length; i++) {
@@ -34,8 +40,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 		}
 		getActiveTotals();
 		$scope.newExpense = Object.assign({}, newExpense);
-		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
-				"update", new Date().formatDate("yyyy/MM/dd"));
+		$('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
 	};
 
 	$scope.getNow = function() {
@@ -56,8 +61,7 @@ app.controller("expensesCtrl", function($scope, $rootScope) {
 			autoclose : true,
 			todayHighlight : true
 		});
-		$('.datepicker[data-ng-model="newExpense.started"]').datepicker(
-				"update", new Date().formatDate("yyyy/MM/dd"));
+		$('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
 	})();
 
 });
