@@ -42,10 +42,6 @@ dependencies {
 
 sourceSets {
     main {
-        java {
-            srcDirs = []
-            outputDir = file("bin/main")
-        }
         scala {
             srcDirs = ['src/main']
             outputDir = file("bin/main")
@@ -250,12 +246,22 @@ task updaterBuild(type: Jar, dependsOn: ['updaterClean', 'updaterTest']) {
 task run(type: JavaExec, dependsOn: 'classes') {
     main = "nohorjo.centsa.Main"
     classpath = files(
-		"application",
-		sourceSets.main.runtimeClasspath,
-		sourceSets.main.resources
-	)
-	jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n",
-		"-Droot.dir=application"
+            "application",
+            sourceSets.main.runtimeClasspath,
+            sourceSets.main.resources
+    )
+    jvmArgs "-Droot.dir=application"
+}
+
+task debug(type: JavaExec, dependsOn: 'classes') {
+    main = "nohorjo.centsa.Main"
+    classpath = files(
+            "application",
+            sourceSets.main.runtimeClasspath,
+            sourceSets.main.resources
+    )
+    jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=y",
+            "-Droot.dir=application"
 }
 
 ext.saveProperties = { props, filename ->

@@ -13,7 +13,7 @@ import nohorjo.util.ClasspathUtils;
 import org.sqlite.Function;
 
 /**
- * Class to provide utiliy methods to DAOs
+ * Class to provide utility methods to DAOs
  *
  * @author muhammed.haque
  */

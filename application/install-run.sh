@@ -22,6 +22,7 @@ else
 		echo "Categories=Office;" >> ${DIR}/Centsa.desktop
 		echo "Comment=Centsa money managing solution" >> ${DIR}/Centsa.desktop
 		
+		mkdir -p ~/.local/share/applications
 		chmod +x ${DIR}/Centsa.desktop
 		
 		cp ${DIR}/Centsa.desktop ~/.local/share/applications
