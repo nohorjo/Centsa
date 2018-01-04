@@ -1,19 +1,17 @@
 package nohorjo.centsa.dbservices;
 
+import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.vo.TransactionFilter;
+import nohorjo.centsa.vo.VO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
-
-import nohorjo.centsa.vo.Transaction;
-import nohorjo.centsa.vo.TransactionFilter;
-import nohorjo.centsa.vo.VO;
 
 /**
  * DAO class to handle transactions
@@ -21,6 +19,8 @@ import nohorjo.centsa.vo.VO;
  * @author muhammed.haque
  */
 public class TransactionsDAO extends AbstractDAO {
+
+    private final Logger log = LoggerFactory.getLogger(TransactionsDAO.class);
 
     private static final String[] COLUMNS = {"AMOUNT", "COMMENT", "ACCOUNT_ID", "TYPE_ID", "EXPENSE_ID", "DATE"};
     private static final String TABLE_NAME = "TRANSACTIONS";
@@ -247,5 +247,33 @@ public class TransactionsDAO extends AbstractDAO {
             }
         }
         return 0;
+    }
+
+    public void insertAutoTransactions(List<Transaction> expected) throws SQLException {
+        String sql = SQLUtils.getQuery("Transactions.InsertMissing");
+        try (Connection conn = SQLUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (Transaction t : expected) {
+                log.info("Checking/inserting automatic transaction: " + t);
+                int i = 0;
+
+                ps.setInt(++i, t.getAmount());
+                ps.setString(++i, t.getComment());
+                ps.setLong(++i, t.getAccount_id());
+                ps.setLong(++i, t.getType_id());
+                ps.setLong(++i, t.getExpense_id());
+                ps.setLong(++i, t.getDate());
+
+                ps.setInt(++i, t.getAmount());
+                ps.setString(++i, t.getComment());
+                ps.setLong(++i, t.getAccount_id());
+                ps.setLong(++i, t.getType_id());
+                ps.setLong(++i, t.getExpense_id());
+                ps.setLong(++i, t.getDate());
+
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
     }
 }

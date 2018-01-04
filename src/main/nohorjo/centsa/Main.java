@@ -3,6 +3,7 @@ package nohorjo.centsa;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nohorjo.centsa.dbservices.ExpensesDAO;
 import nohorjo.centsa.render.Renderer;
 import nohorjo.centsa.server.EmbeddedServer;
 import nohorjo.centsa.updater.UpdateChecker;
@@ -39,6 +40,7 @@ public class Main extends Application {
     public static void main(String[] args) throws Exception {
         UpdateChecker.initialise();
         EmbeddedServer.startServer();
+        ExpensesDAO.applyAutoTransactions();
         launch(args);
     }
 }

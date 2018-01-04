@@ -1,5 +1,12 @@
 package nohorjo.centsa.vo;
 
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -116,6 +123,26 @@ public class Expense implements VO {
         }
     }
 
+    public List<Transaction> allTransactionsUntil(LocalDate date) {
+        List<Transaction> rtn = new ArrayList<>();
+        LocalDate current = Instant.ofEpochMilli(started).atZone(ZoneId.systemDefault()).toLocalDate();
+        System.out.println(current);
+        while (current.isBefore(date) || current.isEqual(date)) {
+            if (isDayOfPayment(current)) {
+                Transaction t = new Transaction();
+                t.setAccount_id(account_id);
+                t.setAmount(cost);
+                t.setComment(name);
+                t.setExpense_id(id);
+                t.setType_id(type_id);
+                t.setDate(current.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                rtn.add(t);
+            }
+            current = current.plusDays(1);
+        }
+        return rtn;
+    }
+
     @Override
     public String toString() {
         return "Expense [id=" + id + ", name=" + name + ", cost=" + cost + ", frequency=" + frequency
@@ -154,7 +181,7 @@ public class Expense implements VO {
      *
      * @param frequency The frequency to check
      */
-    private boolean validateFrequency(String frequency) {
+    private static boolean validateFrequency(String frequency) {
         frequency = frequency.toUpperCase();
         if (frequency.matches("^\\d+$")) {
             return true;
@@ -199,5 +226,97 @@ public class Expense implements VO {
             return d < 12 && d >= -12;
         }
         return false;
+    }
+
+    private boolean isDayOfPayment(LocalDate date) {
+        if (frequency.matches("^\\d+$")) {
+            return Instant.ofEpochMilli(started).atZone(ZoneId.systemDefault()).toLocalDate()
+                    .until(date).getDays() % Integer.parseInt(frequency) == 0;
+        } else if (frequency.matches("^DATE \\d+$")) {
+            return date.getDayOfMonth() == Integer.parseInt(frequency.substring(5));
+        } else if (frequency.matches("^DATE \\d+/\\d+$")) {
+            String[] dm = frequency.substring(5).split("/");
+            return date.getMonthValue() == Integer.parseInt(dm[1])
+                    && date.getDayOfMonth() == Integer.parseInt(dm[0]);
+        } else if (frequency.matches("^DAY -?\\d+$")) {
+            int d = Integer.parseInt(frequency.substring(4));
+            if (d > 0) {
+                return date.getDayOfMonth() == d;
+            } else {
+                return date.getDayOfMonth() == date.with(TemporalAdjusters.lastDayOfMonth()).plusDays(d).getDayOfMonth();
+            }
+        } else if (frequency.matches("^DAY (MO|TU|WE|TH|FR|SA|SU) -?\\d+$")) {
+            int d = Integer.parseInt(frequency.substring(7));
+            DayOfWeek day = day(frequency.substring(4, 6));
+            if (d > 0) {
+                return date.with(TemporalAdjusters.firstInMonth(day)).plusDays((d - 1) * 7).isEqual(date);
+            } else {
+                d = -d;
+                return date.with(TemporalAdjusters.lastInMonth(day)).minusDays((d - 1) * 7).isEqual(date);
+            }
+        } else if (frequency.matches("^WDAY -?\\d+$")) {
+            int d = Integer.parseInt(frequency.substring(5));
+            LocalDate counter;
+            if (d > 0) {
+                counter = date.withDayOfMonth(1);
+                for (int i = 1; i < d; i++) {
+                    counter = counter.plusDays(1);
+                    while (counter.getDayOfWeek().getValue() > 5) {
+                        counter = counter.plusDays(1);
+                    }
+                }
+            } else {
+                counter = date.with(TemporalAdjusters.lastDayOfMonth());
+                for (int i = 1; i < -d; i++) {
+                    counter = counter.plusDays(1);
+                    while (counter.getDayOfWeek().getValue() > 5) {
+                        counter = counter.minusDays(1);
+                    }
+                }
+            }
+            return counter.isEqual(date);
+        } else if (frequency.matches("^RDAY -?\\d+$")) {
+            int d = Integer.parseInt(frequency.substring(5));
+            LocalDate counter;
+            if (d > 0) {
+                counter = date.withDayOfMonth(1);
+                for (int i = 1; i < d; i++) {
+                    counter = counter.plusDays(1);
+                    while (counter.getDayOfWeek().getValue() <= 5) {
+                        counter = counter.plusDays(1);
+                    }
+                }
+            } else {
+                counter = date.with(TemporalAdjusters.lastDayOfMonth());
+                for (int i = 1; i < -d; i++) {
+                    counter = counter.plusDays(1);
+                    while (counter.getDayOfWeek().getValue() <= 5) {
+                        counter = counter.minusDays(1);
+                    }
+                }
+            }
+            return counter.isEqual(date);
+        }
+        return false;
+    }
+
+    private static DayOfWeek day(String firstTwoChars) {
+        switch (firstTwoChars) {
+            case "MO":
+                return DayOfWeek.MONDAY;
+            case "TU":
+                return DayOfWeek.TUESDAY;
+            case "WE":
+                return DayOfWeek.WEDNESDAY;
+            case "TH":
+                return DayOfWeek.THURSDAY;
+            case "FR":
+                return DayOfWeek.FRIDAY;
+            case "SA":
+                return DayOfWeek.SATURDAY;
+            case "SU":
+                return DayOfWeek.SUNDAY;
+        }
+        throw new IllegalArgumentException(firstTwoChars);
     }
 }
