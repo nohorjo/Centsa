@@ -1,61 +1,59 @@
 package nohorjo.centsa.datahandlers;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import nohorjo.centsa.vo.Expense;
 
 /**
  * Class to handle budget calculations
- * 
- * @author muhammed
  *
+ * @author muhammed
  */
 public class BudgetHandler {
 
-	/**
-	 * Calculates budget based on expenses
-	 * 
-	 * @param strict
-	 *            If true will round expenses
-	 * @param expenses
-	 *            List of {@link Expense}s
-	 * @param sumAll
-	 *            Absolute amount of funds available
-	 * @return The budgets considering expenses
-	 */
-	public static Budget getBudget(boolean strict, List<Expense> expenses, int sumAll) {
-		Budget budget = new Budget();
+    private static final long DAYS = TimeUnit.DAYS.toMillis(1);
 
-		int autoExpenseReduction = sumAll;
-		int allExpenseReduction = sumAll;
+    /**
+     * Calculates budget based on expenses
+     *
+     * @param strict   If true will round expenses
+     * @param expenses List of {@link Expense}s
+     * @param sumAll   Absolute amount of funds available
+     * @return The budgets considering expenses
+     */
+    public static Budget getBudget(boolean strict, List<Expense> expenses, int sumAll) {
+        Budget budget = new Budget();
 
-		for (Expense e : expenses) {
-			// Only ones that have started
-			if (e.getId() != 1 && e.getStarted() <= System.currentTimeMillis()) {
-				double expectedInstances = e.get_expected_instances_count();
-				double leftToTransfer = expectedInstances - e.getInstance_count();
-				if (leftToTransfer < 0) {
-					leftToTransfer = 0;
-				}
-				if (e.getCost() < 0) {
-					// If cost is negative (is income) then we floor it so as to assume the money
-					// isn't in yet.
-					leftToTransfer = Math.floor(leftToTransfer);
-				} else if (strict) {
-					// If it's positive we ceiling it so that we're 'saving' the money.
-					leftToTransfer = Math.ceil(leftToTransfer);
-				}
-				double cost = leftToTransfer * e.getCost();
-				if (e.isAutomatic()) {
-					autoExpenseReduction -= cost;
-				}
-				allExpenseReduction -= cost;
-			}
-		}
+        int autoExpenseReduction = sumAll;
+        int allExpenseReduction = sumAll;
 
-		budget.setAfterAuto(autoExpenseReduction);
-		budget.setAfterAll(allExpenseReduction);
+        long currentTime = System.currentTimeMillis();
 
-		return budget;
-	}
+        for (Expense e : expenses) {
+            if (e.getCost() > 0 && e.getStarted() < currentTime) {
+                int cost;
+
+                if (strict) {
+                    cost = e.getCost();
+                } else {
+                    double daysUntilNextPayment = (e.nextPaymentDateFrom(currentTime) - currentTime) / DAYS;
+                    double daysSinceLastPayment = (currentTime - e.lastPaymentFrom(currentTime)) / DAYS;
+
+                    double progress = daysSinceLastPayment / (daysSinceLastPayment + daysUntilNextPayment);
+
+                    cost = (int) (e.getCost() * progress);
+                }
+                if (e.isAutomatic()) {
+                    autoExpenseReduction -= cost;
+                }
+                allExpenseReduction -= cost;
+            }
+        }
+
+        budget.setAfterAuto(autoExpenseReduction);
+        budget.setAfterAll(allExpenseReduction);
+
+        return budget;
+    }
 }

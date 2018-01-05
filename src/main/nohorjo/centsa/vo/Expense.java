@@ -108,23 +108,9 @@ public class Expense implements VO {
         this.type_id = type_id;
     }
 
-    /**
-     * Calculates the fractional expected number of instances
-     *
-     * @return The expected number of instances
-     */
-    public double get_expected_instances_count() {
-        try {
-            double expected = ((System.currentTimeMillis() - started) / DAY) / Integer.parseInt(frequency);
-            return ++expected > 0 ? expected : 0;
-        } catch (NumberFormatException e) {
-            // FIXME
-            return 0;
-        }
-    }
-
-    public List<Transaction> allTransactionsUntil(LocalDate date) {
+    public List<Transaction> allTransactionsUntil(long timeStamp) {
         List<Transaction> rtn = new ArrayList<>();
+        LocalDate date = Instant.ofEpochMilli(timeStamp).atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate current = Instant.ofEpochMilli(started).atZone(ZoneId.systemDefault()).toLocalDate();
         System.out.println(current);
         while (current.isBefore(date) || current.isEqual(date)) {
@@ -141,6 +127,22 @@ public class Expense implements VO {
             current = current.plusDays(1);
         }
         return rtn;
+    }
+
+    public long nextPaymentDateFrom(long timeStamp) {
+        LocalDate date = Instant.ofEpochMilli(timeStamp).atZone(ZoneId.systemDefault()).toLocalDate();
+        do {
+            date = date.plusDays(1);
+        } while (!isDayOfPayment(date));
+        return date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public long lastPaymentFrom(long timeStamp) {
+        LocalDate date = Instant.ofEpochMilli(timeStamp).atZone(ZoneId.systemDefault()).toLocalDate();
+        while (!isDayOfPayment(date)) {
+            date = date.minusDays(1);
+        }
+        return date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     @Override
@@ -229,9 +231,11 @@ public class Expense implements VO {
     }
 
     private boolean isDayOfPayment(LocalDate date) {
-        if (frequency.matches("^\\d+$")) {
-            return Instant.ofEpochMilli(started).atZone(ZoneId.systemDefault()).toLocalDate()
-                    .until(date).getDays() % Integer.parseInt(frequency) == 0;
+        LocalDate start = Instant.ofEpochMilli(started).atZone(ZoneId.systemDefault()).toLocalDate();
+        if (date.isBefore(start)) {
+            return false;
+        } else if (frequency.matches("^\\d+$")) {
+            return start.until(date).getDays() % Integer.parseInt(frequency) == 0;
         } else if (frequency.matches("^DATE \\d+$")) {
             return date.getDayOfMonth() == Integer.parseInt(frequency.substring(5));
         } else if (frequency.matches("^DATE \\d+/\\d+$")) {

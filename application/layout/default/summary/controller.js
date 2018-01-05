@@ -1,4 +1,5 @@
-app.controller("summaryCtrl", function($scope) {
+app.controller("summaryCtrl", function($scope, $sce) {
+    $scope.trust = $sce.trustAsHtml;
     $scope.strictMode = centsa.settings.get("strict.mode") == "true";
 
     $scope.getBudget = function() {
@@ -7,6 +8,14 @@ app.controller("summaryCtrl", function($scope) {
     };
 
     $scope.getBudget();
+
+    $scope.getPostInstallWarning = (function(){
+        var message = centsa.settings.get("post.install.warning");
+        setTimeout(function(){
+            centsa.settings.set("post.install.warning", null);
+        },1000);
+        return message;
+    })();
 
     (function() {
         var sums = []

@@ -257,6 +257,9 @@ public class TransactionsDAO extends AbstractDAO {
                 log.info("Checking/inserting automatic transaction: " + t);
                 int i = 0;
 
+                ps.clearBatch();
+
+                // Insert
                 ps.setInt(++i, t.getAmount());
                 ps.setString(++i, t.getComment());
                 ps.setLong(++i, t.getAccount_id());
@@ -264,10 +267,7 @@ public class TransactionsDAO extends AbstractDAO {
                 ps.setLong(++i, t.getExpense_id());
                 ps.setLong(++i, t.getDate());
 
-                ps.setInt(++i, t.getAmount());
-                ps.setString(++i, t.getComment());
-                ps.setLong(++i, t.getAccount_id());
-                ps.setLong(++i, t.getType_id());
+                // Where
                 ps.setLong(++i, t.getExpense_id());
                 ps.setLong(++i, t.getDate());
 

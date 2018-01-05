@@ -85,7 +85,7 @@
         <InsertMissing>
             <![CDATA[
                 INSERT INTO TRANSACTIONS (AMOUNT, COMMENT, ACCOUNT_ID, TYPE_ID, EXPENSE_ID, DATE) SELECT ?, ?, ?, ?, ?, ? WHERE NOT EXISTS
-                    (SELECT 1 FROM TRANSACTIONS WHERE AMOUNT = ? AND COMMENT = ? AND ACCOUNT_ID = ? AND TYPE_ID = ? AND EXPENSE_ID = ? AND DATE = ?);
+                    (SELECT 1 FROM TRANSACTIONS WHERE EXPENSE_ID = ? AND DATE = ?);
             ]]>
         </InsertMissing>
     </Transactions>

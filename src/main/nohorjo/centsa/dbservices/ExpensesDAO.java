@@ -1,18 +1,17 @@
 package nohorjo.centsa.dbservices;
 
+import nohorjo.centsa.vo.Expense;
+import nohorjo.centsa.vo.Transaction;
+import nohorjo.centsa.vo.VO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import nohorjo.centsa.vo.Expense;
-import nohorjo.centsa.vo.Transaction;
-import nohorjo.centsa.vo.VO;
 
 /**
  * DAO class to handle expenses
@@ -166,7 +165,7 @@ public class ExpensesDAO extends AbstractDAO {
     public static void applyAutoTransactions() throws SQLException {
         List<Expense> expenses = new ExpensesDAO().getAll(0, 0, null).stream().filter(Expense::isAutomatic).collect(Collectors.toList());
         List<Transaction> expected = new ArrayList<>();
-        for(Expense e: expenses) expected.addAll(e.allTransactionsUntil(LocalDate.now()));
+        for (Expense e : expenses) expected.addAll(e.allTransactionsUntil(System.currentTimeMillis()));
 
         new TransactionsDAO().insertAutoTransactions(expected);
     }

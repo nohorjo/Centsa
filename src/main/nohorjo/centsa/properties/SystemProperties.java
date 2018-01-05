@@ -9,7 +9,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * Class to handle properties throughout the application
- * 
+ *
  * @author muhammed.haque
  *
  */
@@ -49,7 +49,7 @@ public class SystemProperties {
 
 	/**
 	 * Gets a property
-	 * 
+	 *
 	 * @param key
 	 *            The property
 	 * @param clazz
@@ -88,7 +88,7 @@ public class SystemProperties {
 
 	/**
 	 * Set a property
-	 * 
+	 *
 	 * @param key
 	 *            The property
 	 * @param value
@@ -100,7 +100,7 @@ public class SystemProperties {
 
 	/**
 	 * Sets a property that's only persistent during runtime
-	 * 
+	 *
 	 * @param key
 	 *            The property
 	 * @param value
@@ -109,4 +109,8 @@ public class SystemProperties {
 	public static void setRuntime(String key, Object value) {
 		runtimeProperties.setProperty(key, value);
 	}
+
+	public static void clear(String key) {
+	    systemProperties.clearProperty(key);
+    }
 }

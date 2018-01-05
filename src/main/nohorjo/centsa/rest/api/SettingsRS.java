@@ -15,30 +15,30 @@ import nohorjo.centsa.rest.AbstractRS;
 
 /**
  * REST service for settings
- * 
- * @author muhammed.haque
  *
+ * @author muhammed.haque
  */
 @PerLookup
 @Path("/settings")
 public class SettingsRS extends AbstractRS {
 
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/{key}")
-	public String get(@PathParam("key") String key) {
-		Object setting = SystemProperties.get(key, Object.class);
-		if (setting == null) {
-			setting = "";
-		}
-		return setting.toString();
-	}
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/{key}")
+    public String get(@PathParam("key") String key) {
+        Object setting = SystemProperties.get(key, Object.class);
+        if (setting == null) {
+            setting = "";
+        }
+        return setting.toString();
+    }
 
-	@POST
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Path("/{key}")
-	public void set(@PathParam("key") String key, String value) {
-		SystemProperties.set(key, value);
-	}
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/{key}")
+    public void set(@PathParam("key") String key, String value) {
+        if ("".equals(value)) SystemProperties.clear(key);
+        else SystemProperties.set(key, value);
+    }
 
 }
