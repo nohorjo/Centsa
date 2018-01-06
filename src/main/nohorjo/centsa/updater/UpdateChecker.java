@@ -184,7 +184,7 @@ public class UpdateChecker extends Thread {
                 e.printStackTrace();
                 Renderer.showExceptionDialog(e, "Download error", "Failed to download update");
             }
-        }).start();
+        });
     }
 
     /**

@@ -191,7 +191,7 @@ task zip(type: Zip) {
     exclude 'data.db'
     exclude 'Centsa.desktop'
     exclude 'fuse*'
-    exclude 'log/*'
+    exclude '**/*.log'
     into "Centsa"
     archiveName 'Centsa-v' + versionInfo.getProperty("major.version") +
             "." + versionInfo.getProperty("minor.version") + '.zip'

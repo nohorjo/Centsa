@@ -3,6 +3,8 @@ package nohorjo.centsa.dbservices;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +27,9 @@ public abstract class AbstractDAO implements DAO {
      */
     static {
         try {
+
+            boolean firstCreation = Files.notExists(Paths.get(SystemProperties.get("root.dir", String.class) + "/data.db"));
+
             new AccountsDAO().createTable();
             new ExpensesDAO().createTable();
             new TransactionsDAO().createTable();
@@ -33,19 +38,20 @@ public abstract class AbstractDAO implements DAO {
             MetaDAO.createTable();
 
             int dbVersion = -1;
-
-            try {
+            if (!firstCreation) {
                 try {
-                    dbVersion = Integer.parseInt(MetaDAO.get("db.version"));
-                } catch (NumberFormatException e) {
-                    dbVersion = 0;
-                }
+                    try {
+                        dbVersion = Integer.parseInt(MetaDAO.get("db.version"));
+                    } catch (NumberFormatException e) {
+                        dbVersion = 0;
+                    }
 
-                // for backwards compatibility
-                int dbVersionOld = SystemProperties.get("db.version", Integer.class);
-                if (dbVersionOld > dbVersion) dbVersion = dbVersionOld;
-            } catch (Exception e) {
-                if (dbVersion == -1) throw e;
+                    // for backwards compatibility
+                    int dbVersionOld = SystemProperties.get("db.version", Integer.class);
+                    if (dbVersionOld > dbVersion) dbVersion = dbVersionOld;
+                } catch (Exception e) {
+                    if (dbVersion == -1) throw e;
+                }
             }
 
             while (runUpdateScript(++dbVersion)) {
