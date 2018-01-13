@@ -1,6 +1,9 @@
 // reference
 import { app, BrowserWindow } from 'electron';
 
+import Updater from './Updater';
+import Expenses from './Expenses';
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow | null = null;
@@ -8,6 +11,7 @@ let mainWindow: Electron.BrowserWindow | null = null;
 const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    icon: `${__dirname}/../assets/icon.png`,
     width: 800,
     height: 600,
   });
@@ -45,3 +49,6 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+Updater.autoCheckUpdate();
+Expenses.applyAutoTrans(() => { if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); } });
