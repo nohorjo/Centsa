@@ -62,6 +62,7 @@
     "electron-forge": "^4.2.0",
     "electron-prebuilt-compile": "1.8.2-beta.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.2.2"
+    "typescript": "^2.2.2",
+    "yarn-or-npm": "^2.0.4"
   }
 }
