@@ -1,37 +1,15 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, dialog } from 'electron';
 
 import Updater from './Updater';
 import Expenses from './Expenses';
 import { settings } from './Settings';
 
-
 let mainWindow: Electron.BrowserWindow | null = null;
 
-settings.init();
-Updater.autoCheckUpdate();
-Expenses.applyAutoTrans(() => {
-  if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); }
-});
+let _init = () => init((options: Electron.BrowserWindowConstructorOptions) => new BrowserWindow(options));
 
-
-const createWindow = async () => {
-  if (mainWindow === null) {
-    mainWindow = new BrowserWindow({
-      icon: `${__dirname}/../assets/icon.png`,
-      width: 800,
-      height: 600,
-    });
-
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-    mainWindow.on('closed', () => {
-      mainWindow = null;
-    });
-  }
-};
-
-app.on('ready', createWindow);
-app.on('activate', createWindow);
+app.on('ready', _init);
+app.on('activate', _init);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -39,3 +17,31 @@ app.on('window-all-closed', () => {
   }
 });
 
+export default async function init(
+  newBrowserWindow: (options: Electron.BrowserWindowConstructorOptions) => Electron.BrowserWindow
+) {
+  try {
+    if (mainWindow === null) {
+      Updater.autoCheckUpdate();
+      Expenses.applyAutoTrans(() => {
+        if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); }
+      });
+
+      settings.init();
+      mainWindow = newBrowserWindow({
+        icon: `${__dirname}/../assets/icon.png`,
+        width: 800,
+        height: 600,
+      });
+
+      mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+      mainWindow.on('closed', () => {
+        mainWindow = null;
+      });
+    }
+  } catch (error) {
+    dialog.showErrorBox("Error", JSON.stringify(error));
+    app.quit();
+  }
+}
