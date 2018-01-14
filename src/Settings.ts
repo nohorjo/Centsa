@@ -2,12 +2,11 @@ import * as fs from 'fs';
 import { app } from 'electron';
 import * as os from 'os';
 
-const centsaDir = `${app.getPath("home")}/.centsa`;
-const settingsFile = `${centsaDir}/settings.json`;
-const settingsFileLegacy = `${centsaDir}/system.properties`;
 
 export let settings: any = {
-    init() {
+    init(centsaDir: any = `${app.getPath("home")}/.centsa`) {
+        const settingsFile = `${centsaDir}/settings.json`;
+        const settingsFileLegacy = `${centsaDir}/system.properties`;
         try {
             fs.mkdirSync(centsaDir);
         } catch (error) {
@@ -20,6 +19,8 @@ export let settings: any = {
             if (err) console.error(err);
             else console.log("Updated settings");
         }) => fs.writeFile(settingsFile, JSON.stringify(settings), done);
+
+        settings.init = () => console.warn("Settings already initialized");
     }
 };
 

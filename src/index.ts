@@ -17,7 +17,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-export default async function init(
+export default function init(
   newBrowserWindow: (options: Electron.BrowserWindowConstructorOptions) => Electron.BrowserWindow
 ) {
   try {
