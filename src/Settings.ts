@@ -32,11 +32,11 @@ function loadSettings(settingsFile: string, legacySettingsFile: string) {
 
         let data = fs.readFileSync(legacySettingsFile, "utf8");
         let tmp: any = {};
-        data.split(os.EOL).forEach(line => {
-            if (!line.startsWith('#')
+        data.replace(/\\\r?\n/g, '').split(os.EOL).forEach(line => {
+            if (!(line.startsWith('#') || line.startsWith("!"))
                 && (line.indexOf('=') != -1 || line.indexOf(':') != -1)) {
                 let kv = line.split(/[=:](.+)/, 2);
-                tmp[kv[0]] = kv[1];
+                tmp[kv[0].trim()] = kv[1].trim();
             }
         });
 
