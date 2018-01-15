@@ -24,7 +24,7 @@ export let settings: any = {
     }
 };
 
-function loadSettings(settingsFile: string, legacySettingsFile: string) {
+export function loadSettings(settingsFile: string, legacySettingsFile: string) {
     try {
         return JSON.parse(fs.readFileSync(settingsFile, "utf8"));
     } catch (error) {
@@ -53,8 +53,8 @@ function loadSettings(settingsFile: string, legacySettingsFile: string) {
                     download: tmp["auto.update.check"] == 2,
                 },
                 transactions: { pageSize: tmp["trans.page.size"] },
-                misc: { postInstallWarning: tmp["post.install.warning"] }
-            }
+            },
+            misc: { postInstallWarning: tmp["post.install.warning"] }
         };
     }
 }
