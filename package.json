@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "tslint --project tsconfig.json --type-check --force",
-    "test": "cross-env NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail",
+    "test": "cross-env NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail --check-leaks",
     "cover": "cross-env NODE_ENV=test nyc npm t"
   },
   "keywords": [],
