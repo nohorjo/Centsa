@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import { app } from 'electron';
-import * as os from 'os';
 
 
 export let settings: any = {
@@ -26,7 +25,7 @@ export function loadSettings(settingsFile: string, legacySettingsFile: string) {
 
         let data = fs.readFileSync(legacySettingsFile, "utf8");
         let tmp: any = {};
-        data.replace(/\\\r?\n/g, '').split(os.EOL).forEach(line => {
+        data.replace(/(\\\r?\n|^\s*)/g, '').split(/\r?\n/).forEach(line => {
             if (!(line.startsWith('#') || line.startsWith("!"))
                 && (line.indexOf('=') != -1 || line.indexOf(':') != -1)) {
                 let kv = line.split(/[=:](.+)/, 2);
