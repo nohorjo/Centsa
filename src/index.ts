@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog } from 'electron';
+import * as fs from 'fs';
 
 import Updater from './Updater';
 import Expenses from './Expenses';
@@ -22,16 +23,27 @@ export default function init(
 ) {
   try {
     if (mainWindow === null) {
+      const centsaDir = `${app.getPath("home")}/.centsa`;
+      try {
+        fs.mkdirSync(centsaDir);
+        fs.createReadStream(`${__dirname}/../assets/defaultsettings.json`)
+          .pipe(fs.createWriteStream(`${centsaDir}/settings.json`));
+        // TODO initialize new setup
+      } catch (error) {
+        if (error.code != 'EEXIST') throw error;
+      }
+
+      settings.init(centsaDir);
+
       Updater.autoCheckUpdate();
       Expenses.applyAutoTrans(() => {
         if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); }
       });
 
-      settings.init();
       mainWindow = newBrowserWindow({
         icon: `${__dirname}/../assets/icon.png`,
-        width: 800,
-        height: 600,
+        width: settings.width,
+        height: settings.height,
       });
 
       mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -39,6 +51,16 @@ export default function init(
       mainWindow.on('closed', () => {
         mainWindow = null;
       });
+
+      let saveSize = () => {
+        settings.width = mainWindow!.getSize()[0];
+        settings.height = mainWindow!.getSize()[1];
+        settings.save();
+      };
+      
+      mainWindow.on("maximize", saveSize);
+      mainWindow.on("unmaximize", saveSize);
+      mainWindow.on("resize", saveSize);
     }
   } catch (error) {
     dialog.showErrorBox("Error", JSON.stringify(error));

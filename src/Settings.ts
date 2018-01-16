@@ -4,16 +4,10 @@ import * as os from 'os';
 
 
 export let settings: any = {
-    init(centsaDir: any = `${app.getPath("home")}/.centsa`) {
+    init(centsaDir: any) {
         const settingsFile = `${centsaDir}/settings.json`;
-        const settingsFileLegacy = `${centsaDir}/system.properties`;
-        try {
-            fs.mkdirSync(centsaDir);
-        } catch (error) {
-            if (error.code != 'EEXIST') throw error;
-        }
 
-        settings = loadSettings(settingsFile, settingsFileLegacy);
+        settings = loadSettings(settingsFile, `${centsaDir}/system.properties`);
 
         settings.save = (done: (err?: NodeJS.ErrnoException) => void = err => {
             if (err) console.error(err);
