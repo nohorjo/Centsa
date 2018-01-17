@@ -35,17 +35,26 @@ export default function init(
       settings.init(centsaDir);
 
       Updater.autoCheckUpdate((update) => {
-        // FIXME:
+        if (settings.app.update.download) {
+
+        } else {
+          dialog.showMessageBox({
+            type: "question",
+            title: "New update available!",
+            message: `Centsa ${update.version} is out. Would you like to update?`,
+            detail: update.changelog,
+            buttons: ["Yes", "No"]
+          }, r => {
+            if (r == 0) {
+
+            }
+          });
+        }
       });
       Expenses.applyAutoTrans(() => {
         if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); }
       });
 
-      dialog.showMessageBox({
-        message: "message\nbox",
-        type: "question",
-        buttons: ["ydes", "nso", "maybe", "idk"]
-      }, r => { console.log(r); });
       mainWindow = newBrowserWindow({
         icon: `${__dirname}/../assets/icon.png`,
         width: settings.width,

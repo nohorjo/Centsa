@@ -6,6 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "electron-forge start",
+    "debug": "electron-forge start -- --inspect-brk=9009 --nolazy",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
