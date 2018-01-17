@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { app } from 'electron';
 
 
 export let settings: any = {
