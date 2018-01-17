@@ -13,7 +13,7 @@ function checkNewVersion(callback: (info: any) => void) {
                     if (currentVersion[0] != nextVersion[0] || currentVersion[1] != nextVersion[1]) {
                         // update available
                         callback({
-                            version: nextVersion.join("."),
+                            version: "v" + nextVersion.join("."),
                             changelog: response.data.body,
                             asset: response.data.assets[0].browser_download_url
                         });
