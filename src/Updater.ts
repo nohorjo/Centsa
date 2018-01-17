@@ -1,10 +1,12 @@
 import axios from 'axios';
 import * as fs from 'fs';
 
+import { settings } from './Settings';
+
 function checkNewVersion(callback: (info: any) => void) {
     axios.get('https://api.github.com/repos/nohorjo/Centsa/releases/latest')
         .then((response: any) => {
-            fs.readFile(`${__dirname}/package.json`, "utf8", (err, data) => {
+            fs.readFile(`${__dirname}/../package.json`, "utf8", (err, data) => {
                 if (err) {
                     console.error(err);
                 } else {
@@ -27,9 +29,9 @@ function checkNewVersion(callback: (info: any) => void) {
 }
 
 export default {
-    autoCheckUpdate() {
-        checkNewVersion(
-            // FIXME: 
-        );
+    autoCheckUpdate(callback: (update:any) => void) {
+        if (settings.app.update.check) {
+            checkNewVersion(callback);
+        }
     }
 };

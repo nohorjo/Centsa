@@ -2,7 +2,7 @@
     "ui": {
         "layout": "default",
         "width": 1500,
-        "height": 800,
+        "height": 800
     },
     "app": {
         "budget": {
@@ -10,11 +10,11 @@
         },
         "update": {
             "check": true,
-            "download": true,
+            "download": true
         },
         "transactions": {
             "pageSize": 15
-        },
+        }
     },
     "misc": {
         "postInstallWarning": null
