@@ -1,5 +1,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
+import { exec } from "child_process";
+import * as os from 'os';
 
 import { settings } from './Settings';
 
@@ -28,10 +30,42 @@ function checkNewVersion(callback: (info: any) => void) {
         });
 }
 
+function downloadAndOpen(url: string) {
+    axios({
+        method: 'get',
+        url: url, responseType:
+        'stream'
+    }).then((resp: any) => {
+        let filePath = `${os.tmpdir()}/${url.replace(/^.*\//g, "")}`;
+        let dlStream = fs.createWriteStream(filePath);
+        dlStream.on("close", () => {
+            let openCommand = (() => {
+                switch (process.platform) {
+                    case 'darwin': return 'open';
+                    case 'linux': return 'xdg-open';
+                    default: return 'start';
+                }
+            })();
+            exec(`${openCommand} ${filePath}`, () => {
+                fs.unlink(filePath, err => { if (err) console.log(err); });
+            });
+        });
+        resp.data.pipe();
+    }).catch((error: any) => {
+        console.error(error);
+    });
+}
+
 export default {
-    autoCheckUpdate(callback: (update:any) => void) {
+    autoCheckUpdate(callback: (update: any, confirm: () => void) => void) {
         if (settings.app.update.check) {
-            checkNewVersion(callback);
+            checkNewVersion((update) => {
+                if (settings.app.update.download) {
+                    downloadAndOpen(update.asset);
+                } else {
+                    callback(update, () => downloadAndOpen(update.asset));
+                }
+            });
         }
     }
 };

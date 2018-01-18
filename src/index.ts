@@ -34,10 +34,7 @@ export default function init(
 
       settings.init(centsaDir);
 
-      Updater.autoCheckUpdate((update) => {
-        if (settings.app.update.download) {
-
-        } else {
+      Updater.autoCheckUpdate((update,confirm) => {
           dialog.showMessageBox({
             type: "question",
             title: "New update available!",
@@ -46,10 +43,9 @@ export default function init(
             buttons: ["Yes", "No"]
           }, r => {
             if (r == 0) {
-
+              confirm();
             }
           });
-        }
       });
       Expenses.applyAutoTrans(() => {
         if (mainWindow) { mainWindow.loadURL(`file://${__dirname}/main.html`); }
