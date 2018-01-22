@@ -69,8 +69,8 @@ auto.update.check=2
 trans.page.size = 15
 
 # is deleted after first run
-post.install.warning=<p>Any automatic expenses have been disabled to prevent duplicate entries.\
-You should <a href="#!expenses">delete and recreate</a> them with the <em>started</em> date as <strong>today</strong>.\
+post.install.warning=<p>Any automatic expenses have been disabled to prevent duplicate entries.\\
+You should <a href="#!expenses">delete and recreate</a> them with the <em>started</em> date as <strong>today</strong>.\\
 <p>Automatic expenses will now produce automatic transactions when due`);
         readFileSyncStub.throws({ code: 'ENOENT' });
 
