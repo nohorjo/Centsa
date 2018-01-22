@@ -1,102 +1,37 @@
 {
   "name": "centsa",
-  "productName": "centsa",
   "version": "2.0.0",
   "description": "Centsa money managing solution",
-  "main": "src/index.ts",
-  "scripts": {
-    "start": "electron-forge start",
-    "debug": "electron-forge start -- --inspect-brk=9009 --nolazy",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "tslint --project tsconfig.json --type-check --force",
-    "test": "cross-env NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail --check-leaks",
-    "cover": "cross-env NODE_ENV=test nyc npm t"
-  },
-  "keywords": [],
-  "author": "muhammed",
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {
-        "icon": "assets/icon.png",
-        "packageManager": "npm"
-      },
-      "electronWinstallerConfig": {
-        "name": "centsa"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "nohorjo",
-        "name": "Centsa"
-      },
-      "windowsStoreConfig": {
-        "packageName": "",
-        "name": "centsa"
-      }
-    }
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
   },
   "dependencies": {
-    "@types/electron-devtools-installer": "^2.0.2",
-    "electron-compile": "^6.4.2",
-    "electron-devtools-installer": "^2.2.3",
-    "electron-squirrel-startup": "^1.0.0",
-    "tslib": "^1.8.1"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.1.0",
-    "@types/fs-extra": "^5.0.0",
-    "@types/mocha": "^2.2.46",
-    "@types/mockery": "^1.4.29",
-    "@types/sinon": "^4.1.3",
-    "axios": "^0.17.1",
     "chai": "^4.1.2",
-    "cross-env": "^5.1.3",
     "electron": "^1.7.10",
-    "electron-forge": "^4.2.0",
-    "electron-prebuilt-compile": "1.8.2-beta.3",
-    "fs-extra": "^5.0.0",
+    "express": "^4.16.2",
     "istanbul": "^0.4.5",
-    "mocha": "^1.1.0",
     "nyc": "^11.4.1",
     "sinon": "^4.1.5",
     "ts-node": "^4.1.0",
-    "tslint": "^5.9.1",
-    "typescript": "^2.2.2",
-    "yarn-or-npm": "^2.0.4"
+    "typescript": "^2.6.2"
   },
-  "nyc": {
-    "include": [
-      "src/*.ts",
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "typings"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "json",
-      "html"
-    ],
-    "all": true
-  }
+  "devDependencies": {
+    "@types/express": "^4.11.0",
+    "ts-lint": "^4.5.1"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nohorjo/Centsa.git"
+  },
+  "author": "Muhammed Haque",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nohorjo/Centsa/issues"
+  },
+  "homepage": "https://github.com/nohorjo/Centsa#readme"
 }
