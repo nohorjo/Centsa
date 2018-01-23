@@ -3,10 +3,45 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="/style/bootstrap.min.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
 
 <body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0">
-  <img src="loading.gif" alt="loading" style="position: fixed; top: 50% ;left: 50%; margin-top: -100px; margin-left: -125px">
+  <a href="https://github.com/nohorjo/Centsa">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+      alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png">
+  </a>
+  <div class="container">
+
+    <div class="row" id="pwd-container">
+      <div class="col-md-4"></div>
+
+      <div class="col-md-4">
+        <section class="login-form">
+          <form method="post" action="#" role="login">
+            <img src="/icon.svg" alt="logo" height="100em" width="100em">
+            <input type="email" name="email" placeholder="Email" required class="form-control input-lg" />
+
+            <input type="password" class="form-control input-lg" id="password" placeholder="Password" required="" />
+
+            <div class="pwstrength_viewport_progress"></div>
+
+            <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
+            <div>
+              <a href="#">Create account</a> or
+              <a href="#" onclick="alert('not available')">Reset password</a>
+            </div>
+
+          </form>
+
+        </section>
+      </div>
+
+      <div class="col-md-4"></div>
+    </div>
+
+  </div>
 </body>
 
 </html>
