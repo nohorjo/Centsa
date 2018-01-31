@@ -77,3 +77,7 @@ form[role=login]>div {
 .form-links a {
   color: #fff;
 }
+
+.fb-login-button {
+  display: block !important;
+}
