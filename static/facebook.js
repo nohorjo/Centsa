@@ -2,11 +2,12 @@ let fbInit = () => {
 
     window.checkLoginState = function () {
         FB.getLoginStatus(function (response) {
-            console.dir(response.authResponse);
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/fb');
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(response.authResponse));
+            if (response.authResponse) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/fb');
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify(response.authResponse));
+            }
         });
     };
 
