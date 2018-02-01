@@ -1,23 +1,22 @@
 {
   "compilerOptions": {
-    "removeComments": false,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "declaration": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
     "noImplicitThis": true,
-    "noUnusedParameters": true,
     "importHelpers": true,
     "noEmitHelpers": true,
     "module": "commonjs",
-    "pretty": true,
     "target": "es2017",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist"
   },
+  "exclude": [
+    "test/*",
+    "dist/*"
+  ],
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2

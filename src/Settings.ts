@@ -2,12 +2,12 @@ import * as fs from 'fs';
 
 
 export let settings: any = {
-    init(centsaDir: any) {
+    init(centsaDir) {
         const settingsFile = `${centsaDir}/settings.json`;
 
         settings = loadSettings(settingsFile, `${centsaDir}/system.properties`);
 
-        settings.save = (done: (err?: NodeJS.ErrnoException) => void = err => {
+        settings.save = (done = err => {
             if (err) console.error(err);
             else console.log("Updated settings");
         }) => fs.writeFile(settingsFile, JSON.stringify(settings), done);
@@ -16,7 +16,7 @@ export let settings: any = {
     }
 };
 
-export function loadSettings(settingsFile: string, legacySettingsFile: string) {
+export function loadSettings(settingsFile, legacySettingsFile) {
     try {
         return JSON.parse(fs.readFileSync(settingsFile, "utf8"));
     } catch (error) {

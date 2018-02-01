@@ -5,9 +5,9 @@ import * as os from 'os';
 
 import { settings } from './Settings';
 
-function checkNewVersion(callback: (info: any) => void) {
+function checkNewVersion(callback) {
     axios.get('https://api.github.com/repos/nohorjo/Centsa/releases/latest')
-        .then((response: any) => {
+        .then(response => {
             fs.readFile(`${__dirname}/../package.json`, "utf8", (err, data) => {
                 if (err) {
                     console.error(err);
@@ -25,17 +25,17 @@ function checkNewVersion(callback: (info: any) => void) {
                 }
             });
         })
-        .catch((error: any) => {
+        .catch(error => {
             console.error(error);
         });
 }
 
-function downloadAndOpen(url: string) {
+function downloadAndOpen(url) {
     axios({
         method: 'get',
         url: url, responseType:
-        'stream'
-    }).then((resp: any) => {
+            'stream'
+    }).then(resp => {
         let filePath = `${os.tmpdir()}/${url.replace(/^.*\//g, "")}`;
         let dlStream = fs.createWriteStream(filePath);
         dlStream.on("close", () => {
@@ -51,13 +51,13 @@ function downloadAndOpen(url: string) {
             });
         });
         resp.data.pipe();
-    }).catch((error: any) => {
+    }).catch(error => {
         console.error(error);
     });
 }
 
 export default {
-    autoCheckUpdate(callback: (update: any, confirm: () => void) => void) {
+    autoCheckUpdate(callback) {
         if (settings.app.update.check) {
             checkNewVersion((update) => {
                 if (settings.app.update.download) {

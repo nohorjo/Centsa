@@ -25,8 +25,12 @@
     "ts-lint": "4.5.1"
   },
   "scripts": {
-    "start": "nodemon --exec 'ts-node src/index.ts'",
-    "test": "mocha"
+    "start": "node dist/index.js",
+    "build": "tsc -p .",
+    "dev": "nodemon --exec 'ts-node src/index.ts'",
+    "debug": "ts-node --inspect-brk=9009 src/index.ts",
+    "test": "mocha",
+    "prebuild": "npm test"
   },
   "repository": {
     "type": "git",
