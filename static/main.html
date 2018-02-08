@@ -2,37 +2,39 @@
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+	<meta charset="utf-8" />
 
-<link href="main.css" rel="stylesheet" />
-<link href="style/bootstrap.min.css" rel="stylesheet" />
-<link href="style/bootstrap-datepicker3.min.css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"
+	/>
 
-<script src="lib/jquery-3.1.0.min.js" type="text/javascript"></script>
-<script src="lib/popper.js" type="text/javascript"></script>
-<script src="lib/bootstrap.min.js" type="text/javascript"></script>
-<script src="lib/bootstrap-datepicker.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
 
-<script src="lib/util/dateFormat.js"></script>
-<script src="lib/util/polyfill.js"></script>
+	<script src="lib/util/dateFormat.js"></script>
+	<script src="lib/util/polyfill.js"></script>
 
-<script src="lib/angular.min.js"></script>
-<script src="lib/angular-route.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-route.min.js"></script>
 
-<script src="lib/amcharts/amcharts.js"></script>
-<script src="lib/amcharts/pie.js"></script>
-<script src="lib/amcharts/serial.js"></script>
-<script src="lib/amcharts/themes/light.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/amcharts.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/pie.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/serial.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/themes/light.js"></script>
 
-<script src="main.js"></script>
-<script src="routes.js"></script>
+	<link href="main.css" rel="stylesheet" />
 
-<script src="summary/controller.js"></script>
-<script src="transactions/controller.js"></script>
-<script src="accounts/controller.js"></script>
-<script src="types/controller.js"></script>
-<script src="expenses/controller.js"></script>
-<script src="import/controller.js"></script>
+	<script src="main.js"></script>
+	<script src="routes.js"></script>
+
+	<script src="summary/controller.js"></script>
+	<script src="transactions/controller.js"></script>
+	<script src="accounts/controller.js"></script>
+	<script src="types/controller.js"></script>
+	<script src="expenses/controller.js"></script>
+	<script src="import/controller.js"></script>
 </head>
 
 <body data-ng-app="app" data-ng-controller="mainCtrl">
@@ -42,11 +44,9 @@
 		</div>
 		<div>
 			<a href="#!summary" data-ng-class="{'active':isActive('/summary')}">Summary</a>
-			<a href="#!transactions"
-				data-ng-class="{'active':isActive('/transactions')}"
-				data-ng-click="resetFilter()">Transactions</a> <a href="#!accounts"
-				data-ng-class="{'active':isActive('/accounts')}">Accounts</a> <a
-				href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
+			<a href="#!transactions" data-ng-class="{'active':isActive('/transactions')}" data-ng-click="resetFilter()">Transactions</a>
+			<a href="#!accounts" data-ng-class="{'active':isActive('/accounts')}">Accounts</a>
+			<a href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
 			<a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}">Expenses/Income</a>
 			<a href="#!import" data-ng-class="{'active':isActive('/import')}">Import</a>
 		</div>

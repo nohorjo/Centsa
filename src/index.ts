@@ -1,12 +1,11 @@
 import * as express from 'express';
-import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import axios from 'axios';
 
 if (cluster.isMaster) {
-    for (var i = 0; i < os.cpus().length; i += 1) {
+    for (let i = 0; i < os.cpus().length; i++) {
         cluster.fork();
     }
 } else {
@@ -19,7 +18,7 @@ if (cluster.isMaster) {
         resave: false,
         saveUninitialized: false,
         cookie: {}
-    }
+    };
 
     if (process.env.NODE_ENV === 'production') {
         app.set('trust proxy', 1);
@@ -32,7 +31,7 @@ if (cluster.isMaster) {
 
     app.use(express.static('static'));
 
-    app.use(bodyParser.json());
+    app.use(express.json());
 
 
 
@@ -44,11 +43,14 @@ if (cluster.isMaster) {
 
             axios.get(url).then((resp) => {
                 console.dir(resp.data);
-                res.send("done");
+                req.session.authorized = true;
+                res.sendStatus(201);
             }).catch(e => {
-                res.status(500).send(e);
+                res.sendStatus(401);
             });
-        } catch (e) { }
+        } catch (e) {
+            res.sendStatus(500);
+        }
     });
 
     app.listen(port, () => console.log(`Server ${cluster.worker.id} listening on port ${port}`));
