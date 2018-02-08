@@ -11,7 +11,7 @@ let fbInit = () => {
                 $.post({
                     url: '/fb',
                     contentType: 'application/json',
-                    data: response.authResponse,
+                    data: JSON.stringify(response.authResponse),
                     success: () => {
                         window.location.pathname = "main.html";
                     }
