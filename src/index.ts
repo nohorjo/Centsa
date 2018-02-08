@@ -15,7 +15,7 @@ if (cluster.isMaster) {
     const app = express();
 
     const sess = {
-        secret: process.env.SECRET || Math.random().toString(),//FIXME:
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {}
@@ -32,7 +32,6 @@ if (cluster.isMaster) {
 
     app.use(express.static('static'));
 
-    app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
 
