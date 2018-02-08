@@ -27,7 +27,7 @@ if (cluster.isMaster) {
 
     app.use(session(sess));
 
-    app.all('/app/*', (req, resp, next) => (req.session && req.session.authorized) ? next() : resp.status(401).redirect('/index.html'));
+    app.all('/app/*', (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html'));
 
     app.use(express.static('static'));
 
@@ -43,7 +43,7 @@ if (cluster.isMaster) {
 
             axios.get(url).then((resp) => {
                 console.dir(resp.data);
-                req.session.authorized = true;
+                req.session.userData = resp.data;
                 res.sendStatus(201);
             }).catch(e => {
                 res.sendStatus(401);
