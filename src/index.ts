@@ -28,7 +28,7 @@ if (cluster.isMaster) {
 
     app.use(session(sess));
 
-    app.all('/app/*', (req, resp, next) => (req.session && req.session.authorized) ? next() : resp.status(401).send());
+    app.all('/app/*', (req, resp, next) => (req.session && req.session.authorized) ? next() : resp.status(401).redirect('/index.html'));
 
     app.use(express.static('static'));
 
