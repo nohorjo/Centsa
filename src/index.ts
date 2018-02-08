@@ -15,7 +15,7 @@ if (cluster.isMaster) {
     const app = express();
 
     const sess = {
-        secret: process.env.SESSION_SECRET,
+        secret: Math.random().toString(),
         resave: false,
         saveUninitialized: false,
         cookie: {}
