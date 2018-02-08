@@ -33,8 +33,6 @@ if (cluster.isMaster) {
 
     app.use(express.json());
 
-
-
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.post('/fb', (req, res) => {
         let fields = ['email', 'name'];
