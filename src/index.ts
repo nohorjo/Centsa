@@ -25,17 +25,17 @@ if (cluster.isMaster) {
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
     }
-    app.use(session(sess));
     app.use(express.json());
     app.use(cookieParser());
-
-    app.use(express.static('static'));
+    app.use(session(sess));
 
     app.all('/app/*', fbauth.checkAuth);
-
+    
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
+    
+    app.use(express.static('static'));
 
     app.listen(port, () => console.log(`Server ${cluster.worker.id} listening on port ${port}`));
 }
