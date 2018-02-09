@@ -3,10 +3,13 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
+import MySQLStore from 'express-mysql-session';
 import * as fbauth from './fbauth';
 
+const cpus = os.cpus().length;
+
 if (cluster.isMaster) {
-    for (let i = 0; i < os.cpus().length; i++) {
+    for (let i = 0; i < cpus; i++) {
         cluster.fork();
     }
 } else {
@@ -15,16 +18,25 @@ if (cluster.isMaster) {
     const app = express();
 
     const sess = {
-        secret: Math.random().toString(),
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
-        unset:'destroy',
+        unset: 'destroy',
         cookie: { maxAge: Number.MAX_VALUE, httpOnly: true }
     };
 
     if (process.env.NODE_ENV === 'production') {
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
+        session["store"] = new MySQLStore({
+            host: process.env.DB_IP,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionLimit: cpus
+        });
+    } else {
+        sess.secret = Math.random().toString();
     }
     app.use(express.json());
     app.use(cookieParser());
