@@ -7,12 +7,13 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="index.css">
 
-  <script src="/facebook.js"></script>
+  <script src="facebook.js"></script>
 </head>
 
 <body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" onload="fbInit()">
+  <div class="cookie-notice">Centsa uses cookies to store login state. By using this service you are agreeing to have these cookies stored on your machine</div>
   <a href="https://github.com/nohorjo/Centsa" target="_blank">
     <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
       alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png">
@@ -25,7 +26,7 @@
       <div class="col-md-4">
         <section class="login-form">
           <form method="post" action="#" role="login">
-            <img src="/icon.svg" alt="logo" height="100em" width="100em">
+            <img src="icon.svg" alt="logo" height="100em" width="100em">
             <div class="fb-login-button" data-max-rows="3" data-size="large" data-button-type="login_with" data-auto-logout-link="true"
               data-use-continue-as="true" data-scope="public_profile,email" onlogin="checkLoginState();"></div>
           </form>

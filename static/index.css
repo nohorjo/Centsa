@@ -25,7 +25,6 @@ http://www.bootstrapzen.com/item/135/simple-login-form-logo/
   height: auto;
   padding: 10px;
   @include box-sizing(border-box);
-
   &:focus {
     z-index: 2;
   }
@@ -80,4 +79,15 @@ form[role=login]>div {
 
 .fb-login-button {
   display: block !important;
+}
+
+.cookie-notice {
+  padding-top: 0.5em;
+  font-weight: bold;
+  text-align: center;
+  background: #f0f8ff;
+  position: absolute;
+  width: 100%;
+  height: 2.5em;
+  top: 0;
 }
