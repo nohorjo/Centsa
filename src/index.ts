@@ -18,7 +18,8 @@ if (cluster.isMaster) {
         secret: Math.random().toString(),
         resave: false,
         saveUninitialized: false,
-        cookie: {}
+        unset:'destroy',
+        cookie: { maxAge: Number.MAX_VALUE, httpOnly: true }
     };
 
     if (process.env.NODE_ENV === 'production') {
@@ -30,11 +31,11 @@ if (cluster.isMaster) {
     app.use(session(sess));
 
     app.all('/app/*', fbauth.checkAuth);
-    
+
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
-    
+
     app.use(express.static('static'));
 
     app.listen(port, () => console.log(`Server ${cluster.worker.id} listening on port ${port}`));
