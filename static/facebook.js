@@ -1,4 +1,5 @@
 let fbInit = () => {
+    const authUrl = '/fb';
     const initConfig = {
         appId: '531919070519328',
         cookie: true,
@@ -9,11 +10,18 @@ let fbInit = () => {
         FB.getLoginStatus(response => {
             if (response.authResponse) {
                 $.post({
-                    url: '/fb',
+                    url: authUrl,
                     contentType: 'application/json',
                     data: JSON.stringify(response.authResponse),
                     success: () => {
                         window.location.pathname = "main.html";
+                    }
+                });
+            } else {
+                $.delete({
+                    url: authUrl,
+                    success: () => {
+                        window.location.pathname = "index.html";
                     }
                 });
             }

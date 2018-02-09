@@ -4,39 +4,35 @@ body {
 
 .sidebar {
 	position: fixed;
-	top: 0;
+	top: 5%;
 	left: 0;
 	z-index: 1;
-	height: 100%;
+	height: 95%;
 	width: 15%;
-	box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px
-		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 5%;
+	width: 100%;
+	padding: 4px 10px;
+	box-shadow: 6px 1px 10px 0px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .main-panel {
 	position: fixed;
-	top: 0;
+	top: 5%;
 	right: 0;
-	height: 100%;
+	height: 95%;
 	width: 85%;
-	position: fixed;
-	padding: 0 10px 0 2em;
+	padding: 10px 10px 0 2em;
 	margin-right: 10px;
 	overflow: auto;
 }
 
-.logo {
-	position: relative;
-	padding: 15px 15px;
-	font-size: 20pt;
-	text-transform: uppercase;
-	display: block;
-	font-size: 18px;
-	color: #3C4858;
-	text-align: center;
-	font-weight: 400;
-	line-height: 30px;
-}
 
 .float-right {
 	float: right;
@@ -56,8 +52,7 @@ body {
 }
 
 .sidebar a:hover {
-	box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px
-		rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
+	box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
 }
 
 .sidebar a.active {
@@ -96,13 +91,14 @@ body {
 	width: 100%;
 }
 
-.datalist span:hover, .datalist span.hover {
+.datalist span:hover,
+.datalist span.hover {
 	background-color: #428bca;
 	color: white;
 }
 
 img {
-	width: 100%;
+	width: 7%;
 	height: auto;
 }
 
@@ -126,7 +122,8 @@ div.amcharts-chart-div>a {
 	display: none !important;
 }
 
-th[data-ng-click], table.table-hover tr td {
+th[data-ng-click],
+table.table-hover tr td {
 	cursor: pointer;
 }
 
@@ -139,43 +136,45 @@ th[data-ng-click]:after {
 }
 
 .no-border-inactive:not(:focus) {
-    border: 0;
+	border: 0;
 }
 
-#frequencySelect > .dropdown-menu {
-    width: calc(100% + 25em);
+#frequencySelect>.dropdown-menu {
+	width: calc(100% + 25em);
 }
 
-#frequencySelect > .btn {
-    white-space: normal;
+#frequencySelect>.btn {
+	white-space: normal;
 }
 
 .dropdown-menu li {
-    padding: 0 0.5em;
+	padding: 0 0.5em;
 }
 
 .dropdown-menu li:hover {
-    background: #f5f5f5;
+	background: #f5f5f5;
 }
 
-.dropdown > button {
-    width: 100%;
+.dropdown>button {
+	width: 100%;
 }
 
 .dropdown-menu input[type="number"] {
-    display: inline;
-    width: 5em;
+	display: inline;
 }
 
 .dropdown-menu select {
-    display: inline;
-    width: 10em;
+	display: inline;
 }
 
 li.disabled :not([type="radio"]) {
-    pointer-events: none;
+	pointer-events: none;
 }
 
 li.disabled {
-    opacity: 0.5;
+	opacity: 0.5;
+}
+
+.fb-login-button {
+	float: right;
 }
