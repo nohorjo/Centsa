@@ -18,7 +18,8 @@ let fbInit = () => {
                     }
                 });
             } else {
-                $.delete({
+                $.ajax({
+                    type: "DELETE",
                     url: authUrl,
                     success: () => {
                         window.location.pathname = "index.html";

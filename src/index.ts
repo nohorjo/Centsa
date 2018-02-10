@@ -4,9 +4,10 @@ import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import MySQLStore from 'express-mysql-session';
+import * as path from 'path';
 import * as fbauth from './fbauth';
 
-const cpus = os.cpus().length;
+const cpus = 1; //os.cpus().length; // FIXME: enable once mysql is set up
 
 if (cluster.isMaster) {
     for (let i = 0; i < cpus; i++) {
@@ -22,7 +23,7 @@ if (cluster.isMaster) {
         resave: false,
         saveUninitialized: false,
         unset: 'destroy',
-        cookie: { maxAge: Number.MAX_VALUE, httpOnly: true }
+        cookie: { maxAge: 31536000000, httpOnly: true }
     };
 
     if (process.env.NODE_ENV === 'production') {
@@ -38,17 +39,20 @@ if (cluster.isMaster) {
     } else {
         sess.secret = Math.random().toString();
     }
+    
     app.use(express.json());
     app.use(cookieParser());
-    app.use(session(sess));
-
-    app.all('/app/*', fbauth.checkAuth);
-
+    app.use(session(sess) );
+    
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
 
-    app.use(express.static('static'));
+    app.all('/app/*', fbauth.checkAuth);
+
+    app.get(/.*(?<!index)\.html$/g, fbauth.checkAuth);
+
+    app.use(express.static(path.join(__dirname, '..', 'static')));
 
     app.listen(port, () => console.log(`Server ${cluster.worker.id} listening on port ${port}`));
 }

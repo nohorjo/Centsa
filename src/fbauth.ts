@@ -1,16 +1,17 @@
 import axios from 'axios';
 
-export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html');
+export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? console.dir(req.session.userData)||next() : resp.status(401).redirect('/index.html');
 
 export const login = (req, res) => {
     let fields = ['email', 'name'];
     try {
+        console.log(`Login request: ${req.body.userID}`);
         let url = `https://graph.facebook.com/${req.body.userID}?access_token=${req.body.accessToken}&fields=${fields.join(',')}`;
 
         axios.get(url).then((resp) => {
             console.dir(resp.data);
             req.session.userData = resp.data;
-            res.cookie('name', resp.data.name, { maxAge: Number.MAX_VALUE, httpOnly: true });
+            res.cookie('name', resp.data.name, { maxAge: 31536000000, httpOnly: false });
             res.sendStatus(201);
         }).catch(e => {
             res.sendStatus(401);
@@ -21,5 +22,8 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
-    // TODO: implement logout
+    console.log(`Cleared session for ${req.session.userData.email}`);
+    delete req.session;
+    res.clearCookie('name');
+    res.sendStatus(201);
 };
