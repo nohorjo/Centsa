@@ -7,21 +7,21 @@ import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fbauth from './fbauth';
 
-try { require('../config'); } catch (e) {/* Config not set or in environment */ }
-for (let v of [
-    'SESSION_SECRET',
-    'DB_IP',
-    'DB_PORT',
-    'DB_USER',
-    'DB_PASSWORD',
-    'DB_NAME'
-]) {
-    if (!process.env[v]) throw `Incomplete configuration: ${v}`;
-}
 
 const cpus = os.cpus().length;
 
 if (cluster.isMaster) {
+    try { require('../config'); } catch (e) {/* Config not set or in environment */ }
+    for (let v of [
+        'SESSION_SECRET',
+        'DB_IP',
+        'DB_PORT',
+        'DB_USER',
+        'DB_PASSWORD',
+        'DB_NAME'
+    ]) {
+        if (!process.env[v]) throw `Incomplete configuration: ${v}`;
+    }
     for (let i = 0; i < cpus; i++) {
         cluster.fork();
     }
