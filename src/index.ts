@@ -7,7 +7,17 @@ import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fbauth from './fbauth';
 
-require('../config');
+try { require('../config'); } catch (e) {/* Config not set or in environment */ }
+for (let v of [
+    'SESSION_SECRET',
+    'DB_IP',
+    'DB_PORT',
+    'DB_USER',
+    'DB_PASSWORD',
+    'DB_NAME'
+]) {
+    if (!process.env[v]) throw `Incomplete configuration: ${v}`;
+}
 
 const cpus = os.cpus().length;
 
@@ -50,7 +60,7 @@ if (cluster.isMaster) {
         path: ['/fb', '/index.html'],
         ext: ['css', 'js', 'svg', 'ico', 'gif']
     }));
-    
+
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
