@@ -32,8 +32,9 @@
     "build": "tsc -p .",
     "dev": "ts-node-dev src/index.ts",
     "debug": "ts-node --inspect-brk=9009 src/index.ts",
-    "test": "mocha",
-    "prebuild": "npm test"
+    "test": "",
+    "prebuild": "npm test",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
