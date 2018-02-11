@@ -1,6 +1,9 @@
 import axios from 'axios';
+import * as unless from 'express-unless';
 
-export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? console.dir(req.session.userData)||next() : resp.status(401).redirect('/index.html');
+export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html');
+
+checkAuth['unless'] = unless;
 
 export const login = (req, res) => {
     let fields = ['email', 'name'];

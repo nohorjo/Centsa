@@ -3,11 +3,11 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import MySQLStore from 'express-mysql-session';
+import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fbauth from './fbauth';
 
-const cpus = 1; //os.cpus().length; // FIXME: enable once mysql is set up
+const cpus = os.cpus().length;
 
 if (cluster.isMaster) {
     for (let i = 0; i < cpus; i++) {
@@ -23,34 +23,36 @@ if (cluster.isMaster) {
         resave: false,
         saveUninitialized: false,
         unset: 'destroy',
-        cookie: { maxAge: 31536000000, httpOnly: true }
+        cookie: { maxAge: 31536000000, httpOnly: true },
+        store: new MySQLStore({
+            host: process.env.DB_IP,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionLimit: cpus,
+            database: process.env.DB_NAME,
+            createDatabaseTable: true
+        })
     };
 
     if (process.env.NODE_ENV === 'production') {
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
-        session["store"] = new MySQLStore({
-            host: process.env.DB_IP,
-            port: process.env.DB_PORT,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionLimit: cpus
-        });
-    } else {
-        sess.secret = Math.random().toString();
     }
-    
+
     app.use(express.json());
     app.use(cookieParser());
-    app.use(session(sess) );
+    app.use(session(sess));
+
+    app.use(fbauth.checkAuth['unless']({
+        path: ['/fb', '/index.html'],
+        ext: ['css', 'js', 'svg', 'ico', 'gif']
+    }));
     
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
 
-    app.all('/app/*', fbauth.checkAuth);
-
-    app.get(/.*(?<!index)\.html$/g, fbauth.checkAuth);
 
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
