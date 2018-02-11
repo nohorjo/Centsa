@@ -6,3 +6,4 @@ out
 package.json.*
 coverage/*
 dist/*
+config.js

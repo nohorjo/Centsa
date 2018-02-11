@@ -7,6 +7,8 @@ import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fbauth from './fbauth';
 
+require('../config');
+
 const cpus = os.cpus().length;
 
 if (cluster.isMaster) {
