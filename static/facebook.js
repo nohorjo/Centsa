@@ -6,6 +6,7 @@ let fbInit = () => {
         xfbml: true,
         version: 'v2.11'
     };
+
     window.checkLoginState = () => {
         FB.getLoginStatus(response => {
             if (response.authResponse) {
@@ -17,14 +18,6 @@ let fbInit = () => {
                         window.location.pathname = "main.html";
                     }
                 });
-            } else {
-                $.ajax({
-                    type: "DELETE",
-                    url: authUrl,
-                    success: () => {
-                        window.location.pathname = "index.html";
-                    }
-                });
             }
         });
     };
@@ -32,6 +25,21 @@ let fbInit = () => {
     window.fbAsyncInit = () => {
         FB.init(initConfig);
         FB.AppEvents.logPageView();
+    };
+
+    window.logoutFB = () => {
+        FB.getLoginStatus(() => {
+            FB.logout(() => {
+                $.ajax({
+                    url: authUrl,
+                    type: 'DELETE',
+                    success: () => {
+                        window.location.pathname = "index.html";
+                    }
+                });
+            });
+        });
+
     };
 
     (function (d, s, id) {

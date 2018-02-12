@@ -40,7 +40,7 @@
 	<script src="facebook.js"></script>
 </head>
 
-<body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
+<body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit();fbAsyncInit()">
 	<div class="sidebar">
 		<div>
 			<a href="#!summary" data-ng-class="{'active':isActive('/summary')}">Summary</a>
@@ -52,9 +52,8 @@
 		</div>
 	</div>
 	<div class="header">
-		<img alt="logo" data-ng-src="logo.svg">
-		<div class="fb-login-button" data-max-rows="3" data-size="medium" data-button-type="login_with" data-auto-logout-link="true"
-		    data-use-continue-as="true" data-scope="public_profile,email" onlogin="checkLoginState();"></div>
+		<img id="logo" data-ng-src="logo.svg">
+		<img id="logout" data-ng-src="logout.svg" onclick="logoutFB();">
 	</div>
 	<div class="main-panel">
 		<div class="content" data-ng-view autoscroll="true"></div>

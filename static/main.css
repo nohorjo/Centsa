@@ -175,6 +175,10 @@ li.disabled {
 	opacity: 0.5;
 }
 
-.fb-login-button {
+img#logout {
+	border-radius: 3px;
 	float: right;
+	width: 7%;
+	height: auto;
+	cursor: pointer;
 }
