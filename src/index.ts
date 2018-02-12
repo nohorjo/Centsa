@@ -5,6 +5,7 @@ import * as cluster from 'cluster';
 import * as os from 'os';
 import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
+import * as mysql from 'mysql';
 import * as fbauth from './fbauth';
 
 
@@ -20,8 +21,27 @@ if (cluster.isMaster) {
         'DB_PASSWORD',
         'DB_NAME'
     ]) {
-        if (!process.env[v]) throw `Incomplete configuration: ${v}`;
+        if (!process.env[v]) {
+            console.error(`Incomplete configuration: ${v}`);
+            process.exit(1);
+        }
     }
+
+    var connection = mysql.createConnection({
+        host: process.env.DB_IP,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    });
+
+    connection.connect();
+    connection.on('error', (e) => {
+        console.error('Error connecting to db', e);
+        process.exit(1);
+    })
+    connection.end();
+
     for (let i = 0; i < cpus; i++) {
         cluster.fork();
     }
