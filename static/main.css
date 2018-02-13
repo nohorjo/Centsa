@@ -178,7 +178,5 @@ li.disabled {
 img#logout {
 	border-radius: 3px;
 	float: right;
-	width: 7%;
-	height: auto;
 	cursor: pointer;
 }

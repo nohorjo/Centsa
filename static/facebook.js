@@ -29,14 +29,13 @@ let fbInit = () => {
 
     window.logoutFB = () => {
         FB.getLoginStatus(() => {
-            FB.logout(() => {
-                $.ajax({
-                    url: authUrl,
-                    type: 'DELETE',
-                    success: () => {
-                        window.location.pathname = "index.html";
-                    }
-                });
+            FB.logout();
+            $.ajax({
+                url: authUrl,
+                type: 'DELETE',
+                success: () => {
+                    window.location.pathname = "index.html";
+                }
             });
         });
 
