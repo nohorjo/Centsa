@@ -1,5 +1,6 @@
 app.controller("typesCtrl", $scope => {
-	centsa.types.getAll(resp => $scope.types = resp.data);
+
+	loadTypes();
 
 	$scope.newType = {
 		name: ""
@@ -14,12 +15,15 @@ app.controller("typesCtrl", $scope => {
 		drawPie();
 	});;
 
-	$scope.deleteType = id => centsa.types.remove(id), () => {
-		$scope.types = centsa.types.getAll();
-		drawPie();
-	};
+	$scope.deleteType = id => centsa.types.remove(id, loadTypes);
 
-	function drawPie() {
+	const loadTypes = () => centsa.types.getAll(data => {
+		$scope.types = data;
+		drawPie();
+	});
+
+
+	const drawPie = () => {
 		AmCharts.makeChart("types-chart", {
 			type: "pie",
 			theme: "light",
@@ -35,5 +39,4 @@ app.controller("typesCtrl", $scope => {
 		});
 	}
 
-	drawPie();
 });
