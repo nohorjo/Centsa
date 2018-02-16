@@ -27,7 +27,7 @@ if (cluster.isMaster) {
         }
     }
 
-    var connection = mysql.createConnection({
+    const connection = mysql.createConnection({
         host: process.env.DB_IP,
         port: process.env.DB_PORT,
         user: process.env.DB_USER,
@@ -39,7 +39,7 @@ if (cluster.isMaster) {
     connection.on('error', (e) => {
         console.error('Error connecting to db', e);
         process.exit(1);
-    })
+    });
     connection.end();
 
     for (let i = 0; i < cpus; i++) {
