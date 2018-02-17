@@ -150,9 +150,9 @@
                 <td>{{ t.id }}</td>
                 <td>{{ formatDate(t.date) }}</td>
                 <td style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
-                <td>{{ getFromArray(accounts, t.account_id).name }}</td>
-                <td>{{ getFromArray(types, t.type_id).name }}</td>
-                <td>{{ getFromArray(expenses, t.expense_id).name }}</td>
+                <td>{{ accounts.find(a=>a.id==t.account_id).name }}</td>
+                <td>{{ types.find(t=>t.id==t.type_id).name }}</td>
+                <td>{{ expenses.find(e=>e.id==t.expense_id).name }}</td>
                 <td>{{ t.comment }}</td>
             </tr>
             <tr data-ng-repeat="t in [] | range:getExtraRows()">

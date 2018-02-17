@@ -1,37 +1,23 @@
-var app = angular.module("app", [ "ngRoute" ]);
+const app = angular.module("app", ["ngRoute"]);
 
-app.controller("mainCtrl", function($scope, $rootScope, $location) {
-	$rootScope.formatDate = function(date) {
+app.controller("mainCtrl", function ($scope, $rootScope, $location) {
+	$rootScope.formatDate = date => {
 		if (date.constructor == String) {
 			date = date.substr(0, 19);
 		}
 		return new Date(date).formatDate("yyyy/MM/dd");
 	};
 
-	/**
-	 * Checks if the selector matches the active element
-	 */
-	$rootScope.isActive = function(sel) {
-		var active = false;
-
-		$(sel).each(function() {
-			if (this == document.activeElement)
-				active = true;
-		});
-
-		return active;
-	}
-
-	$rootScope.sort = (function() {
-		var lastProp;
-		var asc = true;
-		return function(prop, arr) {
+	$rootScope.sort = (() => {
+		let lastProp;
+		let asc = true;
+		return (prop, arr) => {
 			if (lastProp != prop) {
 				lastProp = prop;
 				asc = false;
 			}
 			asc = !asc
-			arr.sort(function(a, b) {
+			arr.sort(function (a, b) {
 				p1 = a[prop];
 				p2 = b[prop];
 				var comp;
@@ -49,17 +35,15 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 	 * Used to filter transactions. Available in the rootscope so that other
 	 * pages can set it if needed
 	 */
-	$rootScope.resetFilter = function() {
-		$rootScope.filter = {
-			account_id : '0',
-			type_id : '0',
-			expense_id : '0',
-			regex : false
-		};
+	$rootScope.resetFilter = () => $rootScope.filter = {
+		account_id: '0',
+		type_id: '0',
+		expense_id: '0',
+		regex: false
 	};
 	$rootScope.resetFilter();
 
-	$rootScope.setFilter = function(f) {
+	$rootScope.setFilter = f => {
 		$rootScope.filter = f;
 		$location.path("transactions");
 	};
@@ -67,27 +51,36 @@ app.controller("mainCtrl", function($scope, $rootScope, $location) {
 	/**
 	 * Rounds a number
 	 */
-	$rootScope.roundTo = function(x, dp) {
+	$rootScope.roundTo = (x, dp) => {
 		var mult = Math.pow(10, dp);
 		return Math.round(x * mult) / mult;
 	};
 
-	$rootScope.getFromArray = function(arr, id) {
-        return arr.filter(function(item) {
-            return item.id == id;
-        })[0];
-    };
+	$scope.isActive = path => $location.path() == path;
 
-	$scope.isActive = function(path) {
-		return $location.path() == path;
-	};
 });
 
-app.filter('range', function() {
-	return function(input, total) {
+app.filter('range', function () {
+	return function (input, total) {
 		total = parseInt(total);
-		for (var i = 0; i < total; i++)
+		for (let i = 0; i < total; i++)
 			input.push(i);
 		return input;
 	};
 });
+
+app.directive('fileModel', ['$parse', function ($parse) {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			const model = $parse(attrs.fileModel);
+			const modelSetter = model.assign;
+
+			element.bind('change', function () {
+				scope.$apply(function () {
+					modelSetter(scope, element[0].files[0]);
+				});
+			});
+		}
+	};
+}]);

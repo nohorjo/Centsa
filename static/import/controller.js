@@ -41,19 +41,3 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 	$scope.getProgressPercentage = extra => $rootScope.roundTo(($scope.importProgress.processed * 100) / $scope.importProgress.total, extra ? 2 : 0);
 
 });
-
-app.directive('fileModel', ['$parse', function ($parse) {
-	return {
-		restrict: 'A',
-		link: function (scope, element, attrs) {
-			var model = $parse(attrs.fileModel);
-			var modelSetter = model.assign;
-
-			element.bind('change', function () {
-				scope.$apply(function () {
-					modelSetter(scope, element[0].files[0]);
-				});
-			});
-		}
-	};
-}]);
