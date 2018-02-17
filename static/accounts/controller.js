@@ -1,4 +1,4 @@
-app.controller("accountsCtrl", ($scope, centsa) => {
+app.controller("accountsCtrl", function ($scope, centsa) {
 	loadAccounts();
 
 	$scope.newAccount = {

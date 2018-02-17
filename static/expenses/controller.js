@@ -1,4 +1,4 @@
-app.controller("expensesCtrl", ($scope, $rootScope, $sce) => {
+app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
     centsa.expenses.getAll(data => $scope.expenses = data);
     centsa.accounts.getAll(data => $scope.accounts = data);

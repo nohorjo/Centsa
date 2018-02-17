@@ -1,4 +1,4 @@
-app.service('centsa'), function ($http) {
+app.service('centsa', function ($http) {
     class genericApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
@@ -9,10 +9,40 @@ app.service('centsa'), function ($http) {
         constructor() { super('expenses'); }
         totalActive(incAuto, success, error) { $http.get(`${this.apiUrl}/total&auto=${incAuto}`).then(resp => success(resp.data), error); }
     }
+    class transactionsApi extends genericApi {
+        constructor() { super('transactions'); }
+        getCumulativeSums(success, error) { $http.get(`${this.apiUrl}/cumulativeSums`).then(resp => success(resp.data), error); }
+    }
 
     this.accounts = new genericApi('accounts');
     this.types = new genericApi('types');
-    this.transactions = new genericApi('transactions');
+    this.transactions = new transactionsApi();
     this.expenses = new expensesApi();
+    this.settings = (() => {
+        const apiUrl = '/api/settings';
+        let _settings;
+        return {
+            get(key, success, error) {
+                if (!_settings) {
+                    $http.get(apiUrl).then(resp => {
+                        _settings = resp.data;
+                        success(_settings[key]);
+                    }, error);
+                } else {
+                    success(_settings[key]);
+                }
+            },
+            set(key, value, success, error) {
+                _settings[key] = value;
+                $http.post(apiUrl, { key: key, value: value }).then(success, error);
+            }
+        };
+    })();
+    this.general = (() => {
+        const apiUrl = '/api/general';
+        return {
+            budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget?strict=${isStrictMode}`).then(success, error); }
+        };
+    })();
 
-};
+});

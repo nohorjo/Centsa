@@ -1,5 +1,4 @@
-app.controller("typesCtrl", $scope => {
-
+app.controller("typesCtrl", function ($scope, centsa) {
 	loadTypes();
 
 	$scope.newType = {
