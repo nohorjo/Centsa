@@ -1,6 +1,6 @@
 app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
-    centsa.expenses.getAll(data => $scope.expenses = data);
+    centsa.expenses.getAll(true, data => $scope.expenses = data);
     centsa.accounts.getAll(data => $scope.accounts = data);
     centsa.types.getAll(data => $scope.types = data);
 
@@ -52,13 +52,11 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.getNow = () => Date.now();
 
-
-    $scope.deleteExpense = function (id) {
-        if (centsa.expenses.remove(id)) {
-            $scope.expenses = centsa.expenses.getAll(0, 0, "NAME ASC");
-            getActiveTotals();
-        }
+    $scope.deleteExpense = id => centsa.expenses.remove(id), () => {
+        $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
+        getActiveTotals();
     };
+
 
     $scope.getMaxDaysInMonth = () => {
         switch ($scope.frequency.month) {

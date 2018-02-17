@@ -1,145 +1,79 @@
-app.controller("transCtrl", function($scope, $rootScope) {
-	function getFilter() {
-		var filter = Object.assign({}, $rootScope.filter);
-
-		if ($rootScope.filter.fromDate) {
-			filter.fromDate = new Date($rootScope.filter.fromDate).getTime();
-		} else {
-			delete filter.fromDate;
-		}
-		if ($rootScope.filter.toDate) {
-			filter.toDate = new Date($rootScope.filter.toDate).getTime();
-		} else {
-			delete filter.toDate;
-		}
-		if ($rootScope.filter.fromAmount) {
-			filter.fromAmount = $rootScope.filter.fromAmount * 100;
-		} else if($rootScope.filter.fromAmount == null) {
-		    delete filter.fromAmount;
-		}
-		if ($rootScope.filter.toAmount) {
-			filter.toAmount = $rootScope.filter.toAmount * 100;
-		} else if($rootScope.filter.toAmount == null) {
-            delete filter.toAmount;
-        }
-
-		return filter;
-	}
-
+app.controller("transCtrl", function ($scope, $rootScope, centsa) {
+	let sort = "DATE DESC, ID DESC";
 	$scope.currentPage = 1;
-	$scope.pageSize = centsa.settings.get("trans.page.size");
 
-	$scope.pagesCount = 0;
+	const loadTransactions = () => centsa.transactions.getAll({
+		page: $scope.currentPage,
+		pageSize: $scope.pageSize,
+		sort: sort,
+		filter: $rootScope.filter
+	}, data => $scope.transactions = data);
 
-	$scope.countPages = function() {
-		return $scope.pagesCount
-				|| ($scope.pagesCount = centsa.transactions.countPages($scope.pageSize, null, getFilter()));
-	};
+	centsa.settings.get("trans.page.size", data => {
+		$scope.pageSize = data;
+		loadTransactions();
+	});
 
-	var sort = "DATE DESC, ID DESC";
+	const countPages = () => centsa.transactions.countPages({
+		pageSize: $scope.pageSize,
+		filter: $rootScope.filter
+	}, data => $scope.pagesCount = data);
 
-	$scope.goToPage = function(n) {
+	countPages();
+
+	$scope.goToPage = n => {
 		if ($scope.currentPage != ($scope.currentPage = n)) {
-			$scope.transactions
-			    = centsa.transactions.getAll($scope.currentPage, $scope.pageSize, sort, null, getFilter());
+			loadTransactions();
 		}
 	};
 
-	$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			$scope.pageSize, sort, null, getFilter());
-	$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
-	$scope.accounts = centsa.accounts.getAll(0, 0, "NAME ASC");
-	$scope.types = centsa.types.getAll(0, 0, "NAME ASC");
-	$scope.expenses = centsa.expenses.getActive(0, 0, "NAME ASC");
-	$scope.allExpenses = centsa.expenses.getAll(0, 0, "NAME ASC");
-	$scope.uniqueComments = centsa.transactions.getUniqueComments();
-
-	$scope.showDataList = false;
-
-	$scope.setComment = function(c) {
-		$scope.showDataList = false;
-		$scope.newTrans.comment = c;
-	};
-
-	$scope.navigateDataList = (function() {
-
-		var index = -1;
-		var dataListItems;
-
-		return function($event) {
-
-			var temp = $(".datalist:first span");
-			dataListItems = temp.length > 0 ? temp : (dataListItems || temp);
-
-			switch ($event.keyCode) {
-			case 38:
-				if (index > 0) {
-					index--;
-				}
-				break;
-			case 40:
-				if (index < dataListItems.length - 1) {
-					index++;
-				}
-				break;
-			case 9:
-			case 13:
-				if (index != -1) {
-					$scope.setComment(dataListItems[index].innerText.trim());
-				}
-			default:
-				index = -1;
-				break;
-			}
-			$(".datalist").each(function() {
-				var dataListItems = $(this).find("span");
-				dataListItems.removeClass("hover");
-				$(dataListItems[index]).addClass("hover");
-				$(dataListItems[index]).focus();
-			});
-		}
-	})();
+	centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
+	centsa.accounts.getAll(data => $scope.accounts = data);
+	centsa.types.getAll(data => $scope.types = data);
+	centsa.expenses.getAll(true, data => $scope.expenses = data);
+	centsa.expenses.getAll(false, data => $scope.allExpenses = data);
+	centsa.transactions.getUniqueComments(data => $scope.uniqueComments = data);
 
 	$scope.newTrans = {
-		amount : 0.0,
-		comment : "",
-		account_id : "1",
-		type_id : "1",
-		expense_id : "1",
-		date : new Date().formatDate("yyyy/MM/dd")
+		amount: 0.0,
+		comment: "",
+		account_id: "1",
+		type_id: "1",
+		expense_id: "1",
+		date: new Date().formatDate("yyyy/MM/dd")
 	};
 
-	var newTrans = Object.assign({}, $scope.newTrans);
+	let newTrans = Object.assign({}, $scope.newTrans);
 
-	$scope.saveTrans = function(updating) {
-		$scope.pagesCount = 0;
+	$scope.saveTrans = updating => {
 		$scope.newTrans.date = new Date($scope.newTrans.date).getTime();
 		$scope.newTrans.amount = Math.round($scope.newTrans.amount * 100);
-		var newId = centsa.transactions.insert($scope.newTrans);
-		if (newId > 0) {
-			$scope.newTrans.id = newId;
-			$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
-		}
-		if ($scope.currentPage == 1 && !updating) {
-			$scope.transactions.unshift($scope.newTrans);
-			if ($scope.transactions.length > $scope.pageSize) {
-				$scope.transactions.pop();
+		centsa.transactions.insert($scope.newTrans, newId => {
+			countPages();
+			if (newId > 0) {
+				$scope.newTrans.id = newId;
+				centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
 			}
-		} else if (updating) {
-			for (var i = 0; i < $scope.transactions.length; i++) {
-				if ($scope.transactions[i].id == $scope.newTrans.id) {
-					$scope.transactions[i] = $scope.newTrans;
+			if ($scope.currentPage == 1 && !updating) {
+				$scope.transactions.unshift($scope.newTrans);
+				if ($scope.transactions.length > $scope.pageSize) {
+					$scope.transactions.pop();
 				}
+			} else if (updating) {
+				for (let i = 0; i < $scope.transactions.length; i++) {
+					if ($scope.transactions[i].id == $scope.newTrans.id) {
+						$scope.transactions[i] = $scope.newTrans;
+					}
+				}
+				$('#transModal').modal('hide');
 			}
-			$('#transModal').modal('hide');
-		}
-		$scope.newTrans = Object.assign({}, newTrans);
-		$('.datepicker').datepicker("update",
-				new Date().formatDate("yyyy/MM/dd"));
+			$scope.newTrans = Object.assign({}, newTrans);
+			$('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
+		});
 	};
 
-	$scope.editTrans = function(trans) {
-		var t = Object.assign({}, trans);
+	$scope.editTrans = trans => {
+		const t = Object.assign({}, trans);
 		t.date = $rootScope.formatDate(t.date);
 		$('.datepicker').datepicker("update", t.date);
 		t.amount = t.amount / 100;
@@ -149,81 +83,66 @@ app.controller("transCtrl", function($scope, $rootScope) {
 		$scope.newTrans = t;
 		$('#transModal').modal("show");
 		$('#transModal').on(
-            'hidden.bs.modal',
-            function(e) {
-                $scope.newTrans = Object.assign({}, newTrans);
-                $('.datepicker').datepicker("update",
-                        new Date().formatDate("yyyy/MM/dd"));
-            })
+			'hidden.bs.modal',
+			e => {
+				$scope.newTrans = Object.assign({}, newTrans);
+				$('.datepicker').datepicker("update",
+					new Date().formatDate("yyyy/MM/dd"));
+			})
 	};
 
-	$scope.initDatePickers = function() {
+	$scope.initDatePickers = () => {
 		$('.datepicker, .daterangepicker').datepicker({
-			format : "yyyy/mm/dd",
-			endDate : new Date(),
-			todayBtn : "linked",
-			autoclose : true,
-			todayHighlight : true
+			format: "yyyy/mm/dd",
+			endDate: new Date(),
+			todayBtn: "linked",
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('.datepicker').datepicker("update",
-				new Date().formatDate("yyyy/MM/dd"));
+			new Date().formatDate("yyyy/MM/dd"));
 	};
 
-	$scope.deleteTrans = function(id) {
-		$scope.pagesCount = 0;
-		if (centsa.transactions.remove(id)) {
-			$scope.transactions
-			    = centsa.transactions.getAll($scope.currentPage, $scope.pageSize, sort, null, getFilter());
-			$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
-		}
-		$('#transModal').modal("hide");
+	$scope.deleteTrans = id => {
+		centsa.transactions.remove(id, () => {
+			centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
+			countPages();
+			$scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
+			$('#transModal').modal("hide");
+		});
 	};
 
-	$scope.sort = (function() {
-		var lastCol;
-		var asc = true;
-		return function(col, secondary) {
+	$scope.sort = (() => {
+		let lastCol;
+		let asc = true;
+		return (col, secondary) => {
 			if (lastCol != col) {
 				lastCol = col;
 				asc = false;
 			}
 			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", ID DESC"
 				+ (secondary ? ", " + secondary : "");
-			$scope.transactions = centsa.transactions.getAll(
-				$scope.currentPage, $scope.pageSize, sort, null, getFilter());
+			loadTransactions();
 		};
 	})();
 
-	$scope.reloadTrans = function() {
-	    centsa.settings.set("trans.page.size", $scope.pageSize);
-		$scope.transactions = centsa.transactions.getAll($scope.currentPage,
-			$scope.pageSize, sort, null, getFilter());
+	$scope.reloadTrans = () => {
+		centsa.settings.set("trans.page.size", $scope.pageSize);
+		countPages();
 		$scope.currentPage = 1;
-		$scope.pagesCount = centsa.transactions.countPages($scope.pageSize, null, getFilter());
-		$scope.transactionSummary = centsa.transactions.getSummary(getFilter());
+		loadTransactions();
+		centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
 	};
 
-	$scope.clearFilter = function() {
+	$scope.clearFilter = () => {
 		$rootScope.resetFilter();
 		$scope.reloadTrans();
 	};
 
-	$scope.getExtraRows = function() {
-	    if($scope.pageSize > 100) {
-	        return 0;
-	    }
-		return $scope.pageSize - $scope.transactions.length;
-	};
+	$scope.getExtraRows = () => $scope.pageSize > 100 ? 0 : $scope.pageSize - $scope.transactions.length;
 
-	$scope.getHighlight = function(amount){
-	    var range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
-
-        var hl = "hsl(";
-        hl += amount > 0 ? 0 : 100;
-        hl += ",50%,";
-        hl += 100 - Math.abs(amount / range) * 40;
-        hl += "%)";
-
-        return hl;
-    }
+	$scope.getHighlight = amount => {
+		const range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
+		return `hsl(${amount > 0 ? 0 : 100},50%,${100 - Math.abs(amount / range) * 40}%)`;
+	}
 });
