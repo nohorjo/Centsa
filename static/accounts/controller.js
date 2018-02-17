@@ -1,5 +1,5 @@
 app.controller("accountsCtrl", function ($scope, centsa) {
-	loadAccounts();
+	centsa.accounts.getAll(data => $scope.accounts = data)
 
 	$scope.newAccount = {
 		name: "",
@@ -90,7 +90,6 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 		}
 	}
 
-	const loadAccounts = () => centsa.accounts.getAll(data => $scope.accounts = data);
 });
 
 app.directive("numberDivide", ($filter, $parse) => ({

@@ -1,6 +1,7 @@
 app.service('centsa', function ($http) {
     class genericApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
+        getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
         insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success(resp.data), error); }
         remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`, success, error); }
     }
@@ -45,7 +46,17 @@ app.service('centsa', function ($http) {
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget?strict=${isStrictMode}`).then(success, error); }
+            budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }).then(resp => success(resp.data), error); },
+            rules(success, error) { $http.get(`${apiUrl}/rules`).then(resp => success(resp.data), error); },
+            importFile(rule, file) {
+                const fd = new FormData();
+                fd.append('file', file);
+                $http.post(`${apiUrl}/import`, fd, {
+                    transformRequest: angular.identity,
+                    headers: { 'Content-Type': undefined }
+                }).then(resp => success(resp.data), error);
+            },
+            importProgress(id, success, error) { $http.get(`${apiUrl}/import`, { params: { id: id } }).then(resp => success(resp.data), error); }
         };
     })();
 

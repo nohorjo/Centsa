@@ -1,52 +1,59 @@
-app.controller("importCtrl", function($scope, $rootScope) {
-	$scope.rules = centsa.general.rules();
+app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
+	centsa.general.rules(data => $scope.rules = data);
 	$scope.rule = "default";
 
 	$scope.importProgress = {
-		processed : 0,
-		total : 1
+		processed: 0,
+		total: 1
 	};
 
-	/**
-	 * Opens file chooser to start importing a CSV. Then displays a progress bar
-	 * modal blocking the use of the UI so as to not overwhelm the database.
-	 */
-	$scope.importFile = (function() {
-		var i = null;
-		return function() {
+	$scope.importFile = (() => {
+		let i = null;
+		return () => {
 			if (i) {
-				clearInterval(i);
+				$interval.cancel(i);
+				delete i;
 			}
-			centsa.general.importFile($scope.rule);
-
-			i = setInterval((function() {
-				var started = false;
-				return function() {
-					var p = centsa.general.importProgress();
-					if (p) {
-						$('#progressModal').modal({
-							backdrop : 'static',
-							keyboard : false
-						});
-						started = true;
-						$scope.$apply(function() {
+			centsa.general.importFile($scope.rule, $scope.uploadFile, id => {
+				i = $interval((() => {
+					let started = false;
+					return () => centsa.general.importProgress(id, p => {
+						if (p) {
+							$('#progressModal').modal({
+								backdrop: 'static',
+								keyboard: false
+							});
+							started = true;
 							$scope.importProgress = p;
-						});
-					} else if (started) {
-						clearInterval(i);
-						$('#progressModal').modal("hide");
-					}
-				};
-			})(), 200);
+						} else if (started) {
+							$interval.cancel(i);
+							delete i;
+							$('#progressModal').modal("hide");
+						}
+					});
+
+				})(), 1500);
+			});
+
 		};
 	})();
 
-	$scope.getProgressPercentage = function(extra) {
-		return $rootScope.roundTo(($scope.importProgress.processed * 100)
-				/ $scope.importProgress.total, extra ? 2 : 0);
-	};
+	$scope.getProgressPercentage = extra => $rootScope.roundTo(($scope.importProgress.processed * 100) / $scope.importProgress.total, extra ? 2 : 0);
 
-	$scope.loadRules = function() {
-	    $scope.rules = centsa.general.rules();
-	};
 });
+
+app.directive('fileModel', ['$parse', function ($parse) {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			var model = $parse(attrs.fileModel);
+			var modelSetter = model.assign;
+
+			element.bind('change', function () {
+				scope.$apply(function () {
+					modelSetter(scope, element[0].files[0]);
+				});
+			});
+		}
+	};
+}]);
