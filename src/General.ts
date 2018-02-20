@@ -4,6 +4,6 @@ const route = Router();
 
 
 const _route = Router();
-_route.use('/expenses', route);
+_route.use('/general', route);
 
 export default _route;

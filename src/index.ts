@@ -7,6 +7,12 @@ import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as mysql from 'mysql';
 import * as fbauth from './fbauth';
+import Accounts from './Accounts';
+import Expenses from './Expenses';
+import General from './General';
+import Settings from './Settings';
+import Transactions from './Transactions';
+import Types from './Types';
 
 
 const cpus = os.cpus().length;
@@ -85,6 +91,14 @@ if (cluster.isMaster) {
     app.delete('/fb', fbauth.logout);
     app.post('/fb', fbauth.login);
 
+    app.use('/api', [
+        Accounts,
+        Expenses,
+        General,
+        Settings,
+        Transactions,
+        Types
+    ]);
 
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
