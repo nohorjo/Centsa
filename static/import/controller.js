@@ -16,26 +16,24 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 				delete i;
 			}
 			centsa.general.importFile($scope.rule, $scope.uploadFile, id => {
-				i = $interval((() => {
-					let started = false;
-					return () => centsa.general.importProgress(id, p => {
-						if (p) {
-							$('#progressModal').modal({
-								backdrop: 'static',
-								keyboard: false
-							});
-							started = true;
-							$scope.importProgress = p;
-						} else if (started) {
-							$interval.cancel(i);
-							delete i;
-							$('#progressModal').modal("hide");
-						}
-					});
-
-				})(), 1500);
+				$('#progressModal').modal({
+					backdrop: 'static',
+					keyboard: false
+				}).appendTo("body");
+				i = $interval(() => centsa.general.importProgress(id, p => {
+					if (p) {
+						$scope.importProgress = p;
+					} else {
+						$interval.cancel(i);
+						delete i;
+						$('#progressModal').modal("hide");
+						$scope.importProgress = {
+							processed: 0,
+							total: 1
+						};
+					}
+				}), 1500);
 			});
-
 		};
 	})();
 

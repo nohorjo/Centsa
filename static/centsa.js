@@ -50,7 +50,7 @@ app.service('centsa', function ($http) {
         return {
             budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }).then(resp => success(resp.data), error); },
             rules(success, error) { $http.get(`${apiUrl}/rules`).then(resp => success(resp.data), error); },
-            importFile(rule, file) {
+            importFile(rule, file, success, error) {
                 const fd = new FormData();
                 fd.append('file', file);
                 $http.post(`${apiUrl}/import`, fd, {

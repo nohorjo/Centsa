@@ -14,18 +14,20 @@ route.get("/rules", (req, resp) => {
 route.get("/import", (() => {
     let done = 0;
     return (req, resp) => {
-        if (done++ % 10) {
+        if (done = (++done % 10)) {
             resp.send({
                 processed: done,
                 total: 10
             });
         } else {
-            resp.sendStatus(201);
+            resp.send(null);
         }
     }
 })());
 route.post("/import", (req, resp) => {
     //FIXME: accept file
+ 
+    resp.send(201);
 });
 
 const _route = Router();

@@ -83,7 +83,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		t.type_id = t.type_id.toString();
 		t.expense_id = t.expense_id.toString();
 		$scope.newTrans = t;
-		$('#transModal').modal("show");
+		$('#transModal').appendTo("body").modal("show");
 		$('#transModal').on(
 			'hidden.bs.modal',
 			e => {
