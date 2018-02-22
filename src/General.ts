@@ -26,11 +26,11 @@ route.get("/import", (() => {
 })());
 route.post("/import", (req, resp) => {
     console.log(req.query.rule);
-    if (!req.files) {
+    if (!req['files']) {
         resp.status(400).send('No files were uploaded.');
     }
     else {
-        resp.send(req.files.csv.data);
+        resp.send(req['files'].csv.data);
     }
 });
 
