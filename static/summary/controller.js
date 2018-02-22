@@ -11,7 +11,7 @@ app.controller("summaryCtrl", function ($scope, centsa) {
     centsa.transactions.getCumulativeSums(data => {
         const sums = data.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
-            sum: x / sum / 100
+            sum: x.sum / 100
         }));
         const valueAxes = [{
             id: "v1",

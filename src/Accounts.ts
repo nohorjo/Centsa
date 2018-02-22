@@ -17,10 +17,6 @@ route.post("/", (req, resp) => {
     resp.send(id.toString());
 });
 
-route.delete('/:id', (req, resp) => {
-    console.log(`Deleting account ${req.params.id}`);
-});
-
 const _route = Router();
 _route.use('/accounts', route);
 

@@ -1,4 +1,5 @@
 app.controller("typesCtrl", function ($scope, centsa) {
+	$scope.types = [];
 	centsa.types.getAll(data => {
 		$scope.types = data;
 		drawPie();

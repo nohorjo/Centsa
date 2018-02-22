@@ -3,11 +3,12 @@ app.service('centsa', function ($http) {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
         insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success(resp.data), error); }
+        //FIXME:
+        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`, success, error); }
     }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
         getAll(activeOnly, success, error) { $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }).then(resp => success(resp.data), error); }
-        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`, success, error); }
         totalActive(incAuto, success, error) { $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }).then(resp => success(resp.data), error); }
     }
     class transactionsApi extends genericApi {

@@ -27,6 +27,8 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		}
 	};
 
+	$scope.transactionSummary = { min: 0, max: 0 };
+	$scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
 	centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
 	centsa.accounts.getAll(data => $scope.accounts = data);
 	centsa.types.getAll(data => $scope.types = data);
@@ -145,4 +147,5 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		const range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
 		return `hsl(${amount > 0 ? 0 : 100},50%,${100 - Math.abs(amount / range) * 40}%)`;
 	}
+
 });

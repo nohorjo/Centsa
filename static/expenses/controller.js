@@ -1,5 +1,6 @@
 app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
+    $scope.expenses = $scope.types = $scope.accounts = [];
     centsa.expenses.getAll(true, data => $scope.expenses = data);
     centsa.accounts.getAll(data => $scope.accounts = data);
     centsa.types.getAll(data => $scope.types = data);

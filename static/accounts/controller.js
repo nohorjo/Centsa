@@ -1,4 +1,5 @@
 app.controller("accountsCtrl", function ($scope, centsa) {
+	$scope.accounts = [];
 	centsa.accounts.getAll(data => $scope.accounts = data)
 
 	$scope.newAccount = {
@@ -65,7 +66,11 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 		$('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
 	};
 
-	$scope.sumAccountBalances = () => $scope.accounts.reduce((a, b) => a + b, 0) / 100;
+	$scope.sumAccountBalances = () => $scope.accounts.reduce((a, b) => ({
+		balance: a.balance + b.balance
+	}), {
+			balance: 0
+		}).balance / 100;
 
 	$('.datepicker').datepicker({
 		format: "yyyy/mm/dd",
