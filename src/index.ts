@@ -14,8 +14,6 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
-import cache from './clonedCache';
-
 
 const cpus = os.cpus().length;
 
@@ -50,19 +48,10 @@ if (cluster.isMaster) {
     });
     connection.end();
 
-    const workers = [];
     for (let i = 0; i < cpus; i++) {
-        const worker = cluster.fork();
-        worker.on('message', msg => workers.forEach(w => {
-            if (w != worker) {
-                w.send(msg);
-            }
-        }));
-        workers.push(worker);
+        cluster.fork();
     }
 } else {
-    process.on('message', msg => cache.data = msg);
-
     const port = process.env.PORT || 8080;
 
     const app = express();

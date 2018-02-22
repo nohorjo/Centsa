@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import cache from './clonedCache';
 
 const route = Router();
 
@@ -13,11 +12,12 @@ route.get("/rules", (req, resp) => {
     resp.send(['rule1', 'rule2']);
 });
 route.get("/import", (() => {
-    cache.data = 0;
+    //FIXME: share between clusters
+    let done = 0;
     return (req, resp) => {
-        if (cache.data = (++cache.data % 10)) {
+        if (done = (++done % 10)) {
             resp.send({
-                processed: cache.data,
+                processed: done,
                 total: 10
             });
         } else {
