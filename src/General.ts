@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import cache from './clonedCache';
 
 const route = Router();
 
@@ -12,11 +13,11 @@ route.get("/rules", (req, resp) => {
     resp.send(['rule1', 'rule2']);
 });
 route.get("/import", (() => {
-    let done = 0;
+    cache.data = 0;
     return (req, resp) => {
-        if (done = (++done % 10)) {
+        if (cache.data = (++cache.data % 10)) {
             resp.send({
-                processed: done,
+                processed: cache.data,
                 total: 10
             });
         } else {
