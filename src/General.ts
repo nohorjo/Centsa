@@ -12,6 +12,7 @@ route.get("/rules", (req, resp) => {
     resp.send(['rule1', 'rule2']);
 });
 route.get("/import", (() => {
+    //FIXME: share between clusters
     let done = 0;
     return (req, resp) => {
         if (done = (++done % 10)) {
