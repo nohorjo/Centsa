@@ -11,7 +11,8 @@ route.get('/', (req, resp) => {
         started: 1543795200000,
         automatic: false,
         account_id: 0,
-        type_id: 0
+        type_id: 0,
+        instance_count:23
     }, {
         id: 2,
         name: "test",
@@ -20,7 +21,8 @@ route.get('/', (req, resp) => {
         started: 1543795200000,
         automatic: true,
         account_id: 1,
-        type_id: 1
+        type_id: 1,
+        instance_count:67
     }]);
 });
 
