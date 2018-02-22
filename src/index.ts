@@ -7,6 +7,7 @@ import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as mysql from 'mysql';
 import * as fbauth from './fbauth';
+import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
 import Expenses from './Expenses';
 import General from './General';
@@ -81,6 +82,7 @@ if (cluster.isMaster) {
     app.use(express.json());
     app.use(cookieParser());
     app.use(session(sess));
+    app.use(fileUpload());
 
     app.use(fbauth.checkAuth['unless']({
         path: ['/fb', '/index.html'],

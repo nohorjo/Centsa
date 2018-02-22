@@ -25,9 +25,13 @@ route.get("/import", (() => {
     }
 })());
 route.post("/import", (req, resp) => {
-    //FIXME: accept file
- 
-    resp.send(201);
+    console.log(req.query.rule);
+    if (!req.files) {
+        resp.status(400).send('No files were uploaded.');
+    }
+    else {
+        resp.send(req.files.csv.data);
+    }
 });
 
 const _route = Router();
