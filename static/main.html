@@ -19,6 +19,7 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-route.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular-cookies.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/amcharts.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.12/pie.js"></script>
@@ -54,7 +55,8 @@
 	</div>
 	<div class="header">
 		<img id="logo" data-ng-src="logo.svg">
-		<img id="logout" data-ng-src="logout.svg" onclick="logoutFB();">
+		<img id="logout" class="float-right" data-ng-src="logout.svg" onclick="logoutFB();">
+		<span id="name" class="float-right">{{ name }}</span>
 	</div>
 	<div class="main-panel">
 		<div class="content" data-ng-view autoscroll="true"></div>

@@ -177,6 +177,11 @@ li.disabled {
 
 img#logout {
 	border-radius: 3px;
-	float: right;
 	cursor: pointer;
+}
+
+#name{
+	font-weight: bold;
+	padding: 0.5em 1em;
+	color: #4267b2;
 }

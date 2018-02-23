@@ -1,6 +1,7 @@
-const app = angular.module("app", ["ngRoute"]);
+const app = angular.module("app", ["ngRoute", "ngCookies"]);
 
-app.controller("mainCtrl", function ($scope, $rootScope, $location) {
+app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
+	$scope.name = $cookies.get('name');
 	$rootScope.formatDate = date => {
 		if (date.constructor == String) {
 			date = date.substr(0, 19);
