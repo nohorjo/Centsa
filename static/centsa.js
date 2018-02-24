@@ -2,9 +2,9 @@ app.service('centsa', function ($http) {
     class genericApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
-        insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success(resp.data), error); }
+        insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success && success(resp.data), error); }
         //FIXME:
-        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`, success, error); }
+        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`).then(success, error); }
     }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
@@ -14,7 +14,6 @@ app.service('centsa', function ($http) {
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
         getAll(options, success, error) { $http.get(this.apiUrl, { params: options }).then(resp => success(resp.data), error); }
-        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`, success, error); }
         getCumulativeSums(success, error) { $http.get(`${this.apiUrl}/cumulativeSums`).then(resp => success(resp.data), error); }
         countPages(options, success, error) { $http.get(`${this.apiUrl}/pages`, { params: options }).then(resp => success(resp.data), error); }
         getSummary(filter, success, error) { $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }).then(resp => success(resp.data), error); }

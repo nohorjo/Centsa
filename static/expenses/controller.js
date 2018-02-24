@@ -53,10 +53,10 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.getNow = () => Date.now();
 
-    $scope.deleteExpense = id => centsa.expenses.remove(id), () => {
+    $scope.deleteExpense = id => centsa.expenses.remove(id, () => {
         $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
         getActiveTotals();
-    };
+    });
 
 
     $scope.getMaxDaysInMonth = () => {

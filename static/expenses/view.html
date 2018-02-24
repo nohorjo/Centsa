@@ -133,7 +133,7 @@
                 <td>{{ formatDate(e.started) }}</td>
                 <td>{{ e.instance_count }}</td>
                 <td>
-                    <a href="" data-ng-click="deleteExpense(e.id)">Delete</a>
+                    <a href="" data-ng-click="deleteExpense(e.id);$event.stopPropagation()">Delete</a>
                 </td>
             </tr>
         </tbody>
