@@ -2,12 +2,15 @@ body {
 	font-family: "Segoe UI", sans-serif;
 }
 
+.sidebar, .main-panel{
+	top: 3em;
+	height: calc(100% - 3em);
+}
+
 .sidebar {
 	position: fixed;
-	top: 7%;
 	left: 0;
 	z-index: 1;
-	height: 93%;
 	width: 15%;
 	box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }
@@ -16,7 +19,7 @@ body {
 	position: fixed;
 	top: 0;
 	left: 0;
-	height: 7%;
+	height: 3em;
 	width: 100%;
 	padding: 4px 10px;
 	box-shadow: 6px 1px 10px 0px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
@@ -24,9 +27,7 @@ body {
 
 .main-panel {
 	position: fixed;
-	top: 7%;
 	right: 0;
-	height: 93%;
 	width: 85%;
 	padding: 10px 10px 0 2em;
 	margin-right: 10px;
