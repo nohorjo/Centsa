@@ -3,6 +3,8 @@ import * as unless from 'express-unless';
 
 export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html');
 
+export const authSkipLogin = (req, resp, next) => (req.session && req.session.userData) ? resp.redirect('/main.html') : next();
+
 checkAuth['unless'] = unless;
 
 export const login = (req, res) => {

@@ -83,6 +83,7 @@ if (cluster.isMaster) {
     app.use(session(sess));
     app.use(fileUpload());
 
+    app.get('/index.html', fbauth.authSkipLogin);
     app.use(fbauth.checkAuth['unless']({
         path: ['/fb', '/index.html'],
         ext: ['css', 'js', 'svg', 'ico', 'gif']
