@@ -1,5 +1,5 @@
 <h4>Summary</h4>
-<p>Total daily active expenses ( total | auto ): {{ totalActiveExpenses/100}} | {{ totalAutoExpenses/100 }}</p>
+<p>Total daily active expenses ( total | auto ): {{ totalActiveExpenses/100 || 0 }} | {{ totalAutoExpenses/100 || 0 }}</p>
 <form name="Form" data-ng-submit="saveExpense()">
     <h4>Manage expenses (incomes have negative amounts)</h4>
     <table id="expensesTable" class="table table-condensed table-hover">
