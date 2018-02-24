@@ -1,9 +1,11 @@
 app.service('centsa', function ($http) {
-    class genericApi {
+    class baseApi{
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
         insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success && success(resp.data), error); }
-        //FIXME:
+    }
+    class genericApi extends baseApi {
+        constructor(path) { super(path); }
         remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`).then(success, error); }
     }
     class expensesApi extends genericApi {
@@ -20,7 +22,7 @@ app.service('centsa', function ($http) {
         getUniqueComments(success, error) { $http.get(`${this.apiUrl}/comments`).then(resp => success(resp.data), error); }
     }
 
-    this.accounts = new genericApi('accounts');
+    this.accounts = new baseApi('accounts');
     this.types = new genericApi('types');
     this.transactions = new transactionsApi();
     this.expenses = new expensesApi();
