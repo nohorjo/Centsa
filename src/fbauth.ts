@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as unless from 'express-unless';
+import * as Users from './Users';
 
 export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html');
 
@@ -17,12 +18,15 @@ export const login = (req, res) => {
             console.dir(resp.data);
             req.session.userData = resp.data;
             res.cookie('name', resp.data.name, { maxAge: 31536000000, httpOnly: false });
-            res.sendStatus(201);
+            Users.getOrCreateUser(resp.data, id => {
+                req.session.userData.user_id = id;
+                res.sendStatus(201);
+            });
         }).catch(e => {
-            res.sendStatus(401);
+            res.status(401).send(e);
         });
     } catch (e) {
-        res.sendStatus(500);
+        res.status(500).send(e);
     }
 };
 

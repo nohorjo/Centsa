@@ -1,38 +1,35 @@
 import * as mysql from 'mysql';
-import * as os from 'os';
 
-const cpus = os.cpus().length;
+const connection = {
+    pool: null,
+    init(config) {
+        const connection = mysql.createConnection({
+            host: config.DB_IP,
+            port: config.DB_PORT,
+            user: config.DB_USER,
+            password: config.DB_PASSWORD,
+            database: config.DB_NAME
+        });
 
-export const pool = mysql.createPool({
-    connectionLimit: Math.floor(cpus / parseInt(process.env.DB_CONNECTION_LIMIT)),
-    host: process.env.DB_IP,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-});
-
-export const test = () => {
-    const connection = mysql.createConnection({
-        host: process.env.DB_IP,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
-    });
-
-    connection.connect();
-    connection.on('error', (e) => {
-        console.error('Error connecting to db', e);
-        process.exit(1);
-    });
-    connection.end();
+        connection.connect();
+        connection.on('error', (e) => {
+            console.error('error connecting to db', e);
+            process.exit(1);
+        });
+        connection.end();
+        this.pool = mysql.createPool({
+            connectionLimit: Math.floor(config.cpusCount / config.DB_CONNECTION_LIMIT),
+            host: config.DB_IP,
+            port: config.DB_PORT,
+            user: config.DB_USER,
+            password: config.DB_PASSWORD,
+            database: config.DB_NAME,
+            multipleStatements: true
+        });
+    }
 }
+export default connection;
 
-const exitHandler = () => pool.end();
+const exitHandler = () => connection.pool && connection.pool.end();
 
 process.on('exit', exitHandler);
-process.on('SIGINT', exitHandler);
-process.on('SIGUSR1', exitHandler);
-process.on('SIGUSR2', exitHandler);
-process.on('uncaughtException', exitHandler);

@@ -14,7 +14,7 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
-import * as Connection from './Connection';
+import Connection from './Connection';
 
 const cpus = os.cpus().length;
 
@@ -35,12 +35,13 @@ if (cluster.isMaster) {
         }
     }
 
-    Connection.test();
-
     for (let i = 0; i < cpus; i++) {
         cluster.fork();
     }
 } else {
+
+    Connection.init(Object.assign({ cpusCount: cpus }, process.env));
+
     const port = process.env.PORT || 8080;
 
     const app = express();
