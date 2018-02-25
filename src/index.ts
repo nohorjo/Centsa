@@ -14,6 +14,7 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
+import * as Connection from './Connection';
 
 const cpus = os.cpus().length;
 
@@ -25,7 +26,8 @@ if (cluster.isMaster) {
         'DB_PORT',
         'DB_USER',
         'DB_PASSWORD',
-        'DB_NAME'
+        'DB_NAME',
+        'DB_CONNECTION_LIMIT'
     ]) {
         if (!process.env[v]) {
             console.error(`Incomplete configuration: ${v}`);
@@ -33,20 +35,7 @@ if (cluster.isMaster) {
         }
     }
 
-    const connection = mysql.createConnection({
-        host: process.env.DB_IP,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
-    });
-
-    connection.connect();
-    connection.on('error', (e) => {
-        console.error('Error connecting to db', e);
-        process.exit(1);
-    });
-    connection.end();
+    Connection.test();
 
     for (let i = 0; i < cpus; i++) {
         cluster.fork();
@@ -62,15 +51,7 @@ if (cluster.isMaster) {
         saveUninitialized: false,
         unset: 'destroy',
         cookie: { maxAge: 31536000000, httpOnly: true },
-        store: new MySQLStore({
-            host: process.env.DB_IP,
-            port: process.env.DB_PORT,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionLimit: cpus,
-            database: process.env.DB_NAME,
-            createDatabaseTable: true
-        })
+        store: new MySQLStore({ createDatabaseTable: true }, Connection.pool)
     };
 
     if (process.env.NODE_ENV === 'production') {
