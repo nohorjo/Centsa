@@ -11,7 +11,7 @@ route.get('/', (req, resp) => {
         comment: "comment",
         account_id: 1,
         type_id: 1,
-        date: 1512777600000,
+        date: new Date(2015,2,5),
         expense_id: 1
     }, {
         id: 2,
@@ -19,13 +19,15 @@ route.get('/', (req, resp) => {
         comment: "comment2",
         account_id: 1,
         type_id: 2,
-        date: 1499554800000,
+        date: new Date(2014, 3, 11),
         expense_id: 1
     }]);
 });
 
 route.post("/", (req, resp) => {
     const transaction = req.body;
+    transaction.date = new Date(transaction.date);
+    console.dir(transaction);
     console.log(JSON.stringify(transaction));
     const id = Math.random();
     resp.send(id.toString());
@@ -39,11 +41,11 @@ route.delete('/:id', (req, resp) => {
 route.get('/cumulativeSums', (req, resp) => {
     resp.send([
         {
-            date: 1512777600000,
+            date: new Date(2013, 3, 9),
             sum: 10
         },
         {
-            date: 1499554800000,
+            date: new Date(2011, 0, 30),
             sum: 20
         }
     ]);

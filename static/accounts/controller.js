@@ -29,7 +29,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 					account_id: $scope.newAccount.id,
 					type_id: "1",
 					expense_id: "1",
-					date: new Date().getTime()
+					date: new Date()
 				});
 			}
 			$scope.newAccount = Object.assign({}, newAccount);
@@ -48,7 +48,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 			account_id: $scope.transfer.from,
 			type_id: "1",
 			expense_id: "1",
-			date: new Date($scope.transfer.date).getTime()
+			date: new Date($scope.transfer.date)
 		};
 		const to = {
 			amount: -amount,
@@ -56,7 +56,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 			account_id: $scope.transfer.to,
 			type_id: "1",
 			expense_id: "1",
-			date: new Date($scope.transfer.date).getTime()
+			date: new Date($scope.transfer.date)
 		};
 		centsa.transactions.insert(from);
 		centsa.transactions.insert(to);
@@ -90,7 +90,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 				account_id: acc.id,
 				type_id: "1",
 				expense_id: "1",
-				date: new Date().getTime()
+				date: new Date()
 			}, () => acc.balanceOld = acc.balance);
 		}
 	}

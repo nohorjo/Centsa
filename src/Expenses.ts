@@ -8,21 +8,21 @@ route.get('/', (req, resp) => {
         name: "N/A",
         cost: 0,
         frequency: "1",
-        started: 1543795200000,
+        started: new Date(2015, 5, 12),
         automatic: false,
         account_id: 0,
         type_id: 0,
-        instance_count:23
+        instance_count: 23
     }, {
         id: 2,
         name: "test",
         cost: 123456,
         frequency: "1",
-        started: 1543795200000,
+        started: new Date(2016, 6, 13),
         automatic: true,
         account_id: 1,
         type_id: 1,
-        instance_count:67
+        instance_count: 67
     }]);
 });
 

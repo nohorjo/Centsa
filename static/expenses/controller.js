@@ -34,7 +34,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.saveExpense = updating => {
         $scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
-        $scope.newExpense.started = new Date($scope.newExpense.started).getTime();
+        $scope.newExpense.started = new Date($scope.newExpense.started);
         if (!$scope.newExpense.account_id) {
             delete $scope.newExpense.account_id;
         }
