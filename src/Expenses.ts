@@ -21,8 +21,8 @@ route.get('/', (req, resp) => {
 
 route.get('/total', (req, resp) => {
     const sql = req.query.auto == "true" ?
-        "SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE AUTOMATIC = 1 AND STARTED < CURRENT_DATE();" :
-        "SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE STARTED < CURRENT_DATE();";
+        "SELECT SUM(COST/FREQUENCY) FROM expenses WHERE AUTOMATIC = 1 AND STARTED < CURRENT_DATE();" :
+        "SELECT SUM(COST/FREQUENCY) FROM expenses WHERE STARTED < CURRENT_DATE();";
     Connection.pool.query(sql, [], (err, result) => {
         if (err) {
             resp.status(500).send(err);
@@ -48,15 +48,26 @@ route.post("/", (req, resp) => {
 });
 
 route.delete('/:id', (req, resp) => {
-    Connection.pool.query('DELETE FROM expenses WHERE id=? AND user_id=?;',
-        [req.params.id, req.session.userData.user_id],
+    Connection.pool.query(
+        "UPDATE transactions SET expense_id=\
+        (SELECT id FROM expenses e WHERE e.user_id=? AND e.name='N/A') \
+        WHERE expense_id=? AND user_id=?;\
+        DELETE FROM expenses WHERE id=? AND user_id=?;",
+        [
+            req.session.userData.user_id,
+            req.params.id,
+            req.session.userData.user_id,
+            req.params.id,
+            req.session.userData.user_id,
+        ],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
             } else {
                 resp.sendStatus(201);
             }
-        });
+        }
+    );
 });
 
 const _route = Router();

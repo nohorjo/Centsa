@@ -19,7 +19,8 @@ CREATE TABLE settings
 	user_id BIGINT NOT NULL,
     setting VARCHAR(40) NOT NULL,
     value VARCHAR(40),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id,setting)
 );
 CREATE TABLE accounts
 (
