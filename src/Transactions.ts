@@ -4,6 +4,7 @@ import Connection from './Connection';
 const route = Router();
 
 route.get('/', (req, resp) => {
+    //FIXME: filter
     console.log(JSON.stringify(req.query));
     Connection.pool.query(
         'SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?;',
@@ -66,6 +67,7 @@ route.get('/cumulativeSums', (req, resp) => {
 });
 
 route.get('/summary', (req, resp) => {
+    //FIXME: filter
     Connection.pool.query(
         'SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?;',
         [req.session.userData.user_id],
@@ -92,6 +94,7 @@ route.get('/comments', (req, resp) => {
 });
 
 route.get('/pages', (req, resp) => {
+    //FIXME: filter
     resp.send((1).toString());
 });
 
