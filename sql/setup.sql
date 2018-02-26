@@ -26,7 +26,7 @@ CREATE TABLE accounts
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
 	name VARCHAR(50) NOT NULL,
-    UNIQUE(name),
+    UNIQUE(user_id,name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE TABLE types
@@ -34,7 +34,7 @@ CREATE TABLE types
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
 	name VARCHAR(50) NOT NULL,
-    UNIQUE(name),
+    UNIQUE(user_id,name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE TABLE expenses
@@ -45,10 +45,10 @@ CREATE TABLE expenses
 	cost INTEGER NOT NULL,
 	frequency VARCHAR(10) NOT NULL,
 	started DATE NOT NULL,
-	automatic TINYINT NOT NULL DEFAULT 0,
+	automatic BOOL NOT NULL DEFAULT FALSE,
 	account_id BIGINT,
-	type_id BIGINT NOT NULL DEFAULT 1,
-    UNIQUE(name),
+	type_id BIGINT NOT NULL,
+    UNIQUE(user_id,name),
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (type_id) REFERENCES types(id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -59,9 +59,9 @@ CREATE TABLE transactions
     user_id BIGINT NOT NULL,
 	amount INTEGER NOT NULL,
 	comment VARCHAR(500),
-	account_id BIGINT NOT NULL DEFAULT 1,
-	type_id BIGINT NOT NULL DEFAULT 1,
-	expense_id BIGINT NOT NULL DEFAULT 1,
+	account_id BIGINT NOT NULL,
+	type_id BIGINT NOT NULL,
+	expense_id BIGINT NOT NULL,
 	date DATE NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (type_id) REFERENCES types(id),

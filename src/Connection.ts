@@ -30,6 +30,4 @@ const connection = {
 }
 export default connection;
 
-const exitHandler = () => connection.pool && connection.pool.end();
-
-process.on('exit', exitHandler);
+process.on('exit', () => connection.pool && connection.pool.end());

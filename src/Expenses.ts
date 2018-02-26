@@ -1,48 +1,63 @@
 import { Router } from 'express';
+import Connection from './Connection';
 
 const route = Router();
 
 route.get('/', (req, resp) => {
-    resp.send([{
-        id: 1,
-        name: "N/A",
-        cost: 0,
-        frequency: "1",
-        started: new Date(2015, 5, 12),
-        automatic: false,
-        account_id: 0,
-        type_id: 0,
-        instance_count: 23
-    }, {
-        id: 2,
-        name: "test",
-        cost: 123456,
-        frequency: "1",
-        started: new Date(2016, 6, 13),
-        automatic: true,
-        account_id: 1,
-        type_id: 1,
-        instance_count: 67
-    }]);
+    Connection.pool.query(
+        'SELECT id,name,cost,frequency,started,automatic,account_id,type_id,\
+        (SELECT COUNT(*) FROM transactions t WHERE t.expense_id=e.id) AS instances_count \
+        FROM expenses e WHERE user_id=?;',
+        [req.session.userData.user_id],
+        (err, result) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                resp.send(result);
+            }
+        }
+    );
 });
 
 route.get('/total', (req, resp) => {
-    resp.send(req.query.auto == "true" ? "123" : "456");
+    const sql = req.query.auto == "true" ?
+        "SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE AUTOMATIC = 1 AND STARTED < CURRENT_DATE();" :
+        "SELECT SUM(COST/FREQUENCY) FROM EXPENSES WHERE STARTED < CURRENT_DATE();";
+    Connection.pool.query(sql, [], (err, result) => {
+        if (err) {
+            resp.status(500).send(err);
+        } else {
+            resp.send(result);
+        }
+    });
 });
 
 route.post("/", (req, resp) => {
-    const expense = req.body;
-    console.log(JSON.stringify(expense));
-    const id = Math.random();
-    resp.send(id.toString());
+    const expense = Object.assign({ user_id: req.session.userData.user_id }, req.body);
+    Connection.pool.query(
+        'INSERT INTO expenses SET ?;\
+        SELECT LAST_INSERT_ID() AS id;', expense,
+        (err, results) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                resp.send(results[1][0].id.toString());
+            }
+        }
+    );
 });
 
 route.delete('/:id', (req, resp) => {
-    console.log(`Deleting expense ${req.params.id}`);
-    resp.sendStatus(201);
+    Connection.pool.query('DELETE FROM expenses WHERE id=? AND user_id=?;',
+        [req.params.id, req.session.userData.user_id],
+        (err, result) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                resp.sendStatus(201);
+            }
+        });
 });
-
-
 
 const _route = Router();
 _route.use('/expenses', route);
