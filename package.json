@@ -11,10 +11,10 @@
     "cookie-parser": "1.4.3",
     "express": "4.16.2",
     "express-fileupload": "0.4.0",
-    "express-mysql-session": "1.2.3",
     "express-session": "1.15.6",
     "express-unless": "0.5.0",
     "mysql": "2.15.0",
+    "session-file-store": "1.2.0",
     "uuid": "3.2.1"
   },
   "devDependencies": {

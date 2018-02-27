@@ -3,7 +3,6 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as mysql from 'mysql';
 import * as fbauth from './fbauth';
@@ -45,14 +44,14 @@ if (cluster.isMaster) {
     const port = process.env.PORT || 8080;
 
     const app = express();
-
+    const FileStore = require('session-file-store')(session);
     const sess = {
         secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
+        resave: true,
+        saveUninitialized: true,
         unset: 'destroy',
         cookie: { maxAge: 31536000000, httpOnly: true },
-        store: new MySQLStore({ createDatabaseTable: true }, Connection.pool)
+        store: new FileStore({ ttl: 31536000 })
     };
 
     if (process.env.NODE_ENV === 'production') {

@@ -7,3 +7,4 @@ package.json.*
 coverage/*
 dist/*
 config.js
+sessions/*
