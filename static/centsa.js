@@ -17,7 +17,7 @@ app.service('centsa', function ($http) {
         constructor() { super('transactions'); }
         getAll(options, success, error) { $http.get(this.apiUrl, { params: options }).then(resp => success(resp.data), error); }
         getCumulativeSums(success, error) { $http.get(`${this.apiUrl}/cumulativeSums`).then(resp => success(resp.data), error); }
-        countPages(options, success, error) { $http.get(`${this.apiUrl}/pages`, { params: options }).then(resp => success(resp.data), error); }
+        countPages(options, success, error) { $http.get(`${this.apiUrl}/countPages`, { params: options }).then(resp => success(resp.data), error); }
         getSummary(filter, success, error) { $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }).then(resp => success(resp.data), error); }
         getUniqueComments(success, error) { $http.get(`${this.apiUrl}/comments`).then(resp => success(resp.data), error); }
     }

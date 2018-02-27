@@ -5,7 +5,10 @@ const route = Router();
 
 route.get('/', (req, resp) => {
     //FIXME: filter
-    console.log(JSON.stringify(req.query));
+    const filter = JSON.parse(req.query.filter);
+    //{account_id:0,type_id:0,expense_id:0,regex:false}
+    const { page, pageSize, sort } = req.query;
+
     Connection.pool.query(
         'SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?;',
         [req.session.userData.user_id],
@@ -68,6 +71,10 @@ route.get('/cumulativeSums', (req, resp) => {
 
 route.get('/summary', (req, resp) => {
     //FIXME: filter
+    const filter = JSON.parse(req.query.filter);
+    //{account_id:0,type_id:0,expense_id:0,regex:false}
+    const { page, pageSize, sort } = req.query;
+
     Connection.pool.query(
         'SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?;',
         [req.session.userData.user_id],
@@ -93,9 +100,24 @@ route.get('/comments', (req, resp) => {
         });
 });
 
-route.get('/pages', (req, resp) => {
-    //FIXME: filter
-    resp.send((1).toString());
+route.get('/countPages', (req, resp) => {
+    const filter = JSON.parse(req.query.filter);
+    Connection.pool.query(
+        'SELECT COUNT(*) as count FROM transactions WHERE user_id=? AND account_id=? AND type_id=? AND expense_id=?;',
+        [//FIXME:
+            req.session.userData.user_id,
+            filter.account_id,
+            filter.type_id,
+            filter.expense_id
+        ],
+        (err, result) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                console.dir(result[0]);
+                resp.send((Math.floor(result[0].count / req.query.pageSize) + 1).toString());
+            }
+        });
 });
 
 const _route = Router();

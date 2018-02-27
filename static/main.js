@@ -37,6 +37,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 	 * pages can set it if needed
 	 */
 	$rootScope.resetFilter = () => $rootScope.filter = {
+		//FIXME: defaults are wrong
 		account_id: '0',
 		type_id: '0',
 		expense_id: '0',

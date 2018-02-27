@@ -36,6 +36,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	centsa.expenses.getAll(false, data => $scope.allExpenses = data);
 	centsa.transactions.getUniqueComments(data => $scope.uniqueComments = data);
 
+	//FIXME: defaults are wrong
 	$scope.newTrans = {
 		amount: 0.0,
 		comment: "",
