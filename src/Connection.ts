@@ -27,7 +27,7 @@ const connection = {
             multipleStatements: true
         });
     }
-}
+};
 export default connection;
 
 process.on('exit', () => connection.pool && connection.pool.end());

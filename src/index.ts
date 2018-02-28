@@ -14,6 +14,7 @@ import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
 import Connection from './Connection';
+import debug from './debug';
 
 const cpus = os.cpus().length;
 
@@ -39,7 +40,7 @@ if (cluster.isMaster) {
     }
 } else {
 
-    Connection.init(Object.assign({ cpusCount: cpus }, process.env));
+  //  Connection.init(Object.assign({ cpusCount: cpus }, process.env));
 
     const port = process.env.PORT || 8080;
 
@@ -65,6 +66,8 @@ if (cluster.isMaster) {
     app.use(fileUpload());
 
     app.get('/index.html', fbauth.authSkipLogin);
+    
+    app.use(debug);
     app.use(fbauth.checkAuth['unless']({
         path: ['/fb', '/index.html'],
         ext: ['css', 'js', 'svg', 'ico', 'gif']
