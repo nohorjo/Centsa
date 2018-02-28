@@ -27,16 +27,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		}
 	};
 
-	$scope.transactionSummary = { min: 0, max: 0 };
-	$scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
-	centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
-	centsa.accounts.getAll(data => $scope.accounts = data);
-	centsa.types.getAll(data => $scope.types = data);
-	centsa.expenses.getAll(true, data => $scope.expenses = data);
-	centsa.expenses.getAll(false, data => $scope.allExpenses = data);
-	centsa.transactions.getUniqueComments(data => $scope.uniqueComments = data);
-
-	//FIXME: defaults are wrong
 	$scope.newTrans = {
 		amount: 0.0,
 		comment: "",
@@ -45,8 +35,28 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		expense_id: "1",
 		date: new Date().formatDate("yyyy/MM/dd")
 	};
-
 	let newTrans = Object.assign({}, $scope.newTrans);
+	
+	$scope.transactionSummary = { min: 0, max: 0 };
+	$scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
+	centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
+	centsa.accounts.getAll(data => {
+		$scope.accounts = data;
+		$scope.newTrans.account_id = data.find(a => a.name == "Default").id.toString();
+		newTrans.account_id = $scope.newTrans.account_id;
+	});
+	centsa.types.getAll(data => {
+		$scope.types = data;
+		$scope.newTrans.type_id = data.find(a => a.name == "Other").id.toString();
+		newTrans.type_id = $scope.newTrans.type_id;
+	});
+	centsa.expenses.getAll(true, data => {
+		$scope.expenses = data;
+		$scope.newTrans.expense_id = data.find(a => a.name == "N/A").id.toString();
+		newTrans.expense_id = $scope.newTrans.expense_id;
+	});
+	centsa.expenses.getAll(false, data => $scope.allExpenses = data);
+
 
 	$scope.saveTrans = updating => {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
