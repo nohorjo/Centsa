@@ -23,10 +23,10 @@ export const login = (req, res) => {
                 res.sendStatus(201);
             });
         }).catch(e => {
-            res.status(401).send(e);
+            res.status(500).send(e.toString());
         });
     } catch (e) {
-        res.status(500).send(e);
+        res.status(500).send(e.toString());
     }
 };
 

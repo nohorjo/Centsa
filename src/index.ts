@@ -40,7 +40,7 @@ if (cluster.isMaster) {
     }
 } else {
 
-  //  Connection.init(Object.assign({ cpusCount: cpus }, process.env));
+    Connection.init(Object.assign({ cpusCount: cpus }, process.env));
 
     const port = process.env.PORT || 8080;
 
@@ -66,7 +66,7 @@ if (cluster.isMaster) {
     app.use(fileUpload());
 
     app.get('/index.html', fbauth.authSkipLogin);
-    
+
     app.use(debug);
     app.use(fbauth.checkAuth['unless']({
         path: ['/fb', '/index.html'],
