@@ -8,6 +8,7 @@ self.addEventListener('message', e => {
     let i = 0;
     setInterval(() => {
         if (i == 50) {
+            self.close();
             throw "Done";
         }
         self.postMessage({
