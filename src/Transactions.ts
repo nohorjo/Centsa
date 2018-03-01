@@ -4,14 +4,30 @@ import Connection from './Connection';
 const route = Router();
 
 route.get('/', (req, resp) => {
-    //FIXME: filter
     const filter = JSON.parse(req.query.filter);
-    //{account_id:0,type_id:0,expense_id:0,regex:false}
-    const { page, pageSize, sort } = req.query;
+    filter.account_id = parseInt(filter.account_id);
+    filter.type_id = parseInt(filter.type_id);
+    filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.regex) {
+        filter.comment = `%${filter.comment}%`;
+    }
+
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+    let sort = req.query.sort;
+    if (sort && !/^(\s*[a-z]* (asc|desc),?)+$/.test(sort)) {
+        sort = '1 ASC';
+    }
 
     Connection.pool.query(
-        'SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?;',
-        [req.session.userData.user_id],
+        `SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?
+        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
+        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
+        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+        AND comment ${filter.regex ? 'R' : ''}LIKE ?
+        ${sort.replace(/,$/g, "")}
+        LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
+        [req.session.userData.user_id, filter.comment],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
@@ -94,14 +110,20 @@ route.get('/cumulativeSums', (req, resp) => {
 });
 
 route.get('/summary', (req, resp) => {
-    //FIXME: filter
     const filter = JSON.parse(req.query.filter);
-    //{account_id:0,type_id:0,expense_id:0,regex:false}
-    const { page, pageSize, sort } = req.query;
-
+    filter.account_id = parseInt(filter.account_id);
+    filter.type_id = parseInt(filter.type_id);
+    filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.regex) {
+        filter.comment = `%${filter.comment}%`;
+    }
     Connection.pool.query(
-        'SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?;',
-        [req.session.userData.user_id],
+        `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
+        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
+        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
+        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+        AND comment ${filter.regex ? 'R' : ''}LIKE ?;`,
+        [req.session.userData.user_id, filter.comment],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
@@ -126,14 +148,19 @@ route.get('/comments', (req, resp) => {
 
 route.get('/countPages', (req, resp) => {
     const filter = JSON.parse(req.query.filter);
+    filter.account_id = parseInt(filter.account_id);
+    filter.type_id = parseInt(filter.type_id);
+    filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.regex) {
+        filter.comment = `%${filter.comment}%`;
+    }
     Connection.pool.query(
-        'SELECT COUNT(*) as count FROM transactions WHERE user_id=? AND account_id=? AND type_id=? AND expense_id=?;',
-        [//FIXME:
-            req.session.userData.user_id,
-            filter.account_id,
-            filter.type_id,
-            filter.expense_id
-        ],
+        `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
+        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
+        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
+        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+        AND comment ${filter.regex ? 'R' : ''}LIKE ?;`,
+        [req.session.userData.user_id, filter.comment],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
