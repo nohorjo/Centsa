@@ -23,17 +23,40 @@ route.get('/', (req, resp) => {
 });
 
 route.post("/", (req, resp) => {
-    const transaction = Object.assign({ user_id: req.session.userData.user_id }, req.body);
+    const transaction = req.body;
+    transaction.user_id = req.session.userData.user_id;
     transaction.date = new Date(transaction.date);
     Connection.pool.query(
-        //FIXME: account, expense and type IDs need to be checked that they belong to the user
-        'INSERT INTO transactions SET ?;\
-        SELECT LAST_INSERT_ID() AS id;', transaction,
+        `SELECT COUNT(*) AS count FROM users u 
+        JOIN accounts a ON u.id=a.user_id 
+        JOIN expenses e ON u.id=e.user_id 
+        JOIN types t ON u.id=t.user_id 
+        WHERE u.id=? AND a.id=? AND e.id=? AND t.id;`,
+        [
+            transaction.user_id,
+            transaction.account_id,
+            transaction.expense_id,
+            transaction.type_id
+        ],
         (err, results) => {
             if (err) {
                 resp.status(500).send(err);
             } else {
-                resp.send(results[1][0].id.toString());
+                if (results[0].count) {
+                    Connection.pool.query(
+                        `INSERT INTO transactions SET ?;
+                        SELECT LAST_INSERT_ID() AS id;`, transaction,
+                        (err, results) => {
+                            if (err) {
+                                resp.status(500).send(err);
+                            } else {
+                                resp.send(results[1][0].id.toString());
+                            }
+                        }
+                    );
+                } else {
+                    resp.status(400).send("Invalid account, expense or type id");
+                }
             }
         }
     );
@@ -51,7 +74,7 @@ route.delete('/:id', (req, resp) => {
             }
         }
     );
-})
+});
 
 route.get('/cumulativeSums', (req, resp) => {
     Connection.pool.query(

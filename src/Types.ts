@@ -34,13 +34,13 @@ route.post("/", (req, resp) => {
 
 route.delete('/:id', (req, resp) => {
     Connection.pool.query(
-        "UPDATE transactions tr SET type_id=\
-        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default') \
-        WHERE type_id=? AND user_id=?;\
-        UPDATE expenses SET type_id=\
-        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default') \
-        WHERE type_id=? AND user_id=?;\
-        DELETE FROM types WHERE id=? AND user_id=?;",
+        `UPDATE transactions tr SET type_id=
+        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default')
+        WHERE type_id=? AND user_id=?;
+        UPDATE expenses SET type_id=
+        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default')
+        WHERE type_id=? AND user_id=?;
+        DELETE FROM types WHERE id=? AND user_id=?;`,
         [
             req.session.userData.user_id,
             req.params.id,
@@ -59,7 +59,7 @@ route.delete('/:id', (req, resp) => {
             }
         }
     );
-})
+});
 
 const _route = Router();
 _route.use('/types', route);

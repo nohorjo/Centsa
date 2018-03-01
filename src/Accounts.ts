@@ -19,8 +19,8 @@ route.get('/', (req, resp) => {
 
 route.post("/", (req, resp) => {
     Connection.pool.query(
-        'INSERT INTO accounts (name,user_id) VALUES (?,?);\
-        SELECT LAST_INSERT_ID() AS id;',
+        `INSERT INTO accounts (name,user_id) VALUES (?,?);
+        SELECT LAST_INSERT_ID() AS id;`,
         [req.body.name, req.session.userData.user_id],
         (err, results) => {
             if (err) {

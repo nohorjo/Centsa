@@ -34,7 +34,7 @@ route.post("/", (req, resp) => {
                 resp.sendStatus(201);
             }
         });
-})
+});
 
 const _route = Router();
 _route.use('/settings', route);

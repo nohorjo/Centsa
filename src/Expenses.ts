@@ -5,9 +5,9 @@ const route = Router();
 
 route.get('/', (req, resp) => {
     Connection.pool.query(
-        'SELECT id,name,cost,frequency,started,automatic,account_id,type_id,\
-        (SELECT COUNT(*) FROM transactions t WHERE t.expense_id=e.id) AS instances_count \
-        FROM expenses e WHERE user_id=?;',
+        `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
+        (SELECT COUNT(*) FROM transactions t WHERE t.expense_id=e.id) AS instances_count 
+        FROM expenses e WHERE user_id=?;`,
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
@@ -33,27 +33,47 @@ route.get('/total', (req, resp) => {
 });
 
 route.post("/", (req, resp) => {
-    const expense = Object.assign({ user_id: req.session.userData.user_id }, req.body);
+    const expense = req.body;
+    expense.user_id = req.session.userData.user_id;
     Connection.pool.query(
-        //FIXME: account and type IDs need to be checked that it belongs to the user
-        'INSERT INTO expenses SET ?;\
-        SELECT LAST_INSERT_ID() AS id;', expense,
+        `SELECT COUNT(*) AS count FROM users u 
+        JOIN accounts a ON u.id=a.user_id 
+        JOIN expenses e ON u.id=e.user_id 
+        WHERE u.id=? AND a.id=? AND t.id;`,
+        [
+            expense.user_id,
+            expense.account_id,
+            expense.type_id,
+        ],
         (err, results) => {
             if (err) {
                 resp.status(500).send(err);
             } else {
-                resp.send(results[1][0].id.toString());
+                if (results[0].count) {
+                    Connection.pool.query(
+                        `INSERT INTO expenses SET ?;
+                        SELECT LAST_INSERT_ID() AS id;`, expense,
+                        (err, results) => {
+                            if (err) {
+                                resp.status(500).send(err);
+                            } else {
+                                resp.send(results[1][0].id.toString());
+                            }
+                        }
+                    );
+                } else {
+                    resp.status(400).send("Invalid account or type id");
+                }
             }
-        }
-    );
+        });
 });
 
 route.delete('/:id', (req, resp) => {
     Connection.pool.query(
-        "UPDATE transactions SET expense_id=\
-        (SELECT id FROM expenses e WHERE e.user_id=? AND e.name='N/A') \
-        WHERE expense_id=? AND user_id=?;\
-        DELETE FROM expenses WHERE id=? AND user_id=?;",
+        `UPDATE transactions SET expense_id=
+        (SELECT id FROM expenses e WHERE e.user_id=? AND e.name='N/A')
+        WHERE expense_id=? AND user_id=?;
+        DELETE FROM expenses WHERE id=? AND user_id=?;`,
         [
             req.session.userData.user_id,
             req.params.id,
