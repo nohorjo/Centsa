@@ -51,16 +51,6 @@ app.service('centsa', function ($http) {
         return {
             budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }).then(resp => success(resp.data), error); },
             rules(success, error) { $http.get(`${apiUrl}/rules`).then(resp => success(resp.data), error); },
-            importFile(rule, file, success, error) {
-                const fd = new FormData();
-                fd.append('csv', file);
-                $http.post(`${apiUrl}/import`, fd, {
-                    transformRequest: angular.identity,
-                    headers: { 'Content-Type': undefined },
-                    params: { rule: rule }
-                }).then(resp => success(resp.data), error);
-            },
-            importProgress(id, success, error) { $http.get(`${apiUrl}/import`, { params: { id: id } }).then(resp => success(resp.data), error); }
         };
     })();
 

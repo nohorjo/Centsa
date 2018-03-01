@@ -14,8 +14,7 @@
     "express-session": "1.15.6",
     "express-unless": "0.5.0",
     "mysql": "2.15.0",
-    "session-file-store": "1.2.0",
-    "uuid": "3.2.1"
+    "session-file-store": "1.2.0"
   },
   "devDependencies": {
     "@types/axios": "0.14.0",

@@ -8,34 +8,28 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		total: 1
 	};
 
-	$scope.importFile = (() => {
-		let i = null;
-		return () => {
-			if (i) {
-				$interval.cancel(i);
-				delete i;
-			}
-			centsa.general.importFile($scope.rule, $scope.uploadFile, id => {
-				$('#progressModal').modal({
-					backdrop: 'static',
-					keyboard: false
-				}).appendTo("body");
-				i = $interval(() => centsa.general.importProgress(id, p => {
-					if (p) {
-						$scope.importProgress = p;
-					} else {
-						$interval.cancel(i);
-						delete i;
-						$('#progressModal').modal("hide");
-						$scope.importProgress = {
-							processed: 0,
-							total: 1
-						};
-					}
-				}), 1500);
+	$scope.importFile = () => centsa.general.importFile($scope.rule, $scope.uploadFile, id => {
+		$('#progressModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		}).appendTo("body");
+
+		const importWorker = new Worker("/importWorker.js");
+
+		importWorker.addEventListener('message', e => {
+			$scope.$apply(() => {
+				$scope.importProgress = e.data;
 			});
-		};
-	})();
+		});
+		importWorker.addEventListener('error', e => {
+			$('#progressModal').modal("hide");
+			importWorker.terminate();
+		});
+		importWorker.postMessage({
+			rule: rule,
+			csv: ""
+		});
+	});
 
 	$scope.getProgressPercentage = extra => $rootScope.roundTo(($scope.importProgress.processed * 100) / $scope.importProgress.total, extra ? 2 : 0);
 
