@@ -5,7 +5,7 @@ const route = Router();
 
 route.get('/', (req, resp) => {
     Connection.pool.query(
-        'SELECT setting,value FROM settings WHERE user_id =?;',
+        'SELECT setting,value FROM settings WHERE user_id=?;',
         [req.session.userData.user_id],
         (err, results) => {
             if (err) {
@@ -14,7 +14,7 @@ route.get('/', (req, resp) => {
                 resp.send(results.reduce((a, b) => {
                     // Convert array of {key:x,value:y} to a single object {x:y}...
                     const x = {};
-                    x[b.k] = b.v;
+                    x[b.setting] = b.value;
                     return Object.assign(x, a);
                 }, {}));
             }
