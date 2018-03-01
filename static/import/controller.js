@@ -8,7 +8,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		total: 1
 	};
 
-	$scope.importFile = () => centsa.general.importFile($scope.rule, $scope.uploadFile, id => {
+	$scope.importFile = () => {
 		$('#progressModal').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -26,10 +26,10 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 			importWorker.terminate();
 		});
 		importWorker.postMessage({
-			rule: rule,
-			csv: ""
+			rule: $scope.rule,
+			csv: $scope.uploadFile
 		});
-	});
+	};
 
 	$scope.getProgressPercentage = extra => $rootScope.roundTo(($scope.importProgress.processed * 100) / $scope.importProgress.total, extra ? 2 : 0);
 
