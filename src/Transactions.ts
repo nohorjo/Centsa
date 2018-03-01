@@ -10,6 +10,8 @@ route.get('/', (req, resp) => {
     filter.expense_id = parseInt(filter.expense_id);
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
+    } else if (!filter.comment) {
+        filter.regex = false;
     }
 
     const page = parseInt(req.query.page);
@@ -153,6 +155,8 @@ route.get('/countPages', (req, resp) => {
     filter.expense_id = parseInt(filter.expense_id);
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
+    } else if (!filter.comment) {
+        filter.regex = false;
     }
     Connection.pool.query(
         `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
