@@ -58,6 +58,7 @@ if (cluster.isMaster) {
     if (process.env.NODE_ENV === 'production') {
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
+        app.use((req, res, next) => req.secure ? next() : res.redirect(`https://${req.hostname}${req.originalUrl}`));
     }
 
     app.use(express.json());
