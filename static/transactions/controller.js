@@ -1,10 +1,11 @@
 app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	let sort = "date DESC, id DESC";
 	$scope.currentPage = 1;
+	$scope.pageSize = "15";
 
 	const loadTransactions = () => centsa.transactions.getAll({
 		page: $scope.currentPage,
-		pageSize: $scope.pageSize || 15,
+		pageSize: $scope.pageSize,
 		sort: sort,
 		filter: $rootScope.filter
 	}, data => $scope.transactions = data);
