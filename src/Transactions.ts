@@ -25,7 +25,7 @@ route.get('/', (req, resp) => {
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
         ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
         AND comment ${filter.regex ? 'R' : ''}LIKE ?
-        ${sort.replace(/,$/g, "")}
+        ORDER BY ${sort.replace(/,$/g, "")}
         LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
         [req.session.userData.user_id, filter.comment],
         (err, result) => {
