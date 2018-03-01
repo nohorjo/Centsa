@@ -26,7 +26,7 @@ route.post("/", (req, resp) => {
     const setting = req.body;
     Connection.pool.query(
         'REPLACE INTO settings (user_id, setting, value) VALUES (?,?,?);',
-        [req.session.userData.user_id, setting.key, setting.setting],
+        [req.session.userData.user_id, setting.key, setting.value],
         err => {
             if (err) {
                 resp.status(500).send(err);
