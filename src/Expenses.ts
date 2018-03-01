@@ -35,6 +35,7 @@ route.get('/total', (req, resp) => {
 route.post("/", (req, resp) => {
     const expense = Object.assign({ user_id: req.session.userData.user_id }, req.body);
     Connection.pool.query(
+        //FIXME: account and type IDs need to be checked that it belongs to the user
         'INSERT INTO expenses SET ?;\
         SELECT LAST_INSERT_ID() AS id;', expense,
         (err, results) => {

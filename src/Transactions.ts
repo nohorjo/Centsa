@@ -26,6 +26,7 @@ route.post("/", (req, resp) => {
     const transaction = Object.assign({ user_id: req.session.userData.user_id }, req.body);
     transaction.date = new Date(transaction.date);
     Connection.pool.query(
+        //FIXME: account, expense and type IDs need to be checked that they belong to the user
         'INSERT INTO transactions SET ?;\
         SELECT LAST_INSERT_ID() AS id;', transaction,
         (err, results) => {
