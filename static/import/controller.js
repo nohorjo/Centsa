@@ -23,7 +23,6 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		});
 		importWorker.addEventListener('error', e => {
 			$('#progressModal').modal("hide");
-			importWorker.terminate();
 		});
 		importWorker.postMessage({
 			rule: $scope.rule,
