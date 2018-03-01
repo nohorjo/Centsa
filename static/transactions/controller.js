@@ -1,10 +1,10 @@
 app.controller("transCtrl", function ($scope, $rootScope, centsa) {
-	let sort = "DATE DESC, ID DESC";
+	let sort = "date DESC, id DESC";
 	$scope.currentPage = 1;
 
 	const loadTransactions = () => centsa.transactions.getAll({
 		page: $scope.currentPage,
-		pageSize: $scope.pageSize,
+		pageSize: $scope.pageSize || 15,
 		sort: sort,
 		filter: $rootScope.filter
 	}, data => $scope.transactions = data);
@@ -36,8 +36,11 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		date: new Date().formatDate("yyyy/MM/dd")
 	};
 	let newTrans = Object.assign({}, $scope.newTrans);
-	
-	$scope.transactionSummary = { min: 0, max: 0 };
+
+	$scope.transactionSummary = {
+		min: 0,
+		max: 0
+	};
 	$scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
 	centsa.transactions.getSummary($rootScope.filter, data => $scope.transactionSummary = data);
 	centsa.accounts.getAll(data => {
@@ -133,8 +136,8 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 				lastCol = col;
 				asc = false;
 			}
-			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", ID DESC"
-				+ (secondary ? ", " + secondary : "");
+			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", ID DESC" +
+				(secondary ? ", " + secondary : "");
 			loadTransactions();
 		};
 	})();
