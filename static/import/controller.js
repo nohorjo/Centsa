@@ -2,7 +2,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 	$scope.rules = [];
 	centsa.general.rules(data => {
 		$scope.rules = data;
-		$scope.rule = data[0];	
+		$scope.rule = data[0].id.toString();
 	});
 
 	$scope.importProgress = {
@@ -24,6 +24,9 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 			});
 		});
 		importWorker.addEventListener('error', e => {
+			if (e.message != 'Uncaught Done') {
+				throw e;
+			}
 			$('#progressModal').modal("hide");
 		});
 		importWorker.postMessage({
