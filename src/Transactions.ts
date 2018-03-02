@@ -118,6 +118,8 @@ route.get('/summary', (req, resp) => {
     filter.expense_id = parseInt(filter.expense_id);
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
+    } else if (!filter.comment) {
+        filter.regex = false;
     }
     Connection.pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
