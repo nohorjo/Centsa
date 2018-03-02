@@ -1,7 +1,9 @@
 app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 	$scope.rules = [];
-	centsa.general.rules(data => $scope.rules = data);
-	$scope.rule = "default";
+	centsa.general.rules(data => {
+		$scope.rules = data;
+		$scope.rule = data[0];	
+	});
 
 	$scope.importProgress = {
 		processed: 0,

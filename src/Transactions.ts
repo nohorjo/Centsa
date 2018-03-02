@@ -174,7 +174,6 @@ route.get('/countPages', (req, resp) => {
             if (err) {
                 resp.status(500).send(err);
             } else {
-                console.dir(result[0]);
                 resp.send((Math.floor(result[0].count / req.query.pageSize) + 1).toString());
             }
         });

@@ -4,6 +4,7 @@ DROP TABLE expenses;
 DROP TABLE types;
 DROP TABLE accounts;
 DROP TABLE settings;
+DROP TABLE rules
 DROP TABLE users;
 */
 
@@ -13,6 +14,15 @@ CREATE TABLE users
     email VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
 	UNIQUE(email)
+);
+CREATE TABLE rules
+(
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(50) NOT NULL,
+	user_id BIGINT,
+	content TEXT NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id,name)
 );
 CREATE TABLE settings
 (
