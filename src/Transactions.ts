@@ -8,10 +8,11 @@ route.get('/', (req, resp) => {
     filter.account_id = parseInt(filter.account_id);
     filter.type_id = parseInt(filter.type_id);
     filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.comment) {
+        filter.regex = false;
+    }
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
-    } else if (!filter.comment) {
-        filter.regex = false;
     }
 
     const page = parseInt(req.query.page);
@@ -116,10 +117,11 @@ route.get('/summary', (req, resp) => {
     filter.account_id = parseInt(filter.account_id);
     filter.type_id = parseInt(filter.type_id);
     filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.comment) {
+        filter.regex = false;
+    }
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
-    } else if (!filter.comment) {
-        filter.regex = false;
     }
     Connection.pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
@@ -155,10 +157,11 @@ route.get('/countPages', (req, resp) => {
     filter.account_id = parseInt(filter.account_id);
     filter.type_id = parseInt(filter.type_id);
     filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.comment) {
+        filter.regex = false;
+    }
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
-    } else if (!filter.comment) {
-        filter.regex = false;
     }
     Connection.pool.query(
         `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
