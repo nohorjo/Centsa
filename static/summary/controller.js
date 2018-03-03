@@ -1,15 +1,15 @@
 app.controller("summaryCtrl", function ($scope, centsa) {
-    $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode, () => {
-        centsa.general.budget($scope.strictMode, budget => $scope.budget = budget)
+    $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
+        centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
     });
 
-    centsa.settings.get("strict.mode", setting => {
-        $scope.strictMode = setting;
+    centsa.settings.get("strict.mode").then(setting => {
+        $scope.strictMode = setting == "1";
         $scope.getBudget();
     });
 
-    centsa.transactions.getCumulativeSums(data => {
-        const sums = data.map(x => ({
+    centsa.transactions.getCumulativeSums().then(resp => {
+        const sums = resp.data.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
             sum: x.sum / 100
         }));

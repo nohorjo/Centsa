@@ -7,8 +7,13 @@
 			<div class="modal-body">
 				{{ getProgressPercentage() }}% Complete ({{ importProgress.processed }}/{{ importProgress.total }})
 				<div class="progress">
-					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" data-ng-style="{ 'width' : getProgressPercentage(true) + '%' }"></div>
+					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" data-ng-style="{ 'width' : getProgressPercentage(true) + '%' }"
+					 data-ng-class="{ 'progress-bar-danger' : importError }" />
 				</div>
+				<div> {{ importError }} </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default float-right" data-dismiss="modal" data-ng-show="importError">Close</button>
 			</div>
 		</div>
 	</div>
@@ -25,7 +30,7 @@
 			</select>
 		</td>
 		<td width="30%">
-			<input type="file" class="form-control-file" data-file-model="uploadFile"/>
+			<input type="file" class="form-control-file" data-file-model="uploadFile" />
 		</td>
 		<td width="25%">
 			<input type="button" value="Import file" class="btn btn-primary" data-ng-click="importFile()" data-ng-class="{ 'btn-warning': !rule || !uploadFile }"

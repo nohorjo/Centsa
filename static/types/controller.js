@@ -1,7 +1,7 @@
 app.controller("typesCtrl", function ($scope, centsa) {
 	$scope.types = [];
-	centsa.types.getAll(data => {
-		$scope.types = data;
+	centsa.types.getAll().then(resp => {
+		$scope.types = resp.data;
 		drawPie();
 	});
 
@@ -10,15 +10,15 @@ app.controller("typesCtrl", function ($scope, centsa) {
 	};
 	var newType = Object.assign({}, $scope.newType);
 
-	$scope.saveType = () => centsa.types.insert($scope.newType, id => {
-		$scope.newType.id = id;
+	$scope.saveType = () => centsa.types.insert($scope.newType).then(resp => {
+		$scope.newType.id = resp.data;
 		$scope.newType.sum = 0;
 		$scope.types.unshift($scope.newType);
 		$scope.newType = Object.assign({}, newType);
 		drawPie();
-	});;
+	});
 
-	$scope.deleteType = id => centsa.types.remove(id, () => {
+	$scope.deleteType = id => centsa.types.remove(id).this(() => {
 		$scope.types.splice($scope.types.findIndex(t => t.id == id), 1);
 		drawPie();
 	});

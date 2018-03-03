@@ -1,25 +1,25 @@
-app.service('centsa', function ($http) {
-    class baseApi{
+const centsa = function ($http) {
+    class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
-        getAll(success, error) { $http.get(this.apiUrl).then(resp => success(resp.data), error); }
-        insert(item, success, error) { $http.post(this.apiUrl, item).then(resp => success && success(resp.data), error); }
+        getAll() { return $http.get(this.apiUrl); }
+        insert(item) { return $http.post(this.apiUrl, item); }
     }
     class genericApi extends baseApi {
         constructor(path) { super(path); }
-        remove(id, success, error) { $http.delete(`${this.apiUrl}/${id}`).then(success, error); }
+        remove(id) { return $http.delete(`${this.apiUrl}/${id}`); }
     }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
-        getAll(activeOnly, success, error) { $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }).then(resp => success(resp.data), error); }
-        totalActive(incAuto, success, error) { $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }).then(resp => success(resp.data), error); }
+        getAll(activeOnly) { return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }); }
+        totalActive(incAuto) { return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }); }
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
-        getAll(options, success, error) { $http.get(this.apiUrl, { params: options }).then(resp => success(resp.data), error); }
-        getCumulativeSums(success, error) { $http.get(`${this.apiUrl}/cumulativeSums`).then(resp => success(resp.data), error); }
-        countPages(options, success, error) { $http.get(`${this.apiUrl}/countPages`, { params: options }).then(resp => success(resp.data), error); }
-        getSummary(filter, success, error) { $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }).then(resp => success(resp.data), error); }
-        getUniqueComments(success, error) { $http.get(`${this.apiUrl}/comments`).then(resp => success(resp.data), error); }
+        getAll(options) { return $http.get(this.apiUrl, { params: options }); }
+        getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
+        countPages(options) { return $http.get(`${this.apiUrl}/countPages`, { params: options }); }
+        getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }
+        getUniqueComments() { return $http.get(`${this.apiUrl}/comments`); }
     }
 
     this.accounts = new baseApi('accounts');
@@ -30,28 +30,34 @@ app.service('centsa', function ($http) {
         const apiUrl = '/api/settings';
         let _settings;
         return {
-            get(key, success, error) {
-                if (!_settings) {
-                    $http.get(apiUrl).then(resp => {
-                        _settings = resp.data;
-                        success(_settings[key]);
-                    }, error);
-                } else {
-                    success(_settings[key]);
-                }
+            get(key) {
+                return new Promise((resolve, reject) => {
+                    if (!_settings) {
+                        $http.get(apiUrl).then(resp => {
+                            _settings = resp.data;
+                            resolve(_settings[key]);
+                        }, reject);
+                    } else {
+                        resolve(_settings[key]);
+                    }
+                });
             },
-            set(key, value, success, error) {
+            set(key, value) {
                 _settings[key] = value;
-                $http.post(apiUrl, { key: key, value: value }).then(success, error);
+                return $http.post(apiUrl, { key: key, value: value });
             }
         };
     })();
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode, success, error) { $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }).then(resp => success(resp.data), error); },
-            rules(success, error) { $http.get(`${apiUrl}/rules`).then(resp => success(resp.data), error); },
+            budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
+            rules() { return $http.get(`${apiUrl}/rules`); },
+            rule(id) { return $http.get(`${apiUrl}/rule/${id}`); }
         };
     })();
 
-});
+};
+if (typeof app == "object") {
+    app.service('centsa', centsa);
+}

@@ -1,6 +1,6 @@
 app.controller("accountsCtrl", function ($scope, centsa) {
 	$scope.accounts = [];
-	centsa.accounts.getAll(data => $scope.accounts = data)
+	centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
 
 	$scope.newAccount = {
 		name: "",
@@ -19,8 +19,8 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 
 	$scope.saveAccount = () => {
 		$scope.newAccount.balance *= 100;
-		centsa.accounts.insert($scope.newAccount, id => {
-			$scope.newAccount.id = id;
+		centsa.accounts.insert($scope.newAccount).then(resp => {
+			$scope.newAccount.id = resp.data;
 			$scope.accounts.unshift($scope.newAccount);
 			if ($scope.newAccount.balance) {
 				centsa.transactions.insert({
@@ -91,7 +91,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 				type_id: "1",
 				expense_id: "1",
 				date: new Date()
-			}, () => acc.balanceOld = acc.balance);
+			}).then(() => acc.balanceOld = acc.balance);
 		}
 	}
 

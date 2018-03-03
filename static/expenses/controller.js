@@ -1,9 +1,9 @@
 app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
     $scope.expenses = $scope.types = $scope.accounts = [];
-    centsa.expenses.getAll(true, data => $scope.expenses = data);
-    centsa.accounts.getAll(data => $scope.accounts = data);
-    centsa.types.getAll(data => $scope.types = data);
+    centsa.expenses.getAll(true).then(resp => $scope.expenses = resp.data);
+    centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
+    centsa.types.getAll().then(resp => $scope.types = resp.data);
 
     $scope.frequency = {
         type: "basic",
@@ -15,8 +15,8 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
 
     const getActiveTotals = () => {
-        centsa.expenses.totalActive(false, data => $scope.totalActiveExpenses = data);
-        centsa.expenses.totalActive(true, data => $scope.totalAutoExpenses = data);
+        centsa.expenses.totalActive(false).then(resp => $scope.totalActiveExpenses = resp.data);
+        centsa.expenses.totalActive(true).then(resp => $scope.totalAutoExpenses = resp.data);
     }
 
     getActiveTotals();
@@ -38,11 +38,11 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         if (!$scope.newExpense.account_id) {
             delete $scope.newExpense.account_id;
         }
-        centsa.expenses.insert($scope.newExpense, newId => {
+        centsa.expenses.insert($scope.newExpense).then(resp => {
             if (updating) {
                 $scope.expenses[$scope.expenses.findIndex(e => e.id == $scope.newExpense.id)] = $scope.newExpense;
             } else {
-                $scope.newExpense.id = newId;
+                $scope.newExpense.id = resp.data;
                 $scope.expenses.unshift($scope.newExpense);
             }
             getActiveTotals();
@@ -53,7 +53,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.getNow = () => Date.now();
 
-    $scope.deleteExpense = id => centsa.expenses.remove(id, () => {
+    $scope.deleteExpense = id => centsa.expenses.remove(id).then(() => {
         $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
         getActiveTotals();
     });

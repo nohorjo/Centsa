@@ -39,7 +39,7 @@ route.post("/", (req, resp) => {
         `SELECT COUNT(*) AS count FROM users u 
         JOIN accounts a ON u.id=a.user_id 
         JOIN expenses e ON u.id=e.user_id 
-        WHERE u.id=? AND a.id=? AND t.id;`,
+        WHERE u.id!=? AND (a.id=? AND t.id=?);`,
         [
             expense.user_id,
             expense.account_id,
@@ -50,19 +50,19 @@ route.post("/", (req, resp) => {
                 resp.status(500).send(err);
             } else {
                 if (results[0].count) {
+                    resp.status(400).send("Invalid account or type id");
+                } else {
                     Connection.pool.query(
-                        `INSERT INTO expenses SET ?;
-                        SELECT LAST_INSERT_ID() AS id;`, expense,
+                        `INSERT INTO expenses SET ?;`,
+                        expense,
                         (err, results) => {
                             if (err) {
                                 resp.status(500).send(err);
                             } else {
-                                resp.send(results[1][0].id.toString());
+                                resp.send(results.insertId.toString());
                             }
                         }
                     );
-                } else {
-                    resp.status(400).send("Invalid account or type id");
                 }
             }
         });

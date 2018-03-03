@@ -18,7 +18,7 @@ route.get('/', (req, resp) => {
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
     let sort = req.query.sort;
-    if (sort && !/^(\s*[a-z]* (asc|desc),?)+$/.test(sort)) {
+    if (sort && !/^(\s*[a-z]* (A|DE)SC.? ?)+$/.test(sort)) {
         sort = '1 ASC';
     }
 
@@ -42,43 +42,105 @@ route.get('/', (req, resp) => {
 });
 
 route.post("/", (req, resp) => {
-    const transaction = req.body;
-    transaction.user_id = req.session.userData.user_id;
-    transaction.date = new Date(transaction.date);
-    Connection.pool.query(
-        `SELECT COUNT(*) AS count FROM users u 
-        JOIN accounts a ON u.id=a.user_id 
-        JOIN expenses e ON u.id=e.user_id 
-        JOIN types t ON u.id=t.user_id 
-        WHERE u.id=? AND a.id=? AND e.id=? AND t.id;`,
-        [
-            transaction.user_id,
-            transaction.account_id,
-            transaction.expense_id,
-            transaction.type_id
-        ],
-        (err, results) => {
-            if (err) {
-                resp.status(500).send(err);
-            } else {
-                if (results[0].count) {
-                    Connection.pool.query(
-                        `INSERT INTO transactions SET ?;
-                        SELECT LAST_INSERT_ID() AS id;`, transaction,
-                        (err, results) => {
-                            if (err) {
-                                resp.status(500).send(err);
-                            } else {
-                                resp.send(results[1][0].id.toString());
-                            }
-                        }
-                    );
+    if (req.body instanceof Array) {
+        const transactions = [];
+        let accountIds = [];
+        let expenseIds = [];
+        let typeIds = [];
+        req.body.forEach(t => {
+            transactions.push([
+                req.session.userData.user_id,
+                t.amount,
+                t.comment,
+                t.account_id,
+                t.type_id,
+                t.expense_id,
+                new Date(t.date)
+            ]);
+            if (!accountIds.includes(t.account_id)) {
+                accountIds.push(t.account_id);
+            }
+            if (!expenseIds.includes(t.expense_id)) {
+                expenseIds.push(t.expense_id);
+            }
+            if (!typeIds.includes(t.type_id)) {
+                typeIds.push(t.type_id);
+            }
+        });
+        Connection.pool.query(
+            `SELECT COUNT(*) AS count FROM users u 
+            JOIN accounts a ON u.id=a.user_id 
+            JOIN expenses e ON u.id=e.user_id 
+            JOIN types t ON u.id=t.user_id 
+            WHERE u.id!=? AND (a.id IN (?) AND e.id IN (?) AND t.id in (?));`,
+            [
+                req.session.userData.user_id,
+                accountIds,
+                expenseIds,
+                typeIds
+            ],
+            (err, results) => {
+                if (err) {
+                    resp.status(500).send(err);
                 } else {
-                    resp.status(400).send("Invalid account, expense or type id");
+                    if (results[0].count) {
+                        resp.status(400).send("Invalid account, expense or type ids");
+                    } else {
+                        Connection.pool.query(
+                            `INSERT INTO transactions
+                            (user_id,amount,comment,account_id,type_id,expense_id,date)
+                            VALUES ?;`,
+                            [transactions],
+                            (err, results) => {
+                                if (err) {
+                                    resp.status(500).send(err);
+                                } else {
+                                    resp.sendStatus(201);
+                                }
+                            }
+                        );
+                    }
                 }
             }
-        }
-    );
+        );
+    } else {
+        const transaction = req.body;
+        transaction.user_id = req.session.userData.user_id;
+        transaction.date = new Date(transaction.date);
+        Connection.pool.query(
+            `SELECT COUNT(*) AS count FROM users u 
+            JOIN accounts a ON u.id=a.user_id 
+            JOIN expenses e ON u.id=e.user_id 
+            JOIN types t ON u.id=t.user_id 
+            WHERE u.id!=? AND (a.id=? AND e.id=? AND t.id = ?);`,
+            [
+                transaction.user_id,
+                transaction.account_id,
+                transaction.expense_id,
+                transaction.type_id
+            ],
+            (err, results) => {
+                if (err) {
+                    resp.status(500).send(err);
+                } else {
+                    if (results[0].count) {
+                        resp.status(400).send("Invalid account, expense or type id");
+                    } else {
+                        Connection.pool.query(
+                            `INSERT INTO transactions SET ?;`, transaction,
+                            (err, results) => {
+                                if (err) {
+                                    resp.status(500).send(err);
+                                } else {
+                                    resp.send(results.insertId.toString());
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+        );
+    }
 });
 
 route.delete('/:id', (req, resp) => {

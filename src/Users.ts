@@ -7,11 +7,10 @@ export const getOrCreateUser = (data, cb) => {
             cb(results[0].id);
         } else {
             Connection.pool.query(
-                `INSERT INTO users (email,name) VALUES (?,?);
-                SELECT LAST_INSERT_ID() AS id;`
+                `INSERT INTO users (email,name) VALUES (?,?);`
                 , [data.email, data.name], (err, results) => {
                     if (err) throw err;
-                    const userId = results[1][0].id;
+                    const userId = results.insertId;
                     Connection.pool.query(
                         "INSERT INTO settings VALUES (?,'strict.mode','true'),(?,'trans.page.size','15');\
                         INSERT INTO accounts (user_id,name) VALUES (?,'Default');\

@@ -1,8 +1,8 @@
 app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 	$scope.rules = [];
-	centsa.general.rules(data => {
-		$scope.rules = data;
-		$scope.rule = data[0].id.toString();
+	centsa.general.rules().then(resp => {
+		$scope.rules = resp.data;
+		$scope.rule = resp.data[0].id.toString();
 	});
 
 	$scope.importProgress = {
@@ -11,6 +11,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 	};
 
 	$scope.importFile = () => {
+		$scope.importError = "";
 		$('#progressModal').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -19,15 +20,18 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		const importWorker = new Worker("/importWorker.js");
 
 		importWorker.addEventListener('message', e => {
-			$scope.$apply(() => {
-				$scope.importProgress = e.data;
-			});
+			if (e.data) {
+				$scope.$apply(() => {
+					$scope.importProgress = e.data;
+				});
+			} else {
+				$('#progressModal').modal("hide");
+			}
 		});
 		importWorker.addEventListener('error', e => {
-			if (e.message != 'Uncaught Done') {
-				throw e;
-			}
-			$('#progressModal').modal("hide");
+			$scope.$apply(() => {
+				$scope.importError = `Error: ${e.message}`;
+			});
 		});
 		importWorker.postMessage({
 			rule: $scope.rule,
