@@ -35,10 +35,11 @@ route.get('/total', (req, resp) => {
 route.post("/", (req, resp) => {
     const expense = req.body;
     expense.user_id = req.session.userData.user_id;
+    expense.started = new Date(expense.started);
     Connection.pool.query(
         `SELECT COUNT(*) AS count FROM users u 
         JOIN accounts a ON u.id=a.user_id 
-        JOIN expenses e ON u.id=e.user_id 
+        JOIN types t ON u.id=t.user_id 
         WHERE u.id!=? AND (a.id=? AND t.id=?);`,
         [
             expense.user_id,

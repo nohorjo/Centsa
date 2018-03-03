@@ -18,7 +18,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
 		drawPie();
 	});
 
-	$scope.deleteType = id => centsa.types.remove(id).this(() => {
+	$scope.deleteType = id => centsa.types.remove(id).then(() => {
 		$scope.types.splice($scope.types.findIndex(t => t.id == id), 1);
 		drawPie();
 	});

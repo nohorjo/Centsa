@@ -34,10 +34,10 @@ route.post("/", (req, resp) => {
 route.delete('/:id', (req, resp) => {
     Connection.pool.query(
         `UPDATE transactions tr SET type_id=
-        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default')
+        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Other')
         WHERE type_id=? AND user_id=?;
         UPDATE expenses SET type_id=
-        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Default')
+        (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Other')
         WHERE type_id=? AND user_id=?;
         DELETE FROM types WHERE id=? AND user_id=?;`,
         [
