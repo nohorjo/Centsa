@@ -60,7 +60,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		newTrans.expense_id = $scope.newTrans.expense_id;
 	});
 	centsa.expenses.getAll(false).then(resp => $scope.allExpenses = resp.data);
-	centsa.getUniqueComments().then(data => $scope.uniqueComments = resp.data);
+	centsa.transactions.getUniqueComments().then(data => $scope.uniqueComments = resp.data);
 
 	$scope.saveTrans = updating => {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
