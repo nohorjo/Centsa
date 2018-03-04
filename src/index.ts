@@ -42,6 +42,10 @@ if (cluster.isMaster) {
 
     Connection.init(Object.assign({ cpusCount: cpus }, process.env));
 
+    if (cluster.worker.id == 1) {
+        //TODO: auto expenses
+    }
+
     const port = process.env.PORT || 8080;
 
     const app = express();

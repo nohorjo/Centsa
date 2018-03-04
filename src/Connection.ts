@@ -18,7 +18,7 @@ const connection = {
         });
         connection.end();
         this.pool = mysql.createPool({
-            connectionLimit: Math.floor(config.cpusCount / config.DB_CONNECTION_LIMIT),
+            connectionLimit: Math.floor(config.DB_CONNECTION_LIMIT / config.cpusCount) || 1,
             host: config.DB_IP,
             port: config.DB_PORT,
             user: config.DB_USER,
