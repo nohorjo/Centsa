@@ -127,7 +127,7 @@ route.post("/", (req, resp) => {
                         resp.status(400).send("Invalid account, expense or type id");
                     } else {
                         Connection.pool.query(
-                            `INSERT INTO transactions SET ?;`, transaction,
+                            `REPLACE INTO transactions SET ?;`, transaction,
                             (err, results) => {
                                 if (err) {
                                     resp.status(500).send(err);
