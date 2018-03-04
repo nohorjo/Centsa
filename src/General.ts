@@ -1,13 +1,51 @@
 import { Router } from 'express';
 import Connection from './Connection';
+import { lastPaymentDate, nextPaymentDate } from './Expenses';
 
 const route = Router();
 
+const DAY = 8.64e7;
+
 route.get("/budget", (req, resp) => {
-    resp.send({
-        afterAll: 987,
-        afterAuto: 654
-    });
+    Connection.pool.query(
+        `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=?;
+        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
+        [req.session.user_id, req.session.user_id],
+        (err, results) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                const expenses = results[1];
+                const strict = req.query.strict == "true";
+                const currentDay = new Date();
+
+                const budget = expenses.reduce(
+                    (currentBudget, expense) => {
+                        if (expense.cost > 0 && expense.started < new Date()) {
+                            let cost = expense.cost;
+                            if (!strict) {
+                                const daysToNextPayment = (nextPaymentDate(expense, currentDay).valueOf() - currentDay.valueOf()) / DAY;
+                                const daysSinceLastPayment = (lastPaymentDate(expense, currentDay).valueOf() - currentDay.valueOf()) / DAY;
+
+                                cost *= daysSinceLastPayment / (daysSinceLastPayment + daysToNextPayment);
+                            }
+                            currentBudget.afterAll -= cost;
+                            if (expense.automatic) {
+                                currentBudget.afterAuto -= cost;
+                            }
+                        }
+                        return currentBudget;
+                    }, {
+                        afterAll: results[0][0].total,
+                        afterAuto: results[0][0].total
+                    }
+                );
+
+                resp.send(budget);
+            }
+        }
+    );
+
 });
 
 // =================== IMPORT

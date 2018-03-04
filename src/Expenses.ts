@@ -96,3 +96,6 @@ const _route = Router();
 _route.use('/expenses', route);
 
 export default _route;
+
+export const lastPaymentDate = (expense, date) => { return new Date(); };
+export const nextPaymentDate = (expense, date) => { return new Date(); };
