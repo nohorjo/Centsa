@@ -102,7 +102,7 @@ self.addEventListener('message', e => {
                 },
                 next() {
                     self.postMessage({
-                        processed: i,
+                        processed: i + 1,
                         total: total
                     });
                     return data[i++];
