@@ -159,7 +159,7 @@ route.delete('/:id', (req, resp) => {
 
 route.get('/cumulativeSums', (req, resp) => {
     Connection.pool.query(
-        'SELECT date,amount FROM transactions WHERE user_id=? ORDER BY date ASC;',
+        'SELECT date, -amount AS amount FROM transactions WHERE user_id=? ORDER BY date ASC;',
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
