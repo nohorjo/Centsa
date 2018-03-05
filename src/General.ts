@@ -10,7 +10,7 @@ route.get("/budget", (req, resp) => {
     Connection.pool.query(
         `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=?;
         SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
-        [req.session.user_id, req.session.user_id],
+        [req.session.userData.user_id, req.session.userData.user_id],
         (err, results) => {
             if (err) {
                 resp.status(500).send(err);
