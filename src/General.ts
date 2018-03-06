@@ -4,8 +4,6 @@ import { lastPaymentDate, nextPaymentDate } from './Expenses';
 
 const route = Router();
 
-const DAY = 8.64e7;
-
 route.get("/budget", (req, resp) => {
     Connection.pool.query(
         `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=?;
@@ -17,17 +15,17 @@ route.get("/budget", (req, resp) => {
             } else {
                 const expenses = results[1];
                 const strict = req.query.strict == "true";
-                const currentDay = new Date();
+                const currentDay = new Date().valueOf();
 
                 const budget = expenses.reduce(
                     (currentBudget, expense) => {
                         if (expense.cost > 0 && expense.started < new Date()) {
                             let cost = expense.cost;
                             if (!strict) {
-                                const daysToNextPayment = (nextPaymentDate(expense, currentDay).valueOf() - currentDay.valueOf()) / DAY;
-                                const daysSinceLastPayment = (lastPaymentDate(expense, currentDay).valueOf() - currentDay.valueOf()) / DAY;
+                                const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
+                                const timeSinceLastPayment = lastPaymentDate(expense, currentDay) - currentDay;
 
-                                cost *= daysSinceLastPayment / (daysSinceLastPayment + daysToNextPayment);
+                                cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
                             }
                             currentBudget.afterAll -= cost;
                             if (expense.automatic) {

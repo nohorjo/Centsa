@@ -158,6 +158,9 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $('#frequencySelect').on('hide.bs.dropdown', () => $scope.$apply(function () {
         try {
+            if ($scope.frequency.date == 0) {
+                throw "Invalid date";
+            }
             switch ($scope.frequency.type) {
                 case "basic":
                     $scope.newExpense.frequency = $scope.frequency.date;
