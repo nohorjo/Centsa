@@ -126,7 +126,7 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 const isDayOfPayment = (frequency, date, started) => {
-    frequency = frequency.toUpperCase();
+    frequency = frequency.toString().toUpperCase();
     const checkPotentialDays = (d, accept) => {
         const xDays = [];
         const temp = new Date(date);
@@ -163,7 +163,7 @@ const isDayOfPayment = (frequency, date, started) => {
     if (date < started) {
         return false;
     } else if (/^\d+$/g.test(frequency)) {
-        return (date - started) % frequency == 0;
+        return Math.floor((date - started)/8.64e7 % frequency) == 0;
     } else if (/^DATE \d+$/g.test(frequency)) {
         return frequency.substring(5) == date.getDate();
     } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
@@ -186,7 +186,7 @@ const isDayOfPayment = (frequency, date, started) => {
 }
 
 const isFrequencyValid = frequency => {
-    frequency = frequency.toUpperCase();
+    frequency = frequency.toString().toUpperCase();
     if (/^\d+$/g.test(frequency)) {
         return frequency > 0;
     } else if (/^DATE \d+$/g.test(frequency)) {

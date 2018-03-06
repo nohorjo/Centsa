@@ -23,7 +23,7 @@ route.get("/budget", (req, resp) => {
                             let cost = expense.cost;
                             if (!strict) {
                                 const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
-                                const timeSinceLastPayment = lastPaymentDate(expense, currentDay) - currentDay;
+                                const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
                                 cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
                             }
@@ -38,7 +38,6 @@ route.get("/budget", (req, resp) => {
                         afterAuto: results[0][0].total
                     }
                 );
-
                 resp.send(budget);
             }
         }

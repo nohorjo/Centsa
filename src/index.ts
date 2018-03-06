@@ -18,31 +18,10 @@ import debug from './debug';
 
 const cpus = os.cpus().length;
 
-if (cluster.isMaster) {
-    try { require('../config'); } catch (e) {/* Config not set or in environment */ }
-    for (let v of [
-        'SESSION_SECRET',
-        'DB_IP',
-        'DB_PORT',
-        'DB_USER',
-        'DB_PASSWORD',
-        'DB_NAME',
-        'DB_CONNECTION_LIMIT'
-    ]) {
-        if (!process.env[v]) {
-            console.error(`Incomplete configuration: ${v}`);
-            process.exit(1);
-        }
-    }
-
-    for (let i = 0; i < cpus; i++) {
-        cluster.fork();
-    }
-} else {
-
+const initWorker = id => {
     Connection.init(Object.assign({ cpusCount: cpus }, process.env));
 
-    if (cluster.worker.id == 1) {
+    if (id == 1) {
         //TODO: auto expenses
     }
 
@@ -93,5 +72,36 @@ if (cluster.isMaster) {
 
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
-    app.listen(port, () => console.log(`Server ${cluster.worker.id} listening on port ${port}`));
+    app.listen(port, () => console.log(`Server ${id} listening on port ${port}`));
+}
+const loadConfig = () => {
+    try { require('../config'); } catch (e) {/* Config not set or in environment */ }
+    for (let v of [
+        'SESSION_SECRET',
+        'DB_IP',
+        'DB_PORT',
+        'DB_USER',
+        'DB_PASSWORD',
+        'DB_NAME',
+        'DB_CONNECTION_LIMIT'
+    ]) {
+        if (!process.env[v]) {
+            console.error(`Incomplete configuration: ${v}`);
+            process.exit(1);
+        }
+    }
+}
+
+if (process.env.NODE_ENV == "debug") {
+    loadConfig();
+    initWorker(1);
+} else {
+    if (cluster.isMaster) {
+        loadConfig();
+        for (let i = 0; i < cpus; i++) {
+            cluster.fork();
+        }
+    } else {
+        initWorker(cluster.worker.id);
+    }
 }
