@@ -163,7 +163,7 @@ const isDayOfPayment = (frequency, date, started) => {
     if (date < started) {
         return false;
     } else if (/^\d+$/g.test(frequency)) {
-        return Math.floor((date - started)/8.64e7 % frequency) == 0;
+        return Math.floor((date - started) / 8.64e7 % frequency) == 0;
     } else if (/^DATE \d+$/g.test(frequency)) {
         return frequency.substring(5) == date.getDate();
     } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
@@ -185,6 +185,20 @@ const isDayOfPayment = (frequency, date, started) => {
     }
 }
 
+/**
+ * Validates the frequency
+ * Valid formats are:
+ * 
+ * [Days per occurrence]
+ * DATE [date in month]
+ * DATE [date in year (d/m)]
+ * DAY [Nth day of the month (negative for last Nth day)]
+ * DAY [day of week (first 2 chars)] [Nth occurrence in the month (negative for last Nth occurrence)]
+ * WDAY [Nth work-day in month (negative for last Nth day)]
+ * RDAY [Nth rest-day in month (negative for last Nth day)]
+ *
+ * @param frequency The frequency to check
+ */
 const isFrequencyValid = frequency => {
     frequency = frequency.toString().toUpperCase();
     if (/^\d+$/g.test(frequency)) {
