@@ -143,11 +143,10 @@ export const applyAutoTransactions = (all?, id?) => {
             // TODO: insert todays auto transactions for all expenses
         }
     }
-}
+};
 
-const isDayOfPayment = (frequency, date, started) => {
-    frequency = frequency.toString().toUpperCase();
-    const checkPotentialDays = (d, accept) => {
+const isDayOfPayment = (() => {
+    const checkPotentialDays = (d, accept, date) => {
         const xDays = [];
         const temp = new Date(date);
         const month = temp.getMonth();
@@ -180,30 +179,33 @@ const isDayOfPayment = (frequency, date, started) => {
             }
         }
     };
-    if (date < started) {
-        return false;
-    } else if (/^\d+$/g.test(frequency)) {
-        return Math.floor((date - started) / 8.64e7 % frequency) == 0;
-    } else if (/^DATE \d+$/g.test(frequency)) {
-        return frequency.substring(5) == date.getDate();
-    } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
-        const dm = frequency.substring(5).split("/");
-        return dm[0] == date.getDate() && dm[1] - 1 == date.getMonth();
-    } else if (/^DAY -?\d+$/g.test(frequency)) {
-        const d = frequency.substring(4);
-        return checkPotentialDays(d, () => true);
-    } else if (/^DAY (MO|TU|WE|TH|FR|SA|SU) -?\d+$/g.test(frequency)) {
-        const d = frequency.substring(7);
-        const day = "SUMOTUWETHFRSA".indexOf(frequency.substring(4, 6)) / 2;
-        return checkPotentialDays(d, temp => temp.getDay() == day);
-    } else if (/^WDAY -?\d+$/g.test(frequency)) {
-        const d = frequency.substring(5);
-        return checkPotentialDays(d, temp => temp.getDay() != 0 && temp.getDay() != 6);
-    } else if (/^RDAY -?\d+$/g.test(frequency)) {
-        const d = frequency.substring(5);
-        return checkPotentialDays(d, temp => temp.getDay() == 0 || temp.getDay() == 6);
-    }
-}
+    return (frequency, date, started) => {
+        frequency = frequency.toString().toUpperCase();
+        if (date < started) {
+            return false;
+        } else if (/^\d+$/g.test(frequency)) {
+            return Math.floor((date - started) / 8.64e7 % frequency) == 0;
+        } else if (/^DATE \d+$/g.test(frequency)) {
+            return frequency.substring(5) == date.getDate();
+        } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
+            const dm = frequency.substring(5).split("/");
+            return dm[0] == date.getDate() && dm[1] - 1 == date.getMonth();
+        } else if (/^DAY -?\d+$/g.test(frequency)) {
+            const d = frequency.substring(4);
+            return checkPotentialDays(d, () => true, date);
+        } else if (/^DAY (MO|TU|WE|TH|FR|SA|SU) -?\d+$/g.test(frequency)) {
+            const d = frequency.substring(7);
+            const day = "SUMOTUWETHFRSA".indexOf(frequency.substring(4, 6)) / 2;
+            return checkPotentialDays(d, temp => temp.getDay() == day, date);
+        } else if (/^WDAY -?\d+$/g.test(frequency)) {
+            const d = frequency.substring(5);
+            return checkPotentialDays(d, temp => temp.getDay() != 0 && temp.getDay() != 6, date);
+        } else if (/^RDAY -?\d+$/g.test(frequency)) {
+            const d = frequency.substring(5);
+            return checkPotentialDays(d, temp => temp.getDay() == 0 || temp.getDay() == 6, date);
+        }
+    };
+})();
 
 /**
  * Validates the frequency
