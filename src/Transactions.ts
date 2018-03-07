@@ -41,8 +41,8 @@ route.get('/', (req, resp) => {
     );
 });
 
-route.post("/", (req, resp) => {
-    if (req.body instanceof Array) {
+route.post("/", (() => {
+    const insertBatch = (req, resp) => {
         const transactions = [];
         let accountIds = [];
         let expenseIds = [];
@@ -103,7 +103,9 @@ route.post("/", (req, resp) => {
                 }
             }
         );
-    } else {
+    };
+
+    const insert = (req, resp) => {
         const transaction = req.body;
         transaction.user_id = req.session.userData.user_id;
         transaction.date = new Date(transaction.date);
@@ -141,7 +143,14 @@ route.post("/", (req, resp) => {
             }
         );
     }
-});
+    return (req, resp) => {
+        if (req.body instanceof Array) {
+            insertBatch(req, resp);
+        } else {
+            insert(req, resp);
+        }
+    };
+})());
 
 route.delete('/:id', (req, resp) => {
     Connection.pool.query(
