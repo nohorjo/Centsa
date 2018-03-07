@@ -69,7 +69,7 @@ CREATE TABLE transactions
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
 	amount INTEGER NOT NULL,
-	comment VARCHAR(500),
+	comment VARCHAR(255),
 	account_id BIGINT NOT NULL,
 	type_id BIGINT NOT NULL,
 	expense_id BIGINT,
