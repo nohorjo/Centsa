@@ -12,7 +12,7 @@ route.get('/', (req, resp) => {
         filter.regex = false;
     }
     if (!filter.regex) {
-        filter.comment = `%${filter.comment}%`;
+        filter.comment = `%${filter.comment || ''}%`;
     }
 
     const page = parseInt(req.query.page);
