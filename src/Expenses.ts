@@ -61,6 +61,9 @@ route.post("/", (req, resp) => {
                                 if (err) {
                                     resp.status(500).send(err);
                                 } else {
+                                    if (expense.automatic) {
+                                        applyAutoTransactions(true, results.insertId);
+                                    }
                                     resp.send(results.insertId.toString());
                                 }
                             }
@@ -112,6 +115,7 @@ export const lastPaymentDate = (expense, date) => {
     }
     return date;
 };
+
 export const nextPaymentDate = (expense, date) => {
     if (date < expense.started) {
         date = new Date(expense.started);
@@ -124,6 +128,22 @@ export const nextPaymentDate = (expense, date) => {
     }
     return date;
 };
+
+export const applyAutoTransactions = (all?, id?) => {
+    if (id) {
+        if (all) {
+            // TODO: insert all auto trasactions from started to today for expense
+        } else {
+            // TODO: insert todays auto transactions for expense
+        }
+    } else {
+        if (all) {
+            // TODO: insert all auto trasactions from started to today for all expenses
+        } else {
+            // TODO: insert todays auto transactions for all expenses
+        }
+    }
+}
 
 const isDayOfPayment = (frequency, date, started) => {
     frequency = frequency.toString().toUpperCase();
@@ -213,18 +233,9 @@ const isFrequencyValid = frequency => {
 
         if (m >= 1 && m <= 12 && d >= 1) {
             switch (m) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
+                case 1: case 3: case 5: case 7: case 8: case 10: case 12:
                     return d <= 31;
-                case 4:
-                case 6:
-                case 9:
-                case 11:
+                case 4: case 6: case 9: case 11:
                     return d <= 30;
                 case 2:
                     return d <= 29;

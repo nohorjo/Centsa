@@ -9,6 +9,7 @@ import * as fbauth from './fbauth';
 import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
 import Expenses from './Expenses';
+import { applyAutoTransactions } from './Expenses';
 import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
@@ -22,7 +23,8 @@ const initWorker = id => {
     Connection.init(Object.assign({ cpusCount: cpus }, process.env));
 
     if (id == 1) {
-        //TODO: auto expenses
+        applyAutoTransactions(true);
+        setInterval(applyAutoTransactions, 8.64e7);
     }
 
     const port = process.env.PORT || 8080;
