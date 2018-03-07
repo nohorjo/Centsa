@@ -130,19 +130,28 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 export const applyAutoTransactions = (all?, id?) => {
-    if (id) {
-        if (all) {
-            // TODO: insert all auto trasactions from started to today for expense
-        } else {
-            // TODO: insert todays auto transactions for expense
+    const today = new Date();
+    Connection.pool.query(
+        `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
+            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started>=? AND automatic=TRUE;`,
+        [today],
+        (err, result) => {
+            if (err) throw err;
+            if (!all) {
+                result = result.filter(e => isDayOfPayment(e.frequency, today, e.started));
+            }
+            const expectedTransactions = result.map(e => ({
+                amount: e.cost,
+                comment: e.name,
+                account_id: e.account_id,
+                type_id: e.type_id,
+                expense_id: e.id,
+                date: today
+            }));
+
+            //TODO: insert expected auto transactions if not already inserted
         }
-    } else {
-        if (all) {
-            // TODO: insert all auto trasactions from started to today for all expenses
-        } else {
-            // TODO: insert todays auto transactions for all expenses
-        }
-    }
+    );
 };
 
 const isDayOfPayment = (() => {
