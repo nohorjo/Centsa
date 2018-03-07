@@ -120,7 +120,7 @@
                     <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newExpense.started">
                 </td>
             </tr>
-            <tr data-ng-repeat="e in expenses" data-ng-if="e.id != 1" data-ng-click="setFilter({expense_id:e.id.toString()})">
+            <tr data-ng-repeat="e in expenses" data-ng-click="setFilter({expense_id:e.id.toString()})">
                 <td>{{ e.id }}</td>
                 <td>{{ e.name }}</td>
                 <td>{{ e.cost / 100 }}</td>

@@ -12,21 +12,13 @@ export const getOrCreateUser = (data, cb) => {
                     if (err) throw err;
                     const userId = results.insertId;
                     Connection.pool.query(
-                        "INSERT INTO settings VALUES (?,'strict.mode','true'),(?,'trans.page.size','15');\
-                        INSERT INTO accounts (user_id,name) VALUES (?,'Default');\
-                        INSERT INTO types (user_id,name) VALUES (?,'Other');\
-                        SELECT LAST_INSERT_ID() AS id;",
+                        `INSERT INTO settings VALUES (?,'strict.mode','true'),(?,'trans.page.size','15');
+                        INSERT INTO accounts (user_id,name) VALUES (?,'Default');
+                        INSERT INTO types (user_id,name) VALUES (?,'Other');`,
                         Array(4).fill(userId),
-                        (err, results) => {
+                        err => {
                             if (err) throw err;
-                            const typeId = results[3][0].id;
-                            Connection.pool.query(
-                                "INSERT INTO expenses (user_id,name,cost,frequency,started,type_id) VALUES (?,'N/A',0,'1',CURRENT_DATE(),?)",
-                                [userId, typeId],
-                                err => {
-                                    if (err) throw err;
-                                    cb(userId);
-                                });
+                            cb(userId);
                         });
                 });
         }

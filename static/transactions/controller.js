@@ -31,9 +31,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	$scope.newTrans = {
 		amount: 0.0,
 		comment: "",
-		account_id: "1",
-		type_id: "1",
-		expense_id: "1",
+		expense_id: null,
 		date: new Date().formatDate("yyyy/MM/dd")
 	};
 	let newTrans = Object.assign({}, $scope.newTrans);
@@ -56,8 +54,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	});
 	centsa.expenses.getAll(true).then(resp => {
 		$scope.expenses = resp.data;
-		$scope.newTrans.expense_id = resp.data.find(a => a.name == "N/A").id.toString();
-		newTrans.expense_id = $scope.newTrans.expense_id;
 	});
 	centsa.expenses.getAll(false).then(resp => $scope.allExpenses = resp.data);
 	centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
@@ -96,7 +92,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		t.amount = t.amount / 100;
 		t.account_id = t.account_id.toString();
 		t.type_id = t.type_id.toString();
-		t.expense_id = t.expense_id.toString();
+		t.expense_id = t.expense_id && t.expense_id.toString();
 		$scope.newTrans = t;
 		$('#transModal').appendTo("body").modal("show");
 		$('#transModal').on(

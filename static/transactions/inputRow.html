@@ -19,6 +19,7 @@
 </td>
 <td>
     <select class="form-control" data-ng-model="newTrans.expense_id">
+        <option value="">N/A</option>
         <option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
     </select>
 </td>

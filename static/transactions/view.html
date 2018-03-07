@@ -152,7 +152,7 @@
                 <td style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
                 <td>{{ (accounts | filter:{ id:t.account_id })[0].name }}</td>
                 <td>{{ (types | filter:{ id:t.type_id })[0].name }}</td>
-                <td>{{ (expenses | filter:{ id:t.expense_id })[0].name }}</td>
+                <td>{{ (expenses | filter:{ id:t.expense_id })[0].name || 'N/A' }}</td>
                 <td>{{ t.comment }}</td>
             </tr>
             <tr data-ng-repeat="t in [] | range:getExtraRows()">

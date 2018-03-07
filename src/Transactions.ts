@@ -54,7 +54,7 @@ route.post("/", (() => {
                 t.comment,
                 t.account_id,
                 t.type_id,
-                t.expense_id,
+                t.expense_id || null,
                 new Date(t.date)
             ]);
             if (!accountIds.includes(t.account_id)) {
@@ -118,7 +118,7 @@ route.post("/", (() => {
             [
                 transaction.user_id,
                 transaction.account_id,
-                transaction.expense_id,
+                transaction.expense_id || null,
                 transaction.type_id
             ],
             (err, results) => {
@@ -129,7 +129,7 @@ route.post("/", (() => {
                         resp.status(400).send("Invalid account, expense or type id");
                     } else {
                         Connection.pool.query(
-                            `REPLACE INTO transactions SET ?;`, transaction,
+                            `${transaction.id ? 'REPLACE' : 'INSERT'} INTO transactions SET ?;`, transaction,
                             (err, results) => {
                                 if (err) {
                                     resp.status(500).send(err);

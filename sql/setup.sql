@@ -72,8 +72,9 @@ CREATE TABLE transactions
 	comment VARCHAR(500),
 	account_id BIGINT NOT NULL,
 	type_id BIGINT NOT NULL,
-	expense_id BIGINT NOT NULL,
+	expense_id BIGINT,
 	date DATE NOT NULL,
+	UNIQUE(amount,comment,account_id,type_id,expense_id,date),
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (type_id) REFERENCES types(id),
 	FOREIGN KEY (expense_id) REFERENCES expenses(id),
@@ -92,13 +93,10 @@ $records.next(); // Skip header
 Promise.all([
 	$centsa.accounts.getAll(),
 	$centsa.types.getAll(),
-	$centsa.expenses.getAll()
 ]).then(async result => {
 	// Store account and type ids
 	const accountsCache = result[0].data;
 	const typesCache = result[1].data;
-
-	naExpenseId = result[2].data.find(e => e.name == "N/A").id
 
 	// Putting transactions in an array for bulk insert
 	const allTransactions = [];
@@ -132,7 +130,7 @@ Promise.all([
 				comment: row[2],
 				account_id: account.id,
 				type_id: type.id,
-				expense_id: naExpenseId
+				expense_id: null
 			});
 		}
 	}

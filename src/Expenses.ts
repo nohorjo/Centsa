@@ -6,7 +6,7 @@ const route = Router();
 route.get('/', (req, resp) => {
     Connection.pool.query(
         `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
-        (SELECT COUNT(*) FROM transactions t WHERE t.expense_id=e.id) AS instances_count 
+        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
         FROM expenses e WHERE user_id=?;`,
         [req.session.userData.user_id],
         (err, result) => {
@@ -79,12 +79,10 @@ route.post("/", (req, resp) => {
 
 route.delete('/:id', (req, resp) => {
     Connection.pool.query(
-        `UPDATE transactions SET expense_id=
-        (SELECT id FROM expenses e WHERE e.user_id=? AND e.name='N/A')
+        `UPDATE transactions SET expense_id=NULL
         WHERE expense_id=? AND user_id=?;
         DELETE FROM expenses WHERE id=? AND user_id=?;`,
         [
-            req.session.userData.user_id,
             req.params.id,
             req.session.userData.user_id,
             req.params.id,
@@ -150,6 +148,7 @@ export const applyAutoTransactions = (all?, id?) => {
             }));
 
             //TODO: insert expected auto transactions if not already inserted
+
         }
     );
 };
