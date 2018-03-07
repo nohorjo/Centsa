@@ -131,24 +131,49 @@ export const applyAutoTransactions = (all?, id?) => {
     const today = new Date();
     Connection.pool.query(
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
-            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started>=? AND automatic=TRUE;`,
+            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,
         [today],
         (err, result) => {
             if (err) throw err;
-            if (!all) {
+            let expectedTransactions;
+            if (all) {
+                expectedTransactions = result.reduce((arr, e) => {
+                    for (let day = new Date(e.started); day <= today; day.setDate(day.getDate() + 1)) {
+                        if (isDayOfPayment(e.frequency, day, e.started)) {
+                            arr.push([
+                                e.user_id,
+                                e.cost,
+                                e.name,
+                                e.account_id,
+                                e.type_id,
+                                e.id,
+                                new Date(day)
+                            ]);
+                        }
+                    }
+                    return arr;
+                }, []);
+            } else {
                 result = result.filter(e => isDayOfPayment(e.frequency, today, e.started));
+                expectedTransactions = result.map(e => ([
+                    e.user_id,
+                    e.cost,
+                    e.name,
+                    e.account_id,
+                    e.type_id,
+                    e.id,
+                    today
+                ]));
             }
-            const expectedTransactions = result.map(e => ({
-                amount: e.cost,
-                comment: e.name,
-                account_id: e.account_id,
-                type_id: e.type_id,
-                expense_id: e.id,
-                date: today
-            }));
-
-            //TODO: insert expected auto transactions if not already inserted
-
+            if (expectedTransactions.length > 0) {
+                Connection.pool.query(
+                    `INSERT IGNORE INTO transactions
+                    (user_id,amount,comment,account_id,type_id,expense_id,date)
+                    VALUES ?;`,
+                    [expectedTransactions],
+                    err => { if (err) { console.dir(err); throw err; } }
+                );
+            }
         }
     );
 };
@@ -172,6 +197,7 @@ const isDayOfPayment = (() => {
                 return date.getDate() == xDays[d - 1].getDate();
             }
         } else {
+            temp.setDate(1); // So we don't accidentally jump 2 months ahead
             temp.setMonth(temp.getMonth() + 1);
             temp.setDate(0);
             while (temp.getMonth() == month) {
@@ -180,7 +206,8 @@ const isDayOfPayment = (() => {
                 }
                 temp.setDate(temp.getDate() - 1);
             }
-            if (-d >= xDays.length) {
+            d = -d;
+            if (d >= xDays.length) {
                 return date.getDate() == xDays.pop().getDate();
             } else {
                 return date.getDate() == xDays[d - 1].getDate();

@@ -14,7 +14,10 @@ let fbInit = () => {
                     url: authUrl,
                     contentType: 'application/json',
                     data: JSON.stringify(response.authResponse),
-                    success: () => window.location.pathname = "main.html"
+                    success: () => {
+                        window.location.hash = "";
+                        window.location.pathname = "main.html";
+                    }
                 });
             }
         });
