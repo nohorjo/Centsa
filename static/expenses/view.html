@@ -40,7 +40,7 @@
                             <span data-ng-bind-html="trust(frequencyDisplayText(newExpense.frequency) || 'Set')"></span>
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" data-ng-click="changeFrequencyType($event)">
                             <li data-ng-class="{ 'disabled' : frequency.type != 'basic' }">
                                 <input type="radio" name="frequency" value="basic" data-ng-model="frequency.type"> Every
                                 <input type="number" class="form-control" min="1" data-ng-model="frequency.date"> day(s)

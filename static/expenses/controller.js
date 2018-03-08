@@ -192,5 +192,6 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             }
         } catch (e) { $scope.newExpense.frequency = ""; }
     }));
-
+    
+    $scope.changeFrequencyType = $event => $scope.frequency.type = $event.target.querySelectorAll('input[type="radio"]')[0].value;
 });

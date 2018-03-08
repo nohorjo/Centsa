@@ -162,10 +162,12 @@ th[data-ng-click]:after {
 
 .dropdown-menu input[type="number"] {
 	display: inline;
+	width: 20%;
 }
 
 .dropdown-menu select {
 	display: inline;
+	width: 30%;
 }
 
 li.disabled :not([type="radio"]) {

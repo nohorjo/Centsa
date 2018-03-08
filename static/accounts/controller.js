@@ -1,6 +1,8 @@
 app.controller("accountsCtrl", function ($scope, centsa) {
 	$scope.accounts = [];
+	let otherType = null;
 	centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
+	centsa.types.getAll().then(resp => otherType = resp.data.find(t => t.name == 'Other').id);
 
 	$scope.newAccount = {
 		name: "",
@@ -28,7 +30,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 					comment: "Initial value",
 					account_id: $scope.newAccount.id,
 					type_id: "1",
-					expense_id: "1",
+					expense_id: null,
 					date: new Date()
 				});
 			}
@@ -46,16 +48,16 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 			amount: amount,
 			comment: $scope.transfer.comment,
 			account_id: $scope.transfer.from,
-			type_id: "1",
-			expense_id: "1",
+			type_id: otherType,
+			expense_id: null,
 			date: new Date($scope.transfer.date)
 		};
 		const to = {
 			amount: -amount,
 			comment: $scope.transfer.comment,
 			account_id: $scope.transfer.to,
-			type_id: "1",
-			expense_id: "1",
+			type_id: otherType,
+			expense_id: null,
 			date: new Date($scope.transfer.date)
 		};
 		centsa.transactions.insert(from);
@@ -88,8 +90,8 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 				amount: diff,
 				comment: "Adjustment",
 				account_id: acc.id,
-				type_id: "1",
-				expense_id: "1",
+				type_id: otherType,
+				expense_id: null,
 				date: new Date()
 			}).then(() => acc.balanceOld = acc.balance);
 		}

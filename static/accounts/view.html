@@ -58,7 +58,7 @@
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
                 </td>
                 <td>
-                    <input type="text" class="form-control" required="required" data-ng-model="newAccount.balance">
+                    <input type="number" step=".01" class="form-control" required="required" data-ng-model="newAccount.balance">
                 </td>
             </tr>
             <tr data-ng-repeat="a in accounts">
