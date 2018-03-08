@@ -125,12 +125,12 @@
                 <td>{{ e.id }}</td>
                 <td>{{ e.name }}</td>
                 <td>{{ e.cost / 100 }}</td>
-                <td>{{ (types | filter:{ id:e.type_id })[0].name }}</td>
+                <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
                 <td data-ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
                 <td>
                     <input type="checkbox" disabled="disabled" data-ng-checked="e.automatic">
                 </td>
-                <td>{{ (accounts | filter:{ id:e.account_id })[0].name || '' }}</td>
+                <td>{{ (accounts | prop:'id':e.account_id)[0].name || '' }}</td>
                 <td>{{ formatDate(e.started) }}</td>
                 <td>{{ e.instance_count }}</td>
                 <td>

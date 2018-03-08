@@ -63,6 +63,12 @@ app.filter('range', function () {
 	};
 });
 
+app.filter('prop', function () {
+	return function (input, prop, value) {
+		return input.filter(e => e[prop] == value);
+	};
+});
+
 app.directive('fileModel', ['$parse', function ($parse) {
 	return {
 		restrict: 'A',
