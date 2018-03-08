@@ -21,15 +21,28 @@ route.get('/', (req, resp) => {
 
 route.get('/total', (req, resp) => {
     const sql = req.query.auto == "true" ?
-        "SELECT SUM(COST/FREQUENCY) FROM expenses WHERE AUTOMATIC = 1 AND STARTED < CURRENT_DATE();" :
-        "SELECT SUM(COST/FREQUENCY) FROM expenses WHERE STARTED < CURRENT_DATE();";
-    Connection.pool.query(sql, [], (err, result) => {
-        if (err) {
-            resp.status(500).send(err);
-        } else {
-            resp.send(result);
+        "SELECT cost,frequency FROM expenses WHERE automatic=1 AND started<CURRENT_DATE() AND user_id=?;" :
+        "SELECT cost,frequency FROM expenses WHERE started<CURRENT_DATE() AND user_id=?;";
+    Connection.pool.query(sql, [req.session.userData.user_id],
+        (err, result) => {
+            if (err) {
+                resp.status(500).send(err);
+            } else {
+                resp.send(result.reduce((total, e) => {
+                    const { cost, frequency } = e;
+                    let daily = 0;
+                    if (/^\d+$/g.test(frequency)) {
+                        daily = cost / frequency;
+                    } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
+                        daily = cost / 365;
+                    } else {
+                        daily = cost / 30;
+                    }
+                    return total + daily;
+                }, 0).toString());
+            }
         }
-    });
+    );
 });
 
 route.post("/", (req, resp) => {
