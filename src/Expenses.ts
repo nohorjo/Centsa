@@ -21,8 +21,8 @@ route.get('/', (req, resp) => {
 
 route.get('/total', (req, resp) => {
     const sql = req.query.auto == "true" ?
-        "SELECT cost,frequency FROM expenses WHERE automatic=1 AND started<CURRENT_DATE() AND user_id=?;" :
-        "SELECT cost,frequency FROM expenses WHERE started<CURRENT_DATE() AND user_id=?;";
+        "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<CURRENT_DATE() AND user_id=?;" :
+        "SELECT cost,frequency FROM expenses WHERE started<=CURRENT_DATE() AND user_id=?;";
     Connection.pool.query(sql, [req.session.userData.user_id],
         (err, result) => {
             if (err) {
