@@ -27,10 +27,12 @@ app.controller("typesCtrl", function ($scope, centsa) {
 		AmCharts.makeChart("types-chart", {
 			type: "pie",
 			theme: "light",
-			dataProvider: $scope.types.map(t => ({
-				name: t.name,
-				sum: t.sum / 100
-			})),
+			dataProvider: $scope.types
+				.filter(t => t.sum > 0)
+				.map(t => ({
+					name: t.name,
+					sum: t.sum / 100
+				})),
 			valueField: "sum",
 			titleField: "name",
 			balloon: {
