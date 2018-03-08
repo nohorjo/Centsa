@@ -265,8 +265,8 @@ const isFrequencyValid = frequency => {
         return d >= 1 && d <= 31;
     } else if (/^DATE \d+\/\d+$/g.test(frequency)) {
         const dm = frequency.substring(5).split("/");
-        const d = dm[0];
-        const m = dm[1];
+        const d = parseInt(dm[0]);
+        const m = parseInt(dm[1]);
 
         if (m >= 1 && m <= 12 && d >= 1) {
             switch (m) {
