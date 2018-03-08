@@ -1,8 +1,9 @@
 const centsa = function ($http) {
+    const headers = h => Object.assign({'x-date' : Date().toString()}, h);
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll() { return $http.get(this.apiUrl); }
-        insert(item) { return $http.post(this.apiUrl, item); }
+        insert(item) { return $http.post(this.apiUrl, item, { headers: headers() }); }
     }
     class genericApi extends baseApi {
         constructor(path) { super(path); }
@@ -11,7 +12,12 @@ const centsa = function ($http) {
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
         getAll(activeOnly) { return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }); }
-        totalActive(incAuto) { return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }); }
+        totalActive(incAuto) {
+            return $http.get(`${this.apiUrl}/total`, {
+                headers: headers(),
+                params: { auto: incAuto }
+            });
+        }
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
@@ -51,7 +57,12 @@ const centsa = function ($http) {
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
+            budget(isStrictMode) {
+                return $http.get(`${apiUrl}/budget`, {
+                    headers: headers(),
+                    params: { strict: isStrictMode }
+                });
+            },
             rules() { return $http.get(`${apiUrl}/rules`); },
             rule(id) { return $http.get(`${apiUrl}/rule/${id}`); }
         };

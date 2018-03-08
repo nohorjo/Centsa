@@ -21,9 +21,9 @@ route.get('/', (req, resp) => {
 
 route.get('/total', (req, resp) => {
     const sql = req.query.auto == "true" ?
-        "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<CURRENT_DATE() AND user_id=?;" :
-        "SELECT cost,frequency FROM expenses WHERE started<=CURRENT_DATE() AND user_id=?;";
-    Connection.pool.query(sql, [req.session.userData.user_id],
+        "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;" :
+        "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;";
+    Connection.pool.query(sql, [new Date(req.get('x-date')), req.session.userData.user_id],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
@@ -75,7 +75,7 @@ route.post("/", (req, resp) => {
                                     resp.status(500).send(err);
                                 } else {
                                     if (expense.automatic) {
-                                        applyAutoTransactions(true, results.insertId);
+                                        applyAutoTransactions(true, results.insertId, new Date(req.get('x-date')));
                                     }
                                     resp.send(results.insertId.toString());
                                 }
@@ -140,8 +140,7 @@ export const nextPaymentDate = (expense, date) => {
     return date;
 };
 
-export const applyAutoTransactions = (all?, id?) => {
-    const today = new Date();
+export const applyAutoTransactions = (all?, id?, today = new Date()) => {
     Connection.pool.query(
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
             FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,

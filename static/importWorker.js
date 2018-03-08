@@ -40,16 +40,17 @@ self.addEventListener('message', e => {
                 return ajax({
                     url: url,
                     method: "GET",
-                    params: opts && opts.params
+                    params: opts && opts.params,
+                    headers: opts && opts.headers
                 });
             },
-            post(url, data) {
+            post(url, data, opts) {
                 return ajax({
                     url: url,
                     method: "POST",
-                    headers: {
+                    headers: Object.assign({
                         "Content-Type": "application/json"
-                    },
+                    }, opts && opts.headers),
                     data: JSON.stringify(data)
                 });
             },

@@ -15,11 +15,11 @@ route.get("/budget", (req, resp) => {
             } else {
                 const expenses = results[1];
                 const strict = req.query.strict == "true";
-                const currentDay = new Date().valueOf();
+                const currentDay = new Date(req.get('x-date')).valueOf();
 
                 const budget = expenses.reduce(
                     (currentBudget, expense) => {
-                        if (expense.cost > 0 && expense.started < new Date()) {
+                        if (expense.cost > 0 && expense.started < new Date(currentDay)) {
                             let cost = expense.cost;
                             if (!strict) {
                                 const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
