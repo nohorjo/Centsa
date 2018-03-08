@@ -46,7 +46,7 @@ const initWorker = id => {
         app.use((req, res, next) => req.secure ? next() : res.redirect(`https://${req.hostname}${req.originalUrl}`));
     }
 
-    app.use(express.json());
+    app.use(express.json({ limit: '10MB' }));
     app.use(cookieParser());
     app.use(session(sess));
     app.use(fileUpload());
