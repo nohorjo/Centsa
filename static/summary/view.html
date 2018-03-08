@@ -22,7 +22,7 @@
                 <td>
                     <label>Budget (All expenses)</label>
                 </td>
-                <td>{{budget.afterAll/100}}</td>
+                <td>{{ (budget.afterAll/100).toFixed(2) }}</td>
                 <td>
                     <span data-ng-show="budget.afterAll < 0">You may need to re-evaluate your
                         <a href="#!expenses">expenses</a>
@@ -33,7 +33,7 @@
                 <td>
                     <label>Budget (Automatic expenses)</label>
                 </td>
-                <td>{{budget.afterAuto/100}}</td>
+                <td>{{ (budget.afterAuto/100).toFixed(2) }}</td>
                 <td>
                     <span data-ng-show="budget.afterAuto < 0">You may not have enough to pay for some automatic expenses</span>
                 </td>

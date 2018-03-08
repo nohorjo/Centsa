@@ -32,26 +32,20 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     };
     let newExpense = Object.assign({}, $scope.newExpense);
 
-    $scope.saveExpense = updating => {
+    $scope.saveExpense = () => {
         $scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
         $scope.newExpense.started = new Date($scope.newExpense.started);
         if (!$scope.newExpense.account_id) {
             delete $scope.newExpense.account_id;
         }
         centsa.expenses.insert($scope.newExpense).then(resp => {
-            if (updating) {
-                $scope.expenses[$scope.expenses.findIndex(e => e.id == $scope.newExpense.id)] = $scope.newExpense;
-            } else {
-                $scope.newExpense.id = resp.data;
-                $scope.expenses.unshift($scope.newExpense);
-            }
+            $scope.newExpense.id = resp.data;
+            $scope.expenses.unshift($scope.newExpense);
             getActiveTotals();
             $scope.newExpense = Object.assign({}, newExpense);
             $('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
         });
     };
-
-    $scope.getNow = () => Date.now();
 
     $scope.deleteExpense = id => centsa.expenses.remove(id).then(() => {
         $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
@@ -61,19 +55,9 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.getMaxDaysInMonth = () => {
         switch ($scope.frequency.month) {
-            case '0':
-            case '1':
-            case '3':
-            case '5':
-            case '7':
-            case '8':
-            case '10':
-            case '12':
+            case '0': case '1': case '3': case '5': case '7': case '8': case '10': case '12':
                 return 31;
-            case '4':
-            case '6':
-            case '9':
-            case '11':
+            case '4': case '6': case '9': case '11':
                 return 30;
             case '2':
                 return 29;

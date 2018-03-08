@@ -50,14 +50,6 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 		$location.path("transactions");
 	};
 
-	/**
-	 * Rounds a number
-	 */
-	$rootScope.roundTo = (x, dp) => {
-		var mult = Math.pow(10, dp);
-		return Math.round(x * mult) / mult;
-	};
-
 	$scope.isActive = path => $location.path() == path;
 
 });

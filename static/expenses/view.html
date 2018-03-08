@@ -129,7 +129,7 @@
                 <td>
                     <input type="checkbox" disabled="disabled" data-ng-checked="e.automatic">
                 </td>
-                <td>{{ (accounts | filter:{ id:e.account_id })[0].name }}</td>
+                <td>{{ (accounts | filter:{ id:e.account_id })[0].name || '' }}</td>
                 <td>{{ formatDate(e.started) }}</td>
                 <td>{{ e.instance_count }}</td>
                 <td>

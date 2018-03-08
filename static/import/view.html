@@ -5,9 +5,9 @@
 				<h4 class="modal-title">Import progress</h4>
 			</div>
 			<div class="modal-body">
-				{{ getProgressPercentage() }}% Complete ({{ importProgress.processed }}/{{ importProgress.total }})
+				{{ (importProgress.processed * 100 / importProgress.total).toFixed() }}% Complete ({{ importProgress.processed }}/{{ importProgress.total }})
 				<div class="progress">
-					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" data-ng-style="{ 'width' : getProgressPercentage(true) + '%' }"
+					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" data-ng-style="{ 'width' : (importProgress.processed * 100 / importProgress.total).toFixed(2) + '%' }"
 					 data-ng-class="{ 'progress-bar-danger' : importError }" />
 				</div>
 				<div> {{ importError }} </div>

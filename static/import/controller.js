@@ -39,6 +39,4 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		});
 	};
 
-	$scope.getProgressPercentage = extra => $rootScope.roundTo(($scope.importProgress.processed * 100) / $scope.importProgress.total, extra ? 2 : 0);
-
 });
