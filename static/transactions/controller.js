@@ -3,6 +3,8 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	$scope.currentPage = 1;
 	$scope.pageSize = "15";
 
+	let currentFilter = Object.assign({}, $rootScope.filter);
+
 	const loadTransactions = () => centsa.transactions.getAll({
 		page: $scope.currentPage,
 		pageSize: $scope.pageSize,
@@ -140,6 +142,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	})();
 
 	$scope.reloadTrans = () => {
+		currentFilter = Object.assign({}, $rootScope.filter);
 		centsa.settings.set("trans.page.size", $scope.pageSize);
 		countPages();
 		$scope.currentPage = 1;
@@ -170,7 +173,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			element.click();
 			document.body.removeChild(element);
 		});
-		exportWorker.postMessage($rootScope.filter);
+		exportWorker.postMessage(currentFilter);
 	};
 
 });

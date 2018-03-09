@@ -89,7 +89,6 @@
                 <td colspan="2">
                     <div id="filterButtons" class="float-right">
                         <input type="button" class="btn btn-default" value="Clear" data-ng-click="clearFilter()">
-                        <input type="button" class="btn btn-info" value="Export to CSV" data-ng-click="exportFilteredTransactions()">
                         <input type="submit" class="btn btn-primary" value="Apply" data-ng-class="{ 'btn-warning': FilterForm.$invalid }" data-ng-disabled="FilterForm.$invalid">
                     </div>
                 </td>
@@ -99,39 +98,42 @@
     <h5>Count: {{ transactionSummary.count }}</h5>
     <h5>Sum: {{ transactionSummary.sum / 100 }}</h5>
 </form>
-<table class="float-right">
-    <tr>
-        <td style="padding: 0 1em 3px 0;">
-            <select class="form-control" data-ng-model="pageSize" data-ng-change="reloadTrans()">
-                <option value="15">15 per page</option>
-                <option value="30">30 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
-                <option value="200">200 per page</option>
-                <option value="99999">All</option>
-            </select>
-        </td>
-        <td>
-            <ul class="pagination">
-                <li data-ng-class="{ 'disabled':currentPage==1 }">
-                    <a href="" data-ng-click="goToPage(1)">First</a>
-                </li>
-                <li data-ng-class="{ 'disabled':currentPage==1 }">
-                    <a href="" data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a>
-                </li>
-                <li data-ng-class="{ 'active':currentPage==(n+1) }" data-ng-repeat="n in [] | range:pagesCount" data-ng-if="(n+1) > (currentPage-6) && (n+1) < (currentPage+6) ">
-                    <a href="" data-ng-click="goToPage(n+1)">{{ n + 1 }}</a>
-                </li>
-                <li data-ng-class="{ 'disabled':currentPage==pagesCount }">
-                    <a href="" data-ng-click="goToPage((currentPage+1 <= pagesCount) ? currentPage+1 : currentPage )">&raquo;</a>
-                </li>
-                <li data-ng-class="{ 'disabled':currentPage==pagesCount }">
-                    <a href="" data-ng-click="goToPage(pagesCount)">Last</a>
-                </li>
-            </ul>
-        </td>
-    </tr>
-</table>
+<div>
+    <input id="export" type="button" class="btn btn-info" value="Export filtered transactions to CSV" data-ng-click="exportFilteredTransactions()">
+    <table class="float-right">
+        <tr>
+            <td style="padding: 0 1em 3px 0;">
+                <select class="form-control" data-ng-model="pageSize" data-ng-change="reloadTrans()">
+                    <option value="15">15 per page</option>
+                    <option value="30">30 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                    <option value="200">200 per page</option>
+                    <option value="99999">All</option>
+                </select>
+            </td>
+            <td>
+                <ul class="pagination">
+                    <li data-ng-class="{ 'disabled':currentPage==1 }">
+                        <a href="" data-ng-click="goToPage(1)">First</a>
+                    </li>
+                    <li data-ng-class="{ 'disabled':currentPage==1 }">
+                        <a href="" data-ng-click="goToPage((currentPage-1)||1)">&laquo;</a>
+                    </li>
+                    <li data-ng-class="{ 'active':currentPage==(n+1) }" data-ng-repeat="n in [] | range:pagesCount" data-ng-if="(n+1) > (currentPage-6) && (n+1) < (currentPage+6) ">
+                        <a href="" data-ng-click="goToPage(n+1)">{{ n + 1 }}</a>
+                    </li>
+                    <li data-ng-class="{ 'disabled':currentPage==pagesCount }">
+                        <a href="" data-ng-click="goToPage((currentPage+1 <= pagesCount) ? currentPage+1 : currentPage )">&raquo;</a>
+                    </li>
+                    <li data-ng-class="{ 'disabled':currentPage==pagesCount }">
+                        <a href="" data-ng-click="goToPage(pagesCount)">Last</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>
 <form name="Form" data-ng-submit="saveTrans()">
     <table id="transTable" class="table table-condensed table-hover">
         <thead>

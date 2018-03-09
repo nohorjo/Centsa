@@ -188,3 +188,7 @@ img#logout {
 	padding: 0.5em 1em;
 	color: #4267b2;
 }
+
+input#export{
+	margin-top: 1.5em;
+}
