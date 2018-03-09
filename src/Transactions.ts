@@ -14,6 +14,10 @@ route.get('/', (req, resp) => {
     if (!filter.regex) {
         filter.comment = `%${filter.comment || ''}%`;
     }
+    filter.fromDate = new Date(filter.fromDate || 0);
+    filter.toDate = new Date(filter.toDate || req.get('x-date'));
+    filter.fromAmount = parseInt(filter.fromAmount == null ? Number.MIN_SAFE_INTEGER : filter.fromAmount);
+    filter.toAmount = parseInt(filter.toAmount == null ? Number.MAX_SAFE_INTEGER : filter.toAmount);
 
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
@@ -28,9 +32,18 @@ route.get('/', (req, resp) => {
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
         ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
         AND comment ${filter.regex ? 'R' : ''}LIKE ?
+        AND date>=? AND date<=?
+        AND amount>=? AND amount<=?
         ORDER BY ${sort.replace(/,$/g, "")}
         LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
-        [req.session.userData.user_id, filter.comment],
+        [
+            req.session.userData.user_id,
+            filter.comment,
+            filter.fromDate,
+            filter.toDate,
+            filter.fromAmount,
+            filter.toAmount
+        ],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
@@ -194,13 +207,27 @@ route.get('/summary', (req, resp) => {
     if (!filter.regex) {
         filter.comment = `%${filter.comment}%`;
     }
+    filter.fromDate = new Date(filter.fromDate || 0);
+    filter.toDate = new Date(filter.toDate || req.get('x-date'));
+    filter.fromAmount = parseInt(filter.fromAmount == null ? Number.MIN_SAFE_INTEGER : filter.fromAmount);
+    filter.toAmount = parseInt(filter.toAmount == null ? Number.MAX_SAFE_INTEGER : filter.toAmount);
+
     Connection.pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
         ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
         ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
-        AND comment ${filter.regex ? 'R' : ''}LIKE ?;`,
-        [req.session.userData.user_id, filter.comment],
+        AND comment ${filter.regex ? 'R' : ''}LIKE ?
+        AND date>=? AND date<=?
+        AND amount>=? AND amount<=?;`,
+        [
+            req.session.userData.user_id,
+            filter.comment,
+            filter.fromDate,
+            filter.toDate,
+            filter.fromAmount,
+            filter.toAmount
+        ],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);

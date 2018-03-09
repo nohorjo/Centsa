@@ -1,5 +1,5 @@
 const centsa = function ($http) {
-    const headers = h => Object.assign({'x-date' : Date().toString()}, h);
+    const headers = h => Object.assign({ 'x-date': Date().toString() }, h);
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll() { return $http.get(this.apiUrl); }
@@ -21,7 +21,12 @@ const centsa = function ($http) {
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
-        getAll(options) { return $http.get(this.apiUrl, { params: options }); }
+        getAll(options) {
+            return $http.get(this.apiUrl, {
+                headers: headers(),
+                params: options
+            });
+        }
         getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
         countPages(options) { return $http.get(`${this.apiUrl}/countPages`, { params: options }); }
         getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }

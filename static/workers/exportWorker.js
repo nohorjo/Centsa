@@ -9,7 +9,7 @@ self.addEventListener('message', e => {
     Promise.all([
         $centsa.transactions.getAll({
             page: 1,
-            pageSize: Number.MAX_VALUE,
+            pageSize: Number.MAX_SAFE_INTEGER,
             filter: e.data
         }),
         $centsa.accounts.getAll(),
@@ -19,12 +19,12 @@ self.addEventListener('message', e => {
         const accounts = result[1].data;
         const types = result[2].data;
 
-        const csv = transactions.map(t=>({
-            Date:new Date(t.date).formatDate("yyyy/MM/dd"),
-            Amount: t.amount,
-			Comment: t.comment,
-			Account: accounts.find(x => x.id == t.account_id).name,
-			Type: type.find(x => x.id == t.type_id).name
+        const csv = transactions.map(t => ({
+            Date: new Date(t.date).formatDate("yyyy/MM/dd"),
+            Amount: (t.amount / 100).toFixed(2),
+            Comment: t.comment,
+            Account: accounts.find(x => x.id == t.account_id).name,
+            Type: types.find(x => x.id == t.type_id).name
         }));
 
         self.postMessage(Papa.unparse(csv));
