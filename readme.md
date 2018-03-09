@@ -6,3 +6,5 @@ Centsa is a simple personal budgeting application to help you manage your money.
 [Check out the Wiki for more information](https://github.com/nohorjo/Centsa/wiki)
 
 Changelog can be found [here](https://github.com/nohorjo/Centsa/wiki/Changelog)
+
+This product is licensed under the [MIT licence](LICENSE)
