@@ -157,6 +157,20 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	$scope.getHighlight = amount => {
 		const range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
 		return `hsl(${amount > 0 ? 0 : 100},50%,${100 - Math.abs(amount / range) * 40}%)`;
-	}
+	};
+
+	$scope.exportFilteredTransactions = () => {
+		const exportWorker = new Worker("/workers/exportWorker.js");
+		exportWorker.addEventListener('message', e => {
+			var element = document.createElement('a');
+			element.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(e.data)}`);
+			element.setAttribute('download', `export_${new Date().formatDate('yyyy-MM-dd@HH-mm-ss')}.csv`);
+			element.style.display = 'none';
+			document.body.appendChild(element);
+			element.click();
+			document.body.removeChild(element);
+		});
+		exportWorker.postMessage($rootScope.filter);
+	};
 
 });

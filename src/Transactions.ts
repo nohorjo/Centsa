@@ -18,7 +18,7 @@ route.get('/', (req, resp) => {
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
     let sort = req.query.sort;
-    if (sort && !/^(\s*[a-z]* (A|DE)SC.? ?)+$/.test(sort)) {
+    if (!sort || !/^(\s*[a-z]* (A|DE)SC.? ?)+$/.test(sort)) {
         sort = '1 ASC';
     }
 
