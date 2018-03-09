@@ -17,7 +17,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 			keyboard: false
 		}).appendTo("body");
 
-		const importWorker = new Worker("/importWorker.js");
+		const importWorker = new Worker("/workers/importWorker.js");
 
 		importWorker.addEventListener('message', e => {
 			if (e.data) {
