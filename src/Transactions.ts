@@ -4,20 +4,7 @@ import Connection from './Connection';
 const route = Router();
 
 route.get('/', (req, resp) => {
-    const filter = JSON.parse(req.query.filter);
-    filter.account_id = parseInt(filter.account_id);
-    filter.type_id = parseInt(filter.type_id);
-    filter.expense_id = parseInt(filter.expense_id);
-    if (!filter.comment) {
-        filter.regex = false;
-    }
-    if (!filter.regex) {
-        filter.comment = `%${filter.comment || ''}%`;
-    }
-    filter.fromDate = new Date(filter.fromDate || 0);
-    filter.toDate = new Date(filter.toDate || req.get('x-date'));
-    filter.fromAmount = parseInt(filter.fromAmount == null ? Number.MIN_SAFE_INTEGER : filter.fromAmount);
-    filter.toAmount = parseInt(filter.toAmount == null ? Number.MAX_SAFE_INTEGER : filter.toAmount);
+    const filter = parseFilter(req);
 
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
@@ -197,20 +184,7 @@ route.get('/cumulativeSums', (req, resp) => {
 });
 
 route.get('/summary', (req, resp) => {
-    const filter = JSON.parse(req.query.filter);
-    filter.account_id = parseInt(filter.account_id);
-    filter.type_id = parseInt(filter.type_id);
-    filter.expense_id = parseInt(filter.expense_id);
-    if (!filter.comment) {
-        filter.regex = false;
-    }
-    if (!filter.regex) {
-        filter.comment = `%${filter.comment}%`;
-    }
-    filter.fromDate = new Date(filter.fromDate || 0);
-    filter.toDate = new Date(filter.toDate || req.get('x-date'));
-    filter.fromAmount = parseInt(filter.fromAmount == null ? Number.MIN_SAFE_INTEGER : filter.fromAmount);
-    filter.toAmount = parseInt(filter.toAmount == null ? Number.MAX_SAFE_INTEGER : filter.toAmount);
+    const filter = parseFilter(req);
 
     Connection.pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
@@ -251,23 +225,24 @@ route.get('/comments', (req, resp) => {
 });
 
 route.get('/countPages', (req, resp) => {
-    const filter = JSON.parse(req.query.filter);
-    filter.account_id = parseInt(filter.account_id);
-    filter.type_id = parseInt(filter.type_id);
-    filter.expense_id = parseInt(filter.expense_id);
-    if (!filter.comment) {
-        filter.regex = false;
-    }
-    if (!filter.regex) {
-        filter.comment = `%${filter.comment}%`;
-    }
+    const filter = parseFilter(req);
+
     Connection.pool.query(
         `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
         ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
         ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+        AND date>=? AND date<=?
+        AND amount>=? AND amount<=?
         AND comment ${filter.regex ? 'R' : ''}LIKE ?;`,
-        [req.session.userData.user_id, filter.comment],
+        [
+            req.session.userData.user_id,
+            filter.fromDate,
+            filter.toDate,
+            filter.fromAmount,
+            filter.toAmount,
+            filter.comment
+        ],
         (err, result) => {
             if (err) {
                 resp.status(500).send(err);
@@ -281,3 +256,22 @@ const _route = Router();
 _route.use('/transactions', route);
 
 export default _route;
+
+const parseFilter = req => {
+    const filter = JSON.parse(req.query.filter);
+    filter.account_id = parseInt(filter.account_id);
+    filter.type_id = parseInt(filter.type_id);
+    filter.expense_id = parseInt(filter.expense_id);
+    if (!filter.comment) {
+        filter.regex = false;
+    }
+    if (!filter.regex) {
+        filter.comment = `%${filter.comment}%`;
+    }
+    filter.fromDate = new Date(filter.fromDate || 0);
+    filter.toDate = new Date(filter.toDate || req.get('x-date'));
+    filter.fromAmount = parseInt(filter.fromAmount == null ? Number.MIN_SAFE_INTEGER : filter.fromAmount);
+    filter.toAmount = parseInt(filter.toAmount == null ? Number.MAX_SAFE_INTEGER : filter.toAmount);
+
+    return filter;
+};

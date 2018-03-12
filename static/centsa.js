@@ -28,8 +28,17 @@ const centsa = function ($http) {
             });
         }
         getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
-        countPages(options) { return $http.get(`${this.apiUrl}/countPages`, { params: options }); }
-        getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }
+        countPages(options) {
+            return $http.get(`${this.apiUrl}/countPages`, {
+                headers: headers(), params: options
+            });
+        }
+        getSummary(filter) {
+            return $http.get(`${this.apiUrl}/summary`, {
+                headers: headers(),
+                params: { filter: filter }
+            });
+        }
         getUniqueComments() { return $http.get(`${this.apiUrl}/comments`); }
     }
 
