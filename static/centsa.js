@@ -1,24 +1,8 @@
-// register the interceptor as a service
-app.factory('myHttpInterceptor', function ($q) {
-    return {
-        'responseError': function (rejection) {
-            // do something on error
-            if (canRecover(rejection)) {
-                return responseOrNewPromise
-            }
-            return $q.reject(rejection);
-        }
-    };
-});
-
-
-const centsa = function ($http, $httpProvider) {
-    $httpProvider.interceptors.push('myHttpInterceptor');
-    const headers = h => Object.assign({ 'x-date': Date().toString() }, h);
+const centsa = function ($http) {
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
         getAll() { return $http.get(this.apiUrl); }
-        insert(item) { return $http.post(this.apiUrl, item, { headers: headers() }); }
+        insert(item) { return $http.post(this.apiUrl, item); }
     }
     class genericApi extends baseApi {
         constructor(path) { super(path); }
@@ -27,33 +11,14 @@ const centsa = function ($http, $httpProvider) {
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
         getAll(activeOnly) { return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }); }
-        totalActive(incAuto) {
-            return $http.get(`${this.apiUrl}/total`, {
-                headers: headers(),
-                params: { auto: incAuto }
-            });
-        }
+        totalActive(incAuto) { return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }); }
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
-        getAll(options) {
-            return $http.get(this.apiUrl, {
-                headers: headers(),
-                params: options
-            });
-        }
+        getAll(options) { return $http.get(this.apiUrl, { params: options }); }
         getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
-        countPages(options) {
-            return $http.get(`${this.apiUrl}/countPages`, {
-                headers: headers(), params: options
-            });
-        }
-        getSummary(filter) {
-            return $http.get(`${this.apiUrl}/summary`, {
-                headers: headers(),
-                params: { filter: filter }
-            });
-        }
+        countPages(options) { return $http.get(`${this.apiUrl}/countPages`, { params: options }); }
+        getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }
         getUniqueComments() { return $http.get(`${this.apiUrl}/comments`); }
     }
 
@@ -86,12 +51,7 @@ const centsa = function ($http, $httpProvider) {
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode) {
-                return $http.get(`${apiUrl}/budget`, {
-                    headers: headers(),
-                    params: { strict: isStrictMode }
-                });
-            },
+            budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
             rules() { return $http.get(`${apiUrl}/rules`); },
             rule(id) { return $http.get(`${apiUrl}/rule/${id}`); }
         };
@@ -99,5 +59,17 @@ const centsa = function ($http, $httpProvider) {
 
 };
 if (typeof app == "object") {
-    app.service('centsa', centsa);
+    app.factory('httpInterceptor', function ($q) {
+        return {
+            'request': function(config) {
+                config.headers = Object.assign({ 'x-date': Date().toString() }, config.headers);
+                return config;
+              },
+            'responseError': function (rejection) {
+                return swal("Error", rejection.data, "error");
+            }
+        };
+    }).config(["$httpProvider", function ($httpProvider) {
+        $httpProvider.interceptors.push('httpInterceptor');
+    }]).service('centsa', centsa);
 }
