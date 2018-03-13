@@ -51,7 +51,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         const result = await swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this expense!",
-            icon: "warning",
+            type: "warning",
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',

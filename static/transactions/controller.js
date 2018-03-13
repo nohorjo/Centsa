@@ -80,7 +80,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 						$scope.transactions[i] = $scope.newTrans;
 					}
 				}
-				$('#transModal').modal('hide');
+				$('#transModal').appendTo(".content").modal('hide');
 			}
 			$scope.newTrans = Object.assign({}, newTrans);
 			$('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
@@ -122,7 +122,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		const result = await swal({
 			title: "Are you sure?",
 			text: "Once deleted, you will not be able to recover this transaction!",
-			icon: "warning",
+			type: "warning",
 			showCancelButton: true,
 			confirmButtonColor: '#d33',
 			cancelButtonColor: '#3085d6',
@@ -133,7 +133,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 				centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
 				countPages();
 				$scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
-				$('#transModal').modal("hide");
+				$('#transModal').appendTo(".content").modal("hide");
 			});
 		}
 	};
