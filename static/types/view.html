@@ -6,24 +6,26 @@
 				<tr>
 					<th width="5%" data-ng-click="sort('id', types)">ID</th>
 					<th data-ng-click="sort('name', types)">Name</th>
-					<th data-ng-click="sort('sum', types)">Sum</th>
+					<th colspan="2" data-ng-click="sort('sum', types)">Sum</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>
-						<input type="submit" value="+" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
-					</td>
+					<td></td>
 					<td>
 						<input type="text" class="form-control" required="required" data-ng-model="newType.name">
+					</td>
+					<td></td>
+					<td>
+						<input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
 					</td>
 				</tr>
 				<tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
 					<td>{{ t.id }}</td>
 					<td>{{ t.name }}</td>
 					<td>{{ t.sum/100 }}</td>
-					<td>
+					<td colspan="2">
 						<a href="" data-ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
 					</td>
 				</tr>

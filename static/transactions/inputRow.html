@@ -1,6 +1,4 @@
-<td>
-    <input type="submit" value="+" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
-</td>
+<td></td>
 <td>
     <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newTrans.date">
 </td>
@@ -31,4 +29,7 @@
             <option ng-repeat="c in uniqueComments" value="{{ c }}">
         </datalist>
     </div>
+</td>
+<td>
+    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
 </td>

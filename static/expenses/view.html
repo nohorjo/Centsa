@@ -15,15 +15,12 @@
                 <th width="10%">Account</th>
                 <th width="15%" data-ng-click="sort('started', expenses)">Started</th>
                 <th width="5%">Instances</th>
-                <th width="5%"></th>
+                <th width="5%" colspan="2"></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                    <input type="submit" value="+" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
-                        data-ng-disabled="Form.$invalid || !newExpense.frequency">
-                </td>
+                <td></td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newExpense.name">
                 </td>
@@ -120,6 +117,11 @@
                 <td>
                     <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newExpense.started">
                 </td>
+                <td></td>
+                <td>
+                    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
+                        data-ng-disabled="Form.$invalid || !newExpense.frequency">
+                </td>
             </tr>
             <tr data-ng-repeat="e in expenses" data-ng-click="setFilter({expense_id:e.id.toString()})">
                 <td>{{ e.id }}</td>
@@ -133,7 +135,7 @@
                 <td>{{ (accounts | prop:'id':e.account_id)[0].name || '' }}</td>
                 <td>{{ formatDate(e.started) }}</td>
                 <td>{{ e.instance_count }}</td>
-                <td>
+                <td colspan="2">
                     <a href="" data-ng-click="deleteExpense(e.id);$event.stopPropagation()">Delete</a>
                 </td>
             </tr>

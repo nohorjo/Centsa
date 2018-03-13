@@ -14,13 +14,14 @@
                                 <th width="10%">Type</th>
                                 <th width="10%">Expense</th>
                                 <th width="40%">Comment</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
                             <tr>
-                                <td colspan="2">
-                                    <input type="button" value="Delete transaction" class="btn btn-danger" data-ng-click="deleteTrans(newTrans.id)">
+                                <td colspan="8">
+                                    <input type="button" value="Delete transaction" class="float-right btn btn-danger" data-ng-click="deleteTrans(newTrans.id)">
                                 </td>
                             </tr>
                         </tbody>
@@ -145,6 +146,7 @@
                 <th width="10%">Type</th>
                 <th width="10%">Expense</th>
                 <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -156,10 +158,10 @@
                 <td>{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
                 <td>{{ (types | prop:'id':t.type_id)[0].name }}</td>
                 <td>{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
-                <td>{{ t.comment }}</td>
+                <td colspan="2">{{ t.comment }}</td>
             </tr>
             <tr data-ng-repeat="t in [] | range:getExtraRows()">
-                <td colspan="7">-</td>
+                <td colspan="8">-</td>
             </tr>
         </tbody>
     </table>

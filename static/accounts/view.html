@@ -46,13 +46,12 @@
             <tr>
                 <th width="5%" data-ng-click="sort('id', accounts)">ID</th>
                 <th data-ng-click="sort('name', accounts)">Name</th>
-                <th data-ng-click="sort('balance', accounts)">Balance</th>
+                <th colspan="2" data-ng-click="sort('balance', accounts)">Balance</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>
-                    <input type="submit" value="+" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
                 </td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
@@ -60,11 +59,14 @@
                 <td>
                     <input type="number" step=".01" class="form-control" required="required" data-ng-model="newAccount.balance">
                 </td>
+                <td>
+                    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+                </td>
             </tr>
             <tr data-ng-repeat="a in accounts">
                 <td>{{ a.id }}</td>
                 <td data-ng-click="setFilter({account_id:a.id.toString()})">{{ a.name }}</td>
-                <td data-ng-init="a.balanceOld = a.balance">
+                <td colspan="2" data-ng-init="a.balanceOld = a.balance">
                     <input type="number" step=".01" class="form-control no-border-inactive" data-ng-model="a.balance" data-number-divide="100"
                         data-ng-blur="adjustAccount(a)">
                 </td>
@@ -72,7 +74,7 @@
             <tr>
                 <td></td>
                 <td>Total</td>
-                <td>{{ sumAccountBalances() }}</td>
+                <td colspan="2">{{ sumAccountBalances() }}</td>
             </tr>
         </tbody>
     </table>

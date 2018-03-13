@@ -66,7 +66,8 @@ if (typeof app == "object") {
                 return config;
               },
             'responseError': function (rejection) {
-                return swal("Error", rejection.data, "error");
+                swal("Error", rejection.data, "error");
+                return $q.reject(rejection);
             }
         };
     }).config(["$httpProvider", function ($httpProvider) {
