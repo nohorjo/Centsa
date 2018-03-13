@@ -1,4 +1,19 @@
-const centsa = function ($http) {
+// register the interceptor as a service
+app.factory('myHttpInterceptor', function ($q) {
+    return {
+        'responseError': function (rejection) {
+            // do something on error
+            if (canRecover(rejection)) {
+                return responseOrNewPromise
+            }
+            return $q.reject(rejection);
+        }
+    };
+});
+
+
+const centsa = function ($http, $httpProvider) {
+    $httpProvider.interceptors.push('myHttpInterceptor');
     const headers = h => Object.assign({ 'x-date': Date().toString() }, h);
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
