@@ -118,13 +118,21 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			new Date().formatDate("yyyy/MM/dd"));
 	};
 
-	$scope.deleteTrans = id => {
-		centsa.transactions.remove(id).then(() => {
-			centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
-			countPages();
-			$scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
-			$('#transModal').modal("hide");
-		});
+	$scope.deleteTrans = async id => {
+		if(await swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this transaction!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })) {
+			  centsa.transactions.remove(id).then(() => {
+				  centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
+				  countPages();
+				  $scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
+				  $('#transModal').modal("hide");
+				});
+			}
 	};
 
 	$scope.sort = (() => {

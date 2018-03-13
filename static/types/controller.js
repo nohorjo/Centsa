@@ -18,10 +18,20 @@ app.controller("typesCtrl", function ($scope, centsa) {
 		drawPie();
 	});
 
-	$scope.deleteType = id => centsa.types.remove(id).then(() => {
-		$scope.types.splice($scope.types.findIndex(t => t.id == id), 1);
-		drawPie();
-	});
+	$scope.deleteType = async id => {
+		if(await swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this transaction!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })) {
+			  centsa.types.remove(id).then(() => {
+				  $scope.types.splice($scope.types.findIndex(t => t.id == id), 1);
+				  drawPie();
+				});
+			}
+		};
 
 	const drawPie = () => {
 		AmCharts.makeChart("types-chart", {

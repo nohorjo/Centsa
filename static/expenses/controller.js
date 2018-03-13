@@ -47,10 +47,20 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         });
     };
 
-    $scope.deleteExpense = id => centsa.expenses.remove(id).then(() => {
-        $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
-        getActiveTotals();
-    });
+    $scope.deleteExpense = async id => {
+        if(await swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this expense!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })) {
+              centsa.expenses.remove(id).then(() => {
+                  $scope.expenses.splice($scope.expenses.findIndex(e => e.id == id), 1);
+                  getActiveTotals();
+                });
+            }
+        };
 
 
     $scope.getMaxDaysInMonth = () => {
