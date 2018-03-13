@@ -33,6 +33,7 @@ route.get('/', (req, resp) => {
         ],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result);
@@ -81,6 +82,7 @@ route.post("/", (() => {
             ],
             (err, results) => {
                 if (err) {
+                    console.error(err);
                     resp.status(500).send(err);
                 } else {
                     if (results[0].count) {
@@ -93,6 +95,7 @@ route.post("/", (() => {
                             [transactions],
                             (err, results) => {
                                 if (err) {
+                                    console.error(err);
                                     resp.status(500).send(err);
                                 } else {
                                     resp.sendStatus(201);
@@ -123,6 +126,7 @@ route.post("/", (() => {
             ],
             (err, results) => {
                 if (err) {
+                    console.error(err);
                     resp.status(500).send(err);
                 } else {
                     if (results[0].count) {
@@ -132,6 +136,7 @@ route.post("/", (() => {
                             `${transaction.id ? 'REPLACE' : 'INSERT'} INTO transactions SET ?;`, transaction,
                             (err, results) => {
                                 if (err) {
+                                    console.error(err);
                                     resp.status(500).send(err);
                                 } else {
                                     resp.send(results.insertId.toString());
@@ -142,7 +147,7 @@ route.post("/", (() => {
                 }
             }
         );
-    }
+    };
     return (req, resp) => {
         if (req.body instanceof Array) {
             insertBatch(req, resp);
@@ -158,6 +163,7 @@ route.delete('/:id', (req, resp) => {
         [req.params.id, req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.sendStatus(201);
@@ -172,6 +178,7 @@ route.get('/cumulativeSums', (req, resp) => {
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 let currentSum = 0;
@@ -204,6 +211,7 @@ route.get('/summary', (req, resp) => {
         ],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result[0]);
@@ -217,6 +225,7 @@ route.get('/comments', (req, resp) => {
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result.map(x => x.comment));
@@ -245,6 +254,7 @@ route.get('/countPages', (req, resp) => {
         ],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send((Math.floor(result[0].count / req.query.pageSize) + 1).toString());

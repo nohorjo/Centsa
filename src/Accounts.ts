@@ -9,6 +9,7 @@ route.get('/', (req, resp) => {
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result);
@@ -23,6 +24,7 @@ route.post("/", (req, resp) => {
         [req.body.name, req.session.userData.user_id],
         (err, results) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(results.insertId.toString());

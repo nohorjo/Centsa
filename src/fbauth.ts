@@ -23,6 +23,7 @@ export const login = async (req, res) => {
             res.sendStatus(201);
         });
     } catch (e) {
+        console.error(e);
         res.status(500).send(e.toString());
     }
 };

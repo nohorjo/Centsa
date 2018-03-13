@@ -9,6 +9,7 @@ route.get('/', (req, resp) => {
         [req.session.userData.user_id],
         (err, results) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(results.reduce((a, b) => {
@@ -29,6 +30,7 @@ route.post("/", (req, resp) => {
         [req.session.userData.user_id, setting.key, setting.value],
         err => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.sendStatus(201);

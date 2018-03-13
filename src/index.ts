@@ -74,7 +74,7 @@ const initWorker = id => {
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
     app.listen(port, () => console.log(`Server ${id} listening on port ${port}`));
-}
+};
 const loadConfig = () => {
     try { require('../config'); } catch (e) {/* Config not set or in environment */ }
     for (let v of [
@@ -91,7 +91,7 @@ const loadConfig = () => {
             process.exit(1);
         }
     }
-}
+};
 
 if (process.env.NODE_ENV == "debug") {
     loadConfig();

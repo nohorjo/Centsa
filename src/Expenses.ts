@@ -11,6 +11,7 @@ route.get('/', (req, resp) => {
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result);
@@ -26,6 +27,7 @@ route.get('/total', (req, resp) => {
     Connection.pool.query(sql, [new Date(req.get('x-date')), req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result.reduce((total, e) => {
@@ -62,6 +64,7 @@ route.post("/", (req, resp) => {
             ],
             (err, results) => {
                 if (err) {
+                    console.error(err);
                     resp.status(500).send(err);
                 } else {
                     if (results[0].count) {
@@ -72,6 +75,7 @@ route.post("/", (req, resp) => {
                             expense,
                             (err, results) => {
                                 if (err) {
+                                    console.error(err);
                                     resp.status(500).send(err);
                                 } else {
                                     if (expense.automatic) {
@@ -103,6 +107,7 @@ route.delete('/:id', (req, resp) => {
         ],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.sendStatus(201);
@@ -146,7 +151,7 @@ export const applyAutoTransactions = (all?, id?, today = new Date()) => {
             FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,
         [today],
         (err, result) => {
-            if (err) throw err;
+            if (err) { console.error(err); throw err; }
             let expectedTransactions;
             if (all) {
                 expectedTransactions = result.reduce((arr, e) => {

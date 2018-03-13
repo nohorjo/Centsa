@@ -11,6 +11,7 @@ route.get("/budget", (req, resp) => {
         [req.session.userData.user_id, req.session.userData.user_id],
         (err, results) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 const expenses = results[1];
@@ -52,6 +53,7 @@ route.get("/rules", (req, resp) => {
         [req.session.userData.user_id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result);
@@ -66,6 +68,7 @@ route.get("/rule/:id", (req, resp) => {
         [req.session.userData.user_id, req.params.id],
         (err, result) => {
             if (err) {
+                console.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result[0].content);
