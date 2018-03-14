@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import Connection from './Connection';
 
-const route = Router();
-
-route.get('/', (req, resp) => {
+export const getAll = (req, resp) => {
     Connection.pool.query(
         'SELECT id,name,-(SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id) AS balance FROM accounts a WHERE user_id=?;',
         [req.session.userData.user_id],
@@ -16,9 +14,9 @@ route.get('/', (req, resp) => {
             }
         }
     );
-});
+};
 
-route.post("/", (req, resp) => {
+export const insert = (req, resp) => {
     Connection.pool.query(
         `INSERT INTO accounts (name,user_id) VALUES (?,?);`,
         [req.body.name, req.session.userData.user_id],
@@ -31,7 +29,12 @@ route.post("/", (req, resp) => {
             }
         }
     );
-});
+};
+
+const route = Router();
+
+route.get('/', getAll);
+route.post("/", insert);
 
 const _route = Router();
 _route.use('/accounts', route);

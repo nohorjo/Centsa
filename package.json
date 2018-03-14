@@ -23,6 +23,7 @@
     "@types/express-session": "1.15.6",
     "@types/mocha": "2.2.48",
     "@types/mysql": "2.15.0",
+    "@types/sinon": "4.3.0",
     "chai": "4.1.2",
     "istanbul": "0.4.5",
     "mocha": "5.0.4",
@@ -39,7 +40,7 @@
     "build": "tsc -p .",
     "dev": "ts-node-dev src/index.ts",
     "debug": "NODE_ENV=debug ts-node --inspect-brk=9009 src/index.ts",
-    "test": "nyc mocha -r ts-node/register test/**/*.ts",
+    "test": "nyc mocha -r ts-node/register test/**/*Test.ts",
     "prebuild": "npm test",
     "postinstall": "npm run build"
   },
@@ -58,7 +59,8 @@
       ".ts"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "test/*.ts"
     ],
     "reporter": [
       "html"
