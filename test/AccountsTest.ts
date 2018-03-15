@@ -18,6 +18,7 @@ describe("Accounts", () => {
             name: "account2",
             balance: 6543,
         };
+        const request = { session: { userData: { user_id: userId } } };
         it("returns accounts", () => {
             Connection.pool.query = (sql, arr, cb) => {
                 expect(sql).to.equal(query);
@@ -27,7 +28,7 @@ describe("Accounts", () => {
                 cb(null, [account1, account2]);
             };
 
-            getAll({ session: { userData: { user_id: userId } } }, {
+            getAll(request, {
                 status() {
                     expect.fail();
                 },
@@ -37,7 +38,7 @@ describe("Accounts", () => {
             });
         });
         it("returns 500 with error", () => {
-            const errorMsg = "Error message";
+            const errorMsg = "Error message: getAll";
             Connection.pool.query = (sql, arr, cb) => {
                 expect(sql).to.equal(query);
                 expect(arr.length).to.equal(1);
@@ -45,7 +46,7 @@ describe("Accounts", () => {
 
                 cb(errorMsg);
             };
-            getAll({ session: { userData: { user_id: userId } } }, {
+            getAll(request, {
                 status(code) {
                     expect(code).to.equal(500);
                     return {
@@ -64,6 +65,10 @@ describe("Accounts", () => {
         const query = `INSERT INTO accounts (name,user_id) VALUES (?,?);`;
         const newAccountName = "new account";
         const newId = '5678';
+        const request = {
+            body: { name: newAccountName },
+            session: { userData: { user_id: userId } }
+        };
         it("returns ID", () => {
             Connection.pool.query = (sql, arr, cb) => {
                 expect(sql).to.equal(query);
@@ -72,17 +77,37 @@ describe("Accounts", () => {
                 expect(arr[1]).to.equal(userId);
                 cb(null, { insertId: newId });
             };
-            insert({
-                body: { name: newAccountName },
-                session: { userData: { user_id: userId } }
-            }, {
-                    status() {
-                        expect.fail();
-                    },
-                    send(result) {
-                        expect(result).to.equal(newId);
-                    }
-                });
+            insert(request, {
+                status() {
+                    expect.fail();
+                },
+                send(result) {
+                    expect(result).to.equal(newId);
+                }
+            });
+        });
+        it("returns 500 with error", () => {
+            const errorMsg = "Error message: insert";
+            Connection.pool.query = (sql, arr, cb) => {
+                expect(sql).to.equal(query);
+                expect(arr.length).to.equal(2);
+                expect(arr[0]).to.equal(newAccountName);
+                expect(arr[1]).to.equal(userId);
+                cb(errorMsg);
+            };
+            insert(request, {
+                status(code) {
+                    expect(code).to.equal(500);
+                    return {
+                        send(msg) {
+                            expect(msg).to.equal(errorMsg);
+                        }
+                    };
+                },
+                send() {
+                    expect.fail();
+                }
+            });
         });
     });
 });
