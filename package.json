@@ -58,6 +58,7 @@
     "extension": [
       ".ts"
     ],
+    "include":[],
     "exclude": [
       "**/*.d.ts",
       "test/*.ts"
