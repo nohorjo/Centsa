@@ -13,13 +13,13 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
-import Connection from './Connection';
+import { testConnection } from './Connection';
 import debug from './debug';
 
 const cpus = os.cpus().length;
 
 const initWorker = id => {
-    Connection.init(Object.assign({ cpusCount: cpus }, process.env));
+    testConnection();
 
     if (id == 1) {
         applyAutoTransactions(true);

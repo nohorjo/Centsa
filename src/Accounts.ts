@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import Connection from './Connection';
+import { pool } from './Connection';
 
 export const getAll = (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'SELECT id,name,-(SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id) AS balance FROM accounts a WHERE user_id=?;',
         [req.session.userData.user_id],
         (err, result) => {
@@ -17,7 +17,7 @@ export const getAll = (req, resp) => {
 };
 
 export const insert = (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         `INSERT INTO accounts (name,user_id) VALUES (?,?);`,
         [req.body.name, req.session.userData.user_id],
         (err, results) => {

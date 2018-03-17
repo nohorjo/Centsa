@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import Connection from './Connection';
+import { pool } from './Connection';
 
 const route = Router();
 
 route.get('/', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
         (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
         FROM expenses e WHERE user_id=?;`,
@@ -24,7 +24,7 @@ route.get('/total', (req, resp) => {
     const sql = req.query.auto == "true" ?
         "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;" :
         "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;";
-    Connection.pool.query(sql, [new Date(req.get('x-date')), req.session.userData.user_id],
+    pool.query(sql, [new Date(req.get('x-date')), req.session.userData.user_id],
         (err, result) => {
             if (err) {
                 console.error(err);
@@ -52,7 +52,7 @@ route.post("/", (req, resp) => {
     if (isFrequencyValid(expense.frequency)) {
         expense.user_id = req.session.userData.user_id;
         expense.started = new Date(expense.started);
-        Connection.pool.query(
+        pool.query(
             `SELECT COUNT(*) AS count FROM users u 
         JOIN accounts a ON u.id=a.user_id 
         JOIN types t ON u.id=t.user_id 
@@ -70,7 +70,7 @@ route.post("/", (req, resp) => {
                     if (results[0].count) {
                         resp.status(400).send("Invalid account or type id");
                     } else {
-                        Connection.pool.query(
+                        pool.query(
                             `INSERT INTO expenses SET ?;`,
                             expense,
                             (err, results) => {
@@ -95,7 +95,7 @@ route.post("/", (req, resp) => {
 });
 
 route.delete('/:id', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         `UPDATE transactions SET expense_id=NULL
         WHERE expense_id=? AND user_id=?;
         DELETE FROM expenses WHERE id=? AND user_id=?;`,
@@ -146,7 +146,7 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 export const applyAutoTransactions = (all?, id?, today = new Date()) => {
-    Connection.pool.query(
+    pool.query(
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
             FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,
         [today],
@@ -183,7 +183,7 @@ export const applyAutoTransactions = (all?, id?, today = new Date()) => {
                 ]));
             }
             if (expectedTransactions.length > 0) {
-                Connection.pool.query(
+                pool.query(
                     `INSERT IGNORE INTO transactions
                     (user_id,amount,comment,account_id,type_id,expense_id,date)
                     VALUES ?;`,

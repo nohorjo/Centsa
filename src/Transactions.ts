@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import Connection from './Connection';
+import { pool } from './Connection';
 
 const route = Router();
 
@@ -13,7 +13,7 @@ route.get('/', (req, resp) => {
         sort = '1 ASC';
     }
 
-    Connection.pool.query(
+    pool.query(
         `SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?
         ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
@@ -68,7 +68,7 @@ route.post("/", (() => {
                 typeIds.push(t.type_id);
             }
         });
-        Connection.pool.query(
+        pool.query(
             `SELECT COUNT(*) AS count FROM users u 
             JOIN accounts a ON u.id=a.user_id 
             JOIN expenses e ON u.id=e.user_id 
@@ -88,7 +88,7 @@ route.post("/", (() => {
                     if (results[0].count) {
                         resp.status(400).send("Invalid account, expense or type ids");
                     } else {
-                        Connection.pool.query(
+                        pool.query(
                             `INSERT INTO transactions
                             (user_id,amount,comment,account_id,type_id,expense_id,date)
                             VALUES ?;`,
@@ -112,7 +112,7 @@ route.post("/", (() => {
         const transaction = req.body;
         transaction.user_id = req.session.userData.user_id;
         transaction.date = new Date(transaction.date);
-        Connection.pool.query(
+        pool.query(
             `SELECT COUNT(*) AS count FROM users u 
             JOIN accounts a ON u.id=a.user_id 
             JOIN expenses e ON u.id=e.user_id 
@@ -132,7 +132,7 @@ route.post("/", (() => {
                     if (results[0].count) {
                         resp.status(400).send("Invalid account, expense or type id");
                     } else {
-                        Connection.pool.query(
+                        pool.query(
                             `${transaction.id ? 'REPLACE' : 'INSERT'} INTO transactions SET ?;`, transaction,
                             (err, results) => {
                                 if (err) {
@@ -158,7 +158,7 @@ route.post("/", (() => {
 })());
 
 route.delete('/:id', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'DELETE FROM transactions WHERE id=? AND user_id=?;',
         [req.params.id, req.session.userData.user_id],
         (err, result) => {
@@ -173,7 +173,7 @@ route.delete('/:id', (req, resp) => {
 });
 
 route.get('/cumulativeSums', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'SELECT date, -amount AS amount FROM transactions WHERE user_id=? ORDER BY date ASC;',
         [req.session.userData.user_id],
         (err, result) => {
@@ -193,7 +193,7 @@ route.get('/cumulativeSums', (req, resp) => {
 route.get('/summary', (req, resp) => {
     const filter = parseFilter(req);
 
-    Connection.pool.query(
+    pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
         ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
@@ -220,7 +220,7 @@ route.get('/summary', (req, resp) => {
 });
 
 route.get('/comments', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'SELECT DISTINCT comment FROM transactions WHERE user_id=?;',
         [req.session.userData.user_id],
         (err, result) => {
@@ -236,7 +236,7 @@ route.get('/comments', (req, resp) => {
 route.get('/countPages', (req, resp) => {
     const filter = parseFilter(req);
 
-    Connection.pool.query(
+    pool.query(
         `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
         ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
         ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 

@@ -2,10 +2,17 @@ import { insert, getAll } from '../src/Accounts';
 
 import { expect } from 'chai';
 
-import Connection from './MockConnection';
+import * as Connection from '../src/Connection';
+
+import { stub, match } from 'sinon';
 
 describe("Accounts", () => {
     const userId = 1234;
+    let queryStub;
+
+    beforeEach(() => queryStub = stub(Connection.pool, "query"));
+    afterEach(() => queryStub.restore());
+
     describe("getAll", () => {
         const query = 'SELECT id,name,-(SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id) AS balance FROM accounts a WHERE user_id=?;';
         const account1 = {
@@ -20,44 +27,43 @@ describe("Accounts", () => {
         };
         const request = { session: { userData: { user_id: userId } } };
         it("returns accounts", () => {
-            Connection.pool.query = (sql, arr, cb) => {
-                expect(sql).to.equal(query);
-                expect(arr.length).to.equal(1);
-                expect(arr[0]).to.equal(userId);
-
+            queryStub.withArgs(query, match([userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(null, [account1, account2]);
-            };
+            });
+            queryStub.throws("Unexpected args: query");
+
+            const sendStub = stub();
+            sendStub.withArgs(match([account1, account2])).returns(undefined);
+            sendStub.throws("Unexpected args: send");
+
+            const statusStub = stub().throws("Unexpected call: status");
 
             getAll(request, {
-                status() {
-                    expect.fail();
-                },
-                send(result) {
-                    expect(result).to.deep.equal([account1, account2]);
-                }
+                status: statusStub,
+                send: sendStub
             });
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: getAll";
-            Connection.pool.query = (sql, arr, cb) => {
-                expect(sql).to.equal(query);
-                expect(arr.length).to.equal(1);
-                expect(arr[0]).to.equal(userId);
 
+            queryStub.withArgs(query, match([userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
-            };
+            });
+            queryStub.throws("Unexpected args: query");
+
+            const errorSendStub = stub();
+            errorSendStub.withArgs(errorMsg).returns(undefined);
+            errorSendStub.throws("Unexpected args: errorSend");
+
+            const statusStub = stub();
+            statusStub.withArgs(500).returns({ send: errorSendStub });
+            statusStub.throws("Unexpected args: status");
+
+            const sendStub = stub().throws("Unexpected call: send");
+
             getAll(request, {
-                status(code) {
-                    expect(code).to.equal(500);
-                    return {
-                        send(msg) {
-                            expect(msg).to.equal(errorMsg);
-                        }
-                    };
-                },
-                send() {
-                    expect.fail();
-                }
+                status: statusStub,
+                send: sendStub
             });
         });
     });
@@ -70,43 +76,42 @@ describe("Accounts", () => {
             session: { userData: { user_id: userId } }
         };
         it("returns ID", () => {
-            Connection.pool.query = (sql, arr, cb) => {
-                expect(sql).to.equal(query);
-                expect(arr.length).to.equal(2);
-                expect(arr[0]).to.equal(newAccountName);
-                expect(arr[1]).to.equal(userId);
+            queryStub.withArgs(query, match([newAccountName, userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(null, { insertId: newId });
-            };
+            });
+            queryStub.throws("Unexpected args: query");
+
+            const sendStub = stub();
+            sendStub.withArgs(newId).returns(undefined);
+            sendStub.throws("Unexpected args: send");
+
+            const statusStub = stub().throws("Unexpected call: status");
+
             insert(request, {
-                status() {
-                    expect.fail();
-                },
-                send(result) {
-                    expect(result).to.equal(newId);
-                }
+                status: statusStub,
+                send: sendStub
             });
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: insert";
-            Connection.pool.query = (sql, arr, cb) => {
-                expect(sql).to.equal(query);
-                expect(arr.length).to.equal(2);
-                expect(arr[0]).to.equal(newAccountName);
-                expect(arr[1]).to.equal(userId);
+            queryStub.withArgs(query, match([newAccountName, userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
-            };
+            });
+            queryStub.throws("Unexpected args: query");
+
+            const errorSendStub = stub();
+            errorSendStub.withArgs(errorMsg).returns(undefined);
+            errorSendStub.throws("Unexpected args: errorSend");
+
+            const statusStub = stub();
+            statusStub.withArgs(500).returns({ send: errorSendStub });
+            statusStub.throws("Unexpected args: status");
+
+            const sendStub = stub().throws("Unexpected call: send");
+
             insert(request, {
-                status(code) {
-                    expect(code).to.equal(500);
-                    return {
-                        send(msg) {
-                            expect(msg).to.equal(errorMsg);
-                        }
-                    };
-                },
-                send() {
-                    expect.fail();
-                }
+                status: statusStub,
+                send: sendStub
             });
         });
     });

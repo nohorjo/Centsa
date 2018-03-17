@@ -61,10 +61,6 @@
     "include": [
       "src/**/*"
     ],
-    "exclude": [
-      "**/*.d.ts",
-      "test/*.ts"
-    ],
     "reporter": [
       "html"
     ],

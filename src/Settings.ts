@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import Connection from './Connection';
+import { pool } from './Connection';
 
 const route = Router();
 
 route.get('/', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'SELECT setting,value FROM settings WHERE user_id=?;',
         [req.session.userData.user_id],
         (err, results) => {
@@ -25,7 +25,7 @@ route.get('/', (req, resp) => {
 
 route.post("/", (req, resp) => {
     const setting = req.body;
-    Connection.pool.query(
+    pool.query(
         'REPLACE INTO settings (user_id, setting, value) VALUES (?,?,?);',
         [req.session.userData.user_id, setting.key, setting.value],
         err => {

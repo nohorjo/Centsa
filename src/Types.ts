@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import Connection from './Connection';
+import { pool } from './Connection';
 
 const route = Router();
 
 route.get('/', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'SELECT id,name,(SELECT SUM(amount) FROM transactions t WHERE t.type_id=a.id) AS sum FROM types a WHERE user_id=?;',
         [req.session.userData.user_id],
         (err, result) => {
@@ -18,7 +18,7 @@ route.get('/', (req, resp) => {
 });
 
 route.post("/", (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         'INSERT INTO types (name,user_id) VALUES (?,?);',
         [req.body.name, req.session.userData.user_id],
         (err, results) => {
@@ -33,7 +33,7 @@ route.post("/", (req, resp) => {
 });
 
 route.delete('/:id', (req, resp) => {
-    Connection.pool.query(
+    pool.query(
         `UPDATE transactions tr SET type_id=
         (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Other')
         WHERE type_id=? AND user_id=?;
