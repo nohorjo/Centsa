@@ -37,6 +37,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		date: new Date().formatDate("yyyy/MM/dd")
 	};
 	let newTrans = Object.assign({}, $scope.newTrans);
+	centsa.settings.get("default.account").then(data => $scope.newTrans.account_id = newTrans.account_id = data.toString());
 
 	$scope.transactionSummary = {
 		min: 0,
@@ -44,19 +45,12 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	};
 	$scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
 	centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
-	centsa.accounts.getAll().then(resp => {
-		$scope.accounts = resp.data;
-		$scope.newTrans.account_id = resp.data.find(a => a.name == "Default").id.toString();
-		newTrans.account_id = $scope.newTrans.account_id;
-	});
+	centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
 	centsa.types.getAll().then(resp => {
 		$scope.types = resp.data;
-		$scope.newTrans.type_id = resp.data.find(a => a.name == "Other").id.toString();
-		newTrans.type_id = $scope.newTrans.type_id;
+		$scope.newTrans.type_id = newTrans.type_id = resp.data.find(a => a.name == "Other").id.toString();
 	});
-	centsa.expenses.getAll(true).then(resp => {
-		$scope.expenses = resp.data;
-	});
+	centsa.expenses.getAll(true).then(resp => $scope.expenses = resp.data);
 	centsa.expenses.getAll(false).then(resp => $scope.allExpenses = resp.data);
 	centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
 
@@ -128,7 +122,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			cancelButtonColor: '#3085d6',
 			confirmButtonText: 'Yes, delete it!'
 		});
-		if(result.value) {
+		if (result.value) {
 			centsa.transactions.remove(id).then(() => {
 				centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
 				countPages();

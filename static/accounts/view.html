@@ -45,14 +45,15 @@
         <thead>
             <tr>
                 <th width="5%" data-ng-click="sort('id', accounts)">ID</th>
+                <th width="5%">Default</th>
                 <th data-ng-click="sort('name', accounts)">Name</th>
                 <th colspan="2" data-ng-click="sort('balance', accounts)">Balance</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                </td>
+                <td></td>
+                <td></td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
                 </td>
@@ -65,6 +66,9 @@
             </tr>
             <tr data-ng-repeat="a in accounts">
                 <td>{{ a.id }}</td>
+                <td>
+                    <input type="radio" name="defaultAccount" value="{{a.id}}" data-ng-model="defaultAccountId" data-ng-click="setDefaultAccount(a.id)">
+                </td>
                 <td data-ng-click="setFilter({account_id:a.id.toString()})">{{ a.name }}</td>
                 <td colspan="2" data-ng-init="a.balanceOld = a.balance">
                     <input type="number" step=".01" class="form-control no-border-inactive" data-ng-model="a.balance" data-number-divide="100"
@@ -72,6 +76,7 @@
                 </td>
             </tr>
             <tr>
+                <td></td>
                 <td></td>
                 <td>Total</td>
                 <td colspan="2">{{ sumAccountBalances() }}</td>
