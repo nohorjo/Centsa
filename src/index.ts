@@ -75,8 +75,7 @@ const initWorker = id => {
 
     app.listen(port, () => console.log(`Server ${id} listening on port ${port}`));
 };
-const loadConfig = () => {
-    try { require('../config'); } catch (e) {/* Config not set or in environment */ }
+const checkConfig = () => {
     for (let v of [
         'SESSION_SECRET',
         'DB_IP',
@@ -87,18 +86,18 @@ const loadConfig = () => {
         'DB_CONNECTION_LIMIT'
     ]) {
         if (!process.env[v]) {
-            console.error(`Incomplete configuration: ${v}`);
+            console.error(`Incomplete configuration from env: ${v}`);
             process.exit(1);
         }
     }
 };
 
 if (process.env.NODE_ENV == "debug") {
-    loadConfig();
+    checkConfig();
     initWorker(1);
 } else {
     if (cluster.isMaster) {
-        loadConfig();
+        checkConfig();
         for (let i = 0; i < cpus; i++) {
             cluster.fork();
         }
