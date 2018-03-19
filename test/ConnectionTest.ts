@@ -1,6 +1,6 @@
 import { testConnection } from '../src/Connection';
 import * as mysql from 'mysql';
-import { stub, match } from 'sinon';
+import { spy, stub, match } from 'sinon';
 import { expect } from 'chai';
 
 
@@ -14,7 +14,7 @@ describe("Connection", () => {
             createConnectionStub.restore();
         });
         it("Opens a connection, setting an error handler to exit", () => {
-            const connectStub = stub();
+            const connectSpy = spy();
             const onStub = stub();
 
             onStub.withArgs("error", match.func).callsFake((e, cb) => {
@@ -28,7 +28,7 @@ describe("Connection", () => {
             });
             onStub.throws("Unexpected args: on");
 
-            const endStub = stub();
+            const endSpy = spy();
 
             const config = {
                 host: "someip",
@@ -39,16 +39,16 @@ describe("Connection", () => {
             };
 
             createConnectionStub.withArgs(match(config)).returns({
-                connect: connectStub,
+                connect: connectSpy,
                 on: onStub,
-                end: endStub
+                end: endSpy
             });
             createConnectionStub.throws("Unexpected args: createConnection");
 
             testConnection();
 
-            expect(connectStub.callCount).to.equal(1);
-            expect(endStub.callCount).to.equal(1);
+            expect(connectSpy.calledOnce).to.be.true;
+            expect(endSpy.calledOnce).to.be.true;
         });
     });
 });

@@ -1,7 +1,7 @@
 import { insert, getAll } from '../src/Accounts';
 import { expect } from 'chai';
 import * as Connection from '../src/Connection';
-import { stub, match } from 'sinon';
+import { spy, stub, match } from 'sinon';
 
 describe("Accounts", () => {
     const userId = 1234;
@@ -33,12 +33,15 @@ describe("Accounts", () => {
             sendStub.withArgs(match([account1, account2])).returns(undefined);
             sendStub.throws("Unexpected args: send");
 
-            const statusStub = stub().throws("Unexpected call: status");
+            const statusSpy = spy();
 
             getAll(request, {
-                status: statusStub,
+                status: statusSpy,
                 send: sendStub
             });
+
+            expect(sendStub.calledOnce).to.be.true;
+            expect(statusSpy.notCalled).to.be.true;
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: getAll";
@@ -56,12 +59,16 @@ describe("Accounts", () => {
             statusStub.withArgs(500).returns({ send: errorSendStub });
             statusStub.throws("Unexpected args: status");
 
-            const sendStub = stub().throws("Unexpected call: send");
+            const sendSpy = spy();
 
             getAll(request, {
                 status: statusStub,
-                send: sendStub
+                send: sendSpy
             });
+
+            expect(statusStub.calledOnce).to.be.true;
+            expect(errorSendStub.calledOnce).to.be.true;
+            expect(sendSpy.notCalled).to.be.true;
         });
     });
     describe("insert", () => {
@@ -82,12 +89,15 @@ describe("Accounts", () => {
             sendStub.withArgs(newId).returns(undefined);
             sendStub.throws("Unexpected args: send");
 
-            const statusStub = stub().throws("Unexpected call: status");
+            const statusSpy = spy();
 
             insert(request, {
-                status: statusStub,
+                status: statusSpy,
                 send: sendStub
             });
+
+            expect(sendStub.calledOnce).to.be.true;
+            expect(statusSpy.notCalled).to.be.true;
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: insert";
@@ -104,12 +114,16 @@ describe("Accounts", () => {
             statusStub.withArgs(500).returns({ send: errorSendStub });
             statusStub.throws("Unexpected args: status");
 
-            const sendStub = stub().throws("Unexpected call: send");
+            const sendSpy = spy();
 
             insert(request, {
                 status: statusStub,
-                send: sendStub
+                send: sendSpy
             });
+
+            expect(statusStub.calledOnce).to.be.true;
+            expect(errorSendStub.calledOnce).to.be.true;
+            expect(sendSpy.notCalled).to.be.true;
         });
     });
 });

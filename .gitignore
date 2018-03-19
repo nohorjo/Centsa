@@ -9,3 +9,4 @@ dist/*
 config.js
 sessions/*
 *.sh
+mochawesome-report/*
