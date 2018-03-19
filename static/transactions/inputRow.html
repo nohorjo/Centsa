@@ -3,7 +3,7 @@
     <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newTrans.date">
 </td>
 <td>
-    <input type="number" class="form-control" required="required" step="0.01" data-ng-model="newTrans.amount">
+    <input type="number" class="form-control" required="required" step="0.01" data-ng-model="newTrans.amount" data-number-divide="100">
 </td>
 <td>
     <select class="form-control" data-ng-model="newTrans.account_id">

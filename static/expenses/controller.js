@@ -33,7 +33,6 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     let newExpense = Object.assign({}, $scope.newExpense);
 
     $scope.saveExpense = () => {
-        $scope.newExpense.cost = Math.round($scope.newExpense.cost * 100);
         $scope.newExpense.started = new Date($scope.newExpense.started);
         if (!$scope.newExpense.account_id) {
             delete $scope.newExpense.account_id;

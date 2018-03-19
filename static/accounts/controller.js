@@ -23,7 +23,6 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 	let transfer = Object.assign({}, $scope.transfer);
 
 	$scope.saveAccount = () => {
-		$scope.newAccount.balance *= 100;
 		centsa.accounts.insert($scope.newAccount).then(resp => {
 			$scope.newAccount.id = resp.data;
 			$scope.accounts.unshift($scope.newAccount);
@@ -46,7 +45,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 	 * another
 	 */
 	$scope.transferFunds = () => {
-		const amount = $scope.transfer.amount * 100;
+		const amount = $scope.transfer.amount;
 		const from = {
 			amount: amount,
 			comment: $scope.transfer.comment,
@@ -103,11 +102,3 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 	$scope.setDefaultAccount = id => centsa.settings.set("default.account", id);
 
 });
-
-app.directive("numberDivide", ($filter, $parse) => ({
-	require: "ngModel",
-	link: ($scope, $elem, $attrs, $controller) => {
-		$controller.$formatters.push(val => val / $attrs.numberDivide);
-		$controller.$parsers.push(val => val * $attrs.numberDivide);
-	}
-}));

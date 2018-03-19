@@ -273,6 +273,7 @@ const parseFilter = req => {
     filter.type_id = parseInt(filter.type_id);
     filter.expense_id = parseInt(filter.expense_id);
     if (!filter.comment) {
+        filter.comment = "";
         filter.regex = false;
     }
     if (!filter.regex) {

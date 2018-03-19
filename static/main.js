@@ -84,3 +84,11 @@ app.directive('fileModel', ['$parse', function ($parse) {
 		}
 	};
 }]);
+
+app.directive("numberDivide", ($filter, $parse) => ({
+	require: "ngModel",
+	link: ($scope, $elem, $attrs, $controller) => {
+		$controller.$formatters.push(val => val / $attrs.numberDivide);
+		$controller.$parsers.push(val => val * $attrs.numberDivide);
+	}
+}));

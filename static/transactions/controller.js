@@ -56,7 +56,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 
 	$scope.saveTrans = updating => {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
-		$scope.newTrans.amount = Math.round($scope.newTrans.amount * 100);
 		centsa.transactions.insert($scope.newTrans).then(resp => {
 			countPages();
 			if (resp.data > 0) {
@@ -85,7 +84,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		const t = Object.assign({}, trans);
 		t.date = $rootScope.formatDate(t.date);
 		$('.datepicker').datepicker("update", t.date);
-		t.amount = t.amount / 100;
 		t.account_id = t.account_id.toString();
 		t.type_id = t.type_id.toString();
 		t.expense_id = t.expense_id && t.expense_id.toString();
