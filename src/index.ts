@@ -18,7 +18,7 @@ import debug from './debug';
 
 const cpus = os.cpus().length;
 
-const initWorker = id => {
+const initWorker = (id, env) => {
     testConnection();
 
     if (id == 1) {
@@ -26,12 +26,12 @@ const initWorker = id => {
         setInterval(applyAutoTransactions, 8.64e7);
     }
 
-    const port = process.env.PORT || 8080;
+    const port = env.PORT || 8080;
 
     const app = express();
     const FileStore = require('session-file-store')(session);
     const sess = {
-        secret: process.env.SESSION_SECRET,
+        secret: env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
         unset: 'destroy',
@@ -39,7 +39,7 @@ const initWorker = id => {
         store: new FileStore({ ttl: 31536000 })
     };
 
-    if (process.env.NODE_ENV === 'production') {
+    if (env.NODE_ENV === 'production') {
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
         app.use((req, res, next) => req.secure ? next() : res.redirect(`https://${req.hostname}${req.originalUrl}`));
@@ -75,7 +75,7 @@ const initWorker = id => {
 
     app.listen(port, () => console.log(`Server ${id} listening on port ${port}`));
 };
-const checkConfig = () => {
+const checkConfig = env => {
     for (let v of [
         'SESSION_SECRET',
         'DB_IP',
@@ -85,23 +85,27 @@ const checkConfig = () => {
         'DB_NAME',
         'DB_CONNECTION_LIMIT'
     ]) {
-        if (!process.env[v]) {
+        if (!env[v]) {
             console.error(`Incomplete configuration from env: ${v}`);
             process.exit(1);
         }
     }
 };
 
-if (process.env.NODE_ENV == "debug") {
-    checkConfig();
-    initWorker(1);
-} else {
-    if (cluster.isMaster) {
-        checkConfig();
-        for (let i = 0; i < cpus; i++) {
-            cluster.fork();
-        }
+const main = (env, isMaster) => {
+    if (env.NODE_ENV == "debug") {
+        checkConfig(env);
+        initWorker(1, env);
     } else {
-        initWorker(cluster.worker.id);
+        if (isMaster) {
+            checkConfig(env);
+            for (let i = 0; i < cpus; i++) {
+                cluster.fork();
+            }
+        } else {
+            initWorker(cluster.worker.id, env);
+        }
     }
-}
+};
+
+main(process.env, cluster.isMaster);
