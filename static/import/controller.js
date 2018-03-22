@@ -39,4 +39,23 @@ app.controller("importCtrl", function ($scope, $rootScope, $interval, centsa) {
 		});
 	};
 
+	$scope.newRuleName = "New rule name";
+	$scope.showEditor = false;
+
+	$scope.$watch('rule', newValue => {
+		if (newValue == "") {
+			$scope.showEditor = true;
+		}
+	});
+	$scope.$watch('showEditor', show => {
+		if (show) {
+			const editor = ace.edit('editor');
+			editor.setTheme("ace/theme/chrome");
+			editor.session.setMode("ace/mode/javascript");
+			$('#invoice-edit-form').submit(function () {
+				//FIXME:
+				$('#ruleScript').val(editor.getSession().getValue());
+			});
+		}
+	});
 });

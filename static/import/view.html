@@ -5,7 +5,8 @@
 				<h4 class="modal-title">Import progress</h4>
 			</div>
 			<div class="modal-body">
-				{{ (importProgress.processed * 100 / importProgress.total).toFixed() }}% Complete ({{ importProgress.processed }}/{{ importProgress.total }})
+				{{ (importProgress.processed * 100 / importProgress.total).toFixed() }}% Complete ({{ importProgress.processed }}/{{ importProgress.total
+				}})
 				<div class="progress">
 					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" data-ng-style="{ 'width' : (importProgress.processed * 100 / importProgress.total).toFixed(2) + '%' }"
 					 data-ng-class="{ 'progress-bar-danger' : importError }" />
@@ -27,7 +28,10 @@
 		<td width="25%">
 			<select class="form-control" data-ng-model="rule">
 				<option data-ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
+				<option value="">-- NEW RULE --</option>
 			</select>
+			Show editor
+			<input type="checkbox" data-ng-model="showEditor" data-ng-disabled="!rule">
 		</td>
 		<td width="30%">
 			<input type="file" class="form-control-file" data-file-model="uploadFile" />
@@ -35,6 +39,19 @@
 		<td width="25%">
 			<input type="button" value="Import file" class="btn btn-primary" data-ng-click="importFile()" data-ng-class="{ 'btn-warning': !rule || !uploadFile }"
 			 data-ng-disabled="!rule || !uploadFile" />
+		</td>
+	</tr>
+	<tr data-ng-show="showEditor" id="ruleEditor">
+		<td colspan="4">
+			<div class="form-group">
+				<div id="editor">/** Enter import rule script here **/</div>
+				<input type="hidden" id="ruleScript" value="" />
+			</div>
+
+			<div class="form-group">
+				<input type="text" class="form-control" data-ng-model="newRuleName">
+				<input type="button" class="btn btn-primary" value="Save" data-ng-disabled="!newRuleName">
+			</div>
 		</td>
 	</tr>
 	<tr>
