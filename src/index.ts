@@ -4,7 +4,6 @@ import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import * as path from 'path';
-import * as mysql from 'mysql';
 import * as fbauth from './fbauth';
 import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
