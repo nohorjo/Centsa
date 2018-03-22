@@ -194,7 +194,7 @@ input#export{
 }
 
 #editor{
-	height: 20em;
+	min-height: 20em;
 	width: 100%;
 }
 

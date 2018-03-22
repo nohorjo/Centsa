@@ -12,4 +12,9 @@ describe("General", () => {
         it("returns script");
         it("returns 500 with error");
     });
+    describe("insertRule", () => {
+        it("inserts script");
+        it("returns 400 with no name");
+        it("returns 500 with error");
+    });
 });

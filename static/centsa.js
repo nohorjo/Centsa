@@ -53,7 +53,8 @@ const centsa = function ($http) {
         return {
             budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
             rules() { return $http.get(`${apiUrl}/rules`); },
-            rule(id) { return $http.get(`${apiUrl}/rule/${id}`); }
+            rule(id) { return $http.get(`${apiUrl}/rule/${id}`); },
+            saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }
         };
     })();
 
@@ -61,10 +62,10 @@ const centsa = function ($http) {
 if (typeof app == "object") {
     app.factory('httpInterceptor', function ($q) {
         return {
-            'request': function(config) {
+            'request': function (config) {
                 config.headers = Object.assign({ 'x-date': Date().toString() }, config.headers);
                 return config;
-              },
+            },
             'responseError': function (rejection) {
                 swal("Error", rejection.data, "error");
                 return $q.reject(rejection);

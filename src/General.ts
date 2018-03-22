@@ -62,6 +62,27 @@ route.get("/rules", (req, resp) => {
     );
 });
 
+route.post("/rule/:name", (req, resp) => {
+    const { name } = req.params;
+
+    if (name && name != 'Default') {
+        pool.query(
+            "REPLACE INTO rules (name,user_id,content) VALUES (?,?,?);",
+            [name, req.session.userData.user_id, req.body.script],
+            (err, result) => {
+                if (err) {
+                    console.error(err);
+                    resp.status(500).send(err);
+                } else {
+                    resp.send(result.insertId.toString());
+                }
+            }
+        );
+    } else {
+        resp.status(400).send("Invalid name");
+    }
+});
+
 route.get("/rule/:id", (req, resp) => {
     pool.query(
         "SELECT content FROM rules WHERE (user_id IS NULL OR user_id=?) AND id=?;",

@@ -4,7 +4,7 @@ importScripts(
     '/centsa.js'
 );
 self.addEventListener('message', e => {
-    const { rule, csv } = e.data;
+    const { rule, script, csv } = e.data;
 
     const readFile = file => {
         return new Promise((resolve, reject) => {
@@ -18,14 +18,8 @@ self.addEventListener('message', e => {
         });
     };
 
-    const $centsa = new centsa($http);
-
-    Promise.all([
-        $centsa.general.rule(rule),
-        readFile(csv)
-    ]).then(result => {
-        const script = result[0].data;
-        const { data, errors } = Papa.parse(result[1]);
+    const runScript = (result, script) => {
+        const { data, errors } = Papa.parse(result);
         if (errors.length) {
             throw JSON.stringify(errors);
         }
@@ -55,7 +49,21 @@ self.addEventListener('message', e => {
         })();
 
         eval(script);
+    };
 
-    }).catch(err => setTimeout(() => { throw JSON.stringify(err.message || err.response); }, 0));
+    const $centsa = new centsa($http);
+
+    if (script) {
+        readFile(csv).then(result => {
+            runScript(result, script);
+        });
+    } else {
+        Promise.all([
+            $centsa.general.rule(rule),
+            readFile(csv)
+        ]).then(result => {
+            runScript(result[1], result[0].data);
+        }).catch(err => setTimeout(() => { throw JSON.stringify(err.message || err.response); }, 0));
+    }
 
 });
