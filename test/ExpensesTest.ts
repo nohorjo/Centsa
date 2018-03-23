@@ -128,7 +128,35 @@ describe("Expenses", () => {
             expect(statusSpy.notCalled).to.be.true;
             expect(sendSpy.calledWith("3")).to.be.true;
         });
-        it("returns non auto total");
+        it("returns non auto total", () => {
+            queryStub.withArgs(
+                "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;",
+                match([match.date, userId]),
+                match.func
+            ).callsFake((x, arr, cb) => {
+                expect(arr[0]).to.deep.equal(new Date(date))
+                cb(null, [
+                    { cost: 4, frequency: "2" },
+                    { cost: 730, frequency: "DATE 1/1" },
+                    { cost: 60, frequency: "DAY 9" }
+                ]);
+            });
+            queryStub.throws("Unexpected args: getTotals");
+
+            const statusSpy = spy();
+            const sendSpy = spy();
+
+            Expenses.getTotals(
+                Object.assign({ query: { auto: "false" } }, req),
+                {
+                    status: statusSpy,
+                    send: sendSpy
+                }
+            );
+
+            expect(statusSpy.notCalled).to.be.true;
+            expect(sendSpy.calledWith("6")).to.be.true;
+        });
         it("returns 500 with error");
     });
     describe("insert", () => {
