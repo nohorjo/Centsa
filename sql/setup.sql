@@ -77,7 +77,7 @@ CREATE TABLE transactions
 	UNIQUE(amount,comment,account_id,type_id,expense_id,date),
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (type_id) REFERENCES types(id),
-	FOREIGN KEY (expense_id) REFERENCES expenses(id),
+	FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -104,7 +104,7 @@ Promise.all([
 	while ($records.hasNext()) {
 		const row = $records.next();
 
-		if (row && row.length == 5) {
+		if (row.length == 5) {
 			let account = accountsCache.find(a => a.name == row[3]);
 			if (!account) {
 				// Account does not exist so create it

@@ -96,12 +96,8 @@ route.post("/", (req, resp) => {
 
 route.delete('/:id', (req, resp) => {
     pool.query(
-        `UPDATE transactions SET expense_id=NULL
-        WHERE expense_id=? AND user_id=?;
-        DELETE FROM expenses WHERE id=? AND user_id=?;`,
+        `DELETE FROM expenses WHERE id=? AND user_id=?;`,
         [
-            req.params.id,
-            req.session.userData.user_id,
             req.params.id,
             req.session.userData.user_id,
         ],
