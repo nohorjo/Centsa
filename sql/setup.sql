@@ -81,8 +81,8 @@ CREATE TABLE transactions
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-INSERT INTO rules SET name='Default',content = '
-/**
+INSERT INTO rules SET name='Default',content = 
+'/**
 	* Script is initialized with the variables: 
 	* 		$records : an iterator of the records in the CSV 
 	* 		$centsa : an interface to the backend
@@ -126,7 +126,7 @@ Promise.all([
 
 			allTransactions.push({
 				date: new Date(row[0]),
-				amount: parseFloat(row[1]) * 100,
+				amount: parseFloat(row[1].replace(/[^\d\.]/g,'')) * 100,
 				comment: row[2],
 				account_id: account.id,
 				type_id: type.id,
