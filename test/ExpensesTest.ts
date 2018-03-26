@@ -157,7 +157,31 @@ describe("Expenses", () => {
             expect(statusSpy.notCalled).to.be.true;
             expect(sendSpy.calledWith("6")).to.be.true;
         });
-        it("returns 500 with error");
+        it("returns 500 with error", () => {
+            const errorMsg = "Error message: getAll";
+            queryStub.callsFake((x, y, cb) => cb(errorMsg));
+
+            const errorSendStub = stub();
+            errorSendStub.withArgs(errorMsg).returns(undefined);
+            errorSendStub.throws("Unexpected args: errorSend");
+
+            const sendSpy = spy();
+            const statusStub = stub();
+
+            statusStub.withArgs(500).returns({ send: errorSendStub });
+            statusStub.throws("Unexpected args: status");
+
+            Expenses.getTotals(
+                Object.assign({ query: { auto: "false" } }, req),
+                {
+                    status: statusStub,
+                    send: sendSpy
+                }
+            );
+
+            expect(sendSpy.notCalled).to.be.true;
+            expect(statusStub.calledOnce).to.be.true;
+        });
     });
     describe("insert", () => {
         it("returns 500 with error on checks");

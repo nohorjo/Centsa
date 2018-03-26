@@ -42,6 +42,7 @@
     "dev": "ts-node-dev src/index.ts",
     "debug": "NODE_ENV=debug ts-node --inspect-brk=9009 src/index.ts",
     "test": "DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha -r ts-node/register test/**/*Test.ts --reporter mochawesome",
+    "xtest": "DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha -r ts-node/register --reporter mochawesome",
     "prebuild": "npm test",
     "postinstall": "npm run build"
   },
