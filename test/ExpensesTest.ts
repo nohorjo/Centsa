@@ -184,9 +184,66 @@ describe("Expenses", () => {
         });
     });
     describe("insert", () => {
-        it("returns 500 with error on checks");
+        let validStub;
+        beforeEach(() => validStub = stub(Expenses, "isFrequencyValid"));
+        afterEach(() => validStub.restore());
+        it("returns 400 on checks failed", () => {
+            validStub.returns(false);
+            const sendSpy = spy();
+            const sendErrorSpy = spy();
+            const statusStub = stub();
+
+            statusStub.withArgs(400).returns({ send: sendErrorSpy });
+            statusStub.throws("Unexpected args: status");
+
+            Expenses.insert({ body: { frequency: null } }, {
+                status: statusStub,
+                send: sendSpy
+            });
+
+            expect(validStub.calledOnce).to.be.true;
+            expect(sendErrorSpy.calledWith("Invalid frequency")).to.be.true
+            expect(sendSpy.notCalled).to.be.true;
+        });
+        const accountId = 6785;
+        const typeId = 8244;
+        it("returns 500 with error on checks", () => {
+            const errorMsg = "Error message: insert check";
+            validStub.returns(true);
+            queryStub.withArgs(`SELECT COUNT(*) AS count FROM users u 
+        JOIN accounts a ON u.id=a.user_id 
+        JOIN types t ON u.id=t.user_id 
+        WHERE u.id!=? AND (a.id=? AND t.id=?);`,
+                match.array.deepEquals([userId, accountId, typeId]),
+                match.func).callsFake((x, y, cb) => {
+                    cb(errorMsg);
+                });
+            queryStub.throws("Unexpected args: insert check");
+
+            const sendSpy = spy();
+            const sendErrorSpy = spy();
+            const statusStub = stub();
+
+            statusStub.withArgs(500).returns({ send: sendErrorSpy });
+            statusStub.throws("Unexpected args: status");
+
+
+            Expenses.insert(Object.assign({
+                body: {
+                    frequency: null,
+                    account_id: accountId,
+                    type_id: typeId
+                }
+            }, req), {
+                    status: statusStub,
+                    send: sendSpy
+                });
+
+            expect(validStub.calledOnce).to.be.true;
+            expect(sendErrorSpy.calledWith(errorMsg)).to.be.true
+            expect(sendSpy.notCalled).to.be.true;
+        });
         it("returns 500 with error on insert");
-        it("returns 400 on checks failed");
         it("inserts and applies auto transactions");
         it("inserts without applying auto transactions");
     });
