@@ -32,7 +32,7 @@ self.addEventListener('message', e => {
             let i = 0;
             return {
                 hasNext() {
-                    const rtn = i < total;
+                    const rtn = i < total - 1;
                     if (!rtn) {
                         self.postMessage(null);
                     }

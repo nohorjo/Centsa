@@ -52,9 +52,9 @@
                 <td colspan="3" data-ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
                     <label>Amount</label>
                     <div class="input-group input-daterange">
-                        <input type="number" class="form-control" data-ng-model="filter.fromAmount">
+                        <input type="number" step="0.01" class="form-control" data-ng-model="filter.fromAmount" data-number-divide="100">
                         <div class="input-group-addon">to</div>
-                        <input type="number" class="form-control" data-ng-model="filter.toAmount">
+                        <input type="number" step="0.01" class="form-control" data-ng-model="filter.toAmount" data-number-divide="100">
                     </div>
                 </td>
             </tr>

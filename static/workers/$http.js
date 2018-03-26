@@ -27,6 +27,7 @@ const $http = (() => {
             }
             xhr.open(x.method, x.url, true);
             for (let header in x.headers) xhr.setRequestHeader(header, x.headers[header]);
+            xhr.setRequestHeader('x-date', Date().toString());
             xhr.send(x.data);
         });
     };

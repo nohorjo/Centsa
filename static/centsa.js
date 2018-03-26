@@ -67,7 +67,7 @@ if (typeof app == "object") {
                 return config;
             },
             'responseError': function (rejection) {
-                swal("Error", rejection.data, "error");
+                swal("Error", JSON.stringify(rejection.data).replace(/(^"|"$)/g,''), "error");
                 return $q.reject(rejection);
             }
         };

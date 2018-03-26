@@ -96,12 +96,8 @@ export const insert = (req, resp) => {
 
 export const deleteExpense = (req, resp) => {
     pool.query(
-        `UPDATE transactions SET expense_id=NULL
-        WHERE expense_id=? AND user_id=?;
-        DELETE FROM expenses WHERE id=? AND user_id=?;`,
+        `DELETE FROM expenses WHERE id=? AND user_id=?;`,
         [
-            req.params.id,
-            req.session.userData.user_id,
             req.params.id,
             req.session.userData.user_id,
         ],
