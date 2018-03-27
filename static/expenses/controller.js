@@ -34,6 +34,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.saveExpense = () => {
         $scope.newExpense.started = new Date($scope.newExpense.started);
+        $scope.newExpense.started.setHours(12);
         if (!$scope.newExpense.account_id) {
             delete $scope.newExpense.account_id;
         }

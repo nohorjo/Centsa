@@ -56,6 +56,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 
 	$scope.saveTrans = updating => {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
+		$scope.newTrans.date.setHours(12);
 		centsa.transactions.insert($scope.newTrans).then(resp => {
 			countPages();
 			if (resp.data > 0) {

@@ -36,6 +36,7 @@ route.get('/', (req, resp) => {
                 console.error(err);
                 resp.status(500).send(err);
             } else {
+                result.forEach(t => t.date.setHours(12));
                 resp.send(result);
             }
         }
