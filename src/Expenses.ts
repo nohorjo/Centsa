@@ -14,6 +14,7 @@ export const getAll = (req, resp) => {
                 console.error(err);
                 resp.status(500).send(err);
             } else {
+                result.forEach(e => e.started.setHours(12));
                 resp.send(result);
             }
         }
