@@ -56,15 +56,6 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 
 });
 
-app.filter('range', () => {
-	return function (input, total) {
-		total = parseInt(total);
-		for (let i = 0; i < total; i++)
-			input.push(i);
-		return input;
-	};
-});
-
 app.filter('prop', () => {
 	return function (input, prop, value) {
 		return input.filter(e => e[prop] == value);
