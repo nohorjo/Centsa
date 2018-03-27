@@ -124,9 +124,7 @@ describe("fbauth", () => {
 
             const cookieSpy = spy();
             const sendStatusSpy = spy();
-            const statusStub = stub();
-
-            statusStub.throws("Unexpected call: status");
+            const statusStub = stub().throws("Unexpected call: status");
 
             await login({
                 session: session,
@@ -139,6 +137,7 @@ describe("fbauth", () => {
                     sendStatus: sendStatusSpy,
                     status: statusStub
                 });
+
             expect(cookieSpy.calledOnce).to.be.true;
             expect(cookieSpy.calledWith('name', name, match({ maxAge: 31536000000, httpOnly: false })))
                 .to.be.true;

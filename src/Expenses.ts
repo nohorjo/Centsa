@@ -3,7 +3,7 @@ import { pool } from './Connection';
 
 const route = Router();
 
-route.get('/', (req, resp) => {
+export const getAll = (req, resp) => {
     pool.query(
         `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
         (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
@@ -19,9 +19,9 @@ route.get('/', (req, resp) => {
             }
         }
     );
-});
+};
 
-route.get('/total', (req, resp) => {
+export const getTotals = (req, resp) => {
     const sql = req.query.auto == "true" ?
         "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;" :
         "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;";
@@ -46,9 +46,9 @@ route.get('/total', (req, resp) => {
             }
         }
     );
-});
+};
 
-route.post("/", (req, resp) => {
+export const insert = (req, resp) => {
     const expense = req.body;
     if (isFrequencyValid(expense.frequency)) {
         expense.user_id = req.session.userData.user_id;
@@ -93,9 +93,9 @@ route.post("/", (req, resp) => {
     } else {
         resp.status(400).send("Invalid frequency");
     }
-});
+};
 
-route.delete('/:id', (req, resp) => {
+export const deleteExpense = (req, resp) => {
     pool.query(
         `DELETE FROM expenses WHERE id=? AND user_id=?;`,
         [
@@ -111,7 +111,13 @@ route.delete('/:id', (req, resp) => {
             }
         }
     );
-});
+};
+
+route.get('/', getAll);
+route.get('/total', getTotals);
+route.post("/", insert);
+
+route.delete('/:id', deleteExpense);
 
 const _route = Router();
 _route.use('/expenses', route);
@@ -192,7 +198,7 @@ export const applyAutoTransactions = (all?, id?, today = new Date()) => {
     );
 };
 
-const isDayOfPayment = (() => {
+export const isDayOfPayment = (() => {
     const checkPotentialDays = (d, accept, date) => {
         const xDays = [];
         const temp = new Date(date);
@@ -270,7 +276,7 @@ const isDayOfPayment = (() => {
  *
  * @param frequency The frequency to check
  */
-const isFrequencyValid = frequency => {
+export const isFrequencyValid = frequency => {
     frequency = frequency.toString().toUpperCase();
     if (/^\d+$/g.test(frequency)) {
         return frequency > 0;
