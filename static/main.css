@@ -202,3 +202,9 @@ input#export{
 	display: inline-block;
     width: initial;
 }
+
+#transDiv {
+	max-height: 80vh;
+	overflow-y: scroll;
+	width: 100%;
+}
