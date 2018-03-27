@@ -32,7 +32,8 @@
     </div>
 </div>
 <h4>Manage transactions</h4>
-<form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()">
+<input type="checkbox" data-ng-model="showFilter"> Show filter
+<form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()" data-ng-show="showFilter">
     <table class="table table-condensed">
         <thead>
             <tr>

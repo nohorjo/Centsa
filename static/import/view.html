@@ -30,8 +30,7 @@
 				<option data-ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
 				<option value="">-- NEW RULE --</option>
 			</select>
-			Show editor
-			<input type="checkbox" data-ng-model="showEditor" data-ng-disabled="!rule">
+			<input type="checkbox" data-ng-model="showEditor" data-ng-disabled="!rule"> Show editor
 		</td>
 		<td width="30%">
 			<input type="file" class="form-control-file" data-file-model="uploadFile" />

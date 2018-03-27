@@ -44,8 +44,10 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 		regex: false
 	};
 	$rootScope.resetFilter();
+	$rootScope.showFilter = false;
 
 	$rootScope.setFilter = f => {
+		$rootScope.showFilter = true;
 		$rootScope.filter = f;
 		$location.path("transactions");
 	};
