@@ -135,34 +135,36 @@
         </tr>
     </table>
 </div>
-<form name="Form" data-ng-submit="saveTrans()">
-    <table id="transTable" class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th width="5%" data-ng-click="sort('id')">ID</th>
-                <th width="15%" data-ng-click="sort('date', 'id DESC')">Date</th>
-                <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
-                <th width="10%">Account</th>
-                <th width="10%">Type</th>
-                <th width="10%">Expense</th>
-                <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
-            <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
-                <td>{{ t.id }}</td>
-                <td>{{ formatDate(t.date) }}</td>
-                <td style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
-                <td>{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
-                <td>{{ (types | prop:'id':t.type_id)[0].name }}</td>
-                <td>{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
-                <td colspan="2">{{ t.comment }}</td>
-            </tr>
-            <tr data-ng-repeat="t in [] | range:getExtraRows()">
-                <td colspan="8">-</td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+<div data-scroll-bottom="loadMoreTransactions()">
+    <form name="Form" data-ng-submit="saveTrans()">
+        <table id="transTable" class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th width="5%" data-ng-click="sort('id')">ID</th>
+                    <th width="15%" data-ng-click="sort('date', 'id DESC')">Date</th>
+                    <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
+                    <th width="10%">Account</th>
+                    <th width="10%">Type</th>
+                    <th width="10%">Expense</th>
+                    <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
+                <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
+                    <td>{{ t.id }}</td>
+                    <td>{{ formatDate(t.date) }}</td>
+                    <td style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
+                    <td>{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
+                    <td>{{ (types | prop:'id':t.type_id)[0].name }}</td>
+                    <td>{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
+                    <td colspan="2">{{ t.comment }}</td>
+                </tr>
+                <tr data-ng-repeat="t in [] | range:getExtraRows()">
+                    <td colspan="8">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

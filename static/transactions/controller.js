@@ -179,4 +179,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		exportWorker.postMessage(currentFilter);
 	};
 
+	$scope.loadMoreTransactions = () => alert("Unimplemented");
+
 });

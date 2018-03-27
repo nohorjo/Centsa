@@ -18,7 +18,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 				asc = false;
 			}
 			asc = !asc
-			arr.sort(function (a, b) {
+			arr.sort((a, b) => {
 				p1 = a[prop];
 				p2 = b[prop];
 				var comp;
@@ -54,7 +54,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 
 });
 
-app.filter('range', function () {
+app.filter('range', () => {
 	return function (input, total) {
 		total = parseInt(total);
 		for (let i = 0; i < total; i++)
@@ -63,7 +63,7 @@ app.filter('range', function () {
 	};
 });
 
-app.filter('prop', function () {
+app.filter('prop', () => {
 	return function (input, prop, value) {
 		return input.filter(e => e[prop] == value);
 	};
@@ -72,23 +72,35 @@ app.filter('prop', function () {
 app.directive('fileModel', ['$parse', function ($parse) {
 	return {
 		restrict: 'A',
-		link: function (scope, element, attrs) {
-			const model = $parse(attrs.fileModel);
+		link: function ($scope, $elem, $attrs) {
+			const model = $parse($attrs.fileModel);
 			const modelSetter = model.assign;
 
-			element.bind('change', function () {
-				scope.$apply(function () {
-					modelSetter(scope, element[0].files[0]);
+			$elem.bind('change', () => {
+				$scope.$apply(() => {
+					modelSetter($scope, $elem[0].files[0]);
 				});
 			});
 		}
 	};
 }]);
 
-app.directive("numberDivide", ($filter, $parse) => ({
+app.directive("numberDivide", () => ({
 	require: "ngModel",
 	link: ($scope, $elem, $attrs, $controller) => {
 		$controller.$formatters.push(val => val && val / $attrs.numberDivide);
 		$controller.$parsers.push(val => val && val * $attrs.numberDivide);
+	}
+}));
+
+app.directive('scrollBottom', () => ({
+	restrict: 'A',
+	link: function ($scope, $elem, $attrs) {
+		var raw = $elem[0];
+		$elem.bind('scroll', () => {
+			if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+				$scope.$apply($attrs.scrollBottom);
+			}
+		})
 	}
 }));
