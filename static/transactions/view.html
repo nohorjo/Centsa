@@ -116,7 +116,7 @@
             <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
         </tbody>
     </table>
-    <div id="transDiv" data-scroll-bottom="loadMoreTransactions()">
+    <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
         <table class="table table-condensed table-hover">
             <tbody>
                 <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
@@ -127,9 +127,10 @@
                     <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
                     <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
                     <td width="40%" colspan="2">{{ t.comment }}</td>
+                    <td></td>
                 </tr>
                 <tr data-ng-show="moreToLoad">
-                    <td colspan="7">
+                    <td colspan="8">
                         <div class="loader">Loading...</div>
                     </td>
                 </tr>

@@ -204,7 +204,6 @@ input#export{
 }
 
 #transDiv {
-	max-height: 75vh;
 	overflow-y: scroll;
 	width: 100%;
 }

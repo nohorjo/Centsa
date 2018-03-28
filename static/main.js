@@ -91,9 +91,29 @@ app.directive('scrollBottom', () => ({
 	link: function ($scope, $elem, $attrs) {
 		var raw = $elem[0];
 		$elem.bind('scroll', () => {
-			if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+			if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight - 10) {
 				$scope.$apply($attrs.scrollBottom);
 			}
 		})
+	}
+}));
+
+app.directive('maxHeightBottom', () => ({
+	restrict: 'A',
+	link: function ($scope, $elem, $attrs) {
+		const setMaxHeight = yPos => $elem.prop("style")["max-height"] = `${(window.innerHeight - yPos) * 0.85}px`;
+		setMaxHeight($elem[0].getBoundingClientRect().y);
+
+		$scope.$watch(
+			() => {
+				setTimeout(() => {
+					if (!$scope.$$phase) {
+						$scope.$digest();
+					}
+				}, 200);
+				return $elem[0].getBoundingClientRect().y
+			},
+			newV => setMaxHeight(newV)
+		);
 	}
 }));
