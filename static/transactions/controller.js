@@ -1,16 +1,8 @@
 app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	let sort = "date DESC, id DESC";
 	$scope.currentPage = 1;
-	$scope.pageSize = "15";
 
 	let currentFilter = Object.assign({}, $rootScope.filter);
-
-	const loadTransactions = () => centsa.transactions.getAll({
-		page: $scope.currentPage,
-		pageSize: $scope.pageSize,
-		sort: sort,
-		filter: $rootScope.filter
-	}).then(resp => $scope.transactions = resp.data);
 
 	$scope.newTrans = {
 		amount: 0.0,
@@ -46,9 +38,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			}
 			if (!updating) {
 				$scope.transactions.unshift($scope.newTrans);
-				if ($scope.transactions.length > $scope.pageSize) {
-					$scope.transactions.pop();
-				}
 			} else if (updating) {
 				for (let i = 0; i < $scope.transactions.length; i++) {
 					if ($scope.transactions[i].id == $scope.newTrans.id) {
@@ -121,14 +110,22 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			}
 			sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", id DESC" +
 				(secondary ? ", " + secondary : "");
-			loadTransactions();
+			$scope.reloadTrans();
 		};
 	})();
 
 	$scope.reloadTrans = () => {
 		currentFilter = Object.assign({}, $rootScope.filter);
 		$scope.currentPage = 1;
-		loadTransactions();
+		centsa.transactions.getAll({
+			page: $scope.currentPage,
+			pageSize: 40,
+			sort: sort,
+			filter: $rootScope.filter
+		}).then(resp => {
+			$scope.transScrollTop();
+			$scope.transactions = resp.data
+		});
 		centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
 	};
 	$scope.reloadTrans();
@@ -137,8 +134,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		$rootScope.resetFilter();
 		$scope.reloadTrans();
 	};
-
-	$scope.getExtraRows = () => $scope.pageSize > 100 ? 0 : $scope.pageSize - $scope.transactions.length;
 
 	$scope.getHighlight = amount => {
 		const range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
@@ -162,10 +157,14 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	$scope.loadMoreTransactions = () => {
 		centsa.transactions.getAll({
 			page: ++$scope.currentPage,
-			pageSize: $scope.pageSize,
+			pageSize: 20,
 			sort: sort,
 			filter: $rootScope.filter
 		}).then(resp => $scope.transactions = $scope.transactions.concat(resp.data));
+	};
+
+	$scope.transScrollTop = () => {
+		//TODO: implement
 	};
 
 });
