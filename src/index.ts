@@ -12,7 +12,7 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
-import { testConnection } from './Connection';
+import { testConnection } from './dao/Connection';
 import debug from './debug';
 
 const cpus = os.cpus().length;

@@ -1,41 +1,29 @@
 import { Router } from 'express';
-import { pool } from './Connection';
+import * as dao from './dao/Settings';
 
 const route = Router();
 
 route.get('/', (req, resp) => {
-    pool.query(
-        'SELECT setting,value FROM settings WHERE user_id=?;',
-        [req.session.userData.user_id],
-        (err, results) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                resp.send(results.reduce((a, b) => {
-                    // Convert array of {key:x,value:y} to a single object {x:y}...
-                    const x = {};
-                    x[b.setting] = b.value;
-                    return Object.assign(x, a);
-                }, {}));
-            }
+    dao.getAll(req.session.userData.user_id, (err, results) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.send(results);
         }
-    );
+    });
 });
 
 route.post("/", (req, resp) => {
     const setting = req.body;
-    pool.query(
-        'REPLACE INTO settings (user_id, setting, value) VALUES (?,?,?);',
-        [req.session.userData.user_id, setting.key, setting.value],
-        err => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                resp.sendStatus(201);
-            }
-        });
+    dao.setSetting(req.body, req.session.userData.user_id, err => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.sendStatus(201);
+        }
+    });
 });
 
 const _route = Router();

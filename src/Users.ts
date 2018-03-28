@@ -1,28 +1,18 @@
-import { pool } from './Connection';
+import * as dao from './dao/Users';
 
 export const getOrCreateUser = (data, cb) => {
-    pool.query('SELECT id FROM users WHERE email=?;', [data.email], (err, results) => {
+    dao.getId(data.email, (err, id) => {
         if (err) throw err;
-        if (results[0]) {
-            cb(results[0].id);
+        if (id) {
+            cb(id);
         } else {
-            pool.query(
-                `INSERT INTO users (email,name) VALUES (?,?);`
-                , [data.email, data.name], (err, results) => {
+            dao.insert(data.name, data.email, (err, userId) => {
+                if (err) throw err;
+                dao.setUpUser(userId, err => {
                     if (err) throw err;
-                    const userId = results.insertId;
-                    pool.query(
-                        `INSERT INTO types (user_id,name) VALUES (?,'Other');
-                        INSERT INTO accounts (user_id,name) VALUES (?,'Default');
-                        INSERT INTO settings VALUES
-                            (?,'strict.mode','true'),
-                            (?,'default.account',(SELECT id FROM accounts a where a.name='Default' AND a.user_id=?));`,
-                        Array(5).fill(userId),
-                        err => {
-                            if (err) throw err;
-                            cb(userId);
-                        });
+                    cb(userId);
                 });
+            });
         }
     });
 };

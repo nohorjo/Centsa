@@ -1,74 +1,66 @@
 import { Router } from 'express';
-import { pool } from './Connection';
 import { lastPaymentDate, nextPaymentDate } from './Expenses';
+import { getAllWithSum } from './dao/Expenses';
+import * as rules from './dao/Rules';
 
 const route = Router();
 
 route.get("/budget", (req, resp) => {
-    pool.query(
-        `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=?;
-        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
-        [req.session.userData.user_id, req.session.userData.user_id],
-        (err, results) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                const expenses = results[1];
-                const strict = req.query.strict == "true";
-                const currentDay = new Date(req.get('x-date')).valueOf();
+    getAllWithSum(req.session.userData.user_id, (err, results) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            const expenses = results[1];
+            const strict = req.query.strict == "true";
+            const currentDay = new Date(req.get('x-date')).valueOf();
 
-                const budget = expenses.reduce(
-                    (currentBudget, expense) => {
-                        if (expense.cost > 0 && expense.started < new Date(currentDay)) {
-                            let cost = expense.cost;
-                            if (!strict) {
-                                const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
-                                const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
+            const budget = expenses.reduce(
+                (currentBudget, expense) => {
+                    if (expense.cost > 0 && expense.started < new Date(currentDay)) {
+                        let cost = expense.cost;
+                        if (!strict) {
+                            const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
+                            const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
-                                cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
-                            }
-                            currentBudget.afterAll -= cost;
-                            if (expense.automatic) {
-                                currentBudget.afterAuto -= cost;
-                            }
+                            cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
                         }
-                        return currentBudget;
-                    }, {
-                        afterAll: results[0][0].total,
-                        afterAuto: results[0][0].total
+                        currentBudget.afterAll -= cost;
+                        if (expense.automatic) {
+                            currentBudget.afterAuto -= cost;
+                        }
                     }
-                );
-                resp.send(budget);
-            }
+                    return currentBudget;
+                }, {
+                    afterAll: results[0][0].total,
+                    afterAuto: results[0][0].total
+                }
+            );
+            resp.send(budget);
         }
-    );
-
+    });
 });
 
 // =================== IMPORT
 route.get("/rules", (req, resp) => {
-    pool.query(
-        "SELECT id,name FROM rules WHERE user_id IS NULL OR user_id=?;",
-        [req.session.userData.user_id],
-        (err, result) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                resp.send(result);
-            }
+    rules.getAll(req.session.userData.user_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.send(result);
         }
-    );
+    });
 });
 
 route.post("/rule/:name", (req, resp) => {
     const { name } = req.params;
 
     if (name && name != 'Default') {
-        pool.query(
-            "REPLACE INTO rules (name,user_id,content) VALUES (?,?,?);",
-            [name, req.session.userData.user_id, req.body.script],
+        rules.insert(
+            name,
+            req.session.userData.user_id,
+            req.body.script,
             (err, result) => {
                 if (err) {
                     console.error(err);
@@ -84,18 +76,14 @@ route.post("/rule/:name", (req, resp) => {
 });
 
 route.get("/rule/:id", (req, resp) => {
-    pool.query(
-        "SELECT content FROM rules WHERE (user_id IS NULL OR user_id=?) AND id=?;",
-        [req.session.userData.user_id, req.params.id],
-        (err, result) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                resp.send(result[0].content);
-            }
+    rules.getRule(req.params.id, req.session.userData.user_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.send(result[0].content);
         }
-    );
+    });
 });
 
 const _route = Router();

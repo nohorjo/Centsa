@@ -1,31 +1,26 @@
 import { Router } from 'express';
-import { pool } from './Connection';
+import * as dao from './dao/Expenses';
+import * as tdao from './dao/Transactions';
 
 const route = Router();
 
 export const getAll = (req, resp) => {
-    pool.query(
-        `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
-        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
-        FROM expenses e WHERE user_id=?;`,
-        [req.session.userData.user_id],
-        (err, result) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                result.forEach(e => e.started.setHours(12));
-                resp.send(result);
-            }
+    dao.getAll(req.session.userData.user_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            result.forEach(e => e.started.setHours(12));
+            resp.send(result);
         }
-    );
+    });
 };
 
 export const getTotals = (req, resp) => {
-    const sql = req.query.auto == "true" ?
-        "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;" :
-        "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;";
-    pool.query(sql, [new Date(req.get('x-date')), req.session.userData.user_id],
+    dao.getTotals(
+        req.query.auto == "true",
+        new Date(req.get('x-date')),
+        req.session.userData.user_id,
         (err, result) => {
             if (err) {
                 console.error(err);
@@ -53,55 +48,36 @@ export const insert = (req, resp) => {
     if (isFrequencyValid(expense.frequency)) {
         expense.user_id = req.session.userData.user_id;
         expense.started = new Date(expense.started);
-        pool.query(
-            `SELECT COUNT(*) AS count FROM users u 
-        JOIN accounts a ON u.id=a.user_id 
-        JOIN types t ON u.id=t.user_id 
-        WHERE u.id!=? AND (a.id=? AND t.id=?);`,
-            [
-                expense.user_id,
-                expense.account_id,
-                expense.type_id,
-            ],
-            (err, results) => {
-                if (err) {
-                    console.error(err);
-                    resp.status(500).send(err);
+        dao.checkEntityOwnership(expense, (err, allowed) => {
+            if (err) {
+                console.error(err);
+                resp.status(500).send(err);
+            } else {
+                if (!allowed) {
+                    resp.status(400).send("Invalid account or type id");
                 } else {
-                    if (results[0].count) {
-                        resp.status(400).send("Invalid account or type id");
-                    } else {
-                        pool.query(
-                            `INSERT INTO expenses SET ?;`,
-                            expense,
-                            (err, results) => {
-                                if (err) {
-                                    console.error(err);
-                                    resp.status(500).send(err);
-                                } else {
-                                    if (expense.automatic) {
-                                        applyAutoTransactions(true, results.insertId, new Date(req.get('x-date')));
-                                    }
-                                    resp.send(results.insertId.toString());
-                                }
+                    dao.insert(expense, (err, results) => {
+                        if (err) {
+                            console.error(err);
+                            resp.status(500).send(err);
+                        } else {
+                            if (expense.automatic) {
+                                applyAutoTransactions(true, results.insertId, new Date(req.get('x-date')));
                             }
-                        );
-                    }
+                            resp.send(results.insertId.toString());
+                        }
+                    });
                 }
             }
-        );
+        });
     } else {
         resp.status(400).send("Invalid frequency");
     }
 };
 
 export const deleteExpense = (req, resp) => {
-    pool.query(
-        `DELETE FROM expenses WHERE id=? AND user_id=?;`,
-        [
-            req.params.id,
-            req.session.userData.user_id,
-        ],
+    dao.deleteExpense(req.params.id,
+        req.session.userData.user_id,
         (err, result) => {
             if (err) {
                 console.error(err);
@@ -149,53 +125,44 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 export const applyAutoTransactions = (all?, id?, today = new Date()) => {
-    pool.query(
-        `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
-            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,
-        [today],
-        (err, result) => {
-            if (err) { console.error(err); throw err; }
-            let expectedTransactions;
-            if (all) {
-                expectedTransactions = result.reduce((arr, e) => {
-                    for (let day = new Date(e.started); day <= today; day.setDate(day.getDate() + 1)) {
-                        if (isDayOfPayment(e.frequency, day, e.started)) {
-                            arr.push([
-                                e.user_id,
-                                e.cost,
-                                e.name,
-                                e.account_id,
-                                e.type_id,
-                                e.id,
-                                new Date(day)
-                            ]);
-                        }
+    dao.getAutoExpenses(all, id, today, (err, result) => {
+        if (err) { console.error(err); throw err; }
+        let expectedTransactions;
+        if (all) {
+            expectedTransactions = result.reduce((arr, e) => {
+                for (let day = new Date(e.started); day <= today; day.setDate(day.getDate() + 1)) {
+                    if (isDayOfPayment(e.frequency, day, e.started)) {
+                        arr.push([
+                            e.user_id,
+                            e.cost,
+                            e.name,
+                            e.account_id,
+                            e.type_id,
+                            e.id,
+                            new Date(day)
+                        ]);
                     }
-                    return arr;
-                }, []);
-            } else {
-                result = result.filter(e => isDayOfPayment(e.frequency, today, e.started));
-                expectedTransactions = result.map(e => ([
-                    e.user_id,
-                    e.cost,
-                    e.name,
-                    e.account_id,
-                    e.type_id,
-                    e.id,
-                    today
-                ]));
-            }
-            if (expectedTransactions.length > 0) {
-                pool.query(
-                    `INSERT IGNORE INTO transactions
-                    (user_id,amount,comment,account_id,type_id,expense_id,date)
-                    VALUES ?;`,
-                    [expectedTransactions],
-                    err => { if (err) { console.dir(err); throw err; } }
-                );
-            }
+                }
+                return arr;
+            }, []);
+        } else {
+            result = result.filter(e => isDayOfPayment(e.frequency, today, e.started));
+            expectedTransactions = result.map(e => ([
+                e.user_id,
+                e.cost,
+                e.name,
+                e.account_id,
+                e.type_id,
+                e.id,
+                today
+            ]));
         }
-    );
+        tdao.insertAutoTransactions(
+            expectedTransactions,
+            err => { if (err) { console.dir(err); throw err; } }
+        );
+
+    });
 };
 
 export const isDayOfPayment = (() => {
