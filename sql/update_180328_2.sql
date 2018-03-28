@@ -1,3 +1,4 @@
+/* #99 Applied fix for import to prevent date going back an hour due to DST */
 UPDATE rules SET content = 
 '/**
 	* Script is initialized with the variables: 
@@ -41,7 +42,7 @@ Promise.all([
 			}
 
 			const date = new Date(row[0]);
-			date.setHours(12);
+			date.setHours(12); // So that DST does not set the date back a day
 
 			allTransactions.push({
 				date: date,
