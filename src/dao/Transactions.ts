@@ -42,6 +42,7 @@ export const getAll = (
             filter.fromAmount,
             filter.toAmount
         ],
+        cb
     );
 };
 
