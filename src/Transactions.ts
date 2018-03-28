@@ -234,35 +234,6 @@ route.get('/comments', (req, resp) => {
         });
 });
 
-route.get('/countPages', (req, resp) => {
-    const filter = parseFilter(req);
-
-    pool.query(
-        `SELECT COUNT(*) as count FROM transactions WHERE user_id=?
-        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
-        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
-        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
-        AND date>=? AND date<=?
-        AND amount>=? AND amount<=?
-        AND comment ${filter.regex ? 'R' : ''}LIKE ?;`,
-        [
-            req.session.userData.user_id,
-            filter.fromDate,
-            filter.toDate,
-            filter.fromAmount,
-            filter.toAmount,
-            filter.comment
-        ],
-        (err, result) => {
-            if (err) {
-                console.error(err);
-                resp.status(500).send(err);
-            } else {
-                resp.send((Math.floor(result[0].count / req.query.pageSize) + 1).toString());
-            }
-        });
-});
-
 const _route = Router();
 _route.use('/transactions', route);
 

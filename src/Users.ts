@@ -16,9 +16,8 @@ export const getOrCreateUser = (data, cb) => {
                         INSERT INTO accounts (user_id,name) VALUES (?,'Default');
                         INSERT INTO settings VALUES
                             (?,'strict.mode','true'),
-                            (?,'trans.page.size','15'),
                             (?,'default.account',(SELECT id FROM accounts a where a.name='Default' AND a.user_id=?));`,
-                        Array(6).fill(userId),
+                        Array(5).fill(userId),
                         err => {
                             if (err) throw err;
                             cb(userId);

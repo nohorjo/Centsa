@@ -17,7 +17,6 @@ const centsa = function ($http) {
         constructor() { super('transactions'); }
         getAll(options) { return $http.get(this.apiUrl, { params: options }); }
         getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
-        countPages(options) { return $http.get(`${this.apiUrl}/countPages`, { params: options }); }
         getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }
         getUniqueComments() { return $http.get(`${this.apiUrl}/comments`); }
     }

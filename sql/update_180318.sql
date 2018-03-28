@@ -1,4 +1,4 @@
--- #92 Created setting for default account
+/* #92 Created setting for default account */
 INSERT INTO settings (
     user_id,
     setting,

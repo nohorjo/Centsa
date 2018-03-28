@@ -40,11 +40,6 @@ describe("Transactions", () => {
         it("returns comments");
         it("returns 500 with error");
     });
-    describe("countPages", () => {
-        it("returns pages count with standard comment");
-        it("returns pages count with regex comment");
-        it("returns 500 with error");
-    });
     describe("parseFilter", () => {
         it("returns filter with no comment");
         it("returns filter with standard comment");

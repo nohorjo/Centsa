@@ -12,24 +12,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		filter: $rootScope.filter
 	}).then(resp => $scope.transactions = resp.data);
 
-	centsa.settings.get("trans.page.size").then(data => {
-		$scope.pageSize = data;
-		loadTransactions();
-	});
-
-	const countPages = () => centsa.transactions.countPages({
-		pageSize: $scope.pageSize,
-		filter: $rootScope.filter
-	}).then(resp => $scope.pagesCount = resp.data);
-
-	countPages();
-
-	$scope.goToPage = n => {
-		if ($scope.currentPage != ($scope.currentPage = n)) {
-			loadTransactions();
-		}
-	};
-
 	$scope.newTrans = {
 		amount: 0.0,
 		comment: "",
@@ -58,12 +40,11 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		$scope.newTrans.date = new Date($scope.newTrans.date);
 		$scope.newTrans.date.setHours(12);
 		centsa.transactions.insert($scope.newTrans).then(resp => {
-			countPages();
 			if (resp.data > 0) {
 				$scope.newTrans.id = resp.data;
 				centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
 			}
-			if ($scope.currentPage == 1 && !updating) {
+			if (!updating) {
 				$scope.transactions.unshift($scope.newTrans);
 				if ($scope.transactions.length > $scope.pageSize) {
 					$scope.transactions.pop();
@@ -124,7 +105,6 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		if (result.value) {
 			centsa.transactions.remove(id).then(() => {
 				centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
-				countPages();
 				$scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
 				$('#transModal').appendTo(".content").modal("hide");
 			});
@@ -147,12 +127,11 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 
 	$scope.reloadTrans = () => {
 		currentFilter = Object.assign({}, $rootScope.filter);
-		centsa.settings.set("trans.page.size", $scope.pageSize);
-		countPages();
 		$scope.currentPage = 1;
 		loadTransactions();
 		centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
 	};
+	$scope.reloadTrans();
 
 	$scope.clearFilter = () => {
 		$rootScope.resetFilter();
@@ -180,6 +159,13 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 		exportWorker.postMessage(currentFilter);
 	};
 
-	$scope.loadMoreTransactions = () => alert("Unimplemented");
+	$scope.loadMoreTransactions = () => {
+		centsa.transactions.getAll({
+			page: ++$scope.currentPage,
+			pageSize: $scope.pageSize,
+			sort: sort,
+			filter: $rootScope.filter
+		}).then(resp => $scope.transactions = $scope.transactions.concat(resp.data));
+	};
 
 });

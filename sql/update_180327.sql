@@ -1,3 +1,4 @@
+/* #99 Fixes (most) transactions that are behind a day due to daylight savings */
 UPDATE transactions SET date=DATE_ADD(date, INTERVAL 1 DAY)
     WHERE (date>"2018/03/25")
     OR (date>"2017/03/26" AND date<="2017/10/29")
