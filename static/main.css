@@ -268,3 +268,7 @@ input#export{
     height: 5em;
   }
 }
+
+#scrollButtom {
+	margin: 0.5em;
+}
