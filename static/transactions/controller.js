@@ -167,7 +167,7 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 	};
 
 	$scope.transScrollTop = () => {
-		//TODO: implement
+		$("#transDiv").animate({ scrollTop: 0 }, "fast");
 	};
 
 });
