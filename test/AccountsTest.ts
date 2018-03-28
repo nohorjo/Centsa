@@ -1,6 +1,6 @@
 import { insert, getAll } from '../src/Accounts';
 import { expect } from 'chai';
-import * as Connection from '../src/Connection';
+import * as Connection from '../src/dao/Connection';
 import { spy, stub, match } from 'sinon';
 
 describe("Accounts", () => {

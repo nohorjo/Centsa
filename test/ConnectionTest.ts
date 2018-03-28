@@ -1,4 +1,4 @@
-import { testConnection } from '../src/Connection';
+import { testConnection } from '../src/dao/Connection';
 import * as mysql from 'mysql';
 import { spy, stub, match } from 'sinon';
 import { expect } from 'chai';

@@ -1,5 +1,5 @@
 import * as Expenses from '../src/Expenses';
-import { pool } from '../src/Connection';
+import { pool } from '../src/dao/Connection';
 import { stub, match, spy } from 'sinon';
 import { expect } from 'chai';
 
@@ -210,10 +210,11 @@ describe("Expenses", () => {
         it("returns 500 with error on checks", () => {
             const errorMsg = "Error message: insert check";
             validStub.returns(true);
+         
             queryStub.withArgs(`SELECT COUNT(*) AS count FROM users u 
-        JOIN accounts a ON u.id=a.user_id 
-        JOIN types t ON u.id=t.user_id 
-        WHERE u.id!=? AND (a.id=? AND t.id=?);`,
+    JOIN accounts a ON u.id=a.user_id 
+    JOIN types t ON u.id=t.user_id 
+    WHERE u.id!=? AND (a.id=? AND t.id=?);`,
                 match.array.deepEquals([userId, accountId, typeId]),
                 match.func).callsFake((x, y, cb) => {
                     cb(errorMsg);
