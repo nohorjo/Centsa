@@ -123,9 +123,11 @@ Promise.all([
 				typesCache.push(type);
 			}
 
+			const date = new Date(row[0]);
+			date.setHours(12);
 
 			allTransactions.push({
-				date: new Date(row[0]),
+				date: date,
 				amount: parseFloat(row[1].replace(/[^\d\.]/g,'')) * 100,
 				comment: row[2],
 				account_id: account.id,
