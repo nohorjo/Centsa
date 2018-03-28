@@ -212,14 +212,14 @@ input#export{
 .loader,
 .loader:before,
 .loader:after {
-  background: #4267b2;
+  background: #5bc0de;
   -webkit-animation: load1 1s infinite ease-in-out;
   animation: load1 1s infinite ease-in-out;
   width: 1em;
   height: 4em;
 }
 .loader {
-  color: #4267b2;
+  color: #5bc0de;
   text-indent: -9999em;
   margin: 2em auto;
   position: relative;
