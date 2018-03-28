@@ -160,7 +160,10 @@ app.controller("transCtrl", function ($scope, $rootScope, centsa) {
 			pageSize: 20,
 			sort: sort,
 			filter: $rootScope.filter
-		}).then(resp => $scope.transactions = $scope.transactions.concat(resp.data));
+		}).then(resp => {
+			$scope.transactions = $scope.transactions.concat(resp.data);
+			$scope.moreToLoad = resp.data.length;
+		});
 	};
 
 	$scope.transScrollTop = () => {

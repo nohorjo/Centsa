@@ -128,6 +128,11 @@
                     <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
                     <td width="40%" colspan="2">{{ t.comment }}</td>
                 </tr>
+                <tr data-ng-show="moreToLoad">
+                    <td colspan="7">
+                        <div class="loader">Loading...</div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
