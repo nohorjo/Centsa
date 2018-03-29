@@ -12,7 +12,9 @@ export const insert = (name, script, userId, cb) => {
     pool.query(
         "REPLACE INTO rules (name,user_id,content) VALUES (?,?,?);",
         [name, script, userId],
-        cb
+        (err, results) => {
+            cb(err, err || results.insertId);
+        }
     );
 };
 

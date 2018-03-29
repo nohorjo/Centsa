@@ -13,12 +13,12 @@ export const getAll = (req, resp) => {
 };
 
 export const insert = (req, resp) => {
-    dao.insert(req.body.name, req.session.userData.user_id, (err, results) => {
+    dao.insert(req.body.name, req.session.userData.user_id, (err, id) => {
         if (err) {
             console.error(err);
             resp.status(500).send(err);
         } else {
-            resp.send(results.insertId.toString());
+            resp.send(id.toString());
         }
     });
 };

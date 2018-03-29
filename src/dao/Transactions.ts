@@ -69,7 +69,9 @@ export const insert = (transaction, cb) => {
     pool.query(
         `${transaction.id ? 'REPLACE' : 'INSERT'} INTO transactions SET ?;`,
         transaction,
-        cb
+        (err, results) => {
+            cb(err, err || results.insertId);
+        }
     );
 };
 

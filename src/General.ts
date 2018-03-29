@@ -61,12 +61,12 @@ route.post("/rule/:name", (req, resp) => {
             name,
             req.session.userData.user_id,
             req.body.script,
-            (err, result) => {
+            (err, id) => {
                 if (err) {
                     console.error(err);
                     resp.status(500).send(err);
                 } else {
-                    resp.send(result.insertId.toString());
+                    resp.send(id.toString());
                 }
             }
         );

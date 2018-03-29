@@ -12,7 +12,9 @@ export const insert = (name, userId, cb) => {
     pool.query(
         'INSERT INTO types (name,user_id) VALUES (?,?);',
         [name, userId],
-        cb
+        (err, results) => {
+            cb(err, err || results.insertId);
+        }
     );
 };
 

@@ -56,15 +56,15 @@ export const insert = (req, resp) => {
                 if (!allowed) {
                     resp.status(400).send("Invalid account or type id");
                 } else {
-                    dao.insert(expense, (err, results) => {
+                    dao.insert(expense, (err, id) => {
                         if (err) {
                             console.error(err);
                             resp.status(500).send(err);
                         } else {
                             if (expense.automatic) {
-                                applyAutoTransactions(true, results.insertId, new Date(req.get('x-date')));
+                                applyAutoTransactions(true, id, new Date(req.get('x-date')));
                             }
-                            resp.send(results.insertId.toString());
+                            resp.send(id.toString());
                         }
                     });
                 }

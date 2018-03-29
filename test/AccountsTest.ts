@@ -81,7 +81,7 @@ describe("Accounts", () => {
         };
         it("returns ID", () => {
             queryStub.withArgs(query, match([newAccountName, userId]), match.func).callsFake((sql, arr, cb) => {
-                cb(null, { insertId: newId });
+                cb(null, newId);
             });
             queryStub.throws("Unexpected args: query");
 

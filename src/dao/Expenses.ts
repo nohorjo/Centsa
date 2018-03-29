@@ -44,7 +44,9 @@ export const checkEntityOwnership = (expense, cb) => {
 };
 
 export const insert = (expense, cb) => {
-    pool.query(`INSERT INTO expenses SET ?;`, expense, cb);
+    pool.query(`INSERT INTO expenses SET ?;`, expense, (err, results) => {
+        cb(err, err || results.insertId);
+    });
 };
 
 export const deleteExpense = (id, userId, cb) => {

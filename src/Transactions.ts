@@ -93,12 +93,12 @@ route.post("/", (() => {
                 if (!allowed) {
                     resp.status(400).send("Invalid account, expense or type id");
                 } else {
-                    dao.insert(transaction, (err, results) => {
+                    dao.insert(transaction, (err, id) => {
                         if (err) {
                             console.error(err);
                             resp.status(500).send(err);
                         } else {
-                            resp.send(results.insertId.toString());
+                            resp.send(id.toString());
                         }
                     });
                 }
