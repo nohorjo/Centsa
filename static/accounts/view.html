@@ -64,15 +64,18 @@
                     <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
                 </td>
             </tr>
-            <tr data-ng-repeat="a in accounts">
+            <tr data-ng-repeat="a in accounts" data-ng-click="setFilter({account_id:a.id.toString()})">
                 <td>{{ a.id }}</td>
                 <td>
-                    <input type="radio" name="defaultAccount" value="{{a.id}}" data-ng-model="defaultAccountId" data-ng-click="setDefaultAccount(a.id)">
+                    <input type="radio" name="defaultAccount" value="{{a.id}}" data-ng-model="defaultAccountId" data-ng-click="setDefaultAccount(a.id);$event.stopPropagation()">
                 </td>
-                <td data-ng-click="setFilter({account_id:a.id.toString()})">{{ a.name }}</td>
+                <td>
+                    <input type="text" step=".01" class="form-control no-border-inactive" data-ng-model="a.name" data-ng-blur="updateAccount(a)"
+                        data-ng-click="$event.stopPropagation()">
+                </td>
                 <td colspan="2" data-ng-init="a.balanceOld = a.balance">
                     <input type="number" step=".01" class="form-control no-border-inactive" data-ng-model="a.balance" data-number-divide="100"
-                        data-ng-blur="adjustAccount(a)">
+                        data-ng-blur="adjustAccount(a)" data-ng-click="$event.stopPropagation()">
                 </td>
             </tr>
             <tr>

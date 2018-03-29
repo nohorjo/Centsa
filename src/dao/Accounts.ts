@@ -8,10 +8,10 @@ export const getAll = (userId, cb) => {
     );
 };
 
-export const insert = (name, userId, cb) => {
+export const insert = (account, cb) => {
     pool.query(
-        `INSERT INTO accounts (name,user_id) VALUES (?,?);`,
-        [name, userId],
+        `${account.id ? 'REPLACE' : 'INSERT'} INTO accounts SET ?;`,
+        account,
         cb
     );
 };

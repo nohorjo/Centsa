@@ -13,7 +13,12 @@ export const getAll = (req, resp) => {
 };
 
 export const insert = (req, resp) => {
-    dao.insert(req.body.name, req.session.userData.user_id, (err, results) => {
+    const account = (({ name, id }) => ({ name, id }))(req.body);
+    account['user_id'] = req.session.userData.user_id;
+    if (!account.id) {
+        delete account.id;
+    }
+    dao.insert(account, (err, results) => {
         if (err) {
             console.error(err);
             resp.status(500).send(err);
