@@ -3,7 +3,7 @@ import { pool } from './Connection';
 export const getAll = (userId, cb) => {
     pool.query(
         `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
-        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
+        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id) AND t.date>=e.started) AS instance_count 
         FROM expenses e WHERE user_id=?;`,
         [userId],
         cb
