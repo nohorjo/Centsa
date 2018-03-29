@@ -271,3 +271,7 @@ input#export{
 #scrollButtom {
 	margin: 0.5em;
 }
+
+.extra-lg-modal{
+	width: 85%;
+}
