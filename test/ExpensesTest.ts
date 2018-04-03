@@ -51,7 +51,7 @@ describe("Expenses", () => {
 
             queryStub.withArgs(
                 `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
-        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
+        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id) AND t.date>=e.started) AS instance_count 
         FROM expenses e WHERE user_id=?;`,
                 match([userId]),
                 match.func
@@ -74,7 +74,7 @@ describe("Expenses", () => {
             const errorMsg = "Error message: getAll";
             queryStub.withArgs(
                 `SELECT id,name,cost,frequency,started,automatic,account_id,type_id, 
-        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id)) AS instances_count 
+        (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id) AND t.date>=e.started) AS instance_count 
         FROM expenses e WHERE user_id=?;`,
                 match.array.deepEquals([userId]),
                 match.func

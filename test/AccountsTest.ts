@@ -72,7 +72,7 @@ describe("Accounts", () => {
         });
     });
     describe("insert", () => {
-        const query = `INSERT INTO accounts (name,user_id) VALUES (?,?);`;
+        const query = `INSERT INTO accounts SET ?;`;
         const newAccountName = "new account";
         const newId = '5678';
         const request = {
@@ -80,8 +80,8 @@ describe("Accounts", () => {
             session: { userData: { user_id: userId } }
         };
         it("returns ID", () => {
-            queryStub.withArgs(query, match([newAccountName, userId]), match.func).callsFake((sql, arr, cb) => {
-                cb(null, newId);
+            queryStub.withArgs(query, match({ user_id: userId, name: newAccountName }), match.func).callsFake((sql, arr, cb) => {
+                cb(null, { insertId: newId });
             });
             queryStub.throws("Unexpected args: query");
 
@@ -101,7 +101,7 @@ describe("Accounts", () => {
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: insert";
-            queryStub.withArgs(query, match([newAccountName, userId]), match.func).callsFake((sql, arr, cb) => {
+            queryStub.withArgs(query, match({ user_id: userId, name: newAccountName }), match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
             });
             queryStub.throws("Unexpected args: query");
