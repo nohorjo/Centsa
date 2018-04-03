@@ -85,6 +85,9 @@ route.post("/", (() => {
         const transaction = req.body;
         transaction.user_id = req.session.userData.user_id;
         transaction.date = new Date(transaction.date);
+        if (!transaction.expense_id) {
+            delete transaction.expense_id;
+        }
         dao.checkEntityOwnership(transaction, (err, allowed) => {
             if (err) {
                 console.error(err);
