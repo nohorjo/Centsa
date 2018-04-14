@@ -102,7 +102,9 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 	$scope.setDefaultAccount = id => centsa.settings.set("default.account", id);
 
 	$scope.updateAccount = a => {
-		centsa.accounts.insert(a);
+		if(a.name != a.nameOld){
+			centsa.accounts.insert(a);
+		}
 	};
 
 });
