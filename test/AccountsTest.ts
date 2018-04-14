@@ -11,7 +11,7 @@ describe("Accounts", () => {
     afterEach(() => queryStub.restore());
 
     describe("getAll", () => {
-        const query = 'SELECT id,name,-(SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id) AS balance FROM accounts a WHERE user_id=?;';
+        const query = 'SELECT id,name,-(COALESCE((SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id), 0)) AS balance FROM accounts a WHERE user_id=?;';
         const account1 = {
             id: 1234,
             name: "account1",
@@ -72,7 +72,7 @@ describe("Accounts", () => {
         });
     });
     describe("insert", () => {
-        const query = `INSERT INTO accounts SET ?;`;
+        const query = "INSERT INTO accounts SET ?;";
         const newAccountName = "new account";
         const newId = '5678';
         const request = {
@@ -80,7 +80,13 @@ describe("Accounts", () => {
             session: { userData: { user_id: userId } }
         };
         it("returns ID", () => {
-            queryStub.withArgs(query, match({ user_id: userId, name: newAccountName }), match.func).callsFake((sql, arr, cb) => {
+            queryStub.withArgs(
+                query,
+                match([
+                    match({ user_id: userId, name: newAccountName }),
+                    undefined
+                ]),
+                match.func).callsFake((sql, arr, cb) => {
                 cb(null, { insertId: newId });
             });
             queryStub.throws("Unexpected args: query");
@@ -101,7 +107,12 @@ describe("Accounts", () => {
         });
         it("returns 500 with error", () => {
             const errorMsg = "Error message: insert";
-            queryStub.withArgs(query, match({ user_id: userId, name: newAccountName }), match.func).callsFake((sql, arr, cb) => {
+            queryStub.withArgs(query,
+                match([
+                    match({ user_id: userId, name: newAccountName }),
+                    undefined
+                ]),
+                match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
             });
             queryStub.throws("Unexpected args: query");
