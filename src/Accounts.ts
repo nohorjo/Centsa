@@ -7,6 +7,7 @@ export const getAll = (req, resp) => {
             console.error(err);
             resp.status(500).send(err);
         } else {
+            result.forEach(a => a.balance = a.balance || 0);
             resp.send(result);
         }
     });
