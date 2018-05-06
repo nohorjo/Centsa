@@ -54,6 +54,10 @@ function onSignIn(googleUser) {
         url: '/google',
         contentType: 'application/json',
         data: JSON.stringify({token:googleUser.getAuthResponse().id_token}),
+        success: () => {
+            window.location.hash = "";
+            window.location.pathname = "main.html";
+        }
     });
     gapi.auth2.getAuthInstance().signOut();
 }

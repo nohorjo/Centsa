@@ -49,21 +49,28 @@ const initWorker = (id, env) => {
     app.use(session(sess));
     app.use(fileUpload());
 
-    app.post('/google', (req, resp) => {
+    app.post('/google', (req, res) => {
        	const {OAuth2Client} = require('google-auth-library');
+	const Users = require('./Users');
 	const CLIENT_ID = '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com';
 	const client = new OAuth2Client(CLIENT_ID);
 	async function verify() {
-	  const ticket = await client.verifyIdToken({
-	  idToken: req.body.token,
-	  audience: '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com'
-	});
-  	const payload = ticket.getPayload();
-       	console.dir((({name,email})=>({name,email}))(payload));        
-}
-verify().catch(console.error);
-       resp.sendStatus(200);
+	    const ticket = await client.verifyIdToken({
+	    idToken: req.body.token,
+	    audience: '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com'
+	    });
+	    const data = (({name,email})=>({name,email}))(ticket.getPayload());
+	    console.dir(data);
+	    req.session.userData = data;
+	    res.cookie('name', data.name, { maxAge: 31536000000, httpOnly: false });
+	    Users.getOrCreateUser(data, id => {
+		req.session.userData.user_id = id;
+		res.sendStatus(201);
+	    });
+	}
+        verify().catch(e => res.status(500).send(e.toString()));
     });
+
     app.get('/index.html', fbauth.authSkipLogin);
 
     app.use(debug);
