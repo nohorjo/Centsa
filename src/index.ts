@@ -4,7 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import * as path from 'path';
-import * as fbauth from './fbauth';
+import * as Authentication from './Authentication';
 import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
 import Expenses, { applyAutoTransactions } from './Expenses';
@@ -49,39 +49,17 @@ const initWorker = (id, env) => {
     app.use(session(sess));
     app.use(fileUpload());
 
-    app.post('/google', (req, res) => {
-       	const {OAuth2Client} = require('google-auth-library');
-	const Users = require('./Users');
-	const CLIENT_ID = '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com';
-	const client = new OAuth2Client(CLIENT_ID);
-	async function verify() {
-	    const ticket = await client.verifyIdToken({
-	    idToken: req.body.token,
-	    audience: '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com'
-	    });
-	    const data = (({name,email})=>({name,email}))(ticket.getPayload());
-	    console.dir(data);
-	    req.session.userData = data;
-	    res.cookie('name', data.name, { maxAge: 31536000000, httpOnly: false });
-	    Users.getOrCreateUser(data, id => {
-		req.session.userData.user_id = id;
-		res.sendStatus(201);
-	    });
-	}
-        verify().catch(e => res.status(500).send(e.toString()));
-    });
-
-    app.get('/index.html', fbauth.authSkipLogin);
+    app.get('/index.html', Authentication.authSkipLogin);
 
     app.use(debug);
-    app.use(fbauth.checkAuth['unless']({
-        path: ['/fb', '/index.html'],
+    app.use(Authentication.checkAuth['unless']({
+        path: ['/login', '/index.html'],
         ext: ['css', 'js', 'svg', 'ico', 'gif']
     }));
 
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
-    app.delete('/fb', fbauth.logout);
-    app.post('/fb', fbauth.login);
+    app.delete('/login', Authentication.logout);
+    app.post('/login', Authentication.login);
 
     app.use('/api', [
         Accounts,

@@ -42,7 +42,7 @@
 	<script src="expenses/controller.js"></script>
 	<script src="import/controller.js"></script>
 
-	<script src="facebook.js"></script>
+	<script src="login.js"></script>
 </head>
 
 <body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
@@ -60,7 +60,7 @@
 		<a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
 			<img id="logo" data-ng-src="logo.svg">
 		</a>
-		<img id="logout" class="float-right" data-ng-src="logout.svg" onclick="logoutFB();">
+		<img id="logout" class="float-right" data-ng-src="logout.svg" onclick="logout();">
 		<span id="name" class="float-right">{{ name }}</span>
 	</div>
 	<div class="main-panel">
