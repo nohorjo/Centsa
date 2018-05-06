@@ -64,7 +64,8 @@ form[role=login] button {
 }
 
 form[role=login]>div {
-  text-align: center;
+  text-align: -webkit-center;
+  margin-top: 1em;
 }
 
 .form-links {

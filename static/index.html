@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="index.css">
 
   <script src="facebook.js"></script>
+  <script src="https://apis.google.com/js/platform.js"></script>
+  <meta name="google-signin-client_id" content="760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com">
 </head>
 
 <body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" onload="fbInit()">
@@ -32,6 +34,7 @@
             <img src="icon.svg" alt="logo" height="100em" width="100em">
             <div class="fb-login-button" data-max-rows="3" data-size="large" data-button-type="login_with" data-use-continue-as="true"
               data-scope="public_profile,email" onlogin="checkLoginState();"></div>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
           </form>
         </section>
       </div>

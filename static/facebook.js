@@ -49,3 +49,11 @@ let fbInit = () => {
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 }
+function onSignIn(googleUser) {
+    $.post({
+        url: '/google',
+        contentType: 'application/json',
+        data: JSON.stringify({token:googleUser.getAuthResponse().id_token}),
+    });
+    gapi.auth2.getAuthInstance().signOut();
+}

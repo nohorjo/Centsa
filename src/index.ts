@@ -49,6 +49,21 @@ const initWorker = (id, env) => {
     app.use(session(sess));
     app.use(fileUpload());
 
+    app.post('/google', (req, resp) => {
+       	const {OAuth2Client} = require('google-auth-library');
+	const CLIENT_ID = '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com';
+	const client = new OAuth2Client(CLIENT_ID);
+	async function verify() {
+	  const ticket = await client.verifyIdToken({
+	  idToken: req.body.token,
+	  audience: '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com'
+	});
+  	const payload = ticket.getPayload();
+       	console.dir((({name,email})=>({name,email}))(payload));        
+}
+verify().catch(console.error);
+       resp.sendStatus(200);
+    });
     app.get('/index.html', fbauth.authSkipLogin);
 
     app.use(debug);
