@@ -34,7 +34,10 @@
             <img src="icon.svg" alt="logo" height="100em" width="100em">
             <div class="fb-login-button" data-max-rows="3" data-size="large" data-button-type="login_with" data-use-continue-as="true"
               data-scope="public_profile,email" onlogin="checkLoginState();"></div>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <div>
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                * Google sign in requires third party cookies enabled for <em>google.com</em>
+            </div>
           </form>
         </section>
       </div>
