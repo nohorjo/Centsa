@@ -31,6 +31,9 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         $scope.newTrans.date = new Date($scope.newTrans.date);
         $scope.newTrans.date.setHours(12);
         centsa.transactions.insert($scope.newTrans).then(resp => {
+            if(!$scope.uniqueComments.includes($scope.newTrans.comment)) {
+                $scope.uniqueComments.push($scope.newTrans.comment);
+            }
             if (resp.data > 0) {
                 $scope.newTrans.id = resp.data;
                 centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
