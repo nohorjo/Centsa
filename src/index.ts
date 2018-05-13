@@ -4,7 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import * as path from 'path';
-import * as fbauth from './fbauth';
+import * as Authentication from './Authentication';
 import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
 import Expenses, { applyAutoTransactions } from './Expenses';
@@ -49,17 +49,17 @@ const initWorker = (id, env) => {
     app.use(session(sess));
     app.use(fileUpload());
 
-    app.get('/index.html', fbauth.authSkipLogin);
+    app.get('/index.html', Authentication.authSkipLogin);
 
     app.use(debug);
-    app.use(fbauth.checkAuth['unless']({
-        path: ['/fb', '/index.html'],
+    app.use(Authentication.checkAuth['unless']({
+        path: ['/login', '/index.html'],
         ext: ['css', 'js', 'svg', 'ico', 'gif']
     }));
 
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
-    app.delete('/fb', fbauth.logout);
-    app.post('/fb', fbauth.login);
+    app.delete('/login', Authentication.logout);
+    app.post('/login', Authentication.login);
 
     app.use('/api', [
         Accounts,

@@ -1,10 +1,10 @@
-import { checkAuth, authSkipLogin, login, logout } from '../src/fbauth';
+import { checkAuth, authSkipLogin, login, logout } from '../src/Authentication';
 import { spy, stub, match } from 'sinon';
 import { expect } from 'chai';
 import axios from 'axios';
 import * as Users from '../src/Users';
 
-describe("fbauth", () => {
+describe("Authentication", () => {
     describe("checkAuth", () => {
         it("calls next when userdata is provided", () => {
             const nextSpy = spy();
