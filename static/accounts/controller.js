@@ -46,21 +46,24 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 	 */
 	$scope.transferFunds = () => {
 		const amount = $scope.transfer.amount;
-		const from = {
-			amount: amount,
+		const date = new Date($scope.transfer.date);
+		date.setHours(12);
+		
+		const trans = {
 			comment: $scope.transfer.comment,
-			account_id: $scope.transfer.from,
 			type_id: otherType,
 			expense_id: null,
-			date: new Date($scope.transfer.date)
+			date
+		};
+		const from = {
+			...trans,
+			amount: amount,
+			account_id: $scope.transfer.from
 		};
 		const to = {
+			...trans,
 			amount: -amount,
-			comment: $scope.transfer.comment,
-			account_id: $scope.transfer.to,
-			type_id: otherType,
-			expense_id: null,
-			date: new Date($scope.transfer.date)
+			account_id: $scope.transfer.to
 		};
 		centsa.transactions.insert(from);
 		centsa.transactions.insert(to);
