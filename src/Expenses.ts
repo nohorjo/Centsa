@@ -125,6 +125,7 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 export const applyAutoTransactions = (all?, id?, today = new Date()) => {
+   today.setHours(12); 
     dao.getAutoExpenses(all, id, today, (err, result) => {
         if (err) { console.error(err); throw err; }
         let expectedTransactions;

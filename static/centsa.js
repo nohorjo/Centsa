@@ -62,7 +62,7 @@ if (typeof app == "object") {
     app.factory('httpInterceptor', function ($q) {
         return {
             'request': function (config) {
-                config.headers = Object.assign({ 'x-date': Date().toString() }, config.headers);
+                config.headers = Object.assign({ 'x-date': Date() }, config.headers);
                 return config;
             },
             'responseError': function (rejection) {
