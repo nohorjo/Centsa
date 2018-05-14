@@ -1,7 +1,16 @@
-app.controller("summaryCtrl", function ($scope, centsa) {
+app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
         centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
     });
+
+    $scope.filterDate = $event => {
+        const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
+        if(new Date(date).getTime()){
+            $rootScope.setFilter({fromDate:date});
+        }
+        
+    };
+
 
     centsa.settings.get("strict.mode").then(setting => {
         $scope.strictMode = setting == "1";
