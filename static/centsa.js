@@ -53,7 +53,9 @@ const centsa = function ($http) {
             budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
             rules() { return $http.get(`${apiUrl}/rules`); },
             rule(id) { return $http.get(`${apiUrl}/rule/${id}`); },
-            saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }
+            saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }, 
+            grantedUsers() { return $http.get(`${apiUrl}/grantedUsers`); }, 
+            switchUser(id) { return $http.get(`${apiUrl}/switchUser`, { params: { id } }) } 
         };
     })();
 
