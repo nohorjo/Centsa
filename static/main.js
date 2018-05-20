@@ -36,12 +36,15 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 	 * Used to filter transactions. Available in the rootscope so that other
 	 * pages can set it if needed
 	 */
-	$rootScope.resetFilter = () => $rootScope.filter = {
-		account_id: '0',
-		type_id: '0',
-		expense_id: '0',
-		comment: "",
-		regex: false
+	$rootScope.resetFilter = () => {
+	    $rootScope.filter = {
+	        account_id: '0',
+	        type_id: '0',
+	        expense_id: '0',
+	        comment: "",
+	        regex: false
+	    }
+        $rootScope.showFilter = false;
 	};
 	$rootScope.resetFilter();
 	$rootScope.showFilter = false;
