@@ -1,10 +1,13 @@
 app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
+    let transChart;
+
     $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
         centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
     });
 
     $scope.filterDate = $event => {
         const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
+        transChart.handleMouseOut();
         if(new Date(date).getTime()){
             $rootScope.setFilter({
                 fromDate : date,
@@ -87,6 +90,6 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             dataProvider: sums,
             mouseWheelZoomEnabled: true
         };
-        AmCharts.makeChart("trans-chart", chartOpts);
+        transChart = AmCharts.makeChart("trans-chart", chartOpts);
     });
 });
