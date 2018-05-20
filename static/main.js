@@ -1,6 +1,6 @@
 const app = angular.module("app", ["ngRoute", "ngCookies"]);
 
-app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
+app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $timeout) {
 	$scope.name = $cookies.get('name');
 	$rootScope.formatDate = date => {
 		if (date.constructor == String) {
@@ -53,6 +53,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies) {
 		$rootScope.showFilter = true;
 		$rootScope.filter = f;
 		$location.path("transactions");
+        $timeout(() => $rootScope.showFilter = false, 1000);
 	};
 
 	$scope.isActive = path => $location.path() == path;
