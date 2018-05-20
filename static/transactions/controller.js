@@ -1,7 +1,7 @@
 app.controller("transCtrl", function($scope, $rootScope, centsa) {
-    let sort = "date DESC, id DESC";
-
     let currentFilter = Object.assign({}, $rootScope.filter);
+
+    let sort = currentFilter.sort || "date DESC, id DESC";
 
     $scope.newTrans = {
         amount: 0.0,

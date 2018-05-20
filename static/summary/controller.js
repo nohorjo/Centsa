@@ -6,7 +6,10 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     $scope.filterDate = $event => {
         const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
         if(new Date(date).getTime()){
-            $rootScope.setFilter({fromDate:date});
+            $rootScope.setFilter({
+                fromDate : date,
+                sort : "date ASC, id ASC"
+            });
         }
         
     };
