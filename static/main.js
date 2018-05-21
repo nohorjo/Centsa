@@ -61,7 +61,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
 
 	$scope.isActive = path => $location.path() == path;
     
-    $scope.switchUser = () => centsa.general.switchUser($scope.currentUser);
+    $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
 
     centsa.general.grantedUsers().then(resp => $scope.grantedUsers = resp.data);
 
