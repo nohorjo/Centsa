@@ -5,6 +5,7 @@ DROP TABLE types;
 DROP TABLE accounts;
 DROP TABLE settings;
 DROP TABLE rules;
+DROP TABLE usergrants;
 DROP TABLE users;
 */
 
@@ -14,6 +15,14 @@ CREATE TABLE users
     email VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
 	UNIQUE(email)
+);
+CREATE TABLE usergrants
+(
+    user BIGINT NOT NULL,
+    accesses BIGINT NOT NULL, 
+	FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (accesses) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user,accesses)
 );
 CREATE TABLE rules
 (

@@ -16,7 +16,7 @@ export const insert = (name, email, cb) => {
     );
 };
 
-export const setUpUser = (userId,cb)=>{
+export const setUpUser = (userId, cb) => {
     pool.query(
         `INSERT INTO types (user_id,name) VALUES (?,'Other');
         INSERT INTO accounts (user_id,name) VALUES (?,'Default');
@@ -24,6 +24,14 @@ export const setUpUser = (userId,cb)=>{
             (?,'strict.mode','true'),
             (?,'default.account',(SELECT id FROM accounts a where a.name='Default' AND a.user_id=?));`,
         Array(5).fill(userId),
+        cb
+    );
+};
+
+export const getGrants = (userId, cb) => {
+    pool.query(
+        `SELECT id, name FROM users WHERE id IN (SELECT accesses FROM usergrants WHERE user=?);`,
+        [userId],
         cb
     );
 };

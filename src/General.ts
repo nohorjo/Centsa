@@ -86,6 +86,17 @@ route.get("/rule/:id", (req, resp) => {
     });
 });
 
+// =================== GRANTS
+
+route.get('/grantedUsers', (req, resp) => {
+    //TODO
+});
+
+
+route.get('/switchUser/:id', (req, resp) => {
+    //TODO
+});
+
 const _route = Router();
 _route.use('/general', route);
 

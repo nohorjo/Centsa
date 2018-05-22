@@ -2,7 +2,7 @@ const app = angular.module("app", ["ngRoute", "ngCookies"]);
 
 app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $timeout, centsa) {
 	$scope.name = $cookies.get('name');
-    $scope.currentUser = '-1';
+    $scope.currentUser = $cookies.get('currentUser') || '-1';
     $scope.grantedUsers = [];
 
 	$rootScope.formatDate = date => {
