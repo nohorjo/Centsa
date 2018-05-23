@@ -21,6 +21,7 @@ export const login = async (req, res) => {
         res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
         Users.getOrCreateUser(details, id => {
             req.session.userData.user_id = id;
+            req.session.userData.original_user_id = id;
             res.sendStatus(201);
         });
     } catch (e) {

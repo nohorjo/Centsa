@@ -38,13 +38,13 @@ export const isController = (controller, controllee, cb) => {
     pool.query(
         `SELECT EXISTS(SELECT 1 FROM usercontrol WHERE controller=? AND controllee=?);`,
         [controller, controllee],
-        (err, result) => cb(err, results[0])
+        (err, results) => cb(err, results[0])
     );
 };
 
 export const getControllers = (userId, cb) => {
     pool.query(
-        `SELECT email FROM usercontrol WHERE controllee=?`,
+        `SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?)`,
         [userId],
         (err, results) => cb(err, err || results.map(r => r.email))
     );

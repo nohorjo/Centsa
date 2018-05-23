@@ -96,7 +96,7 @@ route.get("/rule/:id", (req, resp) => {
 // =================== CONTROLLER/CONTROLLEE
 
 route.get('/controllees', (req, resp) => {
-    getControllees(req.session.userData.user_id, (err, result) => {
+    getControllees(req.session.userData.original_user_id, (err, result) => {
         if (err) {
             console.error(err);
             resp.status(500).send(err);
@@ -118,12 +118,11 @@ route.get('/switchUser/:id', (req, resp) => {
         userData.user_id = userData.original_user_id;
         respond();
     } else {
-        isController(userData.user_id, id, (err, result) => {
+        isController(userData.original_user_id, id, (err, result) => {
             if (err) {
                 console.error(err);
                 resp.status(500).send(err);
             } else if (result) {
-                userData.original_user_id = userData.user_id;
                 userData.user_id = id;
                 respond();
             } else {
