@@ -5,7 +5,7 @@ DROP TABLE types;
 DROP TABLE accounts;
 DROP TABLE settings;
 DROP TABLE rules;
-DROP TABLE usergrants;
+DROP TABLE usercontrol;
 DROP TABLE users;
 */
 
@@ -16,13 +16,13 @@ CREATE TABLE users
     name VARCHAR(50) NOT NULL,
 	UNIQUE(email)
 );
-CREATE TABLE usergrants
+CREATE TABLE usercontrol
 (
-    user BIGINT NOT NULL,
-    accesses BIGINT NOT NULL, 
-	FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE,
-	FOREIGN KEY (accesses) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(user,accesses)
+    controller BIGINT NOT NULL,
+    controllee BIGINT NOT NULL, 
+	FOREIGN KEY (controller) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (controllee) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(controller,controllee)
 );
 CREATE TABLE rules
 (

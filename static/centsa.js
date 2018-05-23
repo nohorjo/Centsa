@@ -54,7 +54,7 @@ const centsa = function ($http) {
             rules() { return $http.get(`${apiUrl}/rules`); },
             rule(id) { return $http.get(`${apiUrl}/rule/${id}`); },
             saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }, 
-            grantedUsers() { return $http.get(`${apiUrl}/grantedUsers`); }, 
+            controllees() { return $http.get(`${apiUrl}/controllees`); }, 
             switchUser(id) { return $http.get(`${apiUrl}/switchUser/${id}`); } 
         };
     })();

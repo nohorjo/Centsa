@@ -55,7 +55,7 @@
 			<a href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
 			<a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}">Expenses/Income</a>
 			<a href="#!import" data-ng-class="{'active':isActive('/import')}">Import</a>
-			<a href="#!users" data-ng-class="{'active':isActive('/users')}">Granted Users</a>
+			<a href="#!users" data-ng-class="{'active':isActive('/users')}">Controller Users</a>
 		</div>
 	</div>
 	<div class="header" style="background: {{ currentUser == -1 ? 'inital' : '#e0a3a3' }}">
@@ -65,7 +65,7 @@
         <input type="button" class="btn btn-primary float-right" value="Log out" onclick="logout()"/>
         <select id="name" class="form-control float-right" data-ng-change="switchUser()" data-ng-model="currentUser">
            <option value="-1">{{ name }}</option> 
-          <option data-ng-repeat="user in grantedUsers" value="{{ user.id }}">{{ user.name }}</option> 
+          <option data-ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
         </select> 
 	</div>
 	<div class="main-panel">

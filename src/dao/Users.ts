@@ -10,9 +10,7 @@ export const insert = (name, email, cb) => {
     pool.query(
         `INSERT INTO users (email,name) VALUES (?,?);`,
         [email, name],
-        (err, results) => {
-            cb(err, err || results.insertId);
-        }
+        (err, results) => cb(err, err || results.insertId);
     );
 };
 
@@ -28,10 +26,18 @@ export const setUpUser = (userId, cb) => {
     );
 };
 
-export const getGrants = (userId, cb) => {
+export const getControllees = (userId, cb) => {
     pool.query(
-        `SELECT id, name FROM users WHERE id IN (SELECT accesses FROM usergrants WHERE user=?);`,
+        `SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE user=?);`,
         [userId],
         cb
+    );
+};
+
+export const isController = (controller, controllee, cb) => {
+    pool.query(
+        `SELECT EXISTS(SELECT 1 FROM usercontrol WHERE controller=? AND controllee=?);`,
+        [controller, controllee],
+        (err, result) => cb(err, results[0])
     );
 };

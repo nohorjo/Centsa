@@ -3,7 +3,7 @@ const app = angular.module("app", ["ngRoute", "ngCookies"]);
 app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $timeout, centsa) {
 	$scope.name = $cookies.get('name');
     $scope.currentUser = $cookies.get('currentUser') || '-1';
-    $scope.grantedUsers = [];
+    $scope.controllees = [];
 
 	$rootScope.formatDate = date => {
 		if (date.constructor == String) {
@@ -63,7 +63,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     
     $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
 
-    centsa.general.grantedUsers().then(resp => $scope.grantedUsers = resp.data);
+    centsa.general.controllees().then(resp => $scope.controllees = resp.data);
 
 });
 

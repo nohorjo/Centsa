@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { lastPaymentDate, nextPaymentDate } from './Expenses';
 import { getAllWithSum } from './dao/Expenses';
 import * as rules from './dao/Rules';
+import { getControllees, isController } from './dao/Users';
 
 const route = Router();
 
@@ -88,13 +89,42 @@ route.get("/rule/:id", (req, resp) => {
 
 // =================== GRANTS
 
-route.get('/grantedUsers', (req, resp) => {
-    //TODO
+route.get('/controllees', (req, resp) => {
+    getControllees(req.session.userData.user_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.send(result);
+        }
+    });
 });
 
 
 route.get('/switchUser/:id', (req, resp) => {
-    //TODO
+    const { userData } = req.session;
+    const { id } = req.params;
+    const respond = () => {
+        resp.cookie('currentUser', id, { maxAge: 31536000000, httpOnly: false });
+        resp.sendStatus(201);
+    };
+    if (id == -1) {
+        userData.user_id = userData.original_user_id;
+        respond();
+    } else {
+        isController(userData.user_id, id, (err, result) => {
+            if (err) {
+                console.error(err);
+                resp.status(500).send(err);
+            } else if (result) {
+                userData.original_user_id = userData.user_id;
+                userData.user_id = id;
+                respond();
+            } else {
+                resp.sendStatus(401);
+            }
+        });
+    }
 });
 
 const _route = Router();
