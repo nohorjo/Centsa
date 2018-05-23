@@ -66,8 +66,17 @@ export const addController = (userId, email, cb) => {
 
 export const deleteController = (userId, email, cb) => {
     pool.query(
-        `DELETE FROM usercontrol WHERE controller=(SELECT id FROM users WHERE email=?) AND controllee=?;`,
-        [email, userId],
-        cb
-    );  
+        `SELECT id FROM users WHERE email=?;`,
+        [email],
+        (err, results) => {
+            let id;
+            if (err) cb(err);
+            else if (id = results[0].id) pool.query(
+                `DELETE FROM usercontrol WHERE controller=? AND controllee=?;`,
+                [id, userId],
+                err => cb(err, id)
+            );
+            else cb();
+        }
+    );
 };

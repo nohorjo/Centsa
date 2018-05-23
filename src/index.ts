@@ -4,6 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as Authentication from './Authentication';
 import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
@@ -17,6 +18,10 @@ import debug from './debug';
 
 const cpus = os.cpus().length;
 
+let sessionStore;
+
+export const getSessionStore = () => sessionStore;
+
 const initWorker = (id, env) => {
     testConnection();
 
@@ -29,13 +34,35 @@ const initWorker = (id, env) => {
 
     const app = express();
     const FileStore = require('session-file-store')(session);
+
+    sessionStore = new FileStore({ ttl: 31536000 });
+    sessionStore.all = cb => {
+        const sessionPath = path.join(__dirname, '..', 'sessions');
+        fs.readdir(sessionPath, (err, files) => {
+            if (err) {
+                cb(err);
+            } else {
+                const loadSession = sid => new Promise((resolve, reject) => {
+                    fs.readFile(path.join(sessionPath,`${sid}.json`), 'utf8', (err, data) => {
+                        if (err) reject(err);
+                        else resolve({sid, ...JSON.parse(data)});
+                    });
+                });
+                
+                Promise.all(
+                    files.filter(f => /\.json$/.test(f)).map(f => loadSession(f.replace(/\.json$/,'')))
+                ).then(sessions => cb(null, sessions))
+                .catch(err => cb(err));
+            }
+        });
+    };
     const sess = {
         secret: env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
         unset: 'destroy',
         cookie: { maxAge: 31536000000, httpOnly: true },
-        store: new FileStore({ ttl: 31536000 })
+        store: sessionStore
     };
 
     if (env.NODE_ENV === 'production') {

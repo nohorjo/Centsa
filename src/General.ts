@@ -9,6 +9,7 @@ import {
     addController,
     deleteController
 } from './dao/Users';
+import { getSessionStore } from './index';
 
 const route = Router();
 
@@ -140,7 +141,7 @@ route.get('/controllers', (req, resp) => {
             resp.status(500).send(err);
         } else {
             resp.send({
-                email : userData.email,
+                email: userData.email,
                 controllers
             });
         }
@@ -167,12 +168,26 @@ route.post('/controllers', (req, resp) => {
 });
 
 route.delete('/controllers/:email', (req, resp) => {
-    deleteController(req.session.userData.user_id, req.params.email, (err, result) => {
+    const { user_id } = req.session.userData;
+    deleteController(user_id, req.params.email, (err, id) => {
         if (err) {
             console.error(err);
             resp.status(500).send(err);
         } else {
-            // FIXME fix sessions that have already switched users
+            const sessionStore = getSessionStore();
+            sessionStore.all((err, sessions) => {
+                if (err) console.error(err);
+                else sessions.forEach(s => {
+                    const { userData } = s;
+                    if (
+                        userData
+                        && userData.user_id == user_id
+                        && userData.original_user_id == id
+                    ) {
+                        sessionStore.destroy(s.sid);
+                    }
+                });
+            });
             resp.sendStatus(201);
         }
     });        
