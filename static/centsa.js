@@ -55,7 +55,10 @@ const centsa = function ($http) {
             rule(id) { return $http.get(`${apiUrl}/rule/${id}`); },
             saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }, 
             controllees() { return $http.get(`${apiUrl}/controllees`); }, 
-            switchUser(id) { return $http.get(`${apiUrl}/switchUser/${id}`); } 
+            switchUser(id) { return $http.get(`${apiUrl}/switchUser/${id}`); }, 
+            controllers() { return $http.get(`${apiUrl}/controllers`); }, 
+            addController(email) { return $http.post(`${apiUrl}/controllers`, {email}); },
+            deleteController(email) { return $http.delete(`${apiUrl}/controllers/${encodeURIComponent(email)}`); }
         };
     })();
 

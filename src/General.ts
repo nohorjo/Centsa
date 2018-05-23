@@ -2,7 +2,13 @@ import { Router } from 'express';
 import { lastPaymentDate, nextPaymentDate } from './Expenses';
 import { getAllWithSum } from './dao/Expenses';
 import * as rules from './dao/Rules';
-import { getControllees, isController } from './dao/Users';
+import {
+    getControllees,
+    isController,
+    getControllers,
+    addController,
+    deleteController
+} from './dao/Users';
 
 const route = Router();
 
@@ -87,7 +93,7 @@ route.get("/rule/:id", (req, resp) => {
     });
 });
 
-// =================== GRANTS
+// =================== CONTROLLER/CONTROLLEE
 
 route.get('/controllees', (req, resp) => {
     getControllees(req.session.userData.user_id, (err, result) => {
@@ -125,6 +131,42 @@ route.get('/switchUser/:id', (req, resp) => {
             }
         });
     }
+});
+
+route.get('/controllers', (req, resp) => {
+    getControllers(req.session.userData.user_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            resp.send(result);
+        }
+    });
+});
+
+route.post('/controllers', (req, resp) => {
+    addController(req.session.userData.user_id, req.body.email, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else if(result) {
+            resp.sendStatus(201);
+        } else {
+            resp.sendStatus(404);
+        }
+    });        
+});
+
+route.delete('/controllers/:email', (req, resp) => {
+    deleteController(req.session.userData.user_id, req.params.email, (err, result) => {
+        if (err) {
+            console.error(err);
+            resp.status(500).send(err);
+        } else {
+            // FIXME fix sessions that have already switched users
+            resp.sendStatus(201);
+        }
+    });        
 });
 
 const _route = Router();

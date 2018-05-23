@@ -1,1 +1,33 @@
-TODO
+<h4>Controller users</h4>
+<p>
+    These users will be able to switch to your account using the user picker in the header bar.
+</p>
+<p>
+   <strong>This will allow them to make changes as well as add and remove data from your account!</strong> 
+</p>
+<form name="Form" data-ng-submit="addController()">
+    <table id="controllerTable" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th width="80%" data-ng-click="sort('email', controllers)">Email</th>
+                <th width="20%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="email" class="form-control" required="required" data-ng-model="newController">
+                </td>
+                <td>
+                    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+                </td>
+            </tr>
+            <tr data-ng-repeat="email in controllers">
+                <td>{{ email }}</td>
+                <td data-ng-init="a.nameOld = a.name">
+                    <a href="" data-ng-click="deleteController(email)">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>

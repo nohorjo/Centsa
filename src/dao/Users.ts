@@ -28,7 +28,7 @@ export const setUpUser = (userId, cb) => {
 
 export const getControllees = (userId, cb) => {
     pool.query(
-        `SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE user=?);`,
+        `SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?);`,
         [userId],
         cb
     );
@@ -40,4 +40,27 @@ export const isController = (controller, controllee, cb) => {
         [controller, controllee],
         (err, result) => cb(err, results[0])
     );
+};
+
+export const getControllers = (userId, cb) => {
+    pool.query(
+        `SELECT email FROM usercontrol WHERE controllee=?`,
+        [userId],
+        (err, results) => cb(err, err || results.map(r => r.email))
+    );
+};
+
+export const addController = (userId, email, cb) => {
+    pool.query(
+        `INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);`,
+        [email, userId],
+        (err, results) => cb(err, err || results.changedRows)
+};
+
+export const deleteController (userId, email, cb) => {
+    pool.query(
+        `DELETE FROM usercontrol WHERE controller=(SELECT id FROM users WHERE email=?) AND controllee=?;`,
+        [email, userId],
+        cb
+    );  
 };
