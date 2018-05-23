@@ -175,8 +175,9 @@ describe("Authentication", () => {
             });
 
             expect(req).to.not.have.property("session");
-            expect(clearCookieSpy.calledOnce).to.be.true;
+            expect(clearCookieSpy.calledTwice).to.be.true;
             expect(clearCookieSpy.calledWith("name")).to.be.true;
+            expect(clearCookieSpy.calledWith("currentUser")).to.be.true;
             expect(sendStatusSpy.calledOnce).to.be.true;
             expect(sendStatusSpy.calledWith(201)).to.be.true;
         });
