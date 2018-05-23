@@ -34,6 +34,7 @@ export const logout = (req, res) => {
     console.log(`Cleared session for ${req.session.userData.email}`);
     delete req.session;
     res.clearCookie('name');
+    res.clearCookie('currentUser');
     res.sendStatus(201);
 };
 

@@ -54,7 +54,13 @@ export const addController = (userId, email, cb) => {
     pool.query(
         `INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);`,
         [email, userId],
-        (err, results) => cb(err, err || results.changedRows)
+        (err, results) => {
+            if(err && err.sqlMessage == "Column 'controller' cannot be null") {
+                cb();
+            } else {
+                cb(err, true);
+            }
+        }
     );
 };
 

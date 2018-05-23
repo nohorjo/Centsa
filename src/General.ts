@@ -133,27 +133,37 @@ route.get('/switchUser/:id', (req, resp) => {
 });
 
 route.get('/controllers', (req, resp) => {
-    getControllers(req.session.userData.user_id, (err, result) => {
+    const { userData } = req.session;
+    getControllers(userData.user_id, (err, controllers) => {
         if (err) {
             console.error(err);
             resp.status(500).send(err);
         } else {
-            resp.send(result);
+            resp.send({
+                email : userData.email,
+                controllers
+            });
         }
     });
 });
 
 route.post('/controllers', (req, resp) => {
-    addController(req.session.userData.user_id, req.body.email, (err, result) => {
-        if (err) {
-            console.error(err);
-            resp.status(500).send(err);
-        } else if(result) {
-            resp.sendStatus(201);
-        } else {
-            resp.sendStatus(404);
-        }
-    });        
+    const controllerEmail = req.body.email;
+    const { email, user_id } = req.session.userData;
+    if (email == controllerEmail) {
+        resp.sendStatus(400);
+    } else {
+        addController(user_id, controllerEmail, (err, result) => {
+            if (err) {
+                console.error(err);
+                resp.status(500).send(err);
+            } else if(result) {
+                resp.sendStatus(201);
+            } else {
+                resp.sendStatus(404);
+            }
+        });        
+    }
 });
 
 route.delete('/controllers/:email', (req, resp) => {
