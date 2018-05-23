@@ -10,7 +10,7 @@ export const insert = (name, email, cb) => {
     pool.query(
         `INSERT INTO users (email,name) VALUES (?,?);`,
         [email, name],
-        (err, results) => cb(err, err || results.insertId);
+        (err, results) => cb(err, err || results.insertId)
     );
 };
 
@@ -55,9 +55,10 @@ export const addController = (userId, email, cb) => {
         `INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);`,
         [email, userId],
         (err, results) => cb(err, err || results.changedRows)
+    );
 };
 
-export const deleteController (userId, email, cb) => {
+export const deleteController = (userId, email, cb) => {
     pool.query(
         `DELETE FROM usercontrol WHERE controller=(SELECT id FROM users WHERE email=?) AND controllee=?;`,
         [email, userId],
