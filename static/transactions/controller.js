@@ -140,8 +140,9 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.getHighlight = amount => {
-        const range = amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max;
-        return `hsl(${amount > 0 ? 0 : 100},50%,${100 - Math.abs(amount / range) * 40}%)`;
+        const range = Math.abs(amount < 0 ? $scope.transactionSummary.min : $scope.transactionSummary.max);
+        const lightness = 100 - Math.sqrt(range * range - Math.pow(Math.abs(amount) - range, 2)) / range * 40;
+        return `hsl(${amount > 0 ? 0 : 100},50%,${lightness}%)`;
     };
 
     $scope.exportFilteredTransactions = () => {
