@@ -129,6 +129,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             $scope.currentPage = 2;
             $scope.transScrollTop();
             $scope.transactions = resp.data;
+            $scope.moreToLoad = $scope.transactions.length == 40;
         });
         centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
     };
