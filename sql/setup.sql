@@ -137,7 +137,7 @@ Promise.all([
 
 			allTransactions.push({
 				date: date,
-				amount: parseFloat(row[1].replace(/[^\\d\\.]/g,"")) * 100,
+				amount: parseFloat(row[1].replace(/[^\\d\\.\\-]/g,"")) * 100,
 				comment: row[2],
 				account_id: account.id,
 				type_id: type.id,
