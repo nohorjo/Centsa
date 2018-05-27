@@ -50,6 +50,8 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             }
             $scope.newTrans = Object.assign({}, newTrans);
             $('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
+        }).catch(() => {
+            $('.datepicker').datepicker("update", $scope.newTrans.date);
         });
     };
 
@@ -178,6 +180,15 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         $("#transDiv").animate({
             scrollTop: 0
         }, "fast");
+    };
+
+    $scope.autoFillFromExpense = expenseId => {
+        if (expenseId) {
+            const expense = $scope.expenses.find(e => e.id == expenseId);
+            const { newTrans } =  $scope;
+            newTrans.type_id = expense.type_id.toString()
+            newTrans.comment = expense.name;
+        }
     };
 
 });
