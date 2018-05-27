@@ -32,6 +32,19 @@
     </div>
 </div>
 <h4>Manage transactions</h4>
+<ul class="nav nav-tabs">
+    <li
+        data-ng-repeat="t in tabs"
+        data-ng-class="{ 'active': currentTab == $index }"
+        data-ng-mouseover="t.hover = true"
+        data-ng-mouseout="t.hover = false"
+    >
+        <a href="" data-ng-click="currentTab == $index ? deleteTab($index) : goToTab($index) ">
+            {{ t.hover && currentTab == $index ? 'Close' : 'Tab ' + (t.index + 1) }}
+        </a>
+    </li>
+    <li><a href="" data-ng-click="newTab()">+</a></li>
+</ul>
 <input type="checkbox" data-ng-model="showFilter"> Show filter
 <form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()" data-ng-show="showFilter">
     <table class="table table-condensed">

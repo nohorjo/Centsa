@@ -16,7 +16,16 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         min: 0,
         max: 0
     };
-    $scope.accounts = $scope.types = $scope.expenses = $scope.allExpenses = $scope.uniqueComments = $scope.transactions = [];
+    
+    $scope.accounts = $scope.types 
+        = $scope.expenses 
+        = $scope.allExpenses 
+        = $scope.uniqueComments 
+        = $scope.transactions 
+        = [];
+    $scope.tabs = [{index:0}]
+    $scope.currentTab = 0;
+
     centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
     centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
     centsa.types.getAll().then(resp => {
@@ -191,4 +200,16 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         }
     };
 
+    $scope.goToTab = index => $scope.currentTab = index;
+
+    $scope.deleteTab = index => {
+        if ($scope.currentTab) $scope.currentTab--;
+        if ($scope.tabs.length - 1) $scope.tabs.splice(index, 1);
+    };
+
+    $scope.newTab = () => {
+        const { tabs } = $scope;
+        const last = tabs.slice(-1).pop();
+        tabs.push({index: (last ? last.index : 0) + 1});
+    };
 });
