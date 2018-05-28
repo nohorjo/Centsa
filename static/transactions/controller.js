@@ -210,8 +210,11 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.deleteTab = index => {
-        if ($scope.currentTab) $scope.currentTab--;
-        if ($scope.tabs.length - 1) $scope.tabs.splice(index, 1);
+        if ($scope.tabs.length - 1) {
+            if ($scope.currentTab) $scope.currentTab--;
+            $scope.tabs.splice(index, 1);
+            $scope.goToTab($scope.currentTab);
+        }
     };
 
     $scope.newTab = () => {
@@ -224,5 +227,6 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             sort: DEFAULT_SORT
         });
         $scope.currentTab = $scope.tabs.length - 1;
+        $scope.reloadTrans();
     };
 });
