@@ -1,7 +1,11 @@
 app.controller("transCtrl", function($scope, $rootScope, centsa) {
-    let currentFilter = Object.assign({}, $rootScope.filter);
-
-    let sort = currentFilter.sort || "date DESC, id DESC";
+    const DEFAULT_SORT = "date DESC, id DESC";
+    $scope.tabs = [{
+        index: 0,
+        filter: $rootScope.filter,
+        sort: $rootScope.filter.sort || DEFAULT_SORT
+    }]
+    $scope.currentTab = 0;
 
     $scope.newTrans = {
         amount: 0.0,
@@ -23,8 +27,6 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         = $scope.uniqueComments 
         = $scope.transactions 
         = [];
-    $scope.tabs = [{index:0}]
-    $scope.currentTab = 0;
 
     centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
     centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
@@ -121,20 +123,20 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                 lastCol = col;
                 asc = false;
             }
-            sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", id DESC" +
+           $scope.tabs[$scope.currentTab].sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", id DESC" +
                 (secondary ? ", " + secondary : "");
             $scope.reloadTrans();
         };
     })();
 
     $scope.reloadTrans = () => {
-        currentFilter = Object.assign({}, $rootScope.filter);
+        $scope.tabs[$scope.currentTab].currentFilter = Object.assign({}, $rootScope.filter);
         $scope.currentPage = 1;
         $scope.moreToLoad = true;
         centsa.transactions.getAll({
             page: $scope.currentPage,
             pageSize: 40,
-            sort: sort,
+            sort: $scope.tabs[$scope.currentTab].sort,
             filter: $rootScope.filter
         }).then(resp => {
             $scope.currentPage = 2;
@@ -148,6 +150,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.clearFilter = () => {
         $rootScope.resetFilter();
+        $scope.tabs[$scope.currentTab].filter = $rootScope.filter;
         $scope.reloadTrans();
     };
 
@@ -168,7 +171,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             element.click();
             document.body.removeChild(element);
         });
-        exportWorker.postMessage(currentFilter);
+        exportWorker.postMessage($scope.tabs[$scope.currentTab].currentFilter);
     };
 
     $scope.loadMoreTransactions = () => {
@@ -176,7 +179,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             centsa.transactions.getAll({
                 page: ++$scope.currentPage,
                 pageSize: 20,
-                sort: sort,
+                sort: $scope.tabs[$scope.currentTab].sort,
                 filter: $rootScope.filter
             }).then(resp => {
                 $scope.transactions = $scope.transactions.concat(resp.data);
@@ -200,7 +203,11 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         }
     };
 
-    $scope.goToTab = index => $scope.currentTab = index;
+    $scope.goToTab = index => {
+        $scope.currentTab = index;
+        $rootScope.filter = $scope.tabs[$scope.currentTab].filter;
+        $scope.reloadTrans();
+    };
 
     $scope.deleteTab = index => {
         if ($scope.currentTab) $scope.currentTab--;
@@ -210,6 +217,12 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     $scope.newTab = () => {
         const { tabs } = $scope;
         const last = tabs.slice(-1).pop();
-        tabs.push({index: (last ? last.index : 0) + 1});
+        $rootScope.resetFilter();
+        tabs.push({
+            index: (last ? last.index : 0) + 1,
+            filter: $rootScope.filter,
+            sort: DEFAULT_SORT
+        });
+        $scope.currentTab = $scope.tabs.length - 1;
     };
 });
