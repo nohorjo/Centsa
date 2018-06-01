@@ -6,15 +6,16 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     });
 
     $scope.filterDate = $event => {
-        const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
-        transChart.handleMouseOut();
-        if(new Date(date).getTime()){
-            $rootScope.setFilter({
-                fromDate : date,
-                sort : "date ASC, id ASC"
-            });
+        if ($event.originalEvent.path[3].constructor == HTMLDivElement) {
+            const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
+            if (new Date(date).getTime()){
+                transChart.handleMouseOut();
+                $rootScope.setFilter({
+                    fromDate: date,
+                    sort: "date ASC, id ASC"
+                });
+            }
         }
-        
     };
 
 
