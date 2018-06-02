@@ -1,6 +1,6 @@
 {
   "name": "centsa",
-  "version": "2.4.4",
+  "version": "2.5.0",
   "description": "Centsa money managing solution",
   "main": "src/index.js",
   "directories": {
@@ -13,7 +13,7 @@
     "express-fileupload": "0.4.0",
     "express-session": "1.15.6",
     "express-unless": "0.5.0",
-    "google-auth-library": "1.4.0",
+    "google-auth-library": "1.5.0",
     "mysql": "2.15.0",
     "session-file-store": "1.2.0"
   },
