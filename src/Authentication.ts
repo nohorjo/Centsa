@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as unless from 'express-unless';
 import * as Users from './Users';
 
-export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.status(401).redirect('/index.html');
+export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.sendStatus(401);
 
 export const authSkipLogin = (req, resp, next) => (req.session && req.session.userData) ? resp.redirect('/main.html') : next();
 

@@ -80,8 +80,8 @@ const initWorker = (id, env) => {
 
     app.use(debug);
     app.use(Authentication.checkAuth['unless']({
-        path: ['/login', '/index.html'],
-        ext: ['css', 'js', 'svg', 'ico', 'gif']
+        path: ['/login'],
+        ext: ['css', 'js', 'svg', 'ico', 'gif', 'html']
     }));
 
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
