@@ -132,7 +132,11 @@
     <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
         <table class="table table-condensed table-hover">
             <tbody>
-                <tr data-ng-repeat="t in transactions" data-ng-click="editTrans(t)">
+                <tr
+                    data-ng-repeat="t in transactions"
+                    data-ng-click="editTrans(t)"
+                    data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
+                >
                     <td width="5%">{{ t.id }}</td>
                     <td width="15%">{{ formatDate(t.date) }}</td>
                     <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>

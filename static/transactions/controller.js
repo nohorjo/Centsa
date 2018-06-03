@@ -143,6 +143,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             $scope.transScrollTop();
             $scope.transactions = resp.data;
             $scope.moreToLoad = $scope.transactions.length == 40;
+            setFirstOfWeeks();
         });
         centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
     };
@@ -184,6 +185,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             }).then(resp => {
                 $scope.transactions = $scope.transactions.concat(resp.data);
                 $scope.moreToLoad = resp.data.length;
+                setFirstOfWeeks();
             });
         }
     };
@@ -229,4 +231,22 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         $scope.currentTab = $scope.tabs.length - 1;
         $scope.reloadTrans();
     };
+
+    function setFirstOfWeeks() {
+        if (/^date/.test($scope.tabs[$scope.currentTab].sort)) {
+            let nextMonday;
+            $scope.transactions.concat()
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .forEach(t => {
+                    const tDate = new Date(t.date);
+                    if (!nextMonday || (tDate - nextMonday) >= 0) {
+                        nextMonday = tDate;
+                        nextMonday.setDate(nextMonday.getDate() + ((1 + 7 - nextMonday.getDay()) % 7 || 7));
+                        t.firstOfWeek = true;
+                    } else {
+                        t.firstOfWeek = false;
+                    }
+            });
+        }
+    }
 });

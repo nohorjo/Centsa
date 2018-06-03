@@ -274,6 +274,11 @@ input#export{
 	margin: 0.5em;
 }
 
-.extra-lg-modal{
+.extra-lg-modal {
 	width: 85%;
+}
+
+tr.first-trans-of-week {
+    font-weight: bold;
+    text-decoration: underline;
 }
