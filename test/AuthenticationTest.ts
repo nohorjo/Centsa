@@ -18,44 +18,34 @@ describe("Authentication", () => {
             expect(nextSpy.called).to.be.true;
             expect(statusSpy.notCalled).to.be.true;
         });
-        it("returns 401 and redirects to index on no userdata", () => {
+        it("returns 401 on no userdata", () => {
             const nextSpy = spy();
             const statusStub = stub();
-            const redirectStub = stub();
 
-            redirectStub.withArgs('/index.html').returns(undefined);
-            redirectStub.throws("Unexpected args: redirect");
-
-            statusStub.withArgs(401).returns({ redirect: redirectStub });
+            statusStub.withArgs(401).returns(undefined);
             statusStub.throws("Unexpected args: status");
 
             checkAuth(
                 { session: {} },
-                { status: statusStub },
+                { sendStatus: statusStub },
                 nextSpy);
 
             expect(statusStub.called).to.be.true;
-            expect(redirectStub.called).to.be.true;
             expect(nextSpy.notCalled).to.be.true;
         });
-        it("returns 401 and redirects to index on no session", () => {
+        it("returns 401 on no session", () => {
             const nextSpy = spy();
             const statusStub = stub();
-            const redirectStub = stub();
 
-            redirectStub.withArgs('/index.html').returns(undefined);
-            redirectStub.throws("Unexpected args: redirect");
-
-            statusStub.withArgs(401).returns({ redirect: redirectStub });
+            statusStub.withArgs(401).returns(undefined);
             statusStub.throws("Unexpected args: status");
 
             checkAuth(
                 {},
-                { status: statusStub },
+                { sendStatus: statusStub },
                 nextSpy);
 
             expect(statusStub.called).to.be.true;
-            expect(redirectStub.called).to.be.true;
             expect(nextSpy.notCalled).to.be.true;
         });
     });
