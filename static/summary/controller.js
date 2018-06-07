@@ -25,10 +25,45 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     });
 
     centsa.transactions.getCumulativeSums().then(resp => {
-        const sums = resp.data.map(x => ({
+        const byDate = (a, b) => new Date(a.date) - new Date(b.date);
+        const applyMovingAverage = (dayMovAvg, sums) => {
+            sums = sums.concat();
+            const millis = dayMovAvg * 8.64e7;
+            const avgs = [];
+
+            for (
+                let date = +new Date(sums[0].date) + millis, end = new Date(sums[sums.length - 1].date);
+                date <= end;
+                date += millis
+            ) {
+                avgs.push({date});
+            }
+
+            for (let i = 0, _sums = sums.concat(); _sums.length; i++) {
+                let avg = avgs[i];
+                if (!avg) break;
+                let sub = _sums.splice(0, _sums.findIndex(s => new Date(s.date) > avg.date));
+                avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
+            }
+
+            avgs.forEach(a => {
+                a.date = new Date(a.date - millis / 2).formatDate('yyyy/MM/dd');
+                const s = sums.find(x => x.date == a.date);
+                if(s) {
+                    s.avg = a.avg;
+                } else {
+                    sums.push(a);
+                }
+            });
+
+            return sums.sort(byDate);
+        };
+
+        const sums = applyMovingAverage(30, resp.data.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
             sum: x.sum / 100
-        }));
+        })).sort(byDate));
+
         const valueAxes = [{
             id: "v1",
             axisAlpha: 0,
@@ -37,6 +72,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }];
         const graphs = [{
             id: "g1",
+            title: 'Balance', 
             balloon: {
                 drop: true,
                 adjustBorderColor: false,
@@ -46,13 +82,18 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             useLineColorForBulletBorder: true,
             valueField: "sum",
             balloonText: "<span>[[value]]</span>"
+        }, {
+            id: "g2",
+            title: 'Average', 
+            lineThickness: 2,
+            useLineColorForBulletBorder: true,
+            valueField: "avg",
         }];
         const chartOpts = {
             type: "serial",
             theme: "light",
             marginRight: 60,
             marginLeft: 60,
-            dataDateFormat: "YYYY/MM/DD",
             valueAxes: valueAxes,
             balloon: {
                 borderThickness: 1,
@@ -89,7 +130,8 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                 color: "#AAAAAA"
             },
             dataProvider: sums,
-            mouseWheelZoomEnabled: true
+            mouseWheelZoomEnabled: true,
+            legend: { useGraphSettings: true }
         };
         transChart = AmCharts.makeChart("trans-chart", chartOpts);
     });
