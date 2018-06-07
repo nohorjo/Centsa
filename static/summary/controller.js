@@ -32,7 +32,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             const avgs = [];
 
             for (
-                let date = +new Date(sums[0].date) + millis, end = new Date(sums[sums.length - 1].date);
+                let date = +new Date(sums[0].date) + millis, end = +new Date(sums[sums.length - 1].date) + millis;
                 date <= end;
                 date += millis
             ) {
@@ -40,9 +40,9 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             }
 
             for (let i = 0, _sums = sums.concat(); _sums.length; i++) {
-                let avg = avgs[i];
-                if (!avg) break;
-                let sub = _sums.splice(0, _sums.findIndex(s => new Date(s.date) > avg.date));
+                const avg = avgs[i];
+                const spliceIndex = _sums.findIndex(s => new Date(s.date) > avg.date);
+                const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
                 avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
             }
 
@@ -86,8 +86,8 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             id: "g2",
             title: 'Average', 
             lineThickness: 2,
-            useLineColorForBulletBorder: true,
             valueField: "avg",
+            bullet: 'round'
         }];
         const chartOpts = {
             type: "serial",
