@@ -56,6 +56,13 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                 }
             });
 
+            if (avgs.length > 1) {
+                sums.push(avgs.splice(-2).reduce((a, b) => ({
+                    avg: +(2 * b.avg - a.avg).toFixed(2),
+                    date: new Date(+new Date(b.date) + millis).formatDate('yyyy/MM/dd')
+                })));
+            }
+
             return sums.sort(byDate);
         };
 
@@ -92,7 +99,6 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         const chartOpts = {
             type: "serial",
             theme: "light",
-            marginRight: 60,
             marginLeft: 60,
             valueAxes: valueAxes,
             balloon: {
@@ -112,7 +118,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             },
             categoryField: "date",
             categoryAxis: {
-                parseDates: false,
+                parseDates: true,
                 dashLength: 1,
             },
             chartScrollbar: {
@@ -131,7 +137,11 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             },
             dataProvider: sums,
             mouseWheelZoomEnabled: true,
-            legend: { useGraphSettings: true }
+            legend: {
+                useGraphSettings: true,
+                position: 'top'
+            },
+            dataDateFormat: 'YYYY/MM/DD'
         };
         transChart = AmCharts.makeChart("trans-chart", chartOpts);
     });
