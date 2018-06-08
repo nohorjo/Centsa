@@ -79,12 +79,12 @@ const initWorker = (id, env) => {
     app.get('/index.html', Authentication.authSkipLogin);
 
     app.use(debug);
+    app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.use(Authentication.checkAuth['unless']({
         path: ['/login'],
         ext: ['css', 'js', 'svg', 'ico', 'gif', 'html']
     }));
 
-    app.get(['/', ''], (req, res) => res.redirect('/index.html'));
     app.delete('/login', Authentication.logout);
     app.post('/login', Authentication.login);
 
