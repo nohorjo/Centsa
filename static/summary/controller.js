@@ -33,34 +33,27 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
 
             for (
                 let date = +new Date(sums[0].date) + millis, end = +new Date(sums[sums.length - 1].date) + millis;
-                date <= end;
+                date < end;
                 date += millis
             ) {
                 avgs.push({date});
             }
 
-            for (let i = 0, _sums = sums.concat(); _sums.length; i++) {
-                const avg = avgs[i];
+            const _sums = sums.concat();
+            avgs.forEach(avg => {
                 const spliceIndex = _sums.findIndex(s => new Date(s.date) > avg.date);
                 const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
                 avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
-            }
-
-            avgs.forEach(a => {
-                a.date = new Date(a.date - millis / 2).formatDate('yyyy/MM/dd');
-                const s = sums.find(x => x.date == a.date);
-                if(s) {
-                    s.avg = a.avg;
-                } else {
-                    sums.push(a);
-                }
+                avg.date = new Date(avg.date - millis / 2).formatDate('yyyy/MM/dd');
+                sums.push(avg);
             });
-
             if (avgs.length > 1) {
-                sums.push(avgs.splice(-2).reduce((a, b) => ({
-                    avg: +(2 * b.avg - a.avg).toFixed(2),
+                sums.push(avgs.splice(-2).reduce((a, b) => {
+                b.proj = b.avg;
+                return {
+                    proj: +(2 * b.avg - a.avg).toFixed(2),
                     date: new Date(+new Date(b.date) + millis).formatDate('yyyy/MM/dd')
-                })));
+                }}));
             }
 
             return sums.sort(byDate);
@@ -94,6 +87,12 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             title: 'Average', 
             lineThickness: 2,
             valueField: "avg",
+            bullet: 'round'
+        }, {
+            id: "g3",
+            title: 'Projection', 
+            lineThickness: 2,
+            valueField: "proj",
             bullet: 'round'
         }];
         const chartOpts = {
