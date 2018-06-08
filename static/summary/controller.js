@@ -40,7 +40,6 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     $scope.drawGraph = () => {
         centsa.settings.set("moving.average.days", $scope.movingAvgDays);
         const applyMovingAverage = sums => {
-            sums = sums.concat();
             const millis = $scope.movingAvgDays * 8.64e7;
             const avgs = [];
 
@@ -52,20 +51,21 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                 avgs.push({date});
             }
 
-            const _sums = sums.concat();
-            let lastAmount;
-
-            avgs.forEach(avg => {
-                const spliceIndex = _sums.findIndex(s => new Date(s.date) > avg.date);
-                const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
-                avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
-                avg.date = new Date(avg.date - millis / 2).formatDate('yyyy/MM/dd');
-                if (!isNaN(lastAmount)) avg.rate = +(avg.avg - lastAmount).toFixed(2);
-                lastAmount = avg.avg;
-                sums.push(avg);
-            });
-
             if (avgs.length > 1) {
+                sums = sums.concat();
+                const _sums = sums.concat();
+                let lastAmount;
+
+                avgs.forEach(avg => {
+                    const spliceIndex = _sums.findIndex(s => new Date(s.date) > avg.date);
+                    const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
+                    avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
+                    avg.date = new Date(avg.date - millis / 2).formatDate('yyyy/MM/dd');
+                    if (!isNaN(lastAmount)) avg.rate = +(avg.avg - lastAmount).toFixed(2);
+                    lastAmount = avg.avg;
+                    sums.push(avg);
+                });
+
                 sums.push(avgs.splice(-2).reduce((a, b) => ({
                     avg: +(2 * b.avg - a.avg).toFixed(2),
                     date: new Date(+new Date(b.date) + millis).formatDate('yyyy/MM/dd')
