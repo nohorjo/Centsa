@@ -40,20 +40,23 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             }
 
             const _sums = sums.concat();
+            let lastAmount;
+
             avgs.forEach(avg => {
                 const spliceIndex = _sums.findIndex(s => new Date(s.date) > avg.date);
                 const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
                 avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
                 avg.date = new Date(avg.date - millis / 2).formatDate('yyyy/MM/dd');
+                if (!isNaN(lastAmount)) avg.rate = +(avg.avg - lastAmount).toFixed(2);
+                lastAmount = avg.avg;
                 sums.push(avg);
             });
+
             if (avgs.length > 1) {
-                sums.push(avgs.splice(-2).reduce((a, b) => {
-                b.proj = b.avg;
-                return {
-                    proj: +(2 * b.avg - a.avg).toFixed(2),
+                sums.push(avgs.splice(-2).reduce((a, b) => ({
+                    avg: +(2 * b.avg - a.avg).toFixed(2),
                     date: new Date(+new Date(b.date) + millis).formatDate('yyyy/MM/dd')
-                }}));
+                })));
             }
 
             return sums.sort(byDate);
@@ -72,7 +75,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }];
         const graphs = [{
             id: "g1",
-            title: 'Balance', 
+            title: 'Total balance', 
             balloon: {
                 drop: true,
                 adjustBorderColor: false,
@@ -84,16 +87,17 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             balloonText: "<span>[[value]]</span>"
         }, {
             id: "g2",
-            title: 'Average', 
+            title: 'Moving average', 
             lineThickness: 2,
             valueField: "avg",
             bullet: 'round'
         }, {
             id: "g3",
-            title: 'Projection', 
+            title: 'Average rate of spending', 
             lineThickness: 2,
-            valueField: "proj",
-            bullet: 'round'
+            valueField: "rate",
+            bullet: 'round',
+            lineColor: '#ff7f7f'
         }];
         const chartOpts = {
             type: "serial",
