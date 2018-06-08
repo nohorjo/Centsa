@@ -1,7 +1,8 @@
 app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
-    let transChart, cumulativeSums;
+    let transChart;
     const byDate = (a, b) => new Date(a.date) - new Date(b.date);
 
+    $scope.cumulativeSums = [];
     $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
         centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
     });
@@ -30,11 +31,11 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             $scope.movingAvgDays = setting || '30';
         })
     ]).then(([resp]) => {
-        cumulativeSums = resp.data.map(x => ({
+        $scope.cumulativeSums = resp.data.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
             sum: x.sum / 100
         })).sort(byDate)
-        $scope.drawGraph();
+        if ($scope.cumulativeSums.length) $scope.drawGraph();
     });
 
     $scope.drawGraph = () => {
@@ -75,7 +76,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             return sums.sort(byDate);
         };
 
-        const sums = applyMovingAverage(cumulativeSums);
+        const sums = applyMovingAverage($scope.cumulativeSums);
 
         const valueAxes = [{
             id: "v1",
