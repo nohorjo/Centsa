@@ -1,5 +1,6 @@
 app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
-    let transChart;
+    let transChart, cumulativeSums;
+    const byDate = (a, b) => new Date(a.date) - new Date(b.date);
 
     $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
         centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
@@ -18,17 +19,29 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }
     };
 
-
     centsa.settings.get("strict.mode").then(setting => {
         $scope.strictMode = setting == "1";
         $scope.getBudget();
     });
 
-    centsa.transactions.getCumulativeSums().then(resp => {
-        const byDate = (a, b) => new Date(a.date) - new Date(b.date);
-        const applyMovingAverage = (dayMovAvg, sums) => {
+    Promise.all([
+        centsa.transactions.getCumulativeSums(),
+        centsa.settings.get("moving.average.days").then(setting => {
+            $scope.movingAvgDays = setting || '30';
+        })
+    ]).then(([resp]) => {
+        cumulativeSums = resp.data.map(x => ({
+            date: new Date(x.date).formatDate("yyyy/MM/dd"),
+            sum: x.sum / 100
+        })).sort(byDate)
+        $scope.drawGraph();
+    });
+
+    $scope.drawGraph = () => {
+        centsa.settings.set("moving.average.days", $scope.movingAvgDays);
+        const applyMovingAverage = sums => {
             sums = sums.concat();
-            const millis = dayMovAvg * 8.64e7;
+            const millis = $scope.movingAvgDays * 8.64e7;
             const avgs = [];
 
             for (
@@ -62,10 +75,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             return sums.sort(byDate);
         };
 
-        const sums = applyMovingAverage(30, resp.data.map(x => ({
-            date: new Date(x.date).formatDate("yyyy/MM/dd"),
-            sum: x.sum / 100
-        })).sort(byDate));
+        const sums = applyMovingAverage(cumulativeSums);
 
         const valueAxes = [{
             id: "v1",
@@ -147,5 +157,5 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             dataDateFormat: 'YYYY/MM/DD'
         };
         transChart = AmCharts.makeChart("trans-chart", chartOpts);
-    });
+    }
 });

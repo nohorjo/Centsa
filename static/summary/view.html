@@ -41,4 +41,14 @@
         </tbody>
     </table>
 </div>
+<div style="display: inline-block">
+    <select class="form-control small" data-ng-change="drawGraph()" data-ng-model="movingAvgDays">
+        <option value="7">Weekly</option> 
+        <option value="30">Monthly</option> 
+        <option value="90">Quarterly</option> 
+        <option value="180">Half-yearly</option> 
+        <option value="365">Annually</option> 
+    </select>
+</div>
+<span>moving average</span>
 <div id="trans-chart" data-ng-click="filterDate($event)"></div>

@@ -1,213 +1,177 @@
 body {
-	font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI", sans-serif;
 }
 
 .sidebar, .main-panel{
-	top: 3em;
-	height: calc(100% - 3em);
+    top: 3em;
+    height: calc(100% - 3em);
 }
 
 .sidebar {
-	position: fixed;
-	left: 0;
-	z-index: 1;
-	width: 15%;
-	box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    left: 0;
+    z-index: 1;
+    width: 15%;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .header {
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 3em;
-	width: 100%;
-	padding: 4px 10px;
-	box-shadow: 6px 1px 10px 0px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3em;
+    width: 100%;
+    padding: 4px 10px;
+    box-shadow: 6px 1px 10px 0px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .main-panel {
-	position: fixed;
-	right: 0;
-	width: 85%;
-	padding: 10px 10px 0 2em;
-	margin-right: 10px;
-	overflow: auto;
+    position: fixed;
+    right: 0;
+    width: 85%;
+    padding: 10px 10px 0 2em;
+    margin-right: 10px;
+    overflow: auto;
 }
 
 
 .float-right {
-	float: right;
+    float: right;
 }
 
 .sidebar a {
-	position: relative;
-	display: block;
-	padding: 10px 15px;
-	text-decoration: none !important;
-	margin: 0.5em 15px;
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none !important;
+    margin: 0.5em 15px;
 }
 
 .sidebar a {
-	box-shadow: 2px 3px 20px -10px rgba(0, 0, 0, 0.75);
-	overflow: hidden;
+    box-shadow: 2px 3px 20px -10px rgba(0, 0, 0, 0.75);
+    overflow: hidden;
 }
 
 .sidebar a:hover {
-	box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
+    box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
 }
 
 .sidebar a.active {
-	background: #428bca;
-	color: white;
-	border-radius: 3px;
-}
-
-.datalist {
-	position: relative;
-}
-
-.datalist input {
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 10
-}
-
-.datalist div {
-	position: absolute;
-	top: 2.4em;
-	left: 0;
-	z-index: 9;
-	width: 100%;
-	background-color: white;
-	border: 1px #ddd solid;
-	border-radius: 2px;
-}
-
-.datalist span {
-	cursor: default;
-	display: block;
-	padding: 1px 2px;
-	margin: 2px 1px;
-	width: 100%;
-}
-
-.datalist span:hover,
-.datalist span.hover {
-	background-color: #428bca;
-	color: white;
+    background: #428bca;
+    color: white;
+    border-radius: 3px;
 }
 
 img {
-	width: auto;
-	height: 100%;
+    width: auto;
+    height: 100%;
 }
 
 #types-chart {
-	float: right;
-	width: 60%;
-	height: 500px;
+    float: right;
+    width: 60%;
+    height: 500px;
 }
 
 #trans-chart {
-	height: 500px;
-	width: 95%;
+    height: 500px;
+    width: 95%;
 }
 
 #types-view>form {
-	float: left;
-	width: 40%;
+    float: left;
+    width: 40%;
 }
 
 div.amcharts-chart-div>a {
-	display: none !important;
+    display: none !important;
 }
 
 th[data-ng-click],
 table.table-hover tr td {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 th[data-ng-click]:after {
-	content: " \21c5"
+    content: " \21c5"
 }
 
 #filterButtons>input {
-	margin: 2em 0.5em;
+    margin: 2em 0.5em;
 }
 
 .no-border-inactive:not(:focus) {
-	border: 0;
+    border: 0;
 }
 
 #frequencySelect>.dropdown-menu {
-	width: calc(100% + 25em);
+    width: calc(100% + 25em);
 }
 
 #frequencySelect>.btn {
-	white-space: normal;
+    white-space: normal;
 }
 
 .dropdown-menu li {
-	padding: 0 0.5em;
+    padding: 0 0.5em;
 }
 
 .dropdown-menu li:hover {
-	background: #f5f5f5;
+    background: #f5f5f5;
 }
 
 .dropdown>button {
-	width: 100%;
+    width: 100%;
 }
 
 .dropdown-menu input[type="number"] {
-	display: inline;
-	width: 20%;
+    display: inline;
+    width: 20%;
 }
 
 .dropdown-menu select {
-	display: inline;
-	width: 30%;
+    display: inline;
+    width: 30%;
 }
 
 li.disabled :not([type="radio"]) {
-	pointer-events: none;
+    pointer-events: none;
 }
 
 li.disabled {
-	opacity: 0.5;
+    opacity: 0.5;
 }
 
 img#logout {
-	border-radius: 3px;
-	cursor: pointer;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 #name{
-	font-weight: bold;
-	padding: 0.5em 1em;
-	color: #428bca;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    color: #428bca;
     margin: 0 0.5em;
     max-width: 20em;
 }
 
 input#export{
-	margin-top: 1.5em;
+    margin-top: 1.5em;
 }
 
 #editor{
-	min-height: 20em;
-	width: 100%;
+    min-height: 20em;
+    width: 100%;
 }
 
 #ruleEditor input.form-control {
-	display: inline-block;
+    display: inline-block;
     width: initial;
 }
 
 #transDiv {
-	overflow-y: scroll;
-	width: 100%;
+    overflow-y: scroll;
+    width: 100%;
 }
 
 .loader,
@@ -271,14 +235,18 @@ input#export{
 }
 
 #scrollButtom {
-	margin: 0.5em;
+    margin: 0.5em;
 }
 
 .extra-lg-modal {
-	width: 85%;
+    width: 85%;
 }
 
 tr.first-trans-of-week {
     font-weight: bold;
     text-decoration: underline;
+}
+
+select.small {
+    max-width: 15em;
 }
