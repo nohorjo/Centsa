@@ -1,6 +1,6 @@
 {
   "name": "centsa",
-  "version": "2.6.3",
+  "version": "2.6.4",
   "description": "Centsa money managing solution",
   "main": "src/index.js",
   "directories": {
