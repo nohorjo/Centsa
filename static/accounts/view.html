@@ -11,7 +11,13 @@
         </tr>
         <tr>
             <td>
-                <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="transfer.date">
+                <input
+                    type="text"
+                    class="datepicker form-control"
+                    pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    required="required"
+                    data-ng-model="transfer.date"
+                >
             </td>
             <td>
                 <select class="form-control" data-ng-model="transfer.from">
@@ -26,14 +32,26 @@
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control" required="required" data-ng-model="transfer.amount" data-number-divide="100">
+                <input
+                    type="number"
+                    class="form-control"
+                    required="required"
+                    step="0.01"
+                    data-ng-model="transfer.amount"
+                    data-number-divide="100"
+                >
             </td>
             <td>
                 <input type="text" class="form-control" required="required" data-ng-model="transfer.comment">
             </td>
             <td>
-                <input type="submit" value="Transfer" class="btn btn-primary" data-ng-class="{ 'btn-warning': TransferForm.$invalid || transfer.to == transfer.from }"
-                    data-ng-disabled="TransferForm.$invalid || transfer.to == transfer.from">
+                <input
+                    type="submit"
+                    value="Transfer"
+                    class="btn btn-primary"
+                    data-ng-class="{ 'btn-warning': TransferForm.$invalid || transfer.to == transfer.from }"
+                    data-ng-disabled="TransferForm.$invalid || transfer.to == transfer.from"
+                >
             </td>
         </tr>
     </table>
@@ -58,24 +76,55 @@
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
                 </td>
                 <td>
-                    <input type="number" step=".01" class="form-control" required="required" data-ng-model="newAccount.balance" data-number-divide="100">
+                    <input
+                        type="number"
+                        step=".01"
+                        class="form-control"
+                        required="required"
+                        data-ng-model="newAccount.balance"
+                        data-number-divide="100"
+                    >
                 </td>
                 <td>
-                    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+                    <input
+                        type="submit"
+                        value="Save"
+                        class="btn btn-primary"
+                        data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid"
+                    >
                 </td>
             </tr>
             <tr data-ng-repeat="a in accounts" data-ng-click="setFilter({account_id:a.id.toString()})">
                 <td>{{ a.id }}</td>
                 <td>
-                    <input type="radio" name="defaultAccount" value="{{a.id}}" data-ng-model="defaultAccountId" data-ng-click="setDefaultAccount(a.id);$event.stopPropagation()">
+                    <input
+                        type="radio"
+                        name="defaultAccount"
+                        value="{{a.id}}"
+                        data-ng-model="defaultAccountId"
+                        data-ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
+                    >
                 </td>
                 <td data-ng-init="a.nameOld = a.name">
-                    <input type="text" step=".01" class="form-control no-border-inactive" data-ng-model="a.name" data-ng-blur="updateAccount(a)"
-                        data-ng-click="$event.stopPropagation()">
+                    <input
+                        type="text"
+                        step=".01"
+                        class="form-control no-border-inactive"
+                        data-ng-model="a.name"
+                        data-ng-blur="updateAccount(a)"
+                        data-ng-click="$event.stopPropagation()"
+                    >
                 </td>
                 <td colspan="2" data-ng-init="a.balanceOld = a.balance">
-                    <input type="number" step=".01" class="form-control no-border-inactive" data-ng-model="a.balance" data-number-divide="100"
-                        data-ng-blur="adjustAccount(a)" data-ng-click="$event.stopPropagation()">
+                    <input
+                        type="number"
+                        step=".01"
+                        class="form-control no-border-inactive"
+                        data-ng-model="a.balance"
+                        data-number-divide="100"
+                        data-ng-blur="adjustAccount(a)"
+                        data-ng-click="$event.stopPropagation()"
+                    >
                 </td>
             </tr>
             <tr>
