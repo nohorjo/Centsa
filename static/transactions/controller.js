@@ -68,6 +68,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.editTrans = trans => {
         const t = Object.assign({}, trans);
+        delete t.firstOfWeek;
         t.date = $rootScope.formatDate(t.date);
         $('.datepicker').datepicker("update", t.date);
         t.account_id = t.account_id.toString();
