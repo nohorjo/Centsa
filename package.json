@@ -1,6 +1,6 @@
 {
   "name": "centsa",
-  "version": "2.6.4",
+  "version": "2.6.6",
   "description": "Centsa money managing solution",
   "main": "src/index.js",
   "directories": {
@@ -9,13 +9,15 @@
   "dependencies": {
     "axios": "0.17.1",
     "cookie-parser": "1.4.3",
+    "debug": "3.1.0",
     "express": "4.16.2",
     "express-fileupload": "0.4.0",
     "express-session": "1.15.6",
     "express-unless": "0.5.0",
     "google-auth-library": "1.5.0",
     "mysql": "2.15.0",
-    "session-file-store": "1.2.0"
+    "session-file-store": "1.2.0",
+    "supports-color": "5.4.0"
   },
   "devDependencies": {
     "@types/axios": "0.14.0",

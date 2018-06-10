@@ -1,29 +1,35 @@
 import { Router } from 'express';
 import * as dao from './dao/Expenses';
 import * as tdao from './dao/Transactions';
+import log from './log';
+
+log('init expense');
 
 const route = Router();
 
 export const getAll = (req, resp) => {
+    log('get all expenses');
     dao.getAll(req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
             result.forEach(e => e.started.setHours(12));
+            log('returning expenses');
             resp.send(result);
         }
     });
 };
 
 export const getTotals = (req, resp) => {
+    log('get expense totals')
     dao.getTotals(
         req.query.auto == "true",
         new Date(req.get('x-date')),
         req.session.userData.user_id,
         (err, result) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else {
                 resp.send(result.reduce((total, e) => {
@@ -36,6 +42,7 @@ export const getTotals = (req, resp) => {
                     } else {
                         daily = cost / 30;
                     }
+                    log('returning totals');
                     return total + daily;
                 }, 0).toString());
             }
@@ -44,26 +51,30 @@ export const getTotals = (req, resp) => {
 };
 
 export const insert = (req, resp) => {
+    log('insert expense');
     const expense = req.body;
     if (isFrequencyValid(expense.frequency)) {
         expense.user_id = req.session.userData.user_id;
         expense.started = new Date(expense.started);
         dao.checkEntityOwnership(expense, (err, allowed) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else {
                 if (!allowed) {
+                    log.warn('insert expense, invalid account or type');
                     resp.status(400).send("Invalid account or type id");
                 } else {
                     dao.insert(expense, (err, id) => {
                         if (err) {
-                            console.error(err);
+                            log.error(err);
                             resp.status(500).send(err);
                         } else {
                             if (expense.automatic) {
+                                log('applying auto transactions');
                                 applyAutoTransactions(true, id, new Date(req.get('x-date')));
                             }
+                            log('inserted expense');
                             resp.send(id.toString());
                         }
                     });
@@ -71,18 +82,21 @@ export const insert = (req, resp) => {
             }
         });
     } else {
+        log.warn('insert expense, invalid frequency');
         resp.status(400).send("Invalid frequency");
     }
 };
 
 export const deleteExpense = (req, resp) => {
+    log('delete expense');
     dao.deleteExpense(req.params.id,
         req.session.userData.user_id,
         (err, result) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else {
+                log('deleted type');
                 resp.sendStatus(201);
             }
         }
@@ -127,7 +141,7 @@ export const nextPaymentDate = (expense, date) => {
 export const applyAutoTransactions = (all?, id?, today = new Date()) => {
    today.setHours(12); 
     dao.getAutoExpenses(all, id, today, (err, result) => {
-        if (err) { console.error(err); throw err; }
+        if (err) { log.error(err); throw err; }
         let expectedTransactions;
         if (all) {
             expectedTransactions = result.reduce((arr, e) => {
@@ -160,7 +174,7 @@ export const applyAutoTransactions = (all?, id?, today = new Date()) => {
         }
         tdao.insertAutoTransactions(
             expectedTransactions,
-            err => { if (err) { console.dir(err); throw err; } }
+            err => { if (err) { log.error(err); throw err; } }
         );
 
     });

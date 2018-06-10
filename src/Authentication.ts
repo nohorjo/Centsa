@@ -1,8 +1,18 @@
 import axios from 'axios';
 import * as unless from 'express-unless';
 import * as Users from './Users';
+import log from './log';
 
-export const checkAuth = (req, resp, next) => (req.session && req.session.userData) ? next() : resp.sendStatus(401);
+log('init authentication');
+
+export const checkAuth = (req, resp, next) => {
+    if (req.session && req.session.userData) {
+        next();
+    } else {
+        log.warn('unauthorized %s', req.ip);
+        resp.sendStatus(401);
+    }
+};
 
 export const authSkipLogin = (req, resp, next) => (req.session && req.session.userData) ? resp.redirect('/main.html') : next();
 
@@ -16,7 +26,7 @@ export const login = async (req, res) => {
         } else {
             details = await getDetailsFromFB(req.body);
         }
-        console.dir(details);
+        log('%O', details);
         req.session.userData = details;
         res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
         Users.getOrCreateUser(details, id => {
@@ -25,7 +35,7 @@ export const login = async (req, res) => {
             res.sendStatus(201);
         });
     } catch (e) {
-        console.error(e);
+        log.error(e);
         res.status(500).send(e.toString());
     }
 };
@@ -39,6 +49,7 @@ export const logout = (req, res) => {
 };
 
 const getDetailsFromGoogle = async token => {
+    log('google auth');
     const {OAuth2Client} = require('google-auth-library');
     const CLIENT_ID = '760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com';
     const ticket = await new OAuth2Client(CLIENT_ID).verifyIdToken({
@@ -50,7 +61,7 @@ const getDetailsFromGoogle = async token => {
 
 const getDetailsFromFB = async ({userID, accessToken}) => {
     const fields = ['email', 'name'];
-    console.log(`Login request: ${userID}`);
+    log('Login request: %s', userID);
     const url = `https://graph.facebook.com/${userID}?access_token=${accessToken}&fields=${fields.join(',')}`;
 
     return (await axios.get(url)).data;

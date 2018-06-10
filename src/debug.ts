@@ -1,8 +1,12 @@
 import { Router } from 'express';
+import log from './log';
+
+log('init debug');
 
 const route = Router();
 
 route.get('/', (req, resp) => {
+    log('debug request %s', req.ip);
     const data = {
         body: req.body,
         cookies: req.cookies,

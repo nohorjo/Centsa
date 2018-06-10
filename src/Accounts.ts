@@ -1,12 +1,17 @@
 import { Router } from 'express';
 import * as dao from './dao/Accounts';
+import log from './log';
+
+log('init accounts');
 
 export const getAll = (req, resp) => {
+    log('get all accounts');
     dao.getAll(req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning accounts');
             result.forEach(a => a.balance = a.balance || 0);
             resp.send(result);
         }
@@ -14,6 +19,7 @@ export const getAll = (req, resp) => {
 };
 
 export const insert = (req, resp) => {
+    log('insert account');
     const account = (({ name, id }) => ({ name, id }))(req.body);
     account['user_id'] = req.session.userData.user_id;
     if (!account.id) {
@@ -21,9 +27,10 @@ export const insert = (req, resp) => {
     }
     dao.insert(account, (err, id) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('inserted account');
             resp.send(id.toString());
         }
     });

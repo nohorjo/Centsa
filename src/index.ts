@@ -15,6 +15,7 @@ import Transactions from './Transactions';
 import Types from './Types';
 import { testConnection } from './dao/Connection';
 import debug from './debug';
+import log from './log';
 
 const cpus = os.cpus().length;
 
@@ -26,6 +27,7 @@ const initWorker = (id, env) => {
     testConnection();
 
     if (id == 1) {
+        log('applying auto transactions');
         applyAutoTransactions(true);
         setInterval(applyAutoTransactions, 8.64e7);
     }
@@ -33,6 +35,7 @@ const initWorker = (id, env) => {
     const port = env.PORT || 8080;
 
     const app = express();
+    log('init session store');
     const FileStore = require('session-file-store')(session);
 
     sessionStore = new FileStore({ ttl: 31536000 });
@@ -66,6 +69,7 @@ const initWorker = (id, env) => {
     };
 
     if (env.NODE_ENV === 'production') {
+        log('init production config');
         app.set('trust proxy', 1);
         sess.cookie['secure'] = true;
         app.use((req, res, next) => req.secure ? next() : res.redirect(`https://${req.hostname}${req.originalUrl}`));
@@ -99,7 +103,7 @@ const initWorker = (id, env) => {
 
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
-    app.listen(port, () => console.log(`Server ${id} listening on port ${port}`));
+    app.listen(port, () => log(`Server ${id} listening on port ${port}`));
 };
 const checkConfig = env => {
     for (let v of [
@@ -112,7 +116,7 @@ const checkConfig = env => {
         'DB_CONNECTION_LIMIT'
     ]) {
         if (!env[v]) {
-            console.error(`Incomplete configuration from env: ${v}`);
+            log.error(`Incomplete configuration from env: ${v}`);
             process.exit(1);
         }
     }
