@@ -250,3 +250,14 @@ tr.first-trans-of-week {
 select.small {
     max-width: 15em;
 }
+
+.ng-hide {
+    opacity: 0;
+}
+
+.ng-hide-add,
+.ng-hide-remove {
+    transition: all linear 0.2s;
+}
+
+
