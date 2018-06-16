@@ -177,14 +177,14 @@ route.delete('/controllers/:email', (req, resp) => {
             const sessionStore = getSessionStore();
             sessionStore.all((err, sessions) => {
                 if (err) console.error(err);
-                else sessions.forEach(s => {
-                    const { userData } = s;
+                else Object.keys(sessions).forEach(k => {
+                    const { userData } = sessions[k];
                     if (
                         userData
                         && userData.user_id == user_id
                         && userData.original_user_id == id
                     ) {
-                        sessionStore.destroy(s.sid);
+                        sessionStore.destroy(k);
                     }
                 });
             });
