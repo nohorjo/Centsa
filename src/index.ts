@@ -3,6 +3,7 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
+import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Authentication from './Authentication';
@@ -13,7 +14,7 @@ import General from './General';
 import Settings from './Settings';
 import Transactions from './Transactions';
 import Types from './Types';
-import { testConnection } from './dao/Connection';
+import { testConnection, pool } from './dao/Connection';
 import debug from './debug';
 
 const cpus = os.cpus().length;
@@ -33,29 +34,8 @@ const initWorker = (id, env) => {
     const port = env.PORT || 8080;
 
     const app = express();
-    const FileStore = require('session-file-store')(session);
 
-    sessionStore = new FileStore({ ttl: 31536000 });
-    sessionStore.all = cb => {
-        const sessionPath = path.join(__dirname, '..', 'sessions');
-        fs.readdir(sessionPath, (err, files) => {
-            if (err) {
-                cb(err);
-            } else {
-                const loadSession = sid => new Promise((resolve, reject) => {
-                    fs.readFile(path.join(sessionPath,`${sid}.json`), 'utf8', (err, data) => {
-                        if (err) reject(err);
-                        else resolve({sid, ...JSON.parse(data)});
-                    });
-                });
-                
-                Promise.all(
-                    files.filter(f => /\.json$/.test(f)).map(f => loadSession(f.replace(/\.json$/,'')))
-                ).then(sessions => cb(null, sessions))
-                .catch(err => cb(err));
-            }
-        });
-    };
+    sessionStore = new MySQLStore({ createDatabaseTable: true }, pool);
     const sess = {
         secret: env.SESSION_SECRET,
         resave: true,
