@@ -38,7 +38,7 @@ const initWorker = (id, env) => {
     sessionStore = new MySQLStore({ createDatabaseTable: true }, pool);
     const sess = {
         secret: env.SESSION_SECRET,
-        resave: true,
+        resave: false,
         saveUninitialized: true,
         unset: 'destroy',
         cookie: { maxAge: 31536000000, httpOnly: true },
