@@ -6,8 +6,6 @@ out
 package.json.*
 coverage/*
 dist/*
-config.js
-sessions/*
 *.sh
 mochawesome-report/*
 *.swp
