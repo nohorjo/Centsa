@@ -62,7 +62,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                     const sub = _sums.splice(0, spliceIndex != -1 ? spliceIndex : _sums.length);
                     avg.avg = +(sub.reduce((s, o) => s + o.sum, 0) / sub.length).toFixed(2);
                     avg.date = new Date(avg.date - millis / 2).formatDate('yyyy/MM/dd');
-                    if (!isNaN(lastAmount)) avg.rate = +(avg.avg - lastAmount).toFixed(2);
+                    if (!isNaN(lastAmount)) avg.rate = +(lastAmount - avg.avg).toFixed(2);
                     lastAmount = avg.avg;
                     sums.push(avg);
                 });
