@@ -53,22 +53,16 @@ const initWorker = (id, env) => {
 
     app.use(express.json({ limit: '10MB' }));
     app.use(cookieParser());
-    app.use(session(sess));
+    app.use(['/api', '/login'], session(sess));
     app.use(fileUpload());
 
     app.get('/index.html', Authentication.authSkipLogin);
 
     app.use(debug);
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
-    app.use(Authentication.checkAuth['unless']({
-        path: ['/login'],
-        ext: ['css', 'js', 'svg', 'ico', 'gif', 'html']
-    }));
-
-    app.delete('/login', Authentication.logout);
-    app.post('/login', Authentication.login);
 
     app.use('/api', [
+        Authentication.checkAuth,
         Accounts,
         Expenses,
         General,
@@ -76,6 +70,9 @@ const initWorker = (id, env) => {
         Transactions,
         Types
     ]);
+
+    app.delete('/login', Authentication.logout);
+    app.post('/login', Authentication.login);
 
     app.use(express.static(path.join(__dirname, '..', 'static')));
 
