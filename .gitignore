@@ -11,3 +11,4 @@ mochawesome-report/*
 *.swp
 *.vim
 tags
+sessions/*
