@@ -12,6 +12,8 @@ import {
 import { getSessionStore } from './index';
 import log from './log';
 
+log('init general');
+
 const route = Router();
 
 route.get("/budget", (req, resp) => {
