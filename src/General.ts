@@ -10,13 +10,15 @@ import {
     deleteController
 } from './dao/Users';
 import { getSessionStore } from './index';
+import log from './log';
 
 const route = Router();
 
 route.get("/budget", (req, resp) => {
+    log('get budget');
     getAllWithSum(req.session.userData.user_id, (err, results) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
             const expenses = results[1];
@@ -44,6 +46,7 @@ route.get("/budget", (req, resp) => {
                     afterAuto: results[0][0].total
                 }
             );
+            log('returning budget');
             resp.send(budget);
         }
     });
@@ -51,11 +54,13 @@ route.get("/budget", (req, resp) => {
 
 // =================== IMPORT
 route.get("/rules", (req, resp) => {
+    log('get all rules');
     rules.getAll(req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning rules');
             resp.send(result);
         }
     });
@@ -63,6 +68,7 @@ route.get("/rules", (req, resp) => {
 
 route.post("/rule/:name", (req, resp) => {
     const { name } = req.params;
+    log('insert rule %s', name);
 
     if (name && name != 'Default') {
         rules.insert(
@@ -71,9 +77,10 @@ route.post("/rule/:name", (req, resp) => {
             req.body.script,
             (err, id) => {
                 if (err) {
-                    console.error(err);
+                    log.error(err);
                     resp.status(500).send(err);
                 } else {
+                    log('inserted rule');
                     resp.send(id.toString());
                 }
             }
@@ -84,11 +91,13 @@ route.post("/rule/:name", (req, resp) => {
 });
 
 route.get("/rule/:id", (req, resp) => {
+    log('get rule');
     rules.getRule(req.params.id, req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning rule');
             resp.send(result[0].content);
         }
     });
@@ -97,11 +106,13 @@ route.get("/rule/:id", (req, resp) => {
 // =================== CONTROLLER/CONTROLLEE
 
 route.get('/controllees', (req, resp) => {
+    log('get controllees');
     getControllees(req.session.userData.original_user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning controllees');
             resp.send(result);
         }
     });
@@ -111,7 +122,10 @@ route.get('/controllees', (req, resp) => {
 route.get('/switchUser/:id', (req, resp) => {
     const { userData } = req.session;
     const { id } = req.params;
+    log('user %d switching to %d', userData.original_user_id, id);
+
     const respond = () => {
+        log('switched user');
         resp.cookie('currentUser', id, { maxAge: 31536000000, httpOnly: false });
         resp.sendStatus(201);
     };
@@ -121,12 +135,13 @@ route.get('/switchUser/:id', (req, resp) => {
     } else {
         isController(userData.original_user_id, id, (err, result) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else if (result) {
                 userData.user_id = id;
                 respond();
             } else {
+                log.warn('unauthorised switch attempt');
                 resp.sendStatus(401);
             }
         });
@@ -134,12 +149,14 @@ route.get('/switchUser/:id', (req, resp) => {
 });
 
 route.get('/controllers', (req, resp) => {
+    log('get controllers');
     const { userData } = req.session;
     getControllers(userData.user_id, (err, controllers) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning controllers');
             resp.send({
                 email: userData.email,
                 controllers
@@ -151,16 +168,20 @@ route.get('/controllers', (req, resp) => {
 route.post('/controllers', (req, resp) => {
     const controllerEmail = req.body.email;
     const { email, user_id } = req.session.userData;
+    log('adding controller %s to %d', controllerEmail, user_id);
     if (email == controllerEmail) {
+        log('controller and controllee the same');
         resp.sendStatus(400);
     } else {
         addController(user_id, controllerEmail, (err, result) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else if(result) {
+                log('controller added');
                 resp.sendStatus(201);
             } else {
+                log('controller not found');
                 resp.sendStatus(404);
             }
         });        
@@ -169,14 +190,15 @@ route.post('/controllers', (req, resp) => {
 
 route.delete('/controllers/:email', (req, resp) => {
     const { user_id } = req.session.userData;
+    log('removing controller by %d', user_id);
     deleteController(user_id, req.params.email, (err, id) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
             const sessionStore = getSessionStore();
             sessionStore.all((err, sessions) => {
-                if (err) console.error(err);
+                if (err) log.error(err);
                 else Object.keys(sessions).forEach(k => {
                     const { userData } = sessions[k];
                     if (
@@ -184,10 +206,12 @@ route.delete('/controllers/:email', (req, resp) => {
                         && userData.user_id == user_id
                         && userData.original_user_id == id
                     ) {
+                        log('destroying session of %d', id);
                         sessionStore.destroy(k);
                     }
                 });
             });
+            log('returning from session deletion');
             resp.sendStatus(201);
         }
     });        

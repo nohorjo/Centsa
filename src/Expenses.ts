@@ -22,7 +22,7 @@ export const getAll = (req, resp) => {
 };
 
 export const getTotals = (req, resp) => {
-    log('get expense totals')
+    log('get expense totals');
     dao.getTotals(
         req.query.auto == "true",
         new Date(req.get('x-date')),
