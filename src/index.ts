@@ -57,6 +57,7 @@ const initWorker = (id, env) => {
     app.use(fileUpload());
 
     app.get('/index.html', Authentication.authSkipLogin);
+    app.get('/login.js', Authentication.loginScript);
 
     app.use(debug);
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
@@ -86,7 +87,9 @@ const checkConfig = env => {
         'DB_USER',
         'DB_PASSWORD',
         'DB_NAME',
-        'DB_CONNECTION_LIMIT'
+        'DB_CONNECTION_LIMIT',
+        'GOOGLE_CLIENT_ID',
+        'FB_APP_ID'
     ]) {
         if (!env[v]) {
             console.error(`Incomplete configuration from env: ${v}`);
