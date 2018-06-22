@@ -71,7 +71,6 @@ export const insert = (req, resp) => {
                             resp.status(500).send(err);
                         } else {
                             if (expense.automatic) {
-                                log('applying auto transactions');
                                 applyAutoTransactions(true, id, new Date(req.get('x-date')));
                             }
                             log('inserted expense');
@@ -139,7 +138,8 @@ export const nextPaymentDate = (expense, date) => {
 };
 
 export const applyAutoTransactions = (all?, id?, today = new Date()) => {
-   today.setHours(12); 
+    log('applying auto transactions');
+    today.setHours(12); 
     dao.getAutoExpenses(all, id, today, (err, result) => {
         if (err) { log.error(err); throw err; }
         let expectedTransactions;

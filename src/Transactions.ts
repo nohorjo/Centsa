@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import * as dao from './dao/Transactions';
+import log from from './log';
+
+log('init transactions');
 
 const route = Router();
 
 route.get('/', (req, resp) => {
+    log('get all transactions');
     const filter = parseFilter(req);
 
     const page = parseInt(req.query.page);
@@ -18,10 +22,11 @@ route.get('/', (req, resp) => {
         sort,
         (err, result) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else {
                 result.forEach(t => t.date.setHours(12));
+                log('returning transactions');
                 resp.send(result);
             }
         }
@@ -30,20 +35,11 @@ route.get('/', (req, resp) => {
 
 route.post("/", (() => {
     const insertBatch = (req, resp) => {
-        const transactions = [];
-        let accountIds = [];
-        let expenseIds = [-1];
-        let typeIds = [];
-        req.body.forEach(t => {
-            transactions.push([
-                req.session.userData.user_id,
-                t.amount,
-                t.comment,
-                t.account_id,
-                t.type_id,
-                t.expense_id || null,
-                new Date(t.date)
-            ]);
+        log('inserting batch transactions');
+        const accountIds = [];
+        const expenseIds = [-1];
+        const typeIds = [];
+        const transactions = req.body.map(t => {
             if (!accountIds.includes(t.account_id)) {
                 accountIds.push(t.account_id);
             }
@@ -53,6 +49,15 @@ route.post("/", (() => {
             if (!typeIds.includes(t.type_id)) {
                 typeIds.push(t.type_id);
             }
+            return [
+                req.session.userData.user_id,
+                t.amount,
+                t.comment,
+                t.account_id,
+                t.type_id,
+                t.expense_id || null,
+                new Date(t.date)
+            ];
         });
         dao.checkBatchEntityOwnership(
             req.session.userData.user_id,
@@ -61,17 +66,19 @@ route.post("/", (() => {
             typeIds,
             (err, allowed) => {
                 if (err) {
-                    console.error(err);
+                    log.error(err);
                     resp.status(500).send(err);
                 } else {
                     if (!allowed) {
+                        log.warn('insert batch transactions, entity ownership failed');
                         resp.status(400).send("Invalid account, expense or type ids");
                     } else {
                         dao.insertBatch(transactions, (err, results) => {
                             if (err) {
-                                console.error(err);
+                                log.error(err);
                                 resp.status(500).send(err);
                             } else {
+                                log('inserted batch transactions');
                                 resp.sendStatus(201);
                             }
                         });
@@ -82,6 +89,7 @@ route.post("/", (() => {
     };
 
     const insert = (req, resp) => {
+        log('inserting transaction');
         const transaction = req.body;
         transaction.user_id = req.session.userData.user_id;
         transaction.date = new Date(transaction.date);
@@ -90,17 +98,19 @@ route.post("/", (() => {
         }
         dao.checkEntityOwnership(transaction, (err, allowed) => {
             if (err) {
-                console.error(err);
+                log.error(err);
                 resp.status(500).send(err);
             } else {
                 if (!allowed) {
+                    log.warn('insert transactions, entity ownership failed');
                     resp.status(400).send("Invalid account, expense or type id");
                 } else {
                     dao.insert(transaction, (err, id) => {
                         if (err) {
-                            console.error(err);
+                            log.error(err);
                             resp.status(500).send(err);
                         } else {
+                            log('inserted transaction');
                             resp.send(id.toString());
                         }
                     });
@@ -118,23 +128,27 @@ route.post("/", (() => {
 })());
 
 route.delete('/:id', (req, resp) => {
+    log('deleting transaction');
     dao.deleteTransaction(req.params.id, req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('deleted transaction');
             resp.sendStatus(201);
         }
     });
 });
 
 route.get('/cumulativeSums', (req, resp) => {
+    log('getting cumulative sums');
     dao.getAmounts(req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
             let currentSum = 0;
+            log('returning sums');
             resp.send(result.reduce((arr, e) => {
                 const other = arr.find(x => x.date.valueOf() == e.date.valueOf());
                 if (other) {
@@ -152,23 +166,27 @@ route.get('/cumulativeSums', (req, resp) => {
 });
 
 route.get('/summary', (req, resp) => {
+    log('getting summary');
     const filter = parseFilter(req);
     dao.getSummary(req.session.userData.user_id, filter, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning summary');
             resp.send(result[0]);
         }
     });
 });
 
 route.get('/comments', (req, resp) => {
+    log('getting comments');
     dao.getUniqueComments(req.session.userData.user_id, (err, result) => {
         if (err) {
-            console.error(err);
+            log.error(err);
             resp.status(500).send(err);
         } else {
+            log('returning comments');
             resp.send(result.map(x => x.comment));
         }
     });

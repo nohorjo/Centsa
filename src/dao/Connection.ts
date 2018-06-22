@@ -1,10 +1,14 @@
 import * as mysql from 'mysql';
 import * as os from 'os';
+import log from '../log';
+
+log('init db connection');
 
 const cpus = os.cpus().length;
 const config = Object.assign({ cpusCount: cpus }, process.env);
 
 export const testConnection = () => {
+    log('test connection');
     const connection = mysql.createConnection({
         host: config.DB_IP,
         port: parseInt(config.DB_PORT),
@@ -31,5 +35,9 @@ export const pool = mysql.createPool({
     multipleStatements: true
 });
 
+log('pool created');
 
-process.on('exit', () => pool.end());
+process.on('exit', () => {
+    log('shutting down pool');
+    pool.end();
+});

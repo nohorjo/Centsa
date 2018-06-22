@@ -28,7 +28,6 @@ const initWorker = (id, env) => {
     testConnection();
 
     if (id == 1) {
-        log('applying auto transactions');
         applyAutoTransactions(true);
         setInterval(applyAutoTransactions, 8.64e7);
     }
