@@ -1,24 +1,51 @@
 const centsa = function ($http) {
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
-        getAll() { return $http.get(this.apiUrl); }
-        insert(item) { return $http.post(this.apiUrl, item); }
+        getAll() {
+            console.log(this.constructor.name, 'getAll');
+            return $http.get(this.apiUrl);
+        }
+        insert(item) {
+            console.log(this.constructor.name, 'insert', item);
+            return $http.post(this.apiUrl, item);
+        }
     }
     class genericApi extends baseApi {
         constructor(path) { super(path); }
-        remove(id) { return $http.delete(`${this.apiUrl}/${id}`); }
+        remove(id) {
+            console.log(this.constructor.name, 'remove', id);
+            return $http.delete(`${this.apiUrl}/${id}`);
+        }
     }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
-        getAll(activeOnly) { return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } }); }
-        totalActive(incAuto) { return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } }); }
+        getAll(activeOnly) {
+            console.log(this.constructor.name, 'getAll', activeOnly);
+            return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } });
+        }
+        totalActive(incAuto) {
+            console.log(this.constructor.name, 'totalActive', incAuto);
+            return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } });
+        }
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
-        getAll(options) { return $http.get(this.apiUrl, { params: options }); }
-        getCumulativeSums() { return $http.get(`${this.apiUrl}/cumulativeSums`); }
-        getSummary(filter) { return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } }); }
-        getUniqueComments() { return $http.get(`${this.apiUrl}/comments`); }
+        getAll(options) {
+            console.log(this.constructor.name, 'getAll', options);
+            return $http.get(this.apiUrl, { params: options });
+        }
+        getCumulativeSums() {
+            console.log(this.constructor.name, 'getCumulativeSums');
+            return $http.get(`${this.apiUrl}/cumulativeSums`);
+        }
+        getSummary(filter) {
+            console.log(this.constructor.name, 'getSummary', filter);
+            return $http.get(`${this.apiUrl}/summary`, { params: { filter: filter } });
+        }
+        getUniqueComments() {
+            console.log(this.constructor.name, 'getUniqueComments');
+            return $http.get(`${this.apiUrl}/comments`);
+        }
     }
 
     this.accounts = new baseApi('accounts');
@@ -32,6 +59,7 @@ const centsa = function ($http) {
             get(key) {
                 return new Promise((resolve, reject) => {
                     if (!_settings) {
+                        console.log('loading settings');
                         $http.get(apiUrl).then(resp => {
                             _settings = resp.data;
                             resolve(_settings[key]);
@@ -42,6 +70,7 @@ const centsa = function ($http) {
                 });
             },
             set(key, value) {
+                console.log('saving setting', key, value);
                 _settings[key] = value;
                 return $http.post(apiUrl, { key: key, value: value });
             }
@@ -50,15 +79,42 @@ const centsa = function ($http) {
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode) { return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } }); },
-            rules() { return $http.get(`${apiUrl}/rules`); },
-            rule(id) { return $http.get(`${apiUrl}/rule/${id}`); },
-            saveRule(name, script) { return $http.post(`${apiUrl}/rule/${name}`, { script: script }); }, 
-            controllees() { return $http.get(`${apiUrl}/controllees`); }, 
-            switchUser(id) { return $http.get(`${apiUrl}/switchUser/${id}`); }, 
-            controllers() { return $http.get(`${apiUrl}/controllers`); }, 
-            addController(email) { return $http.post(`${apiUrl}/controllers`, {email}); },
-            deleteController(email) { return $http.delete(`${apiUrl}/controllers/${encodeURIComponent(email)}`); }
+            budget(isStrictMode) {
+                console.log('get budget', isStrictMode);
+                return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } });
+            },
+            rules() {
+                console.log('get rules meta');
+                return $http.get(`${apiUrl}/rules`);
+            },
+            rule(id) {
+                console.log('get rule', id);
+                return $http.get(`${apiUrl}/rule/${id}`);
+            },
+            saveRule(name, script) {
+                console.log('save rule', name);
+                return $http.post(`${apiUrl}/rule/${name}`, { script: script });
+            }, 
+            controllees() {
+                console.log('get controllees');
+                return $http.get(`${apiUrl}/controllees`);
+            }, 
+            switchUser(id) {
+                console.log('switch user', id);
+                return $http.get(`${apiUrl}/switchUser/${id}`);
+            }, 
+            controllers() {
+                console.log('get controllers');
+                return $http.get(`${apiUrl}/controllers`);
+            }, 
+            addController(email) {
+                console.log('add controller', email);
+                return $http.post(`${apiUrl}/controllers`, {email});
+            },
+            deleteController(email) {
+                console.log('delete controller', email);
+                return $http.delete(`${apiUrl}/controllers/${encodeURIComponent(email)}`);
+            }
         };
     })();
 
