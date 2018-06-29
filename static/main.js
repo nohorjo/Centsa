@@ -15,7 +15,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     $rootScope.sort = (() => {
         let lastProp;
         let asc = true;
-        return (prop, arr) => {
+        return (prop, arr, cb) => {
             if (lastProp != prop) {
                 lastProp = prop;
                 asc = false;
@@ -32,6 +32,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
                 }
                 return comp * (asc ? 1 : -1);
             });
+            if (cb) cb();
         };
     })();
 

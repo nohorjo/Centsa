@@ -2,7 +2,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
     $scope.types = [];
     centsa.types.getAll().then(resp => {
         $scope.types = resp.data;
-        drawPie();
+        $scope.drawPie();
     });
 
     $scope.newType = {
@@ -15,7 +15,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
         $scope.newType.sum = 0;
         $scope.types.unshift($scope.newType);
         $scope.newType = Object.assign({}, newType);
-        drawPie();
+        $scope.drawPie();
     });
 
     $scope.deleteType = async id => {
@@ -31,12 +31,12 @@ app.controller("typesCtrl", function ($scope, centsa) {
         if(result.value) {
             centsa.types.remove(id).then(() => {
                 $scope.types.splice($scope.types.findIndex(t => t.id == id), 1);
-                drawPie();
+                $scope.drawPie();
             });
         }
     };
 
-    const drawPie = () => {
+    $scope.drawPie = () => {
         console.log('draw pie');
         AmCharts.makeChart("types-chart", {
             type: "pie",

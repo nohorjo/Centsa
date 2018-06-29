@@ -1,37 +1,36 @@
 <div id="types-view">
-	<form name="Form" data-ng-submit="saveType()">
-		<h4>Manage types</h4>
-		<table id="typesTable" class="table table-condensed table-hover">
-			<thead>
-				<tr>
-					<th width="5%" data-ng-click="sort('id', types)">ID</th>
-					<th data-ng-click="sort('name', types)">Name</th>
-					<th colspan="2" data-ng-click="sort('sum', types)">Sum</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td>
-						<input type="text" class="form-control" required="required" data-ng-model="newType.name">
-					</td>
-					<td></td>
-					<td>
-						<input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
-					</td>
-				</tr>
-				<tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
-					<td>{{ t.id }}</td>
-					<td>{{ t.name }}</td>
-					<td>{{ t.sum/100 }}</td>
-					<td colspan="2">
-						<a href="" data-ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</form>
-	<div id="chart"></div>
+    <form name="Form" data-ng-submit="saveType()">
+        <h4>Manage types</h4>
+        <table id="typesTable" class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th width="5%" data-ng-click="sort('id', types, drawPie)">ID</th>
+                    <th data-ng-click="sort('name', types, drawPie)">Name</th>
+                    <th colspan="2" data-ng-click="sort('sum', types, drawPie)">Sum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="text" class="form-control" required="required" data-ng-model="newType.name">
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+                    </td>
+                </tr>
+                <tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.name }}</td>
+                    <td>{{ t.sum/100 }}</td>
+                    <td colspan="2">
+                        <a href="" data-ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
 <div id="types-chart"></div>
