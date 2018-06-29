@@ -50,7 +50,7 @@ export const loginScript = (req, resp) => {
         `(${
            `() => {
                 const authUrl = '/login';
-                window = () => {
+                window.fbInit = () => {
                     const initConfig = {
                         appId: 'FB_APP_ID',
                         cookie: true,
