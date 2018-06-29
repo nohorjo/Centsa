@@ -46,11 +46,11 @@ export const logout = (req, res) => {
 };
 
 export const loginScript = (req, resp) => {
-    res.status(200).send(
+    resp.status(200).send(
         `(${
-           (() => {
+           `() => {
                 const authUrl = '/login';
-                window.fbInit = () => {
+                window = () => {
                     const initConfig = {
                         appId: 'FB_APP_ID',
                         cookie: true,
@@ -77,8 +77,8 @@ export const loginScript = (req, resp) => {
                         js = d.createElement(s);
                         js.id = id;
                         js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1'
-                                    + `&version=${initConfig.version}`
-                                    + `&appId=${initConfig.appId}`
+                                    + '&version=' + initConfig.version
+                                    + '&appId=' + initConfig.appId
                                     + '&autoLogAppEvents=1';
                         fjs.parentNode.insertBefore(js, fjs);
                     }(document, 'script', 'facebook-jssdk'));
@@ -96,7 +96,7 @@ export const loginScript = (req, resp) => {
                 window.onSignIn = googleUser => {
                     loginRequest({google_token:googleUser.getAuthResponse().id_token}, gapi.auth2.getAuthInstance().signOut);
                 };
-                
+
                 function loginRequest(data, signOut) {
                     $.post({
                         url: authUrl,
@@ -109,7 +109,7 @@ export const loginScript = (req, resp) => {
                         }
                     });
                 }
-            }).toString().replace('FB_APP_ID', process.env.FB_APP_ID) 
+            }`.replace('FB_APP_ID', process.env.FB_APP_ID)
         })()`
     );
 };

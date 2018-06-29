@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as dao from './dao/Transactions';
-import log from from './log';
+import log from './log';
 
 log('init transactions');
 
