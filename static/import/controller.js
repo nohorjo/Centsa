@@ -22,11 +22,13 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
         let debounceTimeout;
         importWorker.addEventListener('message', ({data}) => {
             if (data) {
+                console.log('progress', data);
                 $timeout.cancel(debounceTimeout);
                 debounceTimeout = $timeout(() => {
                     $scope.importProgress = data;
                 }, 200);
             } else {
+                console.log('import done');
                 $timeout(() => {
                     $scope.importProgress = {
                         processed: 0,
@@ -38,6 +40,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
         });
         importWorker.addEventListener('error', ({message}) => {
             $scope.$apply(() => {
+                console.error('import error', message);
                 $scope.importError = `Error: ${message}`;
             });
         });
@@ -52,7 +55,8 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     let editor;
 
     $scope.$watch('rule', newValue => {
-        if (newValue == "") {
+        if (newValue === "") {
+            console.log('new rule');
             $scope.newRuleName = "";
             $scope.showEditor = true;
             if (editor) {
@@ -73,6 +77,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     };
     $scope.$watch('showEditor', show => {
         if (show) {
+            console.log('show editor');
             editor = ace.edit('editor');
             editor.setTheme("ace/theme/chrome");
             editor.session.setMode("ace/mode/javascript");
@@ -85,6 +90,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     });
 
     $scope.saveRule = () => {
+        console.log('save rule');
         const script = editor.getSession().getValue();
         centsa.general.saveRule($scope.newRuleName, script).then(resp => {
             const id = resp.data;

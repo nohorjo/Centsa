@@ -28,6 +28,9 @@ self.addEventListener('message', e => {
         }));
 
         self.postMessage(Papa.unparse(csv));
-    }).catch(err => setTimeout(() => { throw JSON.stringify(err.message || err.response); }, 0));
+    }).catch(err => setTimeout(() => {
+        console.error(err);
+        throw JSON.stringify(err.message || err.response);
+    }, 0));
 
 });

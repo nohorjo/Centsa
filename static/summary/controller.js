@@ -39,6 +39,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     });
 
     $scope.drawGraph = () => {
+        console.log('draw graph');
         centsa.settings.set("moving.average.days", $scope.movingAvgDays);
         const applyMovingAverage = sums => {
             const millis = $scope.movingAvgDays * 8.64e7;

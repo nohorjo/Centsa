@@ -4,7 +4,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         index: 0,
         filter: $rootScope.filter,
         sort: $rootScope.filter.sort || DEFAULT_SORT
-    }]
+    }];
     $scope.currentTab = 0;
 
     $scope.newTrans = {
@@ -39,6 +39,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
 
     $scope.saveTrans = updating => {
+        console.log('saving', {updating});
         $scope.newTrans.date = new Date($scope.newTrans.date);
         $scope.newTrans.date.setHours(12);
         centsa.transactions.insert($scope.newTrans).then(resp => {
@@ -131,6 +132,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     })();
 
     $scope.reloadTrans = () => {
+        console.log('reload transactions');
         $scope.tabs[$scope.currentTab].currentFilter = Object.assign({}, $rootScope.filter);
         $scope.currentPage = 1;
         $scope.moreToLoad = true;
@@ -163,6 +165,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.exportFilteredTransactions = () => {
+        console.log('export');
         const exportWorker = new Worker("/workers/exportWorker.js");
         exportWorker.addEventListener('message', e => {
             var element = document.createElement('a');
@@ -177,6 +180,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.loadMoreTransactions = () => {
+        console.log('load more');
         if ($scope.moreToLoad) {
             centsa.transactions.getAll({
                 page: ++$scope.currentPage,
@@ -192,6 +196,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.transScrollTop = () => {
+        console.log('scroll to top');
         $("#transDiv").animate({
             scrollTop: 0
         }, "fast");
@@ -199,6 +204,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.autoFillFromExpense = expenseId => {
         if (expenseId) {
+            console.log('auto fill');
             const expense = $scope.expenses.find(e => e.id == expenseId);
             const { newTrans } =  $scope;
             newTrans.type_id = expense.type_id.toString()
@@ -207,6 +213,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.goToTab = index => {
+        console.log('change tab', index);
         $scope.currentTab = index;
         $rootScope.filter = $scope.tabs[$scope.currentTab].filter;
         $scope.reloadTrans();
@@ -214,6 +221,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.deleteTab = index => {
         if ($scope.tabs.length - 1) {
+            console.log('delete tab');
             if ($scope.currentTab) $scope.currentTab--;
             $scope.tabs.splice(index, 1);
             $scope.goToTab($scope.currentTab);
@@ -221,6 +229,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.newTab = () => {
+        console.log('new tab');
         const { tabs } = $scope;
         const last = tabs.slice(-1).pop();
         $rootScope.resetFilter();

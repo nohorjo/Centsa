@@ -63,7 +63,10 @@ self.addEventListener('message', e => {
             readFile(csv)
         ]).then(result => {
             runScript(result[1], result[0].data);
-        }).catch(err => setTimeout(() => { throw JSON.stringify(err.message || err.response); }, 0));
+        }).catch(err => setTimeout(() => {
+            console.error(err);
+            throw JSON.stringify(err.message || err.response);
+        }, 0));
     }
 
 });

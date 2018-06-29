@@ -15,6 +15,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
 
     const getActiveTotals = () => {
+        console.log('get totals');
         centsa.expenses.totalActive(false).then(resp => $scope.totalActiveExpenses = resp.data);
         centsa.expenses.totalActive(true).then(resp => $scope.totalAutoExpenses = resp.data);
     }
@@ -203,7 +204,10 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
                     $scope.newExpense.frequency += $scope.frequency.date;
                     break;
             }
-        } catch (e) { $scope.newExpense.frequency = ""; }
+        } catch (e) {
+            console.error(e);
+            scope.newExpense.frequency = "";
+        }
     }));
     
     $scope.changeFrequencyType = $event => $scope.frequency.type = $event.target.querySelectorAll('input[type="radio"]')[0].value;

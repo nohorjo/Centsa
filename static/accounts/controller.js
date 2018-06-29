@@ -45,6 +45,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
      * another
      */
     $scope.transferFunds = () => {
+        console.log('transfer funds');
         const amount = $scope.transfer.amount;
         const date = new Date($scope.transfer.date);
         date.setHours(12);
@@ -89,6 +90,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
     $scope.adjustAccount = acc => {
         const diff = acc.balanceOld - acc.balance;
         if (diff) {
+            console.log('adjust account');
             centsa.transactions.insert({
                 amount: diff,
                 comment: "Adjustment",
@@ -104,6 +106,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 
     $scope.updateAccount = a => {
         if(a.name != a.nameOld){
+            console.log('update account');
             centsa.accounts.insert(a);
         }
     };
