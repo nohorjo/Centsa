@@ -45,116 +45,118 @@
     </li>
     <li><a href="" data-ng-click="newTab()">+</a></li>
 </ul>
-<input type="checkbox" data-ng-model="showFilter"> Show filter
-<form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()" data-ng-show="showFilter">
-    <table class="table table-condensed">
-        <tbody>
-            <tr>
-                <td colspan="3" data-ng-class="{'success' : filter.fromDate || filter.toDate }">
-                    <label>Dates</label>
-                    <div class="input-group input-daterange">
-                        <input type="text" class="daterangepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.fromDate">
-                        <div class="input-group-addon">to</div>
-                        <input type="text" class="daterangepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.toDate">
-                    </div>
-                </td>
-                <td colspan="3" data-ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
-                    <label>Amount</label>
-                    <div class="input-group input-daterange">
-                        <input type="number" step="0.01" class="form-control" data-ng-model="filter.fromAmount" data-number-divide="100">
-                        <div class="input-group-addon">to</div>
-                        <input type="number" step="0.01" class="form-control" data-ng-model="filter.toAmount" data-number-divide="100">
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" data-ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
-                    <label>Account</label>
-                    <select class="form-control" data-ng-model="filter.account_id">
-                        <option value="0"></option>
-                        <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-                    </select>
-                </td>
-                <td colspan="2" data-ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
-                    <label>Type</label>
-                    <select class="form-control" data-ng-model="filter.type_id">
-                        <option value="0"></option>
-                        <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-                    </select>
-                </td>
-                <td colspan="2" data-ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
-                    <label>Expense</label>
-                    <select class="form-control" data-ng-model="filter.expense_id">
-                        <option value="0"></option>
-                        <option data-ng-repeat="exp in allExpenses" value="{{ exp.id }}">{{ exp.name }}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" data-ng-class="{'success' : filter.comment }">
-                    <label>Comment</label>
-                    <input type="text" class="form-control" data-ng-model="filter.comment">
-                    <input type="checkbox" data-ng-model="filter.regex"> Regular expression
-                </td>
-                <td colspan="2">
-                    <div id="filterButtons" class="float-right">
-                        <input type="button" class="btn btn-default" value="Clear" data-ng-click="clearFilter()">
-                        <input type="submit" class="btn btn-primary" value="Apply" data-ng-class="{ 'btn-warning': FilterForm.$invalid }" data-ng-disabled="FilterForm.$invalid">
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <h5>Count: {{ transactionSummary.count }}</h5>
-    <h5>Sum: {{ transactionSummary.sum / 100 }}</h5>
-</form>
-<div>
-    <input id="export" type="button" class="btn btn-info" value="Export current transaction set to CSV" data-ng-click="exportFilteredTransactions()">
-</div>
-<form name="Form" data-ng-submit="saveTrans()">
-    <table class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th width="5%" data-ng-click="sort('id')">ID</th>
-                <th width="15%" data-ng-click="sort('date', 'id DESC')">Date</th>
-                <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
-                <th width="10%">Account</th>
-                <th width="10%">Type</th>
-                <th width="10%">Expense</th>
-                <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
-        </tbody>
-    </table>
-    <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
-        <table class="table table-condensed table-hover">
+ <div class="tab-content">
+    <input type="checkbox" data-ng-model="showFilter"> Show filter
+    <form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()" data-ng-show="showFilter">
+        <table class="table table-condensed">
             <tbody>
-                <tr
-                    data-ng-repeat="t in transactions"
-                    data-ng-click="editTrans(t)"
-                    data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
-                >
-                    <td width="5%">{{ t.id }}</td>
-                    <td width="15%">{{ formatDate(t.date) }}</td>
-                    <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
-                    <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
-                    <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
-                    <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
-                    <td width="40%" colspan="2">{{ t.comment }}</td>
-                    <td></td>
+                <tr>
+                    <td colspan="3" data-ng-class="{'success' : filter.fromDate || filter.toDate }">
+                        <label>Dates</label>
+                        <div class="input-group input-daterange">
+                            <input type="text" class="daterangepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.fromDate">
+                            <div class="input-group-addon">to</div>
+                            <input type="text" class="daterangepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" data-ng-model="filter.toDate">
+                        </div>
+                    </td>
+                    <td colspan="3" data-ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
+                        <label>Amount</label>
+                        <div class="input-group input-daterange">
+                            <input type="number" step="0.01" class="form-control" data-ng-model="filter.fromAmount" data-number-divide="100">
+                            <div class="input-group-addon">to</div>
+                            <input type="number" step="0.01" class="form-control" data-ng-model="filter.toAmount" data-number-divide="100">
+                        </div>
+                    </td>
                 </tr>
-                <tr data-ng-show="moreToLoad">
-                    <td colspan="8">
-                        <div class="loader">Loading...</div>
+                <tr>
+                    <td colspan="2" data-ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
+                        <label>Account</label>
+                        <select class="form-control" data-ng-model="filter.account_id">
+                            <option value="0"></option>
+                            <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+                        </select>
+                    </td>
+                    <td colspan="2" data-ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
+                        <label>Type</label>
+                        <select class="form-control" data-ng-model="filter.type_id">
+                            <option value="0"></option>
+                            <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+                        </select>
+                    </td>
+                    <td colspan="2" data-ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
+                        <label>Expense</label>
+                        <select class="form-control" data-ng-model="filter.expense_id">
+                            <option value="0"></option>
+                            <option data-ng-repeat="exp in allExpenses" value="{{ exp.id }}">{{ exp.name }}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" data-ng-class="{'success' : filter.comment }">
+                        <label>Comment</label>
+                        <input type="text" class="form-control" data-ng-model="filter.comment">
+                        <input type="checkbox" data-ng-model="filter.regex"> Regular expression
+                    </td>
+                    <td colspan="2">
+                        <div id="filterButtons" class="float-right">
+                            <input type="button" class="btn btn-default" value="Clear" data-ng-click="clearFilter()">
+                            <input type="submit" class="btn btn-primary" value="Apply" data-ng-class="{ 'btn-warning': FilterForm.$invalid }" data-ng-disabled="FilterForm.$invalid">
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <h5>Count: {{ transactionSummary.count }}</h5>
+        <h5>Sum: {{ transactionSummary.sum / 100 }}</h5>
+    </form>
+    <div>
+        <input id="export" type="button" class="btn btn-info" value="Export current transaction set to CSV" data-ng-click="exportFilteredTransactions()">
     </div>
-    <div class="text-center">
-        <input id="scrollButtom" type="button" class="btn btn-default btn-sm" value="Back to top" data-ng-click="transScrollTop()">
-    </div>
-</form>
+    <form name="Form" data-ng-submit="saveTrans()">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th width="5%" data-ng-click="sort('id')">ID</th>
+                    <th width="15%" data-ng-click="sort('date', 'id DESC')">Date</th>
+                    <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
+                    <th width="10%">Account</th>
+                    <th width="10%">Type</th>
+                    <th width="10%">Expense</th>
+                    <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
+            </tbody>
+        </table>
+        <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
+            <table class="table table-condensed table-hover">
+                <tbody>
+                    <tr
+                        data-ng-repeat="t in transactions"
+                        data-ng-click="editTrans(t)"
+                        data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
+                    >
+                        <td width="5%">{{ t.id }}</td>
+                        <td width="15%">{{ formatDate(t.date) }}</td>
+                        <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
+                        <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
+                        <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
+                        <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
+                        <td width="40%" colspan="2">{{ t.comment }}</td>
+                        <td></td>
+                    </tr>
+                    <tr data-ng-show="moreToLoad">
+                        <td colspan="8">
+                            <div class="loader">Loading...</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <input id="scrollButtom" type="button" class="btn btn-default btn-sm" value="Back to top" data-ng-click="transScrollTop()">
+        </div>
+    </form>
+ </div>

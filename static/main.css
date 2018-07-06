@@ -260,4 +260,9 @@ select.small {
     transition: all linear 0.2s;
 }
 
-
+.tab-content {
+    border: lightgrey solid 1px;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    padding: 0.5em;
+}
