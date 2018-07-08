@@ -11,50 +11,73 @@ import {
 } from './dao/Users';
 import { getSessionStore } from './index';
 import log from './log';
+import { getSummary } from './dao/Transactions';
 
 log('init general');
 
 const route = Router();
 
 route.get("/budget", (req, resp) => {
-    log('get budget');
-    getAllWithSum(req.session.userData.user_id, (err, results) => {
-        if (err) {
-            log.error(err);
-            resp.status(500).send(err);
-        } else {
-            const expenses = results[1];
-            const strict = req.query.strict == "true";
-            const expenseRounds = req.query.expenseRounds - 1 || 0;
-            log('budget params', {strict, expenseRounds});
-            const currentDay = new Date(req.get('x-date')).valueOf();
+    const mode = JSON.parse(req.query.budgetMode);
+    const { userData : { user_id } } = req.session;
+    log('get budget', mode);
+    if (['expense', 'strictExpense'].includes(mode.mode)) {
+        getAllWithSum(user_id, (err, results) => {
+            if (err) {
+                log.error(err);
+                resp.status(500).send(err);
+            } else {
+                const expenses = results[1];
+                const strict = mode.mode == 'strictExpense';
+                const multiplier = mode.expenseRounds - 1 || 0;
+                const currentDay = new Date(req.get('x-date')).valueOf();
 
-            const budget = expenses.reduce(
-                (currentBudget, expense) => {
-                    if (expense.cost > 0 && expense.started < new Date(currentDay)) {
-                        let { cost } = expense;
-                        if (!strict) {
-                            const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
-                            const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
+                const budget = expenses.reduce(
+                    (currentBudget, expense) => {
+                        if (expense.cost > 0 && expense.started < new Date(currentDay)) {
+                            let { cost } = expense;
+                            if (!strict) {
+                                const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
+                                const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
-                            cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
+                                cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
+                            }
+                            cost += multiplier * expense.cost;
+                            currentBudget.afterAll -= cost;
+                            if (expense.automatic) {
+                                currentBudget.afterAuto -= cost;
+                            }
                         }
-                        cost += expenseRounds * expense.cost;
-                        currentBudget.afterAll -= cost;
-                        if (expense.automatic) {
-                            currentBudget.afterAuto -= cost;
-                        }
+                        return currentBudget;
+                    }, {
+                        afterAll: results[0][0].total,
+                        afterAuto: results[0][0].total
                     }
-                    return currentBudget;
-                }, {
-                    afterAll: results[0][0].total,
-                    afterAuto: results[0][0].total
-                }
-            );
-            log('returning budget');
-            resp.send(budget);
-        }
-    });
+                );
+                log('returning budget');
+                resp.send(budget);
+            }
+        });
+    } else {
+        const today = new Date(req.get('x-date'));
+        const start = new Date(mode.start);
+        getSummary(user_id, {
+            comment: '%%',
+            fromDate: start,
+            toDate: today,
+            fromAmount: Number.MIN_SAFE_INTEGER,
+            toAmount: Number.MAX_SAFE_INTEGER
+        }, (err, [{sum}]) => {
+            if (err) {
+                log.error(err);
+                resp.status(500).send(err);
+            } else {
+                const days = (today - start) / 8.64e7;
+                log('returning budget');
+                resp.send({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
+            }
+        });
+    }
 });
 
 // =================== IMPORT

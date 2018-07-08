@@ -3,35 +3,54 @@
     <table class="table">
         <thead>
             <tr>
-                <th width="25%"></th>
-                <th width="10%"></th>
+                <th width="20%"></th>
+                <th width="20%"></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>
-                    <label>Strict mode</label>
+                    <label>Budget mode</label>
                 </td>
-                <td colspan="2">
-                    <input type="checkbox" data-ng-model="strictMode" data-ng-change="getBudget()">
+                <td data-ng-click="getBudget()">
+                    <input type="radio" name="budgetMode" value="expense" data-ng-model="budgetMode.mode"> Expense based<br/>
+                    <input type="radio" name="budgetMode" value="strictExpense" data-ng-model="budgetMode.mode"> Strict expense based<br/>
+                    <input type="radio" name="budgetMode" value="manual" data-ng-model="budgetMode.mode" data-ng-click="initDatePickers()"> Manual<br/>
                 </td>
-            </tr>
-            <tr>
-                <td>
+                <td class="no-animate" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
                     <label>Expense rounds</label> 
-                </td>
-                <td colspan="2">
                     <input class="form-control small" type="number" step="1" min="1"
-                        data-ng-min="1" data-ng-model="expenseRounds"
-                        data-ng-change="expenseRounds && getBudget()"
+                        data-ng-min="1" data-ng-model="budgetMode.expenseRounds"
+                        data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
-                    /> 
+                    > 
                 </td> 
-            </tr> 
+                <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
+                    <label>Starting</label>
+                    <input type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}"
+                        data-ng-model="budgetMode.start"
+                        data-ng-change="getBudget()"
+                        data-ng-model-options="{ 'debounce' : 500 }"
+                    ><br/>
+                    <label>Amount</label>
+                    <div class="cell">
+                        <input class="form-control small" type="number" step="0.01"
+                            data-ng-model="budgetMode.amount"
+                            data-ng-change="getBudget()"
+                            data-ng-model-options="{ 'debounce' : 500 }"
+                            data-number-divide="100"
+                        ><br/>
+                        <div data-ng-click="getBudget()">
+                            <input type="radio" name="manualFrequency" value="7" data-ng-model="budgetMode.frequency">Weekly
+                            <input type="radio" name="manualFrequency" value="30" data-ng-model="budgetMode.frequency">Monthly<br/>
+                        </div> 
+                    </div> 
+                </td> 
+            </tr>
             <tr data-ng-class="{ 'warning' : budget.afterAll < 0 }">
                 <td>
-                    <label>Budget (All expenses)</label>
+                    <label>Budget</label>
                 </td>
                 <td>{{ (budget.afterAll/100).toFixed(2) }}</td>
                 <td>
@@ -40,9 +59,9 @@
                     </span>
                 </td>
             </tr>
-            <tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }">
+            <tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
                 <td>
-                    <label>Budget (Automatic expenses)</label>
+                    <label>Budget (Only automatic expenses)</label>
                 </td>
                 <td>{{ (budget.afterAuto/100).toFixed(2) }}</td>
                 <td>

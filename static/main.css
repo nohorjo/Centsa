@@ -250,6 +250,7 @@ tr.first-trans-of-week {
 select.small,
 input.small {
     max-width: 15em;
+    display: inline-block;
 }
 
 .ng-hide {
@@ -266,4 +267,13 @@ input.small {
     border-top: none;
     border-radius: 0 0 3px 3px;
     padding: 0.5em;
+}
+
+.no-animate {
+   -webkit-transition: none !important;
+   transition: none !important;
+}
+
+.cell {
+    display: inline-table;
 }

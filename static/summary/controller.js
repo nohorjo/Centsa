@@ -4,10 +4,8 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
 
     $scope.cumulativeSums = [];
     $scope.getBudget = () => {
-        centsa.settings.set("strict.mode", $scope.strictMode);
-        centsa.settings.set("expense.rounds", $scope.expenseRounds);
-        centsa.general.budget($scope.strictMode, $scope.expenseRounds)
-            .then(resp => $scope.budget = resp.data);
+        centsa.settings.set("budget.mode", JSON.stringify($scope.budgetMode));
+        centsa.general.budget($scope.budgetMode).then(({data}) => $scope.budget = data);
     };
 
     $scope.filterDate = $event => {
@@ -23,12 +21,14 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }
     };
 
-    Promise.all([
-        centsa.settings.get("strict.mode"),
-        centsa.settings.get("expense.rounds")
-    ]).then(([strictMode, expenseRounds]) => {
-        $scope.strictMode = strictMode == "1";
-        $scope.expenseRounds = +expenseRounds || 1;
+    centsa.settings.get("budget.mode").then(budgetMode => {
+        $scope.budgetMode = budgetMode ? JSON.parse(budgetMode) : {
+            mode: 'expense',
+            expenseRounds: 1
+        };
+        if ($scope.budgetMode.mode == "manual") {
+            $scope.initDatePickers();
+        }
         $scope.getBudget();
     });
 
@@ -166,5 +166,16 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             dataDateFormat: 'YYYY/MM/DD'
         };
         transChart = AmCharts.makeChart("trans-chart", chartOpts);
-    }
+    };
+
+    $scope.initDatePickers = () => {
+        $('.datepicker, .daterangepicker').datepicker({
+            format: "yyyy/mm/dd",
+            endDate: new Date(),
+            todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true
+        });
+        $('.datepicker').datepicker("update", new Date($scope.budgetMode.start).formatDate("yyyy/MM/dd"));
+    };
 });
