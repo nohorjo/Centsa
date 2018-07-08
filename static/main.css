@@ -247,7 +247,8 @@ tr.first-trans-of-week {
     text-decoration: underline;
 }
 
-select.small {
+select.small,
+input.small {
     max-width: 15em;
 }
 

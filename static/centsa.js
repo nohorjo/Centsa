@@ -79,9 +79,14 @@ const centsa = function ($http) {
     this.general = (() => {
         const apiUrl = '/api/general';
         return {
-            budget(isStrictMode) {
-                console.log('get budget', isStrictMode);
-                return $http.get(`${apiUrl}/budget`, { params: { strict: isStrictMode } });
+            budget(isStrictMode, expenseRounds) {
+                console.log('get budget', isStrictMode, expenseRounds);
+                return $http.get(`${apiUrl}/budget`, {
+                    params: {
+                            strict: isStrictMode,
+                            expenseRounds
+                        }
+                });
             },
             rules() {
                 console.log('get rules meta');

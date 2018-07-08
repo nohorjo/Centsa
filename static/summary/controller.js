@@ -3,9 +3,12 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     const byDate = (a, b) => new Date(a.date) - new Date(b.date);
 
     $scope.cumulativeSums = [];
-    $scope.getBudget = () => centsa.settings.set("strict.mode", $scope.strictMode).then(() => {
-        centsa.general.budget($scope.strictMode).then(resp => $scope.budget = resp.data);
-    });
+    $scope.getBudget = () => {
+        centsa.settings.set("strict.mode", $scope.strictMode);
+        centsa.settings.set("expense.rounds", $scope.expenseRounds);
+        centsa.general.budget($scope.strictMode, $scope.expenseRounds)
+            .then(resp => $scope.budget = resp.data);
+    };
 
     $scope.filterDate = $event => {
         if ($event.originalEvent.path[3].constructor == HTMLDivElement) {
@@ -20,8 +23,12 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }
     };
 
-    centsa.settings.get("strict.mode").then(setting => {
-        $scope.strictMode = setting == "1";
+    Promise.all([
+        centsa.settings.get("strict.mode"),
+        centsa.settings.get("expense.rounds")
+    ]).then(([strictMode, expenseRounds]) => {
+        $scope.strictMode = strictMode == "1";
+        $scope.expenseRounds = +expenseRounds || 1;
         $scope.getBudget();
     });
 

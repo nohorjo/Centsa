@@ -13,11 +13,22 @@
                 <td>
                     <label>Strict mode</label>
                 </td>
-                <td>
+                <td colspan="2">
                     <input type="checkbox" data-ng-model="strictMode" data-ng-change="getBudget()">
                 </td>
-                <td></td>
             </tr>
+            <tr>
+                <td>
+                    <label>Expense rounds</label> 
+                </td>
+                <td colspan="2">
+                    <input class="form-control small" type="number" step="1" min="1"
+                        data-ng-min="1" data-ng-model="expenseRounds"
+                        data-ng-change="expenseRounds && getBudget()"
+                        data-ng-model-options="{ 'debounce' : 500 }"
+                    /> 
+                </td> 
+            </tr> 
             <tr data-ng-class="{ 'warning' : budget.afterAll < 0 }">
                 <td>
                     <label>Budget (All expenses)</label>

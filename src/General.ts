@@ -25,18 +25,21 @@ route.get("/budget", (req, resp) => {
         } else {
             const expenses = results[1];
             const strict = req.query.strict == "true";
+            const expenseRounds = req.query.expenseRounds - 1 || 0;
+            log('budget params', {strict, expenseRounds});
             const currentDay = new Date(req.get('x-date')).valueOf();
 
             const budget = expenses.reduce(
                 (currentBudget, expense) => {
                     if (expense.cost > 0 && expense.started < new Date(currentDay)) {
-                        let cost = expense.cost;
+                        let { cost } = expense;
                         if (!strict) {
                             const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
                             const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
                             cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
                         }
+                        cost += expenseRounds * expense.cost;
                         currentBudget.afterAll -= cost;
                         if (expense.automatic) {
                             currentBudget.afterAuto -= cost;
