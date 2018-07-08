@@ -48,7 +48,7 @@
                     </div> 
                 </td> 
             </tr>
-            <tr data-ng-class="{ 'warning' : budget.afterAll < 0 }">
+            <tr data-ng-class="{ 'warning' : budget.afterAll < 0 && budget.afterAuto, 'danger' : !budget.afterAuto && budget.afterAll < 0 }">
                 <td>
                     <label>Budget</label>
                 </td>
