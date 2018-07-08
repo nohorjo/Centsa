@@ -169,13 +169,13 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     };
 
     $scope.initDatePickers = () => {
-        $('.datepicker, .daterangepicker').datepicker({
+        $('#manualStart').datepicker({
             format: "yyyy/mm/dd",
             endDate: new Date(),
             todayBtn: "linked",
             autoclose: true,
             todayHighlight: true
         });
-        $('.datepicker').datepicker("update", new Date($scope.budgetMode.start).formatDate("yyyy/MM/dd"));
+        $('#manualStart').datepicker("update", new Date($scope.budgetMode.start).formatDate("yyyy/MM/dd"));
     };
 });

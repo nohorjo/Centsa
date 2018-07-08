@@ -28,7 +28,7 @@
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>
-                    <input type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    <input id="manualStart" type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}"
                         data-ng-model="budgetMode.start"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
@@ -54,12 +54,15 @@
                 </td>
                 <td>{{ (budget.afterAll/100).toFixed(2) }}</td>
                 <td>
-                    <span data-ng-show="budget.afterAll < 0">You may need to re-evaluate your
-                        <a href="#!expenses">expenses</a>
-                    </span>
+                    <div data-ng-show="budget.afterAll < 0">
+                         <span data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
+                            You may need to re-evaluate your <a href="#!expenses">expenses</a>
+                        </span>
+                        <span data-ng-show="budgetMode.mode == 'manual'">You have overspent your budget</span> 
+                    </div>
                 </td>
             </tr>
-            <tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
+            <tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }" data-ng-show="budget.afterAuto">
                 <td>
                     <label>Budget (Only automatic expenses)</label>
                 </td>
