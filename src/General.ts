@@ -92,14 +92,17 @@ route.get("/budget", (req, resp) => {
                     log.error(err);
                     resp.status(500).send(err);
                 } else {
-                    const expenses = results[1];
+                    let expenses = results[1];
                     const current = new Date(today);
                     const end = new Date(today.getTime() + mode.days * DAY);
-                    let afterAll = results[0][0].total;
-                    let afterAuto = results[0][0].total;
+                    let afterAll = results[0][0].total
+                                    - expenses.filter(e => e.name.startsWith("Saving: ")).map(e => e.cost).reduce((a, b) => a + b, 0);
+                    let afterAuto = afterAll;
+
+                    expenses = expenses.filter(e => e.cost > 0 && !e.name.startsWith("Saving: "));
 
                     while (current <= end) {
-                        const currentExpenses = expenses.filter(e => e.cost > 0 && isDayOfPayment(e.frequency, current, e.started));
+                        const currentExpenses = expenses.filter(e => isDayOfPayment(e.frequency, current, e.started));
                         afterAll -= currentExpenses.map(e => e.cost)
                             .reduce((a, b) => a + b, 0);
                         afterAuto -= currentExpenses.filter(e => e.automatic)

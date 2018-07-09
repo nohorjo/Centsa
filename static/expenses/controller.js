@@ -150,6 +150,13 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         autoclose: true,
         todayHighlight: true
     });
+    $('form[name="GoalForm"] .datepicker').datepicker({
+        format: "yyyy/mm/dd",
+        todayBtn: "linked",
+        autoclose: true,
+        startDate: '+1d',
+        todayHighlight: true
+    });
     $('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
 
     $('.dropdown-menu').click(e => e.stopPropagation());
@@ -211,4 +218,37 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     }));
     
     $scope.changeFrequencyType = $event => $scope.frequency.type = $event.target.querySelectorAll('input[type="radio"]')[0].value;
+
+    $scope.saveGoal = async () => {
+        const cost = Math.ceil($scope.goal.amount / ((new Date($scope.goal.by) - Date.now()) / 8.64e7));
+        if (cost > -$scope.totalActiveExpenses) {
+           const { value } = await swal({
+                title: "Insufficient income",
+                text: `Your total daily income is ${-Math.round($scope.totalActiveExpenses) / 100}
+                        but this will cost you ${cost / 100} daily.
+                        Do you still want to add it?`,
+                type: "warning", 
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes'
+            });
+            if (!value) return;
+        }
+        const expense = {
+            automatic: false,
+            cost,
+            frequency: 1,
+            name: `Saving: ${$scope.goal.name}`,
+            started: new Date(),
+            type_id: $scope.types.find(t => t.name == "Other").id
+        };
+        centsa.expenses.insert(expense).then(({data}) => {
+            expense.id = data;
+            $scope.expenses.push(expense);
+            getActiveTotals();
+            $scope.goal = {};
+            $('form[name="GoalForm"] .datepicker').datepicker('clearDates');
+        });
+    };
 });

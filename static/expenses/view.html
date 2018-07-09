@@ -1,6 +1,14 @@
 <h4>Summary</h4>
-<p>Approximate total daily active expenses ( total | auto ): {{ (totalActiveExpenses/100).toFixed(2) || 0 }} | {{ (totalAutoExpenses/100).toFixed(2)
-    || 0 }}</p>
+<p>Approximate total daily active expenses ( total | auto ): {{ (totalActiveExpenses/100).toFixed(2) || 0 }} | {{ (totalAutoExpenses/100).toFixed(2) || 0 }}</p>
+<form name="GoalForm" data-ng-submit="saveGoal()">
+    <h4>Savings goal</h4>
+    <p>Create an expense to set aside funds</p>
+    <label>Name </label> <input type="text" class="form-control small" required="required" data-ng-model="goal.name">
+    <label>Amount </label> <input type="number" class="form-control small" required="required" step="0.01" data-number-divide="100" data-ng-model="goal.amount">
+    <label>By </label> <input type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="goal.by">
+    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': GoalForm.$invalid }"
+                        data-ng-disabled="GoalForm.$invalid">
+</form>
 <form name="Form" data-ng-submit="saveExpense()">
     <h4>Manage expenses (incomes have negative amounts)</h4>
     <table id="expensesTable" class="table table-condensed table-hover">
