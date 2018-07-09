@@ -59,8 +59,8 @@ route.get("/budget", (req, resp) => {
             }
         });
     } else {
-        const today = new Date(req.get('x-date'));
-        const start = new Date(mode.start);
+        const today:any = new Date(req.get('x-date'));
+        const start:any = new Date(mode.start);
         getSummary(user_id, {
             comment: '%%',
             fromDate: start,
