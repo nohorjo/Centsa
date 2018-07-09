@@ -16,6 +16,7 @@
                 <td data-ng-click="getBudget()">
                     <input type="radio" name="budgetMode" value="expense" data-ng-model="budgetMode.mode"> Expense based<br/>
                     <input type="radio" name="budgetMode" value="strictExpense" data-ng-model="budgetMode.mode"> Strict expense based<br/>
+                    <input type="radio" name="budgetMode" value="time" data-ng-model="budgetMode.mode"> Time based<br/>
                     <input type="radio" name="budgetMode" value="manual" data-ng-model="budgetMode.mode" data-ng-click="initDatePickers()"> Manual<br/>
                 </td>
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
@@ -25,6 +26,19 @@
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
                     > 
+                </td> 
+                <td class="no-animate" data-ng-show="budgetMode.mode == 'time'">
+                    <label>Next <em>x</em> days</label>
+                    <input class="form-control small" type="number" step="1" min="1"
+                        data-ng-min="1" data-ng-model="budgetMode.days"
+                        data-ng-change="getBudget()"
+                        data-ng-model-options="{ 'debounce' : 500 }"
+                        data-number-divide="{{ budgetMode.daysMultiplier }}"
+                    >
+                    <div data-ng-click="getBudget()">
+                        <input type="radio" name="daysMultiplier" value="7" data-ng-model="budgetMode.daysMultiplier"> Weeks
+                        <input type="radio" name="daysMultiplier" value="30" data-ng-model="budgetMode.daysMultiplier"> Months
+                    </div> 
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>
@@ -42,8 +56,8 @@
                             data-number-divide="100"
                         ><br/>
                         <div data-ng-click="getBudget()">
-                            <input type="radio" name="manualFrequency" value="7" data-ng-model="budgetMode.frequency">Weekly
-                            <input type="radio" name="manualFrequency" value="30" data-ng-model="budgetMode.frequency">Monthly<br/>
+                            <input type="radio" name="manualFrequency" value="7" data-ng-model="budgetMode.frequency"> Weekly
+                            <input type="radio" name="manualFrequency" value="30" data-ng-model="budgetMode.frequency"> Monthly
                         </div> 
                     </div> 
                 </td> 
