@@ -33,12 +33,7 @@
                         data-ng-min="1" data-ng-model="budgetMode.days"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
-                        data-number-divide="{{ budgetMode.daysMultiplier }}"
                     >
-                    <div data-ng-click="getBudget()">
-                        <input type="radio" name="daysMultiplier" value="7" data-ng-model="budgetMode.daysMultiplier"> Weeks
-                        <input type="radio" name="daysMultiplier" value="30" data-ng-model="budgetMode.daysMultiplier"> Months
-                    </div> 
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>
@@ -69,7 +64,7 @@
                 <td>{{ (budget.afterAll/100).toFixed(2) }}</td>
                 <td>
                     <div data-ng-show="budget.afterAll < 0">
-                         <span data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
+                         <span data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time'">
                             You may need to re-evaluate your <a href="#!expenses">expenses</a>
                         </span>
                         <span data-ng-show="budgetMode.mode == 'manual'">You have overspent your budget</span> 

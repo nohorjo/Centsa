@@ -95,15 +95,21 @@ route.get("/budget", (req, resp) => {
                     const expenses = results[1];
                     const current = new Date(today);
                     const end = new Date(today.getTime() + mode.days * DAY);
-                    let budget = -results[0][0].total;
+                    let afterAll = results[0][0].total;
+                    let afterAuto = results[0][0].total;
 
                     while (current <= end) {
-                        budget -= expenses.filter(e => isDayOfPayment(e.frequency, current, e.started)).reduce((a, b) => a.cost + b.cost);
+                        const currentExpenses = expenses.filter(e => e.cost > 0 && isDayOfPayment(e.frequency, current, e.started));
+                        afterAll -= currentExpenses.map(e => e.cost)
+                            .reduce((a, b) => a + b, 0);
+                        afterAuto -= currentExpenses.filter(e => e.automatic)
+                            .map(e => e.cost)
+                            .reduce((a, b) => a + b, 0);
                         current.setDate(current.getDate() + 1);
                     }
                     
                     log('returning budget');
-                    resp.send({afterAll: budget});
+                    resp.send({afterAll, afterAuto});
                 }
             }); 
             break;
