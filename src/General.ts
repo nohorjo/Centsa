@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { lastPaymentDate, nextPaymentDate } from './Expenses';
+import {
+    lastPaymentDate,
+    nextPaymentDate,
+    isDayOfPayment
+} from './Expenses';
 import { getAllWithSum } from './dao/Expenses';
 import * as rules from './dao/Rules';
 import {
@@ -17,66 +21,96 @@ log('init general');
 
 const route = Router();
 
+const DAY = 8.64e7;
+
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
     const { userData : { user_id } } = req.session;
+    const today:any = new Date(req.get('x-date'));
     log('get budget', mode);
-    if (['expense', 'strictExpense'].includes(mode.mode)) {
-        getAllWithSum(user_id, (err, results) => {
-            if (err) {
-                log.error(err);
-                resp.status(500).send(err);
-            } else {
-                const expenses = results[1];
-                const strict = mode.mode == 'strictExpense';
-                const multiplier = mode.expenseRounds - 1 || 0;
-                const currentDay = new Date(req.get('x-date')).valueOf();
+    switch (mode.mode) {
+        case 'expense': case 'strictExpense':
+            getAllWithSum(user_id, (err, results) => {
+                if (err) {
+                    log.error(err);
+                    resp.status(500).send(err);
+                } else {
+                    const expenses = results[1];
+                    const strict = mode.mode == 'strictExpense';
+                    const multiplier = mode.expenseRounds - 1 || 0;
+                    const currentDay = new Date(req.get('x-date')).valueOf();
 
-                const budget = expenses.reduce(
-                    (currentBudget, expense) => {
-                        if (expense.cost > 0 && expense.started < new Date(currentDay)) {
-                            let { cost } = expense;
-                            if (!strict) {
-                                const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
-                                const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
+                    const budget = expenses.reduce(
+                        (currentBudget, expense) => {
+                            if (expense.cost > 0 && expense.started < new Date(currentDay)) {
+                                let { cost } = expense;
+                                if (!strict) {
+                                    const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
+                                    const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
-                                cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
+                                    cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
+                                }
+                                cost += multiplier * expense.cost;
+                                currentBudget.afterAll -= cost;
+                                if (expense.automatic) {
+                                    currentBudget.afterAuto -= cost;
+                                }
                             }
-                            cost += multiplier * expense.cost;
-                            currentBudget.afterAll -= cost;
-                            if (expense.automatic) {
-                                currentBudget.afterAuto -= cost;
-                            }
+                            return currentBudget;
+                        }, {
+                            afterAll: results[0][0].total,
+                            afterAuto: results[0][0].total
                         }
-                        return currentBudget;
-                    }, {
-                        afterAll: results[0][0].total,
-                        afterAuto: results[0][0].total
+                    );
+                    log('returning budget');
+                    resp.send(budget);
+                }
+            });
+            break;
+        case 'manual':
+            const start:any = new Date(mode.start);
+            getSummary(user_id, {
+                comment: '%%',
+                fromDate: start,
+                toDate: today,
+                fromAmount: Number.MIN_SAFE_INTEGER,
+                toAmount: Number.MAX_SAFE_INTEGER
+            }, (err, [{sum}]) => {
+                if (err) {
+                    log.error(err);
+                    resp.status(500).send(err);
+                } else {
+                    const days = (today - start) / DAY;
+                    log('returning budget');
+                    resp.send({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
+                }
+            });
+            break;
+        case 'time':
+            getAllWithSum(user_id, (err, results) => {
+                if (err) {
+                    log.error(err);
+                    resp.status(500).send(err);
+                } else {
+                    const expenses = results[1];
+                    const current = new Date(today);
+                    const end = new Date(today.getTime() + mode.days * DAY);
+                    let budget = -results[0][0].total;
+
+                    while (current <= end) {
+                        budget -= expenses.filter(e => isDayOfPayment(e.frequency, current, e.started)).reduce((a, b) => a.cost + b.cost);
+                        current.setDate(current.getDate() + 1);
                     }
-                );
-                log('returning budget');
-                resp.send(budget);
-            }
-        });
-    } else {
-        const today:any = new Date(req.get('x-date'));
-        const start:any = new Date(mode.start);
-        getSummary(user_id, {
-            comment: '%%',
-            fromDate: start,
-            toDate: today,
-            fromAmount: Number.MIN_SAFE_INTEGER,
-            toAmount: Number.MAX_SAFE_INTEGER
-        }, (err, [{sum}]) => {
-            if (err) {
-                log.error(err);
-                resp.status(500).send(err);
-            } else {
-                const days = (today - start) / 8.64e7;
-                log('returning budget');
-                resp.send({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
-            }
-        });
+                    
+                    log('returning budget');
+                    resp.send({afterAll: budget});
+                }
+            }); 
+            break;
+        default:
+            log.warn('invalid budget type');
+            resp.status(400).send('Invalid budget type');
+            break;
     }
 });
 
