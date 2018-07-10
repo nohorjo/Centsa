@@ -1,5 +1,13 @@
 import { pool } from './Connection';
 
+const NO_FILTER = {
+    comment: '%%',
+    fromDate: new Date(-8.64e15),
+    toDate: new Date(8.64e15),
+    fromAmount: Number.MIN_SAFE_INTEGER,
+    toAmount: Number.MAX_SAFE_INTEGER
+};
+
 export const insertAutoTransactions = (trans, cb) => {
     if (trans.length > 0) {
         pool.query(
@@ -20,6 +28,7 @@ export const getAll = (
     sort,
     cb
 ) => {
+    filter = Object.assign(NO_FILTER, filter);
     if (!sort || !/^(\s*[a-z]* (A|DE)SC.? ?)+$/.test(sort)) {
         sort = '1 ASC';
     }
@@ -122,6 +131,7 @@ export const getAmounts = (userId, cb) => {
 };
 
 export const getSummary = (userId, filter, cb) => {
+    filter = Object.assign(NO_FILTER, filter);
     pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
         AND ${filterToClause(filter)};`,
@@ -146,10 +156,11 @@ export const getUniqueComments = (userId, cb) => {
 };
 
 const filterToClause = filter => `
-        comment ${filter.regex ? 'R' : ''}LIKE ?
-        AND date>=? AND date<=?
-        AND amount>=? AND amount<=?
-        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
-        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
-        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
-        `;
+    comment ${filter.regex ? 'R' : ''}LIKE ?
+    AND date>=? AND date<=?
+    AND amount>=? AND amount<=?
+    ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
+    ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
+    ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+`;
+

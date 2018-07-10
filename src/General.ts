@@ -71,11 +71,8 @@ route.get("/budget", (req, resp) => {
         case 'manual':
             const start:any = new Date(mode.start);
             getSummary(user_id, {
-                comment: '%%',
                 fromDate: start,
                 toDate: today,
-                fromAmount: Number.MIN_SAFE_INTEGER,
-                toAmount: Number.MAX_SAFE_INTEGER
             }, (err, [{sum}]) => {
                 if (err) {
                     log.error(err);
