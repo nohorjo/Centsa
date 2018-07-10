@@ -28,12 +28,13 @@
                     > 
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'time'">
-                    <label>Next <em>x</em> days</label>
-                    <input class="form-control small" type="number" step="1" min="1"
+                    <label>Next </label>
+                    <input class="form-control xsmall" type="number" step="1" min="1"
                         data-ng-min="1" data-ng-model="budgetMode.days"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
                     >
+                    <label> days</label>
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>

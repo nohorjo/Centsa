@@ -253,6 +253,11 @@ input.small {
     display: inline-block;
 }
 
+input.xsmall {
+    max-width: 5em;
+    display: inline-block;
+}
+
 .ng-hide {
     opacity: 0;
 }
