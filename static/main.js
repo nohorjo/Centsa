@@ -46,7 +46,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
             account_id: '0',
             type_id: '0',
             expense_id: '0',
-            comment: "",
+            comments: [{comment:""}],
             regex: false
         }
         $rootScope.showFilter = false;

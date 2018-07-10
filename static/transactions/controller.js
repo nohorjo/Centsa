@@ -242,6 +242,12 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         $scope.reloadTrans();
     };
 
+    $scope.hasFilterComments = () => $rootScope.filter.comments.some(c => c.comment);
+
+    $scope.removeCommentFilter = index => $rootScope.filter.comments.splice(index, 1);
+
+    $scope.addCommentFilter = () => $rootScope.filter.comments.push({comment: ""});
+
     function setFirstOfWeeks() {
         if (/^date/.test($scope.tabs[$scope.currentTab].sort)) {
             let nextMonday;

@@ -91,13 +91,24 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="4" data-ng-class="{'success' : filter.comment }">
+                <tr data-ng-repeat="c in filter.comments">
+                    <td colspan="5" data-ng-class="{'success' : hasFilterComments() }">
                         <label>Comment</label>
-                        <input type="text" class="form-control" data-ng-model="filter.comment">
-                        <input type="checkbox" data-ng-model="filter.regex"> Regular expression
+                        <input type="text" class="form-control" data-ng-model="c.comment">
+                        <input type="checkbox" data-ng-model="c.regex"> Regular expression
                     </td>
-                    <td colspan="2">
+                    <td>
+                        <a href="" class="no-animate" data-ng-show="$last" data-ng-click="addCommentFilter()">Add<br/></a>
+                        <a href="" class="no-animate"
+                            data-ng-hide="$first && filter.comments.length == 1"
+                            data-ng-click="removeCommentFilter($index)"
+                        >
+                            Remove
+                        </a>
+                    </td> 
+                </tr>
+                <tr>
+                    <td colspan="6">
                         <div id="filterButtons" class="float-right">
                             <input type="button" class="btn btn-default" value="Clear" data-ng-click="clearFilter()">
                             <input type="submit" class="btn btn-primary" value="Apply" data-ng-class="{ 'btn-warning': FilterForm.$invalid }" data-ng-disabled="FilterForm.$invalid">

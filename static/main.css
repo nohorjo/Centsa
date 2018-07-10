@@ -286,3 +286,7 @@ input.xsmall {
 tr#budgetMode input {
     margin: 1px 0;
 }
+
+#FilterForm td {
+    vertical-align: middle;
+}

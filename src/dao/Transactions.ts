@@ -156,7 +156,7 @@ export const getUniqueComments = (userId, cb) => {
 };
 
 const filterToClause = filter => `
-    (${comments.map(c => `comment ${c.regex ? 'R' : ''}LIKE ?`).join(' OR ') || '1=1'})
+    (${filter.comments.map(c => `comment ${c.regex ? 'R' : ''}LIKE ?`).join(' OR ') || '1=1'})
     AND date>=? AND date<=?
     AND amount>=? AND amount<=?
     ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
