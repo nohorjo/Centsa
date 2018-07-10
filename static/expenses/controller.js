@@ -150,18 +150,11 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         autoclose: true,
         todayHighlight: true
     });
-    $('form[name="GoalForm"] .datepicker').datepicker({
-        format: "yyyy/mm/dd",
-        todayBtn: "linked",
-        autoclose: true,
-        startDate: '+1d',
-        todayHighlight: true
-    });
     $('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
 
     $('.dropdown-menu').click(e => e.stopPropagation());
 
-    $('#frequencySelect').on('hide.bs.dropdown', () => $scope.$apply(function () {
+    $('.dropdown-menu').mouseout(() => $scope.$apply(function () {
         try {
             if ($scope.frequency.date == 0) {
                 throw "Invalid date";
@@ -213,7 +206,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             }
         } catch (e) {
             console.error(e);
-            scope.newExpense.frequency = "";
+            $scope.newExpense.frequency = "";
         }
     }));
     
@@ -221,6 +214,14 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.saveGoal = async () => {
         const cost = Math.ceil($scope.goal.amount / ((new Date($scope.goal.by) - Date.now()) / 8.64e7));
+        if (cost <= 0) {
+            await swal({
+                title: "Invalid date or amount",
+                text: "Amount must be greater than zero and date must be in the future",
+                type: 'error'
+            });
+            return;
+        }
         if (cost > -$scope.totalActiveExpenses) {
            const { value } = await swal({
                 title: "Insufficient income",
