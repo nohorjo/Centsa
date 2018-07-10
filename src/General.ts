@@ -22,6 +22,7 @@ log('init general');
 const route = Router();
 
 const DAY = 8.64e7;
+const SAVING_TEST = /Saving \d{4}\/\d{2}\/\d{2}: /;
 
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
@@ -96,10 +97,10 @@ route.get("/budget", (req, resp) => {
                     const current = new Date(today);
                     const end = new Date(today.getTime() + mode.days * DAY);
                     let afterAll = results[0][0].total
-                                    - expenses.filter(e => e.name.startsWith("Saving: ")).map(e => e.cost).reduce((a, b) => a + b, 0);
+                                    - expenses.filter(e => SAVING_TEST.test(e.name)).map(e => e.cost).reduce((a, b) => a + b, 0);
                     let afterAuto = afterAll;
 
-                    expenses = expenses.filter(e => e.cost > 0 && !e.name.startsWith("Saving: "));
+                    expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
 
                     while (current <= end) {
                         const currentExpenses = expenses.filter(e => isDayOfPayment(e.frequency, current, e.started));

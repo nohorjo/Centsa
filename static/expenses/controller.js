@@ -239,7 +239,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             automatic: false,
             cost,
             frequency: 1,
-            name: `Saving: ${$scope.goal.name}`,
+            name: `Saving ${$scope.goal.by}: ${$scope.goal.name}`,
             started: new Date(),
             type_id: $scope.types.find(t => t.name == "Other").id
         };
