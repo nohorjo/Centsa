@@ -26,12 +26,7 @@ export const getAll = (
 
     pool.query(
         `SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?
-        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
-        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
-        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
-        AND comment ${filter.regex ? 'R' : ''}LIKE ?
-        AND date>=? AND date<=?
-        AND amount>=? AND amount<=?
+        AND ${filterToClause(filter)}
         ORDER BY ${sort.replace(/,$/g, "")}
         LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
         [
@@ -129,12 +124,7 @@ export const getAmounts = (userId, cb) => {
 export const getSummary = (userId, filter, cb) => {
     pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
-        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
-        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
-        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
-        AND comment ${filter.regex ? 'R' : ''}LIKE ?
-        AND date>=? AND date<=?
-        AND amount>=? AND amount<=?;`,
+        AND ${filterToClause(filter)};`,
         [
             userId,
             filter.comment,
@@ -154,3 +144,12 @@ export const getUniqueComments = (userId, cb) => {
         cb
     );
 };
+
+const filterToClause = filter => `
+        comment ${filter.regex ? 'R' : ''}LIKE ?
+        AND date>=? AND date<=?
+        AND amount>=? AND amount<=?
+        ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
+        ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
+        ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
+        `;
