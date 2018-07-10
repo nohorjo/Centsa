@@ -202,12 +202,16 @@ const parseFilter = req => {
     filter.account_id = parseInt(filter.account_id);
     filter.type_id = parseInt(filter.type_id);
     filter.expense_id = parseInt(filter.expense_id);
-    if (!filter.comment) {
-        filter.comment = "";
-        filter.regex = false;
-    }
-    if (!filter.regex) {
-        filter.comment = `%${filter.comment}%`;
+    if (filter.comments) {
+        filter.comments.forEach(c => {
+            if (!c.comment) {
+                c.comment = "";
+                c.regex = false;
+            }
+            if (!c.regex) {
+                c.comment = `%${c.comment}%`;
+            }
+        });
     }
     filter.fromDate = new Date(filter.fromDate || 0);
     filter.toDate = new Date(filter.toDate || req.get('x-date'));

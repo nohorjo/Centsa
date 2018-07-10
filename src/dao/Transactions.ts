@@ -1,7 +1,7 @@
 import { pool } from './Connection';
 
 const NO_FILTER = {
-    comment: '%%',
+    comments: [{comment: '%%'}],
     fromDate: new Date(-8.64e15),
     toDate: new Date(8.64e15),
     fromAmount: Number.MIN_SAFE_INTEGER,
@@ -40,7 +40,7 @@ export const getAll = (
         LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
         [
             userId,
-            filter.comment,
+            ...filter.comments.map(c => c.comment),
             filter.fromDate,
             filter.toDate,
             filter.fromAmount,
@@ -137,7 +137,7 @@ export const getSummary = (userId, filter, cb) => {
         AND ${filterToClause(filter)};`,
         [
             userId,
-            filter.comment,
+            ...filter.comments.map(c => c.comment),
             filter.fromDate,
             filter.toDate,
             filter.fromAmount,
@@ -156,8 +156,8 @@ export const getUniqueComments = (userId, cb) => {
 };
 
 const filterToClause = filter => `
-    comment ${filter.regex ? 'R' : ''}LIKE ?
-    AND date>=? AND date<=?
+    ${comments.map(c => `comment ${c.regex ? 'R' : ''}LIKE ?`).join(' AND ')}
+    ${comments.length ? 'AND' : ''} date>=? AND date<=?
     AND amount>=? AND amount<=?
     ${filter.account_id ? ` AND account_id=${filter.account_id}` : ''} 
     ${filter.type_id ? ` AND type_id=${filter.type_id}` : ''} 
