@@ -9,16 +9,22 @@ const route = Router();
 
 export const getAll = (req, resp) => {
     log('get all expenses');
-    dao.getAll(req.session.userData.user_id, (err, result) => {
-        if (err) {
-            log.error(err);
-            resp.status(500).send(err);
-        } else {
-            result.forEach(e => e.started.setHours(12));
-            log('returning expenses');
-            resp.send(result);
-        }
-    });
+    if (req.query.light == 'true') {
+        log('returning expenses from cache');
+        resp.send(req.session.userData.expenses);
+    } else {
+        dao.getAll(req.session.userData.user_id, (err, result) => {
+            if (err) {
+                log.error(err);
+                resp.status(500).send(err);
+            } else {
+                result.forEach(e => e.started.setHours(12));
+                req.session.userData.expenses = result;
+                log('returning expenses');
+                resp.send(result);
+            }
+        });
+    }
 };
 
 export const getTotals = (req, resp) => {
@@ -32,6 +38,7 @@ export const getTotals = (req, resp) => {
                 log.error(err);
                 resp.status(500).send(err);
             } else {
+                log('returning totals');
                 resp.send(result.reduce((total, e) => {
                     const { cost, frequency } = e;
                     let daily = 0;
@@ -42,7 +49,6 @@ export const getTotals = (req, resp) => {
                     } else {
                         daily = cost / 30;
                     }
-                    log('returning totals');
                     return total + daily;
                 }, 0).toString());
             }
@@ -73,6 +79,10 @@ export const insert = (req, resp) => {
                             if (expense.automatic) {
                                 applyAutoTransactions(true, id, new Date(req.get('x-date')));
                             }
+                            req.session.userData.expenses.push({
+                                id,
+                                ...expense
+                            });
                             log('inserted expense');
                             resp.send(id.toString());
                         }
@@ -88,13 +98,16 @@ export const insert = (req, resp) => {
 
 export const deleteExpense = (req, resp) => {
     log('delete expense');
-    dao.deleteExpense(req.params.id,
+    const { id } = req.params;
+    dao.deleteExpense(
+        id,
         req.session.userData.user_id,
         (err, result) => {
             if (err) {
                 log.error(err);
                 resp.status(500).send(err);
             } else {
+            req.session.userData.expenses = req.session.userData.expenses.filter(e => e.id != id);
                 log('deleted type');
                 resp.sendStatus(201);
             }

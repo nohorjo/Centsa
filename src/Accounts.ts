@@ -6,16 +6,22 @@ log('init accounts');
 
 export const getAll = (req, resp) => {
     log('get all accounts');
-    dao.getAll(req.session.userData.user_id, (err, result) => {
-        if (err) {
-            log.error(err);
-            resp.status(500).send(err);
-        } else {
-            log('returning accounts');
-            result.forEach(a => a.balance = a.balance || 0);
-            resp.send(result);
-        }
-    });
+    if (req.query.light == 'true') {
+        log('returning accounts from cache');
+        resp.send(req.session.userData.accounts);
+    } else {
+        dao.getAll(req.session.userData.user_id, (err, result) => {
+            if (err) {
+                log.error(err);
+                resp.status(500).send(err);
+            } else {
+                result.forEach(a => a.balance = a.balance || 0);
+                req.session.userData.accounts = result;
+                log('returning accounts');
+                resp.send(result);
+            }
+        });
+    }
 };
 
 export const insert = (req, resp) => {
@@ -30,6 +36,10 @@ export const insert = (req, resp) => {
             log.error(err);
             resp.status(500).send(err);
         } else {
+            req.session.userData.accounts.push({
+                id,
+                ...account
+            });
             log('inserted account');
             resp.send(id.toString());
         }

@@ -1,9 +1,9 @@
 const centsa = function ($http) {
     class baseApi {
         constructor(path) { this.apiUrl = `/api/${path}`; }
-        getAll() {
-            console.log(this.constructor.name, 'getAll');
-            return $http.get(this.apiUrl);
+        getAll(params) {
+            console.log(this.constructor.name, 'getAll', params);
+            return $http.get(this.apiUrl, { params });
         }
         insert(item) {
             console.log(this.constructor.name, 'insert', item);
@@ -19,10 +19,6 @@ const centsa = function ($http) {
     }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
-        getAll(activeOnly) {
-            console.log(this.constructor.name, 'getAll', activeOnly);
-            return $http.get(this.apiUrl, { params: { activeOnly: activeOnly } });
-        }
         totalActive(incAuto) {
             console.log(this.constructor.name, 'totalActive', incAuto);
             return $http.get(`${this.apiUrl}/total`, { params: { auto: incAuto } });
@@ -30,10 +26,6 @@ const centsa = function ($http) {
     }
     class transactionsApi extends genericApi {
         constructor() { super('transactions'); }
-        getAll(options) {
-            console.log(this.constructor.name, 'getAll', options);
-            return $http.get(this.apiUrl, { params: options });
-        }
         getCumulativeSums() {
             console.log(this.constructor.name, 'getCumulativeSums');
             return $http.get(`${this.apiUrl}/cumulativeSums`);

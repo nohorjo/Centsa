@@ -87,7 +87,7 @@
                         <label>Expense</label>
                         <select class="form-control" data-ng-model="filter.expense_id">
                             <option value="0"></option>
-                            <option data-ng-repeat="exp in allExpenses" value="{{ exp.id }}">{{ exp.name }}</option>
+                            <option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
                         </select>
                     </td>
                 </tr>

@@ -23,19 +23,17 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     
     $scope.accounts = $scope.types 
         = $scope.expenses 
-        = $scope.allExpenses 
         = $scope.uniqueComments 
         = $scope.transactions 
         = [];
 
     centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
-    centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
-    centsa.types.getAll().then(resp => {
+    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp.data);
+    centsa.types.getAll({light: true}).then(resp => {
         $scope.types = resp.data;
         $scope.newTrans.type_id = newTrans.type_id = resp.data.find(a => a.name == "Other").id.toString();
     });
-    centsa.expenses.getAll(true).then(resp => $scope.expenses = resp.data);
-    centsa.expenses.getAll(false).then(resp => $scope.allExpenses = resp.data);
+    centsa.expenses.getAll({light: true}).then(resp => $scope.expenses = resp.data);
     centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
 
     $scope.saveTrans = updating => {

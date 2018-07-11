@@ -1,9 +1,9 @@
 app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
     $scope.expenses = $scope.types = $scope.accounts = [];
-    centsa.expenses.getAll(true).then(resp => $scope.expenses = resp.data);
-    centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
-    centsa.types.getAll().then(resp => $scope.types = resp.data);
+    centsa.expenses.getAll().then(resp => $scope.expenses = resp.data);
+    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp.data);
+    centsa.types.getAll({light: true}).then(resp => $scope.types = resp.data);
 
     $scope.frequency = {
         type: "basic",
