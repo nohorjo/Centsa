@@ -62,33 +62,47 @@ export const insert = (req, resp) => {
     if (isFrequencyValid(expense.frequency)) {
         expense.user_id = req.session.userData.user_id;
         expense.started = new Date(expense.started);
-        dao.checkEntityOwnership(expense, (err, allowed) => {
-            if (err) {
-                log.error(err);
-                resp.status(500).send(err);
+        const { accounts, types } = req.session.userData;
+        new Promise((resolve, reject) => {
+            if (
+                (!expense.account_id || accounts.some(a => a.id == expense.account_id))
+                && types.some(t => t.id == expense.type_id)
+            ) {
+                resolve(true);
             } else {
-                if (!allowed) {
-                    log.warn('insert expense, invalid account or type');
-                    resp.status(400).send("Invalid account or type id");
-                } else {
-                    dao.insert(expense, (err, id) => {
-                        if (err) {
-                            log.error(err);
-                            resp.status(500).send(err);
-                        } else {
-                            if (expense.automatic) {
-                                applyAutoTransactions(true, id, new Date(req.get('x-date')));
-                            }
-                            req.session.userData.expenses.push({
-                                id,
-                                ...expense
-                            });
-                            log('inserted expense');
-                            resp.send(id.toString());
-                        }
-                    });
-                }
+                dao.checkEntityOwnership(expense, (err, allowed) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(allowed);
+                    }
+                });
             }
+        }).then(allowed => {
+            if (!allowed) {
+                log.warn('insert expense, invalid account or type');
+                resp.status(400).send("Invalid account or type id");
+            } else {
+                dao.insert(expense, (err, id) => {
+                    if (err) {
+                        log.error(err);
+                        resp.status(500).send(err);
+                    } else {
+                        if (expense.automatic) {
+                            applyAutoTransactions(true, id, new Date(req.get('x-date')));
+                        }
+                        req.session.userData.expenses.push({
+                            id,
+                            ...expense
+                        });
+                        log('inserted expense');
+                        resp.send(id.toString());
+                    }
+                });
+            }
+        }).catch(err => {
+            log.error(err);
+            resp.status(500).send(err);
         });
     } else {
         log.warn('insert expense, invalid frequency');

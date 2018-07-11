@@ -59,33 +59,52 @@ route.post("/", (() => {
                 new Date(t.date)
             ];
         });
-        dao.checkBatchEntityOwnership(
-            req.session.userData.user_id,
-            accountIds,
-            expenseIds,
-            typeIds,
-            (err, allowed) => {
-                if (err) {
-                    log.error(err);
-                    resp.status(500).send(err);
-                } else {
-                    if (!allowed) {
-                        log.warn('insert batch transactions, entity ownership failed');
-                        resp.status(400).send("Invalid account, expense or type ids");
-                    } else {
-                        dao.insertBatch(transactions, (err, results) => {
-                            if (err) {
-                                log.error(err);
-                                resp.status(500).send(err);
-                            } else {
-                                log('inserted batch transactions');
-                                resp.sendStatus(201);
-                            }
-                        });
+        const {
+            accounts,
+            types,
+            expenses
+        } = req.session.userData;
+        new Promise((resolve, reject) => {
+            if (
+                accountIds.every(id => accounts.some(a => a.id == id))
+                && typeIds.every(id => types.some(t => t.id == id))
+                && expenseIds.every(id => id == -1 || expenses.some(e => e.id == id))
+            ) {
+                resolve(true);
+            } else {
+                dao.checkBatchEntityOwnership(
+                    req.session.userData.user_id,
+                    accountIds,
+                    expenseIds,
+                    typeIds,
+                    (err, allowed) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(allowed);
+                        }
                     }
-                }
+                );
             }
-        );
+        }).then(allowed => {
+            if (!allowed) {
+                log.warn('insert batch transactions, entity ownership failed');
+                resp.status(400).send("Invalid account, expense or type ids");
+            } else {
+                dao.insertBatch(transactions, (err, results) => {
+                    if (err) {
+                        log.error(err);
+                        resp.status(500).send(err);
+                    } else {
+                        log('inserted batch transactions');
+                        resp.sendStatus(201);
+                    }
+                });
+            }
+        }).catch(err => {
+            log.error(err);
+            resp.status(500).send(err);
+        });
     };
 
     const insert = (req, resp) => {
@@ -96,26 +115,45 @@ route.post("/", (() => {
         if (!transaction.expense_id) {
             delete transaction.expense_id;
         }
-        dao.checkEntityOwnership(transaction, (err, allowed) => {
-            if (err) {
-                log.error(err);
-                resp.status(500).send(err);
+        const {
+            accounts,
+            types,
+            expenses
+        } = req.session.userData;
+        new Promise((resolve, reject) => {
+            if (
+                accounts.some(a => a.id == transaction.account_id)
+                && types.some(t => t.id == transaction.type_id)
+                && (!transaction.expense_id || expenses.some(e => e.id == transaction.expense_id)) 
+            ) {
+                resolve(true);
             } else {
-                if (!allowed) {
-                    log.warn('insert transactions, entity ownership failed');
-                    resp.status(400).send("Invalid account, expense or type id");
-                } else {
-                    dao.insert(transaction, (err, id) => {
-                        if (err) {
-                            log.error(err);
-                            resp.status(500).send(err);
-                        } else {
-                            log('inserted transaction');
-                            resp.send(id.toString());
-                        }
-                    });
-                }
+                dao.checkEntityOwnership(transaction, (err, allowed) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(allowed);
+                    }
+                });
             }
+        }).then(allowed => {
+            if (!allowed) {
+                log.warn('insert transactions, entity ownership failed');
+                resp.status(400).send("Invalid account, expense or type id");
+            } else {
+                dao.insert(transaction, (err, id) => {
+                    if (err) {
+                        log.error(err);
+                        resp.status(500).send(err);
+                    } else {
+                        log('inserted transaction');
+                        resp.send(id.toString());
+                    }
+                });
+            }
+        }).catch(err => {
+            log.error(err);
+            resp.status(500).send(err);
         });
     };
     return (req, resp) => {
