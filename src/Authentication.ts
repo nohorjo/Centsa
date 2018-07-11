@@ -26,11 +26,11 @@ export const login = async (req, res) => {
         log('%O', details);
         req.session.userData = details;
         res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
-        Users.getOrCreateUser(details, id => {
-            req.session.userData.user_id = id;
-            req.session.userData.original_user_id = id;
-            res.sendStatus(201);
-        });
+        const id = await Users.getOrCreateUser(details);
+
+        req.session.userData.user_id = id;
+        req.session.userData.original_user_id = id;
+        res.sendStatus(201);
     } catch (e) {
         log.error(e);
         res.status(500).send(e.toString());
