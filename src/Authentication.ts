@@ -23,13 +23,14 @@ export const login = async (req, res) => {
         } else {
             details = await getDetailsFromFB(req.body);
         }
-        log('%O', details);
-        req.session.userData = details;
-        res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
-        const id = await Users.getOrCreateUser(details);
+        req.session.userData = {
+            ...details,
+            ...(await Users.getOrCreateUser(details))
+        };
+        req.session.userData.original_user_id = req.session.userData.user_id;
+        log('session', req.session);
 
-        req.session.userData.user_id = id;
-        req.session.userData.original_user_id = id;
+        res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
         res.sendStatus(201);
     } catch (e) {
         log.error(e);

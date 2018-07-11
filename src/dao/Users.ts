@@ -1,9 +1,33 @@
 import { pool } from './Connection';
 
-export const getId = (email, cb) => {
-    pool.query('SELECT id FROM users WHERE email=?;', [email], (err, results) => {
-        cb(err, err || (results[0] && results[0].id));
-    });
+export const getUserAETs = (email, cb) => {
+    const getId = 'SELECT id FROM users WHERE email=?';
+    pool.query(
+        `${getId};
+        SELECT id, name FROM accounts WHERE user_id=(${getId});
+        SELECT id, name FROM expenses WHERE user_id=(${getId});
+        SELECT id, name FROM types WHERE user_id=(${getId});`, 
+        Array(4).fill(email),
+        (err, [
+            [id],
+            accounts,
+            expenses,
+            types
+        ]) => {
+            if (err) {
+                cb(err);
+            } else if (!id) {
+                cb();
+            } else {
+                cb(null, {
+                    user_id: id.id,
+                    accounts,
+                    expenses,
+                    types
+                });
+            }
+        }
+    );
 };
 
 export const insert = (name, email, cb) => {

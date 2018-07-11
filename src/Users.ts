@@ -3,12 +3,12 @@ import log from './log';
 
 export const getOrCreateUser = (data, cb) => {
     return new Promise((resolve, reject) => {
-        dao.getId(data.email, (err, id) => {
+        dao.getUserAETs(data.email, (err, user) => {
             if (err) {
                 reject(err);
-            } else if (id) {
+            } else if (user) {
                 log('returning existing user');
-                resolve(id);
+                resolve(user);
             } else {
                 dao.insert(data.name, data.email, (err, userId) => {
                     if (err) {
@@ -20,6 +20,10 @@ export const getOrCreateUser = (data, cb) => {
                                 reject(err);
                             } else {
                                 log('returning user');
+                                dao.getUserAETs(data.email, (err, user) => {
+                                    if (err) reject(err);
+                                    else resolve(user);
+                                });
                                 resolve(userId);
                             }
                         });
