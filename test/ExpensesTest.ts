@@ -5,16 +5,21 @@ import { expect } from 'chai';
 
 describe("Expenses", () => {
     const userId = 1234;
-    const date = '2017-04-22T18:32:09.101Z'
+    const date = '2017-04-22T18:32:09.101Z';
     const req = {
         session: {
-            userData: { user_id: userId }
+            userData: {
+                user_id: userId,
+                accounts: [],
+                types: []
+            }
         },
         get(header) {
             switch (header) {
                 case "x-date": return date;
             }
-        }
+        },
+        query: {}
     };
     let queryStub;
 
@@ -118,7 +123,7 @@ describe("Expenses", () => {
             const sendSpy = spy();
 
             Expenses.getTotals(
-                Object.assign({ query: { auto: "true" } }, req),
+                {...req, query: { auto: "true" } }, 
                 {
                     status: statusSpy,
                     send: sendSpy
@@ -207,7 +212,7 @@ describe("Expenses", () => {
         });
         const accountId = 6785;
         const typeId = 8244;
-        it("returns 500 with error on checks", () => {
+        it("returns 500 with error on checks", async () => {
             const errorMsg = "Error message: insert check";
             validStub.returns(true);
          
@@ -229,16 +234,16 @@ describe("Expenses", () => {
             statusStub.throws("Unexpected args: status");
 
 
-            Expenses.insert(Object.assign({
+            await Expenses.insert(Object.assign({
                 body: {
                     frequency: null,
                     account_id: accountId,
                     type_id: typeId
                 }
             }, req), {
-                    status: statusStub,
-                    send: sendSpy
-                });
+                status: statusStub,
+                send: sendSpy
+            });
 
             expect(validStub.calledOnce).to.be.true;
             expect(sendErrorSpy.calledWith(errorMsg)).to.be.true

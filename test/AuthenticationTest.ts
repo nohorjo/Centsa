@@ -108,8 +108,8 @@ describe("Authentication", () => {
                 .returns(Promise.resolve({ data: { name: name } }));
             getStub.throws("Unexpected args: get");
 
-            getOrCreateUserStub.withArgs(match({ name: name }), match.func)
-                .callsFake((x, cb) => cb(userID));
+            getOrCreateUserStub.withArgs(match({ name: name }))
+                .returns(Promise.resolve());
             getOrCreateUserStub.throws("Unexpected args: getOrCreateUserStub");
 
             const cookieSpy = spy();

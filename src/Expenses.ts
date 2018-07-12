@@ -63,7 +63,7 @@ export const insert = (req, resp) => {
         expense.user_id = req.session.userData.user_id;
         expense.started = new Date(expense.started);
         const { accounts, types } = req.session.userData;
-        new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             if (
                 (!expense.account_id || accounts.some(a => a.id == expense.account_id))
                 && types.some(t => t.id == expense.type_id)

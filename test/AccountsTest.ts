@@ -22,7 +22,7 @@ describe("Accounts", () => {
             name: "account2",
             balance: 6543,
         };
-        const request = { session: { userData: { user_id: userId } } };
+        const request = { session: { userData: { user_id: userId } }, query: {} };
         it("returns accounts", () => {
             queryStub.withArgs(query, match([userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(null, [account1, account2]);
@@ -77,7 +77,7 @@ describe("Accounts", () => {
         const newId = '5678';
         const request = {
             body: { name: newAccountName },
-            session: { userData: { user_id: userId } }
+            session: { userData: { user_id: userId, accounts: [] } }
         };
         it("returns ID", () => {
             queryStub.withArgs(
