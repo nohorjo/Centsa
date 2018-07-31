@@ -1,7 +1,7 @@
 import * as dao from './dao/Users';
 import log from './log';
 
-export const getOrCreateUser = (data, cb) => {
+export const getOrCreateUser = data => {
     return new Promise((resolve, reject) => {
         dao.getUserAETs(data.email, (err, user) => {
             if (err) {
