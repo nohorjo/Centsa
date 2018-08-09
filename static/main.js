@@ -57,7 +57,10 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     $rootScope.setFilter = f => {
         console.log('filter', f);
         $rootScope.showFilter = true;
-        $rootScope.filter = f;
+        $rootScope.filter = {
+            comments:[{comment:''}],
+            ...f
+        };
         $location.path("transactions");
         $timeout(() => $rootScope.showFilter = false, 1000);
     };
