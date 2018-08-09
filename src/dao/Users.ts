@@ -5,7 +5,7 @@ export const getUserAETs = (email, cb) => {
     pool.query(
         `${getId};
         SELECT id, name FROM accounts WHERE user_id=(${getId});
-        SELECT id, name FROM expenses WHERE user_id=(${getId});
+        SELECT id, name, type_id FROM expenses WHERE user_id=(${getId});
         SELECT id, name FROM types WHERE user_id=(${getId});`, 
         Array(4).fill(email),
         (err, [
