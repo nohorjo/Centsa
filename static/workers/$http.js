@@ -45,9 +45,10 @@ const $http = (() => {
             return ajax({
                 url: url,
                 method: "POST",
-                headers: Object.assign({
-                    "Content-Type": "application/json"
-                }, opts && opts.headers),
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(opts && opts.headers)
+                },
                 data: JSON.stringify(data)
             });
         },

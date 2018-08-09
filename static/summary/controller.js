@@ -22,14 +22,15 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     };
 
     centsa.settings.get("budget.mode").then(budgetMode => {
-        $scope.budgetMode = Object.assign({
+        $scope.budgetMode = {
             mode: 'expense',
             expenseRounds: 1,
             frequency: '7',
             days: 90,
             start: new Date().formatDate("yyyy/MM/dd"),
             amount: 0,
-        }, budgetMode ? JSON.parse(budgetMode) : null);
+            ...(budgetMode && JSON.parse(budgetMode)
+        };
         if ($scope.budgetMode.mode == "manual") {
             $scope.initDatePickers();
         }

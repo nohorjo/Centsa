@@ -31,7 +31,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
         account_id: "",
         type_id: "1"
     };
-    let newExpense = Object.assign({}, $scope.newExpense);
+    let newExpense = {...$scope.newExpense};
 
     $scope.saveExpense = () => {
         $scope.newExpense.started = new Date($scope.newExpense.started);
@@ -43,7 +43,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             $scope.newExpense.id = resp.data;
             $scope.expenses.unshift($scope.newExpense);
             getActiveTotals();
-            $scope.newExpense = Object.assign({}, newExpense);
+            $scope.newExpense = {...newExpense};
             $('.datepicker[data-ng-model="newExpense.started"]').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
         });
     };

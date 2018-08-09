@@ -8,13 +8,13 @@ app.controller("typesCtrl", function ($scope, centsa) {
     $scope.newType = {
         name: ""
     };
-    var newType = Object.assign({}, $scope.newType);
+    var newType = {...$scope.newType};
 
     $scope.saveType = () => centsa.types.insert($scope.newType).then(resp => {
         $scope.newType.id = resp.data;
         $scope.newType.sum = 0;
         $scope.types.unshift($scope.newType);
-        $scope.newType = Object.assign({}, newType);
+        $scope.newType = {...newType};
         $scope.drawPie();
     });
 

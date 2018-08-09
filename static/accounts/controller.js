@@ -11,7 +11,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
         name: "",
         balance: 0
     };
-    let newAccount = Object.assign({}, $scope.newAccount);
+    let newAccount = {...$scope.newAccount};
 
     $scope.transfer = {
         date: new Date().formatDate("yyyy/MM/dd"),
@@ -20,7 +20,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
         amount: 0,
         comment: ""
     };
-    let transfer = Object.assign({}, $scope.transfer);
+    let transfer = {...$scope.transfer};
 
     $scope.saveAccount = () => {
         centsa.accounts.insert($scope.newAccount).then(resp => {
@@ -36,7 +36,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
                     date: new Date()
                 });
             }
-            $scope.newAccount = Object.assign({}, newAccount);
+            $scope.newAccount = {...newAccount};
         });
     };
 
@@ -70,7 +70,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
         centsa.transactions.insert(to);
         $scope.accounts.find(a => a.id == $scope.transfer.from).balance -= amount;
         $scope.accounts.find(a => a.id == $scope.transfer.to).balance += amount;
-        $scope.transfer = Object.assign({}, transfer);
+        $scope.transfer = {...transfer};
         $('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
     };
 

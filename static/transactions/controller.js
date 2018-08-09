@@ -13,7 +13,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         expense_id: null,
         date: new Date().formatDate("yyyy/MM/dd")
     };
-    let newTrans = Object.assign({}, $scope.newTrans);
+    let newTrans = {...$scope.newTrans};
     centsa.settings.get("default.account").then(data => $scope.newTrans.account_id = newTrans.account_id = data.toString());
 
     $scope.transactionSummary = {
@@ -58,7 +58,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                 }
                 $('#transModal').appendTo(".content").modal('hide');
             }
-            $scope.newTrans = Object.assign({}, newTrans);
+            $scope.newTrans = {...newTrans};
             $('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
         }).catch(() => {
             $('.datepicker').datepicker("update", $scope.newTrans.date);
@@ -66,7 +66,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     };
 
     $scope.editTrans = trans => {
-        const t = Object.assign({}, trans);
+        const t = {...trans};
         delete t.firstOfWeek;
         t.date = $rootScope.formatDate(t.date);
         $('.datepicker').datepicker("update", t.date);
@@ -78,7 +78,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         $('#transModal').on(
             'hidden.bs.modal',
             e => {
-                $scope.newTrans = Object.assign({}, newTrans);
+                $scope.newTrans = {...newTrans};
                 $('.datepicker').datepicker("update",
                     new Date().formatDate("yyyy/MM/dd"));
             })
@@ -131,7 +131,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.reloadTrans = () => {
         console.log('reload transactions');
-        $scope.tabs[$scope.currentTab].currentFilter = Object.assign({}, $rootScope.filter);
+        $scope.tabs[$scope.currentTab].currentFilter = {...$rootScope.filter};
         $scope.currentPage = 1;
         $scope.moreToLoad = true;
         centsa.transactions.getAll({

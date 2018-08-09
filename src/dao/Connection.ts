@@ -5,7 +5,10 @@ import log from '../log';
 log('init db connection');
 
 const cpus = os.cpus().length;
-const config = Object.assign({ cpusCount: cpus }, process.env);
+const config = {
+    cpusCount: cpus,
+    ...process.env
+};
 
 export const testConnection = () => {
     log('test connection');

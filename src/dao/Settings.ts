@@ -9,7 +9,7 @@ export const getAll = (userId, cb) => {
                 // Convert array of {key:x,value:y} to a single object {x:y}...
                 const x = {};
                 x[b.setting] = b.value;
-                return Object.assign(x, a);
+                return {...x, ...a};
             }, {}));
         }
     );

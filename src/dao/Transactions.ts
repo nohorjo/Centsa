@@ -28,7 +28,10 @@ export const getAll = (
     sort,
     cb
 ) => {
-    filter = Object.assign(NO_FILTER, filter);
+    filter = {
+        ...NO_FILTER,
+        ...filter
+    };
     if (!sort || !/^(\s*[a-z]* (A|DE)SC.? ?)+$/.test(sort)) {
         sort = '1 ASC';
     }
@@ -131,7 +134,10 @@ export const getAmounts = (userId, cb) => {
 };
 
 export const getSummary = (userId, filter, cb) => {
-    filter = Object.assign(NO_FILTER, filter);
+    filter = {
+        ...NO_FILTER,
+        ...filter
+    };
     pool.query(
         `SELECT COUNT(*) AS count, SUM(amount) AS sum, MIN(amount) as min, MAX(amount) AS max FROM transactions WHERE user_id=?
         AND ${filterToClause(filter)};`,
