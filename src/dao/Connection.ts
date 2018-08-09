@@ -5,7 +5,7 @@ import log from '../log';
 log('init db connection');
 
 const cpus = os.cpus().length;
-const config = {
+const config: any = {
     cpusCount: cpus,
     ...process.env
 };

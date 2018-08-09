@@ -29,7 +29,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             days: 90,
             start: new Date().formatDate("yyyy/MM/dd"),
             amount: 0,
-            ...(budgetMode && JSON.parse(budgetMode)
+            ...(budgetMode && JSON.parse(budgetMode))
         };
         if ($scope.budgetMode.mode == "manual") {
             $scope.initDatePickers();
