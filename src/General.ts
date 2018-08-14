@@ -11,7 +11,8 @@ import {
     isController,
     getControllers,
     addController,
-    deleteController
+    deleteController,
+    getUserAETs
 } from './dao/Users';
 import { getSessionStore } from './index';
 import log from './log';
@@ -194,9 +195,21 @@ route.get('/switchUser/:id', (req, resp) => {
     log('user %d switching to %d', userData.original_user_id, id);
 
     const respond = () => {
-        log('switched user');
-        resp.cookie('currentUser', id, { maxAge: 31536000000, httpOnly: false });
-        resp.sendStatus(201);
+        log('getting aets');
+        getUserAETs(id, (err, aets) => {
+            if (err) {
+                log.error(err);
+                resp.status(500).send(err);
+            } else {
+                log('switched user');
+                req.session.userData = {
+                    ...userData,
+                    ...aets
+                }
+                resp.cookie('currentUser', id, { maxAge: 31536000000, httpOnly: false });
+                resp.sendStatus(201);
+            }
+        });
     };
     if (id == -1) {
         userData.user_id = userData.original_user_id;
