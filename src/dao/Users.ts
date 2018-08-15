@@ -1,7 +1,7 @@
 import { pool } from './Connection';
 
 export const getUserAETs = (emailOrId, cb) => {
-    const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} WHERE 1!=?`}`;
+    const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} WHERE 'NULL'!=?`}`;
     pool.query(
         `${getId};
         SELECT id, name FROM accounts WHERE user_id=(${getId});
