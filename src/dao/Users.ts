@@ -1,29 +1,24 @@
 import { pool } from './Connection';
 
 export const getUserAETs = (emailOrId, cb) => {
-    const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} WHERE 'NULL'!=?`}`;
+    const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} AS id`}`;
     pool.query(
         `${getId};
         SELECT id, name FROM accounts WHERE user_id=(${getId});
         SELECT id, name, type_id FROM expenses WHERE user_id=(${getId});
         SELECT id, name FROM types WHERE user_id=(${getId});`, 
         Array(4).fill(emailOrId),
-        (err, [
-            [id],
-            accounts,
-            expenses,
-            types
-        ]) => {
+        (err, data) => {
             if (err) {
                 cb(err);
-            } else if (!id) {
+            } else if (!data[0][0]) {
                 cb();
             } else {
                 cb(null, {
-                    user_id: id.id,
-                    accounts,
-                    expenses,
-                    types
+                    user_id: data[0][0].id,
+                    accounts: data[1],
+                    expenses: data[2],
+                    types: data[3]
                 });
             }
         }

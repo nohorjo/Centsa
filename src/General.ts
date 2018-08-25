@@ -196,7 +196,7 @@ route.get('/switchUser/:id', (req, resp) => {
 
     const respond = () => {
         log('getting aets');
-        getUserAETs(id, (err, aets) => {
+        getUserAETs(id == -1 ? userData.original_user_id : id, (err, aets) => {
             if (err) {
                 log.error(err);
                 resp.status(500).send(err);
@@ -205,7 +205,7 @@ route.get('/switchUser/:id', (req, resp) => {
                 req.session.userData = {
                     ...userData,
                     ...aets
-                }
+                };
                 resp.cookie('currentUser', id, { maxAge: 31536000000, httpOnly: false });
                 resp.sendStatus(201);
             }
