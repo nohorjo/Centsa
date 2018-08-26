@@ -26,7 +26,7 @@ export const getAll = (req, resp) => {
 
 export const insert = (req, resp) => {
     log('insert account');
-    const account = (({ name, id }) => ({ name, id }))(req.body);
+    const account = (({ name, id }) => ({ name, id }))(req.body || {});
     account['user_id'] = req.session.userData.user_id;
     if (!account.id) {
         delete account.id;

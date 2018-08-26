@@ -95,13 +95,13 @@ route.get("/budget", (req, resp) => {
             getSummary(user_id, {
                 fromDate: start,
                 toDate: today,
-            }, (err, [{sum}]) => {
+            }, (err, data) => {
                 if (err) {
                     log.error(err);
                     resp.status(500).send(err);
                 } else {
                     const days = (today - start) / DAY;
-                    respond({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
+                    respond({afterAll: Math.ceil(days / mode.frequency) * mode.amount - data[0].sum});
                 }
             });
             break;
