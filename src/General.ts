@@ -29,6 +29,28 @@ route.get("/budget", (req, resp) => {
     const { userData : { user_id } } = req.session;
     const today:any = new Date(req.get('x-date'));
     log('get budget', mode);
+    const respond = budget => {
+        log('returning budget');
+        if (+mode.cashflowPeriod) {
+            getSummary(user_id, {
+                fromDate: new Date(today - 8.64e7 * mode.cashflowPeriod),
+                toDate: today,
+            }, (err, data) => {
+                if (err) {
+                    log.error(err);
+                    resp.status(500).send(err);
+                } else {
+                    const max = -data[0].sum;
+                    resp.send({
+                        afterAll: Math.min(max, budget.afterAll),
+                        afterAuto: Math.min(max, budget.afterAuto)
+                    });
+                }
+            });
+        } else {
+            resp.send(budget);
+        }
+    };
     switch (mode.mode) {
         case 'expense': case 'strictExpense':
             getAllWithSum(user_id, (err, results) => {
@@ -63,8 +85,7 @@ route.get("/budget", (req, resp) => {
                             afterAuto: results[0][0].total
                         }
                     );
-                    log('returning budget');
-                    resp.send(budget);
+                    respond(budget);
                 }
             });
             break;
@@ -79,8 +100,7 @@ route.get("/budget", (req, resp) => {
                     resp.status(500).send(err);
                 } else {
                     const days = (today - start) / DAY;
-                    log('returning budget');
-                    resp.send({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
+                    respond({afterAll: Math.ceil(days / mode.frequency) * mode.amount - sum});
                 }
             });
             break;
@@ -110,7 +130,7 @@ route.get("/budget", (req, resp) => {
                     }
                     
                     log('returning budget');
-                    resp.send({afterAll, afterAuto});
+                    respond({afterAll, afterAuto});
                 }
             }); 
             break;
