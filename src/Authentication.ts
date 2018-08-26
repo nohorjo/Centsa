@@ -126,7 +126,7 @@ const getDetailsFromGoogle = async token => {
     return (({name,email})=>({name,email}))(ticket.getPayload() || {});
 };
 
-const getDetailsFromFB = async ({userID, accessToken} = {}) => {
+const getDetailsFromFB = async ({userID, accessToken}:any = {}) => {
     const fields = ['email', 'name'];
     log('Login request: %s', userID);
     const url = `https://graph.facebook.com/${userID}?access_token=${accessToken}&fields=${fields.join(',')}`;
