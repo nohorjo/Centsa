@@ -14,10 +14,16 @@
                     <label>Budget mode</label>
                 </td>
                 <td data-ng-click="getBudget()">
-                    <input type="radio" name="budgetMode" value="expense" data-ng-model="budgetMode.mode"> Expense based<br/>
-                    <input type="radio" name="budgetMode" value="strictExpense" data-ng-model="budgetMode.mode"> Strict expense based<br/>
-                    <input type="radio" name="budgetMode" value="time" data-ng-model="budgetMode.mode"> Time based<br/>
-                    <input type="radio" name="budgetMode" value="manual" data-ng-model="budgetMode.mode" data-ng-click="initDatePickers()"> Manual<br/>
+                    <select
+                        class="form-control"
+                        data-ng-change="getBudget()"
+                        data-ng-model="budgetMode.mode"
+                    >
+                        <option value="expense">Expense based</option>
+                        <option value="strictExpense">Strict expense based</option>
+                        <option value="time">Time based</option>
+                        <option value="manual">Manual</option>
+                    </select>
                 </td>
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
                     <label>Expense rounds</label> 
@@ -57,6 +63,24 @@
                         </div> 
                     </div> 
                 </td> 
+            </tr>
+            <tr>
+                <td>
+                    <label>Maintain positive cashflow</label>
+                </td>
+                <td colspan="2">
+                    <label>Period</label>
+                    <select
+                        class="form-control small"
+                        data-ng-change="getBudget()"
+                        data-ng-model="budgetMode.cashflowPeriod"
+                    >
+                        <option value="0">Never</option> 
+                        <option value="7">Week</option> 
+                        <option value="30">Month</option> 
+                        <option value="90">Quarter</option> 
+                    </select>
+                </td>
             </tr>
             <tr data-ng-class="{ 'warning' : budget.afterAll < 0 && budget.afterAuto, 'danger' : !budget.afterAuto && budget.afterAll < 0 }">
                 <td>
