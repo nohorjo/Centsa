@@ -3,7 +3,6 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as cluster from 'cluster';
 import * as os from 'os';
-import * as MySQLStore from 'express-mysql-session';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Authentication from './Authentication';
@@ -17,6 +16,7 @@ import Types from './Types';
 import { testConnection, pool } from './dao/Connection';
 import debug from './debug';
 import log from './log';
+const FileMySQLSession = require('file-mysql-session')(session);
 
 const cpus = os.cpus().length;
 
@@ -36,7 +36,8 @@ const initWorker = (id, env) => {
 
     const app = express();
 
-    sessionStore = new MySQLStore({ createDatabaseTable: true }, pool);
+    sessionStore = new FileMySQLSession({connection: pool});
+
     const sess = {
         secret: env.SESSION_SECRET,
         resave: false,

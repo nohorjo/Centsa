@@ -157,17 +157,21 @@ describe("Authentication", () => {
         it("deletes session and clears name cookie", () => {
             const clearCookieSpy = spy();
             const sendStatusSpy = spy();
-            const req = { session: { userData: {} } };
+            const destroyStub = stub();
+            const req = { session: { userData: {}, destroy: destroyStub } };
+
+            destroyStub.withArgs(match.func).callsArg(0);
+            destroyStub.throws('Unexpected args: destroy');
 
             logout(req, {
                 clearCookie: clearCookieSpy,
                 sendStatus: sendStatusSpy
             });
 
-            expect(req).to.not.have.property("session");
-            expect(clearCookieSpy.calledTwice).to.be.true;
             expect(clearCookieSpy.calledWith("name")).to.be.true;
             expect(clearCookieSpy.calledWith("currentUser")).to.be.true;
+            expect(clearCookieSpy.calledWith("connect.sid")).to.be.true;
+            expect(destroyStub.calledOnce).to.be.true;
             expect(sendStatusSpy.calledOnce).to.be.true;
             expect(sendStatusSpy.calledWith(201)).to.be.true;
         });

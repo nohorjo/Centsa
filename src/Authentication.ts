@@ -39,11 +39,14 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    console.log(`Cleared session for ${req.session.userData.email}`);
-    delete req.session;
-    res.clearCookie('name');
-    res.clearCookie('currentUser');
-    res.sendStatus(201);
+    const { userData } = req.session;
+    req.session.destroy(() => {
+        log(`Cleared session for ${userData.email}`);
+        res.clearCookie('name');
+        res.clearCookie('currentUser');
+        res.clearCookie('connect.sid');
+        res.sendStatus(201);
+    });
 };
 
 export const loginScript = (req, resp) => {
