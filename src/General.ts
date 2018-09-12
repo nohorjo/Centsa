@@ -4,7 +4,10 @@ import {
     nextPaymentDate,
     isDayOfPayment
 } from './Expenses';
-import { getAllWithSum } from './dao/Expenses';
+import {
+    getAllWithSum,
+    deleteExpense
+} from './dao/Expenses';
 import * as rules from './dao/Rules';
 import {
     getControllees,
@@ -23,7 +26,7 @@ log('init general');
 const route = Router();
 
 const DAY = 8.64e7;
-const SAVING_TEST = /Saving \d{4}\/\d{2}\/\d{2}: /;
+const SAVING_TEST = /Saving (\d{4}\/\d{2}\/\d{2}): /;
 
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
@@ -52,14 +55,22 @@ route.get("/budget", (req, resp) => {
             resp.send(budget);
         }
     };
-    switch (mode.mode) {
-        case 'expense': case 'strictExpense':
-            getAllWithSum(user_id, (err, results) => {
-                if (err) {
-                    log.error(err);
-                    resp.status(500).send(err);
-                } else {
-                    const expenses = results[1];
+    getAllWithSum(user_id, (err, results) => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            let [ [{total}], expenses ] = results;
+            expenses.filter(({name}) => {
+                const match = name.match(SAVING_TEST);
+                if (match) {
+                    return today >= new Date(match[1]);
+                }
+            }).forEach(({id}) => deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id)));
+            const goals = expenses.filter(e => SAVING_TEST.test(e.name))
+                .reduce((sum, e) => e.cost * (today - e.started) / DAY, 0);
+            switch (mode.mode) {
+                case 'expense': case 'strictExpense':
                     const strict = mode.mode == 'strictExpense';
                     const multiplier = mode.expenseRounds - 1 || 0;
                     const currentDay = new Date(req.get('x-date')).valueOf();
@@ -82,41 +93,35 @@ route.get("/budget", (req, resp) => {
                             }
                             return currentBudget;
                         }, {
-                            afterAll: results[0][0].total,
-                            afterAuto: results[0][0].total
+                            afterAll: total,
+                            afterAuto: total
                         }
                     );
                     respond(budget);
-                }
-            });
-            break;
-        case 'manual':
-            const start:any = new Date(mode.start);
-            getSummary(user_id, {
-                fromDate: start,
-                toDate: today,
-            }, (err, data) => {
-                if (err) {
-                    log.error(err);
-                    resp.status(500).send(err);
-                } else {
-                    const days = (today - start) / DAY;
-                    respond({afterAll: Math.ceil(days / mode.frequency) * mode.amount - data[0].sum});
-                }
-            });
-            break;
-        case 'time':
-            getAllWithSum(user_id, (err, results) => {
-                if (err) {
-                    log.error(err);
-                    resp.status(500).send(err);
-                } else {
-                    let expenses = results[1];
+                    break;
+                case 'manual':
+                    const start:any = new Date(mode.start);
+                    getSummary(user_id, {
+                        fromDate: start,
+                        toDate: today,
+                    }, (err, data) => {
+                        if (err) {
+                            log.error(err);
+                            resp.status(500).send(err);
+                        } else {
+                            const days = (today - start) / DAY;
+                            const amount = Math.ceil(days / mode.frequency) * mode.amount - data[0].sum;
+                            respond({afterAll: amount - goals});
+                        }
+                    });
+                    break;
+                case 'time':
                     const current = new Date(today);
                     const end = new Date(today.getTime() + mode.days * DAY);
-                    let afterAll = results[0][0].total
-                                    - expenses.filter(e => SAVING_TEST.test(e.name)).map(e => e.cost).reduce((a, b) => a + b, 0);
-                    let afterAuto = afterAll;
+                    let afterAuto = total - expenses
+                                            .filter(e => SAVING_TEST.test(e.name))
+                                            .map(e => e.cost).reduce((a, b) => a + b, 0);
+                    let afterAll = afterAuto - goals;
 
                     expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
 
@@ -132,14 +137,14 @@ route.get("/budget", (req, resp) => {
                     
                     log('returning budget');
                     respond({afterAll, afterAuto});
-                }
-            }); 
-            break;
-        default:
-            log.warn('invalid budget type');
-            resp.status(400).send('Invalid budget type');
-            break;
-    }
+                    break;
+                default:
+                    log.warn('invalid budget type');
+                    resp.status(400).send('Invalid budget type');
+                    break;
+            }
+        }
+    });
 });
 
 // =================== IMPORT

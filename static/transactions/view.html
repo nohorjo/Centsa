@@ -46,7 +46,9 @@
     <li><a href="" data-ng-click="newTab()">+</a></li>
 </ul>
  <div class="tab-content">
-    <input type="checkbox" data-ng-model="showFilter"> Show filter
+    <div data-ng-class="{'bg-success' : filter.fromDate || filter.toDate || filter.fromAmount != null || filter.toAmount != null || filter.account_id && filter.account_id != '0' || filter.type_id && filter.type_id != '0' || filter.expense_id && filter.expense_id != '0' || hasFilterComments() }">
+        <input type="checkbox" data-ng-model="showFilter"> Show filter
+    </div>
     <form id="FilterForm" name="FilterForm" data-ng-submit="reloadTrans()" data-ng-show="showFilter">
         <table class="table table-condensed">
             <tbody>
