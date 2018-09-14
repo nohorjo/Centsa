@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <script src="https://unpkg.com/otplib@^10.0.0/otplib-browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
+    <script src="admin.js"></script>
+
+    <link href="admin.css" rel="stylesheet" />
+</head>
+
+<body>
+    <h1>Admin console</h1>
+    <div class="container">
+        <div class="options container">
+            Password <input id="password" type="text" onkeyup="updatePassword()"
+            /> Mode
+            <div onclick="updateMode()">
+                <input type="radio" name="mode" value="sh" checked /> Bash <br/>
+                <input type="radio" name="mode" value="mysql" /> SQL
+            </div>
+        </div>
+        <div>
+            Input
+            <div id="editor"></div>
+        </div>
+        <div>Output</div>
+    </div>
+</body>
+
+</html>
