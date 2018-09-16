@@ -6,7 +6,6 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Authentication from './Authentication';
-import * as fileUpload from 'express-fileupload';
 import Accounts from './Accounts';
 import Expenses, { applyAutoTransactions } from './Expenses';
 import General from './General';
@@ -16,6 +15,7 @@ import Types from './Types';
 import { testConnection, pool } from './dao/Connection';
 import debug from './debug';
 import log from './log';
+import Admin from './Admin';
 const FileMySQLSession = require('file-mysql-session')(session);
 
 const cpus = os.cpus().length;
@@ -56,8 +56,7 @@ const initWorker = (id, env) => {
 
     app.use(express.json({ limit: '10MB' }));
     app.use(cookieParser());
-    app.use(['/api', '/login'], session(sess));
-    app.use(fileUpload());
+    app.use(['/index.html', '/api', '/login'], session(sess));
 
     app.get('/index.html', Authentication.authSkipLogin);
     app.get('/login.js', Authentication.loginScript);
@@ -72,7 +71,8 @@ const initWorker = (id, env) => {
         General,
         Settings,
         Transactions,
-        Types
+        Types,
+        Admin
     ]);
 
     app.delete('/login', Authentication.logout);
