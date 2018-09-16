@@ -3,7 +3,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         password = document.getElementById('password').value = window.sessionStorage.getItem('password');
-        mode = document.querySelector('input[name="mode"]:checked').value;
+        mode = window.sessionStorage.getItem('mode') || document.querySelector('input[name="mode"]:checked').value;
         editor = ace.edit('editor');
         editor.setTheme("ace/theme/solarized_dark");
         editor.session.setMode("ace/mode/" + mode);
@@ -11,6 +11,7 @@
         editor.setOptions({
             maxLines: Infinity
         });
+        editor.setValue(window.sessionStorage.getItem('command') || '');
     });
 
     window.updatePassword = () => {
@@ -21,9 +22,12 @@
     window.updateMode = () => {
         mode = document.querySelector('input[name="mode"]:checked').value;
         editor.session.setMode("ace/mode/" + mode);
+        window.sessionStorage.setItem('mode', mode);
     };
 
     window.execute = retries => {
+        const command = editor.session.getValue();
+        window.sessionStorage.setItem('command', command);
         const token = otplib.authenticator.generate(password);
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -44,7 +48,7 @@
         xhttp.send(JSON.stringify({
             token,
             mode,
-            command: editor.session.getValue()
+            command
         }));
     };
 })();
