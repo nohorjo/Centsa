@@ -11,19 +11,23 @@
 <body>
     <h1>Admin console</h1>
     <div class="container">
-        <div class="options container">
+        <div class="two-column container">
             Password <input id="password" type="text" onkeyup="updatePassword()"
             /> Mode
             <div onclick="updateMode()">
                 <input type="radio" name="mode" value="sh" checked /> Bash <br/>
                 <input type="radio" name="mode" value="mysql" /> SQL
             </div>
+            <input class="two-column" type="button" value="execute" onclick="execute(5)">
         </div>
         <div>
             Input
             <div id="editor"></div>
         </div>
-        <div>Output</div>
+        <div>
+            Output
+            <div id="output"></div>
+        </div>
     </div>
 </body>
 

@@ -22,4 +22,26 @@
         mode = document.querySelector('input[name="mode"]:checked').value;
         editor.session.setMode("ace/mode/" + mode);
     };
+
+    window.execute = retries => {
+        const token = otplib.authenticator.generate(password);
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    document.getElementById("output").innerHTML = xhttp.responseText;
+                } else if (retries) {
+                    setTimeout(() => window.execute(--retries), 1000);
+                } else {
+                    document.getElementById("output").innerHTML = 'ERROR:\n' + xhttp.responseText;
+                }
+            }
+        };
+        xhttp.open("POST", "/api/execute");
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.send(JSON.stringify({
+            token,
+            command: editor.session.getValue()
+        }));
+    };
 })();
