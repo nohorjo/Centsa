@@ -4,14 +4,18 @@
     document.addEventListener("DOMContentLoaded", () => {
         password = document.getElementById('password').value = window.sessionStorage.getItem('password');
         mode = window.sessionStorage.getItem('mode') || document.querySelector('input[name="mode"]:checked').value;
+        document.querySelector(`input[value="${mode}"]`).checked = true;
+
         editor = ace.edit('editor');
-        editor.setTheme("ace/theme/solarized_dark");
+        editor.setTheme("ace/theme/terminal");
         editor.session.setMode("ace/mode/" + mode);
         editor.$blockScrolling = Infinity;
         editor.setOptions({
             maxLines: Infinity
         });
-        editor.setValue(window.sessionStorage.getItem('command') || '');
+        editor.setValue(window.sessionStorage.getItem(mode + 'command') || '');
+
+        document.getElementById('editor').addEventListener('keyup', e => e.ctrlKey && e.keyCode == 13 && window.execute(5));
     });
 
     window.updatePassword = () => {
@@ -23,11 +27,12 @@
         mode = document.querySelector('input[name="mode"]:checked').value;
         editor.session.setMode("ace/mode/" + mode);
         window.sessionStorage.setItem('mode', mode);
+        editor.setValue(window.sessionStorage.getItem(mode + 'command') || '');
     };
 
     window.execute = retries => {
         const command = editor.session.getValue();
-        window.sessionStorage.setItem('command', command);
+        window.sessionStorage.setItem(mode + 'command', command);
         const token = otplib.authenticator.generate(password);
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -36,6 +41,7 @@
                     document.getElementById("output").innerHTML = xhttp.responseText
                                                                     .replace(/\n/g, '<br>')
                                                                     .replace(/ /g, '&nbsp;');
+                    if (mode == 'sh') editor.selectAll();
                 } else if (retries) {
                     setTimeout(() => window.execute(--retries), 1000);
                 } else {
