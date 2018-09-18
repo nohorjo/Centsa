@@ -37,7 +37,7 @@ route.post('/execute', (req, resp) => {
             }
         } else {
             log.warn('unauthorized admin %s, %s', req.ip, command);
-            resp.sendStatus(403);
+            resp.status(403).send((Date.now() / 1000 | 0).toString());
         }
     } catch (e) {
         log.error('execute error', e);

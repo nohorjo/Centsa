@@ -42,10 +42,18 @@
                                                                     .replace(/\n/g, '<br>')
                                                                     .replace(/ /g, '&nbsp;');
                     if (mode == 'sh') editor.selectAll();
-                } else if (retries) {
-                    setTimeout(() => window.execute(--retries), 1000);
                 } else {
-                    document.getElementById("output").innerHTML = 'ERROR:\n' + xhttp.responseText;
+                    if (retries) {
+                        setTimeout(() => window.execute(--retries), 1000);
+                    } else {
+                        document.getElementById("output").innerHTML = 'ERROR:\n' + xhttp.responseText;
+                    }
+                    try {
+                        if (!otplib.authenticator.options.epoch) {
+                            otplib.authenticator.options = {epoch: +xhttp.responseText || null};
+                            setInterval(() => otplib.authenticator.options = {epoch: otplib.authenticator.options.epoch +1}, 1000);
+                        }
+                    } catch (e) {}
                 }
             }
         };
