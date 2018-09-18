@@ -12,10 +12,9 @@
 
   <script src="login.js"></script>
   <script src="https://apis.google.com/js/platform.js"></script>
-  <meta name="google-signin-client_id" content="760035206518-mt38hjblfp202e0gsqioovoi2bq4svll.apps.googleusercontent.com">
 </head>
 
-<body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" onload="fbInit()">
+<body style="overflow: hidden; background-color: rgba(0,0,0,0); margin: 0" onload="fbInit();googleInit()">
   <div class="cookie-notice">Centsa uses cookies to store login state. By using this service you are agreeing to having these cookies stored on your
     device
   </div>
@@ -35,7 +34,7 @@
             <div class="fb-login-button" data-max-rows="3" data-size="large" data-button-type="login_with" data-use-continue-as="true"
               data-scope="public_profile,email" onlogin="checkLoginState();"></div>
             <div>
-                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <div id="g-signin2"></div>
                 * Google sign in requires third party cookies enabled for <em>google.com</em>
             </div>
           </form>

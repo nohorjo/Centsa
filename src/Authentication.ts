@@ -88,6 +88,11 @@ export const loginScript = (req, resp) => {
                     }(document, 'script', 'facebook-jssdk'));
                 };
 
+                window.googleInit = () => gapi.load('auth2', () => {
+                    gapi.auth2.init({client_id: 'GOOGLE_CLIENT_ID'});
+                    gapi.signin2.render('g-signin2', {onsuccess: window.onSignIn});
+                });
+
                 window.logout = () => {
                     $.ajax({
                         url: authUrl,
@@ -113,7 +118,7 @@ export const loginScript = (req, resp) => {
                         }
                     });
                 }
-            }`.replace('FB_APP_ID', process.env.FB_APP_ID)
+            }`.replace('FB_APP_ID', process.env.FB_APP_ID).replace('GOOGLE_CLIENT_ID', process.env.GOOGLE_CLIENT_ID)
         })()`
     );
 };
