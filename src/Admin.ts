@@ -32,6 +32,11 @@ route.post('/execute', (req, resp) => {
                         resp.send(err || `STDOUT:\n\n${stdout}\n\nSTDERR:\n${stderr}`);
                     });
                     break;
+                case 'javascript':
+                    eval(`new Promise((resolve, reject) => {${command}})`)
+                        .then(result => resp.send(result))
+                        .catch(error => resp.send(error));
+                    break;
                 default:
                     resp.status(400).send(`unsupported mode: ${mode}`);
             }
