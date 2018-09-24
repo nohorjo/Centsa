@@ -1,4 +1,4 @@
-app.controller("usersCtrl", function ($scope, centsa) {
+app.controller("userCtrl", function ($scope, $rootScope, centsa) {
     $scope.controllers = [];
     $scope.email = '...';
     centsa.general.controllers().then(({data}) => {
@@ -23,8 +23,20 @@ app.controller("usersCtrl", function ($scope, centsa) {
         });
         if(result.value) {
             centsa.general.deleteController(email)
-            .then(() => $scope.controllers.splice($scope.controllers.findIndex(c => c==email), 1));
+            .then(() => $scope.controllers.splice($scope.controllers.findIndex(c => c == email), 1));
         }
+    };
+
+    $scope.readNotifications = () => {
+        centsa.general.readNotifications().then(() => {
+            $rootScope.notifications.forEach(n => n.read = true);
+        });
+    };
+
+    $scope.deleteNotification = id => {
+        centsa.general.deleteNotification(id).then(() => {
+            $rootScope.notifications = $rootScope.notifications.filter(n => n.id != id);
+        });
     };
 });
 

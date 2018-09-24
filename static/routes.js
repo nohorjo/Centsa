@@ -17,9 +17,9 @@ app.config(function($routeProvider) {
 	}).when("/import", {
 		templateUrl : "import/view.html",
 		controller : "importCtrl"
-	}).when("/users", {
-		templateUrl : "users/view.html",
-		controller : "usersCtrl"
+	}).when("/user", {
+		templateUrl : "user/view.html",
+		controller : "userCtrl"
 	}).otherwise({
 		redirectTo : '/summary'
 	});

@@ -106,6 +106,18 @@ const centsa = function ($http) {
             deleteController(email) {
                 console.log('delete controller', email);
                 return $http.delete(`${apiUrl}/controllers/${encodeURIComponent(email)}`);
+            },
+            getNotifications() {
+                console.log('getting notifications');
+                return $http.get(`${apiUrl}/notifications`);
+            },
+            deleteNotification(id) {
+                console.log('deleting notification', id);
+                return $http.delete(`${apiUrl}/notifications/${id}`);
+            },
+            readNotifications() {
+                console.log('update read notifications');
+                return $http.get(`${apiUrl}/notifications/update`);
             }
         };
     })();

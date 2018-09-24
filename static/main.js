@@ -4,6 +4,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     $scope.name = $cookies.get('name');
     $scope.currentUser = $cookies.get('currentUser') || '-1';
     $scope.controllees = [];
+    $rootScope.notifications = [];
 
     $rootScope.formatDate = date => {
         if (date.constructor == String) {
@@ -70,6 +71,8 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
 
     centsa.general.controllees().then(resp => $scope.controllees = resp.data);
+
+    centsa.general.getNotifications().then(({data}) => $rootScope.notifications = data);
 
 });
 

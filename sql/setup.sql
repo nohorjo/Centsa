@@ -14,7 +14,16 @@ CREATE TABLE users
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
+    password VARCHAR(50),
     UNIQUE(email)
+);
+CREATE TABLE notifications
+(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    message VARCHAR(500) NOT NULL,
+    user_id BIGINT NOT NULL,
+    read BOOL NOT NULL DEFAULT FALSE,
+    UNIQUE(message,user_id)
 );
 CREATE TABLE usercontrol
 (

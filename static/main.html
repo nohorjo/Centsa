@@ -41,7 +41,7 @@
 	<script src="types/controller.js"></script>
 	<script src="expenses/controller.js"></script>
 	<script src="import/controller.js"></script>
-	<script src="users/controller.js"></script>
+	<script src="user/controller.js"></script>
 
 	<script src="login.js"></script>
 </head>
@@ -49,13 +49,16 @@
 <body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
 	<div class="sidebar">
 		<div>
+                        <div class="notify-container">
+                            <a href="#!user" data-ng-class="{'active':isActive('/user')}">My account</a>
+                            <span class="notify-bubble" data-ng-hide="(notifications | filter:read=false).length == 0">{{(notifications | filter:read=false).length}}</span>
+                        </div>
 			<a href="#!summary" data-ng-class="{'active':isActive('/summary')}">Summary</a>
 			<a href="#!transactions" data-ng-class="{'active':isActive('/transactions')}" data-ng-click="resetFilter()">Transactions</a>
 			<a href="#!accounts" data-ng-class="{'active':isActive('/accounts')}">Accounts</a>
 			<a href="#!types" data-ng-class="{'active':isActive('/types')}">Types</a>
 			<a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}">Expenses &amp; Income</a>
 			<a href="#!import" data-ng-class="{'active':isActive('/import')}">Import</a>
-			<a href="#!users" data-ng-class="{'active':isActive('/users')}">Controller Users</a>
 		</div>
 	</div>
 	<div class="header" style="background: {{ currentUser == -1 ? 'inital' : '#e0a3a3' }}">

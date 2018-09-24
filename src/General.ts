@@ -20,6 +20,7 @@ import {
 import { getSessionStore } from './index';
 import log from './log';
 import { getSummary } from './dao/Transactions';
+import { getNotifications, deleteNotification, readNotifications } from './dao/Notifications';
 
 log('init general');
 
@@ -322,6 +323,50 @@ route.delete('/controllers/:email', (req, resp) => {
             resp.sendStatus(201);
         }
     });        
+});
+
+// =================== NOTIFICATIONS
+route.get('/notifications', (req, resp) => {
+    const { user_id } = req.session;
+    log('getting notifications', user_id);
+    getNotifications(user_id, (err, results) => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            log('returning notifications');
+            resp.send(results);
+        }
+    });
+});
+
+route.delete('/notifications/:id', (req, resp) => {
+    const { user_id } = req.session;
+    const { id } = req.param;
+    log('deleting notification', id);
+    deleteNotification(user_id, id, err => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            log('deleted notification');
+            resp.sendStatus(201);
+        }
+    });
+});
+
+route.get('/notifications/update', (req, resp) => {
+    const { user_id } = req.session;
+    log('read notifications', user_id);
+    readNotifications(user_id, err => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            log('updated notification');
+            resp.sendStatus(201);
+        }
+    });
 });
 
 const _route = Router();
