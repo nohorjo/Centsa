@@ -2,8 +2,8 @@
     let editor, password, mode;
 
     document.addEventListener("DOMContentLoaded", () => {
-        password = document.getElementById('password').value = window.sessionStorage.getItem('password');
-        mode = window.sessionStorage.getItem('mode') || document.querySelector('input[name="mode"]:checked').value;
+        password = document.getElementById('password').value = window.localStorage.getItem('password');
+        mode = window.localStorage.getItem('mode') || document.querySelector('input[name="mode"]:checked').value;
         document.querySelector(`input[value="${mode}"]`).checked = true;
 
         editor = ace.edit('editor');
@@ -13,26 +13,26 @@
         editor.setOptions({
             maxLines: Infinity
         });
-        editor.setValue(window.sessionStorage.getItem(mode + 'command') || '');
+        editor.setValue(window.localStorage.getItem(mode + 'command') || '');
 
         document.getElementById('editor').addEventListener('keyup', e => e.ctrlKey && e.keyCode == 13 && window.execute(5));
     });
 
     window.updatePassword = () => {
         password = document.getElementById('password').value;
-        window.sessionStorage.setItem('password', password);
+        window.localStorage.setItem('password', password);
     };
 
     window.updateMode = () => {
         mode = document.querySelector('input[name="mode"]:checked').value;
         editor.session.setMode("ace/mode/" + mode);
-        window.sessionStorage.setItem('mode', mode);
-        editor.setValue(window.sessionStorage.getItem(mode + 'command') || '');
+        window.localStorage.setItem('mode', mode);
+        editor.setValue(window.localStorage.getItem(mode + 'command') || '');
     };
 
     window.execute = retries => {
         const command = editor.session.getValue();
-        window.sessionStorage.setItem(mode + 'command', command);
+        window.localStorage.setItem(mode + 'command', command);
         const token = otplib.authenticator.generate(password);
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
