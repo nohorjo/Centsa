@@ -5,7 +5,7 @@
         </button>
     </h5>
     <div id="notifications" class="collapse">
-        <div class="notification" data-ng-repeat="n in notifications" data-ng-class="{read: n.read}">
+        <div class="notification" data-ng-repeat="n in notifications" data-ng-class="{read: n.is_read}">
             {{n.message}} <a class="float-right" href="" data-ng-click="deleteNotification(n.id)">Dismiss</a>
         </div>
     </div>

@@ -29,7 +29,7 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
 
     $scope.readNotifications = () => {
         centsa.general.readNotifications().then(() => {
-            $rootScope.notifications.forEach(n => n.read = true);
+            $rootScope.notifications.forEach(n => n.is_read = true);
         });
     };
 

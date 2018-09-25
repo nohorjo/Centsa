@@ -51,7 +51,7 @@
 		<div>
                         <div class="notify-container">
                             <a href="#!user" data-ng-class="{'active':isActive('/user')}">My account</a>
-                            <span class="notify-bubble" data-ng-hide="(notifications | filter:read=false).length == 0">{{(notifications | filter:read=false).length}}</span>
+                            <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
                         </div>
 			<a href="#!summary" data-ng-class="{'active':isActive('/summary')}">Summary</a>
 			<a href="#!transactions" data-ng-class="{'active':isActive('/transactions')}" data-ng-click="resetFilter()">Transactions</a>

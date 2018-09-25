@@ -4,6 +4,6 @@ CREATE TABLE notifications
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     message VARCHAR(500) NOT NULL,
     user_id BIGINT NOT NULL,
-    read BOOL NOT NULL DEFAULT FALSE,
+    is_read BOOL NOT NULL DEFAULT FALSE,
     UNIQUE(message,user_id)
 );
