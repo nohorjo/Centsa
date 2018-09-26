@@ -125,7 +125,8 @@ describe("Authentication", () => {
             }, {
                     cookie: cookieSpy,
                     sendStatus: sendStatusSpy,
-                    status: statusStub
+                    status: statusStub,
+                    clearCookie: () => {}
                 });
 
             expect(cookieSpy.calledOnce).to.be.true;

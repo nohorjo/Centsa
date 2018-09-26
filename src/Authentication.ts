@@ -31,6 +31,7 @@ export const login = async (req, res) => {
         log('session', req.session);
 
         res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
+        res.clearCookie('currentUser');
         res.sendStatus(201);
     } catch (e) {
         log.error(e);
