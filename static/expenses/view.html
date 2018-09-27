@@ -1,5 +1,30 @@
 <h4>Summary</h4>
-<p>Approximate total daily active expenses ( total | auto ): {{ (totalActiveExpenses/100).toFixed(2) || 0 }} | {{ (totalAutoExpenses/100).toFixed(2) || 0 }}</p>
+<table class="table-condensed">
+    <thead>
+        <tr>
+            <th>Approximate total active expenses</th>
+            <th>Total</th>
+            <th>Auto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Daily</td>
+            <td>{{ (totalActiveExpenses/100).toFixed(2) || 0 }}</td>
+            <td>{{ (totalAutoExpenses/100).toFixed(2) || 0 }}</td>
+        </tr>
+        <tr>
+            <td>Weekly</td>
+            <td>{{ ((totalActiveExpenses*7)/100).toFixed(2) || 0 }}</td>
+            <td>{{ ((totalAutoExpenses*7)/100).toFixed(2) || 0 }}</td>
+        </tr>
+        <tr>
+            <td>Monthly</td>
+            <td>{{ ((totalActiveExpenses*30)/100).toFixed(2) || 0 }}</td>
+            <td>{{ ((totalAutoExpenses*30)/100).toFixed(2) || 0 }}</td>
+        </tr>
+    </tbody>
+</table>
 <form name="GoalForm" data-ng-submit="saveGoal()">
     <h4>Savings goal</h4>
     <p>Create an expense to set aside funds</p>
