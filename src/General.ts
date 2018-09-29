@@ -15,12 +15,21 @@ import {
     getControllers,
     addController,
     deleteController,
-    getUserAETs
+    getUserAETs,
+    deleteUser,
+    updatePassword,
 } from './dao/Users';
 import { getSessionStore } from './index';
 import log from './log';
 import { getSummary } from './dao/Transactions';
-import { getNotifications, deleteNotification, readNotifications } from './dao/Notifications';
+import {
+    getNotifications,
+    deleteNotification,
+    readNotifications,
+} from './dao/Notifications';
+import { logout } from './Authentication';
+import { createHash } from 'crypto';
+import { setSetting } from './dao/Settings';
 
 log('init general');
 
@@ -31,7 +40,7 @@ const SAVING_TEST = /Saving (\d{4}\/\d{2}\/\d{2}): /;
 
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
-    const { userData : { user_id } } = req.session;
+    const { user_id } = req.session.userData;
     const today:any = new Date(req.get('x-date'));
     log('get budget', mode);
     const respond = budget => {
@@ -327,7 +336,7 @@ route.delete('/controllers/:email', (req, resp) => {
 
 // =================== NOTIFICATIONS
 route.get('/notifications', (req, resp) => {
-    const { user_id } = req.session;
+    const { user_id } = req.session.userData;
     log('getting notifications', user_id);
     getNotifications(user_id, (err, results) => {
         if (err) {
@@ -341,7 +350,7 @@ route.get('/notifications', (req, resp) => {
 });
 
 route.delete('/notifications/:id', (req, resp) => {
-    const { user_id } = req.session;
+    const { user_id } = req.session.userData;
     const { id } = req.param;
     log('deleting notification', id);
     deleteNotification(user_id, id, err => {
@@ -356,7 +365,7 @@ route.delete('/notifications/:id', (req, resp) => {
 });
 
 route.get('/notifications/update', (req, resp) => {
-    const { user_id } = req.session;
+    const { user_id } = req.session.userData;
     log('read notifications', user_id);
     readNotifications(user_id, err => {
         if (err) {
@@ -365,6 +374,55 @@ route.get('/notifications/update', (req, resp) => {
         } else {
             log('updated notification');
             resp.sendStatus(201);
+        }
+    });
+});
+
+route.delete('/deleteUser', (req, resp) => {
+    const { user_id } = req.session.userData;
+    log('deleting user', user_id);
+    deleteUser(user_id, err => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            log('deleted user');
+            logout(req, resp);
+        }
+    });
+});
+
+route.post('/password', (req, resp) => {
+    const { user_id } = req.session.userData;
+    log('updating password', user_id);
+    req.body.newPassword = createHash('sha256').update(req.body.newPassword).digest('base64');
+    try {
+        req.body.oldPassword = createHash('sha256').update(req.body.oldPassword).digest('base64');
+    } catch (e) {}
+    updatePassword(user_id, req.body, (err, updated) => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else if (updated) {
+            setSetting(
+                {
+                    key: 'password.set',
+                    value: true
+                },
+                user_id,
+                err => {
+                    if (err) {
+                        log.error(err);
+                        resp.status(500).send(err);
+                    } else {
+                        log('updated password');
+                        resp.sendStatus(201);
+                    }
+                }
+            );
+        } else {
+            log.warn('wrong password update', req.ip);
+            resp.status(400).send('Wrong password');
         }
     });
 });

@@ -6,6 +6,7 @@ DROP TABLE accounts;
 DROP TABLE settings;
 DROP TABLE rules;
 DROP TABLE usercontrol;
+DROP TABLE notifications;
 DROP TABLE users;
 */
 

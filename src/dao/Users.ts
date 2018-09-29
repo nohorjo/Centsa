@@ -99,3 +99,31 @@ export const deleteController = (userId, email, cb) => {
         }
     );
 };
+
+export const deleteUser = (userId, cb) => {
+    pool.query(
+        `DELETE FROM transactions WHERE user_id=?;
+        DELETE FROM expenses WHERE user_id=?;
+        DELETE FROM types WHERE user_id=?;
+        DELETE FROM accounts WHERE user_id=?;
+        DELETE FROM settings WHERE user_id=?;
+        DELETE FROM rules WHERE user_id=?;
+        DELETE FROM usercontrol WHERE controller=? OR controllee=?;
+        DELETE FROM notifications WHERE user_id=?;
+        DELETE FROM users WHERE id=?;`,
+        Array(10).fill(userId),
+        cb
+    );
+};
+
+export const updatePassword = (userId, password, cb) => {
+    pool.query(
+        `UPDATE users SET password=? WHERE id=? AND ${password.oldPassword ? 'password=?' : 'password IS NULL'};`,
+        [
+            password.newPassword,
+            userId,
+            password.oldPassword,
+        ],
+        (err, result) => cb(err, err ||console.log(result, password, userId)|| !!result.affectedRows)
+    );
+};

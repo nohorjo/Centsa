@@ -118,6 +118,14 @@ const centsa = function ($http) {
             readNotifications() {
                 console.log('update read notifications');
                 return $http.get(`${apiUrl}/notifications/update`);
+            },
+            deleteUser() {
+                console.log('deleting user');
+                return $http.delete(`${apiUrl}/deleteUser`);
+            },
+            updatePassword(password) {
+                console.log('updating password', password);
+                return $http.post(`${apiUrl}/password`, password);
             }
         };
     })();
