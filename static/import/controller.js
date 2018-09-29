@@ -106,6 +106,13 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
                 });
             }
             $scope.rule = id.toString();
+            swal({
+                position: 'top-end',
+                type: 'success',
+                title: 'Updated successfully',
+                showConfirmButton: false,
+                timer: 1000
+            });
         });
     };
 
