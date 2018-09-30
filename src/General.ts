@@ -351,7 +351,7 @@ route.get('/notifications', (req, resp) => {
 
 route.delete('/notifications/:id', (req, resp) => {
     const { user_id } = req.session.userData;
-    const { id } = req.param;
+    const { id } = req.params;
     log('deleting notification', id);
     deleteNotification(user_id, id, err => {
         if (err) {

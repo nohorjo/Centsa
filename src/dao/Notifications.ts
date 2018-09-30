@@ -8,7 +8,7 @@ export const getNotifications = (userId, cb) => {
     );
 };
 
-export const deleteNotification = (id, userId, cb) => {
+export const deleteNotification = (userId, id, cb) => {
     pool.query(
         'DELETE FROM notifications WHERE user_id=? AND id=?;',
         [userId, id],
