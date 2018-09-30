@@ -70,9 +70,12 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
     
     $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
 
-    centsa.general.controllees().then(resp => $scope.controllees = resp);
+    centsa.general.controllees().then(resp => $scope.controllees = resp.data);
 
-    centsa.general.getNotifications().then(data => $rootScope.notifications = data);
+    centsa.general.getNotifications().then(({data}) => {
+        data.forEach(x => x.is_read = !!x.is_read);
+        $rootScope.notifications = data;
+    });
 
 });
 

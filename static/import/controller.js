@@ -1,8 +1,8 @@
 app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     $scope.rules = [];
     centsa.general.rules().then(resp => {
-        $scope.rules = resp;
-        $scope.rule = resp.find(x => x.name == "Default").id.toString();
+        $scope.rules = resp.data;
+        $scope.rule = resp.data.find(x => x.name == "Default").id.toString();
     });
 
     $scope.importProgress = {
@@ -69,9 +69,9 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     $scope.updateEditor = () => {
         if ($scope.rule) {
             centsa.general.rule($scope.rule).then(resp => {
-                const script = resp;
+                const script = resp.data;
                 editor.getSession().setValue(script);
-                $scope.rules.find(x => x.id == $scope.rule).script = resp;
+                $scope.rules.find(x => x.id == $scope.rule).script = resp.data;
             });
         }
     };
@@ -92,7 +92,8 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     $scope.saveRule = () => {
         console.log('save rule');
         const script = editor.getSession().getValue();
-        centsa.general.saveRule($scope.newRuleName, script).then(id => {
+        centsa.general.saveRule($scope.newRuleName, script).then(resp => {
+            const id = resp.data;
             const newRule = $scope.rules.find(x => x.name == $scope.newRuleName);
             if (newRule) {
                 newRule.script = script;

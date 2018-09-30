@@ -5,7 +5,7 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
     centsa.settings.get('password.set').then(data => {
         $scope.passwordSet = !!data;
     });
-    centsa.general.controllers().then(data => {
+    centsa.general.controllers().then(({data}) => {
         $scope.email = data.email;
         $scope.controllers = data.controllers;
     });

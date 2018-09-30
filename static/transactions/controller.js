@@ -27,14 +27,14 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         = $scope.transactions 
         = [];
 
-    centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp);
-    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp);
+    centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
+    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp.data);
     centsa.types.getAll({light: true}).then(resp => {
-        $scope.types = resp;
-        $scope.newTrans.type_id = newTrans.type_id = resp.find(a => a.name == "Other").id.toString();
+        $scope.types = resp.data;
+        $scope.newTrans.type_id = newTrans.type_id = resp.data.find(a => a.name == "Other").id.toString();
     });
-    centsa.expenses.getAll({light: true}).then(resp => $scope.expenses = resp);
-    centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp);
+    centsa.expenses.getAll({light: true}).then(resp => $scope.expenses = resp.data);
+    centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
 
     $scope.saveTrans = updating => {
         console.log('saving', {updating});
@@ -44,9 +44,9 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             if(!$scope.uniqueComments.includes($scope.newTrans.comment)) {
                 $scope.uniqueComments.push($scope.newTrans.comment);
             }
-            if (resp > 0) {
-                $scope.newTrans.id = resp;
-                centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp);
+            if (resp.data > 0) {
+                $scope.newTrans.id = resp.data;
+                centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
             }
             if (!updating) {
                 $scope.transactions.unshift($scope.newTrans);
@@ -108,7 +108,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         });
         if (result.value) {
             centsa.transactions.remove(id).then(() => {
-                centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp);
+                centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
                 $scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
                 $('#transModal').appendTo(".content").modal("hide");
             });
@@ -142,11 +142,11 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         }).then(resp => {
             $scope.currentPage = 2;
             $scope.transScrollTop();
-            $scope.transactions = resp;
+            $scope.transactions = resp.data;
             $scope.moreToLoad = $scope.transactions.length == 40;
             setFirstOfWeeks();
         });
-        centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp);
+        centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
     };
     $scope.reloadTrans();
 
@@ -186,8 +186,8 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                 sort: $scope.tabs[$scope.currentTab].sort,
                 filter: $rootScope.filter
             }).then(resp => {
-                $scope.transactions = $scope.transactions.concat(resp);
-                $scope.moreToLoad = resp.length;
+                $scope.transactions = $scope.transactions.concat(resp.data);
+                $scope.moreToLoad = resp.data.length;
                 setFirstOfWeeks();
             });
         }
