@@ -6,6 +6,7 @@ DROP TABLE accounts;
 DROP TABLE settings;
 DROP TABLE rules;
 DROP TABLE usercontrol;
+DROP TABLE notifications;
 DROP TABLE users;
 */
 
@@ -14,7 +15,16 @@ CREATE TABLE users
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
+    password VARCHAR(50),
     UNIQUE(email)
+);
+CREATE TABLE notifications
+(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    message VARCHAR(500) NOT NULL,
+    user_id BIGINT NOT NULL,
+    is_read BOOL NOT NULL DEFAULT FALSE,
+    UNIQUE(message,user_id)
 );
 CREATE TABLE usercontrol
 (

@@ -1,0 +1,102 @@
+<div>
+    <h5>
+        <button class="btn accordion-header" type="button" data-toggle="collapse" data-target="#notifications" data-ng-click="readNotifications()">
+            <div class="notify-container">
+                <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
+              Notifications
+            </div>
+        </button>
+    </h5>
+    <div id="notifications" class="collapse">
+        <div class="notification" data-ng-repeat="n in notifications" data-ng-class="{read: n.is_read}">
+            {{n.message}} <a class="float-right" href="" data-ng-click="deleteNotification(n.id)">Dismiss</a>
+        </div>
+        <p data-ng-hide="!!notifications.length">
+            You have no notifications
+        </p>
+    </div>
+</div>
+<div>
+    <h5>
+        <button class="btn accordion-header" type="button" data-toggle="collapse" data-target="#controllerUsers">
+          Controller users
+        </button>
+    </h5>
+    <div id="controllerUsers" class="collapse">
+        <p>These users will be able to switch to your account using the user picker
+            in the header bar.</p>
+        <p>
+            <strong>This will allow them to make changes as well as add and remove data from your account!</strong>
+        </p>
+        <p> The email for the current logged in account is: <strong>{{ email }}</strong></p>
+        <form name="controllerForm" data-ng-submit="addController()">
+            <table id="controllerTable" class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th width="80%" data-ng-click="sort('email', controllers)">Email</th>
+                        <th width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="email" class="form-control" required="required" data-ng-model="newController">
+                        </td>
+                        <td>
+                            <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': controllerForm.$invalid }"
+                                data-ng-disabled="controllerForm.$invalid">
+                        </td>
+                    </tr>
+                    <tr data-ng-repeat="email in controllers">
+                        <td>{{ email }}</td>
+                        <td data-ng-init="a.nameOld = a.name">
+                            <a href="" data-ng-click="deleteController(email)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<div>
+    <h5>
+        <button class="btn accordion-header" type="button" data-toggle="collapse" data-target="#userSettings">
+          User settings
+        </button>
+    </h5>
+    <div id="userSettings" class="collapse">
+        <table class="table-condensed">
+            <tbody>
+                <tr data-ng-show="passwordSet">
+                    <td>Old Password</td>
+                    <td>
+                        <input type="password" class="form-control" data-ng-model="passwordData.oldPassword" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>New Password</td>
+                    <td>
+                        <input type="password" class="form-control"
+                            data-ng-model="passwordData.newPassword"
+                            data-ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Confirm Password</td>
+                    <td>
+                        <input type="password" class="form-control"
+                            data-ng-model="passwordData.confirmPassword"
+                            data-ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="button" class="btn btn-danger" value="Delete account" data-ng-click="deleteUser()" />
+        <input type="button" class="btn btn-primary" value="Update password"
+            data-ng-click="updatePassword()"
+            data-ng-disabled="passwordData.confirmPassword != passwordData.newPassword"
+        />
+    </div>
+</div>

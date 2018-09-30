@@ -290,3 +290,32 @@ tr#budgetMode input {
 #FilterForm td {
     vertical-align: middle;
 }
+
+button.accordion-header {
+    width: 100%;
+    border: #428bca solid 1px;
+    color: #428bca;
+}
+
+div.notification {
+    width: 100%;
+}
+
+div.notification.read {
+    color: #d0d0d0;
+}
+
+.notify-container {
+    position: relative;
+}
+.notify-bubble {
+     position: absolute;
+     top: -3px;
+     right: 5px;
+     padding: 3px 8px;
+     background-color: #d9534f;
+     color: white;
+     font-size: 0.9em;
+     border-radius: 50%;
+     box-shadow: 1px 1px 1px gray;
+}

@@ -24,7 +24,6 @@ export const getOrCreateUser = data => {
                                     if (err) reject(err);
                                     else resolve(user);
                                 });
-                                resolve(userId);
                             }
                         });
                     }
