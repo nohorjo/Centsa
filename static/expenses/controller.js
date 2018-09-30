@@ -1,9 +1,9 @@
 app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
     $scope.trust = $sce.trustAsHtml;
     $scope.expenses = $scope.types = $scope.accounts = [];
-    centsa.expenses.getAll().then(resp => $scope.expenses = resp.data);
-    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp.data);
-    centsa.types.getAll({light: true}).then(resp => $scope.types = resp.data);
+    centsa.expenses.getAll().then(resp => $scope.expenses = resp);
+    centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp);
+    centsa.types.getAll({light: true}).then(resp => $scope.types = resp);
 
     $scope.frequency = {
         type: "basic",
@@ -16,8 +16,8 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     const getActiveTotals = () => {
         console.log('get totals');
-        centsa.expenses.totalActive(false).then(resp => $scope.totalActiveExpenses = resp.data);
-        centsa.expenses.totalActive(true).then(resp => $scope.totalAutoExpenses = resp.data);
+        centsa.expenses.totalActive(false).then(resp => $scope.totalActiveExpenses = resp);
+        centsa.expenses.totalActive(true).then(resp => $scope.totalAutoExpenses = resp);
     }
 
     getActiveTotals();
@@ -40,7 +40,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             delete $scope.newExpense.account_id;
         }
         centsa.expenses.insert($scope.newExpense).then(resp => {
-            $scope.newExpense.id = resp.data;
+            $scope.newExpense.id = resp;
             $scope.expenses.unshift($scope.newExpense);
             getActiveTotals();
             $scope.newExpense = {...newExpense};
@@ -244,7 +244,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
             started: new Date(),
             type_id: $scope.types.find(t => t.name == "Other").id
         };
-        centsa.expenses.insert(expense).then(({data}) => {
+        centsa.expenses.insert(expense).then(data => {
             expense.id = data;
             $scope.expenses.push(expense);
             getActiveTotals();

@@ -1,7 +1,10 @@
 <div>
     <h5>
         <button class="btn accordion-header" type="button" data-toggle="collapse" data-target="#notifications" data-ng-click="readNotifications()">
-          Notifications
+            <div class="notify-container">
+                <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
+              Notifications
+            </div>
         </button>
     </h5>
     <div id="notifications" class="collapse">

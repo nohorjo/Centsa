@@ -310,7 +310,7 @@ div.notification.read {
 }
 .notify-bubble {
      position: absolute;
-     top: -8px;
+     top: -3px;
      right: 5px;
      padding: 3px 8px;
      background-color: #d9534f;

@@ -1,7 +1,7 @@
 app.controller("typesCtrl", function ($scope, centsa) {
     $scope.types = [];
     centsa.types.getAll().then(resp => {
-        $scope.types = resp.data;
+        $scope.types = resp;
         $scope.drawPie();
     });
 
@@ -11,7 +11,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
     var newType = {...$scope.newType};
 
     $scope.saveType = () => centsa.types.insert($scope.newType).then(resp => {
-        $scope.newType.id = resp.data;
+        $scope.newType.id = resp;
         $scope.newType.sum = 0;
         $scope.types.unshift($scope.newType);
         $scope.newType = {...newType};

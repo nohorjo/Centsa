@@ -1,8 +1,8 @@
 app.controller("accountsCtrl", function ($scope, centsa) {
     $scope.accounts = [];
     let otherType = null;
-    centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
-    centsa.types.getAll().then(resp => otherType = resp.data.find(t => t.name == 'Other').id);
+    centsa.accounts.getAll().then(resp => $scope.accounts = resp);
+    centsa.types.getAll().then(resp => otherType = resp.find(t => t.name == 'Other').id);
     $scope.defaultAccountId = "";
 
     centsa.settings.get("default.account").then(data => $scope.defaultAccountId = data.toString());
@@ -24,7 +24,7 @@ app.controller("accountsCtrl", function ($scope, centsa) {
 
     $scope.saveAccount = () => {
         centsa.accounts.insert($scope.newAccount).then(resp => {
-            $scope.newAccount.id = resp.data;
+            $scope.newAccount.id = resp;
             $scope.accounts.unshift($scope.newAccount);
             if ($scope.newAccount.balance) {
                 centsa.transactions.insert({

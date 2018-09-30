@@ -5,7 +5,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     $scope.cumulativeSums = [];
     $scope.getBudget = () => {
         centsa.settings.set("budget.mode", JSON.stringify($scope.budgetMode));
-        centsa.general.budget($scope.budgetMode).then(({data}) => $scope.budget = data);
+        centsa.general.budget($scope.budgetMode).then(data => $scope.budget = data);
     };
 
     $scope.filterDate = $event => {
@@ -44,7 +44,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             $scope.movingAvgDays = setting || '30';
         })
     ]).then(([resp]) => {
-        $scope.cumulativeSums = resp.data.map(x => ({
+        $scope.cumulativeSums = resp.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
             sum: x.sum / 100
         })).sort(byDate)
