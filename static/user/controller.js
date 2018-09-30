@@ -60,8 +60,11 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
     };
 
     $scope.updatePassword = () => {
-        $scope.passwordSet = true;
         centsa.general.updatePassword($scope.passwordData).then(() => {
+            $scope.passwordSet = true;
+            $scope.passwordData.oldPassword = "";
+            $scope.passwordData.newPassword = "";
+            $scope.passwordData.confirmPassword = "";
             swal({
                 position: 'top-end',
                 type: 'success',
