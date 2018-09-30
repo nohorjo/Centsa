@@ -5,7 +5,9 @@ app.controller("accountsCtrl", function ($scope, centsa) {
     centsa.types.getAll().then(resp => otherType = resp.data.find(t => t.name == 'Other').id);
     $scope.defaultAccountId = "";
 
-    centsa.settings.get("default.account").then(data => $scope.defaultAccountId = data.toString());
+    centsa.settings.get("default.account").then(data => $scope.$apply(() => {
+        $scope.defaultAccountId = data.toString();
+    }));
 
     $scope.newAccount = {
         name: "",

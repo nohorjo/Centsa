@@ -14,7 +14,9 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         date: new Date().formatDate("yyyy/MM/dd")
     };
     let newTrans = {...$scope.newTrans};
-    centsa.settings.get("default.account").then(data => $scope.newTrans.account_id = newTrans.account_id = data.toString());
+    centsa.settings.get("default.account").then(data => $scope.$apply(() => {
+        $scope.newTrans.account_id = newTrans.account_id = data.toString();
+    }));
 
     $scope.transactionSummary = {
         min: 0,

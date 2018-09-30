@@ -154,7 +154,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $('.dropdown-menu').click(e => e.stopPropagation());
 
-    $('.dropdown-menu').mouseout(() => $scope.$apply(function () {
+    $('.dropdown-menu').mouseout(() => $scope.$apply(() => {
         try {
             if ($scope.frequency.date == 0) {
                 throw "Invalid date";

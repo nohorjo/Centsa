@@ -21,7 +21,7 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         }
     };
 
-    centsa.settings.get("budget.mode").then(budgetMode => {
+    centsa.settings.get("budget.mode").then(budgetMode => $scope.$apply(() => {
         $scope.budgetMode = {
             mode: 'expense',
             expenseRounds: 1,
@@ -36,13 +36,13 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             $scope.initDatePickers();
         }
         $scope.getBudget();
-    });
+    }));
 
     Promise.all([
         centsa.transactions.getCumulativeSums(),
-        centsa.settings.get("moving.average.days").then(setting => {
+        centsa.settings.get("moving.average.days").then(setting => $scope.$apply(() => {
             $scope.movingAvgDays = setting || '30';
-        })
+        }))
     ]).then(([resp]) => {
         $scope.cumulativeSums = resp.data.map(x => ({
             date: new Date(x.date).formatDate("yyyy/MM/dd"),
