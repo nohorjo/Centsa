@@ -395,9 +395,9 @@ route.delete('/deleteUser', (req, resp) => {
 route.post('/password', (req, resp) => {
     const { user_id } = req.session.userData;
     log('updating password', user_id);
-    req.body.newPassword = createHash('sha256').update(req.body.newPassword).digest('base64');
+    req.body.newPassword = createHash('sha256').update(user_id + req.body.newPassword).digest('base64');
     try {
-        req.body.oldPassword = createHash('sha256').update(req.body.oldPassword).digest('base64');
+        req.body.oldPassword = createHash('sha256').update(user_id + req.body.oldPassword).digest('base64');
     } catch (e) {}
     updatePassword(user_id, req.body, (err, updated) => {
         if (err) {
