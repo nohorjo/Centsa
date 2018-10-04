@@ -18,8 +18,10 @@ export const authSkipLogin = (req, resp, next) => (req.session && req.session.us
 export const login = async (req, res) => {
     try {
         let details;
-        if(req.body.google_token) {
+        if (req.body.google_token) {
             details = await getDetailsFromGoogle(req.body.google_token);
+        } else if (req.body.manual) {
+            details = authenticateUser(req.body);
         } else {
             details = await getDetailsFromFB(req.body);
         }
@@ -27,6 +29,7 @@ export const login = async (req, res) => {
             ...details,
             ...(await Users.getOrCreateUser(details))
         };
+
         req.session.userData.original_user_id = req.session.userData.user_id;
         log('session', req.session);
 
@@ -35,7 +38,7 @@ export const login = async (req, res) => {
         res.sendStatus(201);
     } catch (e) {
         log.error(e);
-        res.status(500).send(e.toString());
+        res.status(e == "Unauthorized" ? 401 : 500).send(e.toString());
     }
 };
 
@@ -94,6 +97,14 @@ export const loginScript = (req, resp) => {
                     gapi.signin2.render('g-signin2', {onsuccess: window.onSignIn});
                 });
 
+                window.login = () => {
+                    loginRequest({
+                        manual: true,
+                        email: $('#email').val(),
+                        password: $('#password').val()
+                    });
+                };
+
                 window.logout = () => {
                     $.ajax({
                         url: authUrl,
@@ -113,11 +124,12 @@ export const loginScript = (req, resp) => {
                         contentType: 'application/json',
                         data: JSON.stringify(data),
                         success: () => {
-                            signOut();
+                            signOut && signOut();
                             window.location.hash = "";
                             window.location.pathname = "main.html";
-                        }
-                    });
+                        },
+                        error: message => swal("Error", message, "error")
+                  });
                 }
             }`.replace('FB_APP_ID', process.env.FB_APP_ID).replace('GOOGLE_CLIENT_ID', process.env.GOOGLE_CLIENT_ID)
         })()`
@@ -143,3 +155,9 @@ const getDetailsFromFB = async ({userID, accessToken}:any = {}) => {
     return (await axios.get(url)).data;
 };
 
+const authenticateUser = data => {
+    return {
+        email: data.email,
+        name: data.email.split('@')[0]
+    }
+};

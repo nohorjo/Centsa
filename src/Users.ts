@@ -32,3 +32,7 @@ export const getOrCreateUser = data => {
         });
     });
 };
+
+export const authenticateUser = data => {
+    
+};
