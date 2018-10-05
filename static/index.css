@@ -32,6 +32,11 @@ body {
     margin: 25% 0;
 }
 
-.login * {
+.login>* {
     margin-top: 1em;
+}
+
+#g-signin2 {
+    display: flex;
+    justify-content: center;
 }
