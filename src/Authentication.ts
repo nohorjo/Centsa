@@ -1,6 +1,9 @@
 import axios from 'axios';
 import * as Users from './Users';
+import * as UsersDao from './dao/Users';
 import log from './log';
+import { createHash } from 'crypto';
+import { setSetting } from './dao/Settings';
 
 log('init authentication');
 
@@ -17,23 +20,52 @@ export const authSkipLogin = (req, resp, next) => (req.session && req.session.us
 
 export const login = async (req, res) => {
     try {
-        let details;
-        if (req.body.google_token) {
-            details = await getDetailsFromGoogle(req.body.google_token);
-        } else if (req.body.manual) {
-            details = authenticateUser(req.body);
+        const { body: data } = req;
+        let details, newManualUser;
+        if (data.google_token) {
+            details = await getDetailsFromGoogle(data.google_token);
+        } else if (data.manual) {
+            await authenticateUser(data);
+            newManualUser = true;
+            details = {
+                email: data.email,
+                name: data.name
+            };
         } else {
-            details = await getDetailsFromFB(req.body);
+            details = await getDetailsFromFB(data);
         }
         req.session.userData = {
             ...details,
             ...(await Users.getOrCreateUser(details))
         };
 
+        if (newManualUser) {
+            const { user_id }  = req.session.userData;
+            await new Promise((resolve, reject) => {
+                UsersDao.updatePassword(
+                    user_id,
+                    {
+                         newPassword: createHash('sha256').update(user_id.toString() + data.password).digest('base64')
+                    },
+                    err => err ? reject(err) : resolve()
+                );
+            });
+            await new Promise((resolve, reject) => {
+                setSetting(
+                    {
+                        key: 'password.set',
+                        value: true
+                    },
+                    user_id,
+                    err => err ? reject(err) : resolve()
+                );
+            });
+        }
+
         req.session.userData.original_user_id = req.session.userData.user_id;
         log('session', req.session);
 
-        res.cookie('name', details.name, { maxAge: 31536000000, httpOnly: false });
+        res.cookie('name', req.session.userData.name, { maxAge: 31536000000, httpOnly: false });
         res.clearCookie('currentUser');
         res.sendStatus(201);
     } catch (e) {
@@ -55,12 +87,11 @@ export const logout = (req, res) => {
 
 export const loginScript = (req, resp) => {
     resp.status(200).send(
-        `(${
-           `() => {
+        `(() => {
                 const authUrl = '/login';
                 window.fbInit = () => {
                     const initConfig = {
-                        appId: 'FB_APP_ID',
+                        appId: '${process.env.FB_APP_ID}',
                         cookie: true,
                         xfbml: true,
                         version: 'v2.11'
@@ -93,16 +124,32 @@ export const loginScript = (req, resp) => {
                 };
 
                 window.googleInit = () => gapi.load('auth2', () => {
-                    gapi.auth2.init({client_id: 'GOOGLE_CLIENT_ID'});
+                    gapi.auth2.init({client_id: '${process.env.GOOGLE_CLIENT_ID}'});
                     gapi.signin2.render('g-signin2', {onsuccess: window.onSignIn});
                 });
 
-                window.login = () => {
-                    loginRequest({
-                        manual: true,
-                        email: $('#email').val(),
-                        password: $('#password').val()
-                    });
+                window.login = isNew => {
+                    if (!isNew || $('#newPassword').val() == $('#confirmPassword').val()) {
+                        loginRequest({
+                            isNew,
+                            manual: true,
+                            name: $('#name').val(),
+                            email: $(isNew ? '#newEmail' : '#email').val(),
+                            password: $(isNew ? '#newPassword' : '#password').val()
+                        });
+                    }
+                };
+
+                window.validatePassword = () => {
+                    if ($('#newPassword').val() != $('#confirmPassword').val()) {
+                        $('#newPassword').addClass('alert-danger');
+                        $('#confirmPassword').addClass('alert-danger')
+                        $('#signup').attr('disabled', true);
+                    } else {
+                        $('#newPassword').removeClass('alert-danger');
+                        $('#confirmPassword').removeClass('alert-danger')
+                        $('#signup').attr('disabled', false);
+                    }
                 };
 
                 window.logout = () => {
@@ -128,11 +175,10 @@ export const loginScript = (req, resp) => {
                             window.location.hash = "";
                             window.location.pathname = "main.html";
                         },
-                        error: message => swal("Error", message, "error")
+                        error: message => swal("Error", message.responseText, "error")
                   });
                 }
-            }`.replace('FB_APP_ID', process.env.FB_APP_ID).replace('GOOGLE_CLIENT_ID', process.env.GOOGLE_CLIENT_ID)
-        })()`
+            })()`
     );
 };
 
@@ -155,9 +201,13 @@ const getDetailsFromFB = async ({userID, accessToken}:any = {}) => {
     return (await axios.get(url)).data;
 };
 
-const authenticateUser = data => {
-    return {
-        email: data.email,
-        name: data.email.split('@')[0]
+const authenticateUser = async data => {
+    const { user_id = 0, password } = await Users.getIdPassword(data.email);
+    const hashed = createHash('sha256').update(user_id.toString() + data.password).digest('base64');
+    if (
+        (user_id && (data.isNew || hashed !== password))
+        || (!user_id && !data.isNew)
+    ) {
+        throw 'Unauthorized';
     }
 };

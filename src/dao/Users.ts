@@ -6,8 +6,9 @@ export const getUserAETs = (emailOrId, cb) => {
         `${getId};
         SELECT id, name FROM accounts WHERE user_id=(${getId});
         SELECT id, name, type_id FROM expenses WHERE user_id=(${getId});
-        SELECT id, name FROM types WHERE user_id=(${getId});`, 
-        Array(4).fill(emailOrId),
+        SELECT id, name FROM types WHERE user_id=(${getId});
+        SELECT name FROM users WHERE id=(${getId})`, 
+        Array(5).fill(emailOrId),
         (err, data) => {
             if (err) {
                 cb(err);
@@ -18,7 +19,8 @@ export const getUserAETs = (emailOrId, cb) => {
                     user_id: data[0][0].id,
                     accounts: data[1],
                     expenses: data[2],
-                    types: data[3]
+                    types: data[3],
+                    name: data[4][0].name
                 });
             }
         }
@@ -124,6 +126,14 @@ export const updatePassword = (userId, password, cb) => {
             userId,
             password.oldPassword,
         ],
-        (err, result) => cb(err, err ||console.log(result, password, userId)|| !!result.affectedRows)
+        (err, result) => cb(err, err || !!result.affectedRows)
+    );
+};
+
+export const getIdPassword = (email, cb) => {
+    pool.query(
+        `SELECT id, password FROM users WHERE email=?;`,
+        [email],
+        cb
     );
 };

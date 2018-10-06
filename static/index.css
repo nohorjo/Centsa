@@ -8,12 +8,12 @@ body {
 }
 
 .cookie-notice {
-    padding-top: 0.5em;
+    padding: 0.5em 150px;
     font-weight: bold;
     text-align: center;
     background: #171d42d2;
     color: #ff8c00;
-    position: absolute;
+    position: fixed;
     width: 100%;
     top: 0;
 }
@@ -29,7 +29,7 @@ body {
     text-align: center;
     padding: 1em;
     border-radius: 1em;
-    margin: 25% 0;
+    margin: 20% 0 0;
 }
 
 .login>* {
@@ -40,3 +40,9 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.manual {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+

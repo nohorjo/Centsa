@@ -16,21 +16,42 @@
 </head>
 
 <body onload="fbInit();googleInit()">
-    <a href="https://github.com/nohorjo/Centsa" target="_blank">
-    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
-      alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png">
-  </a>
     <div class="cookie-notice">Centsa uses cookies to store login state. By using this service you are agreeing
         to having these cookies stored on your device
     </div>
+    <a href="https://github.com/nohorjo/Centsa" target="_blank">
+        <img
+            style="position: absolute; top: 0; right: 0; border: 0;"
+            src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+            alt="Fork me on GitHub"
+            data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+        />
+    </a>
     <div class="container">
         <form class="login">
             <img src="icon.svg" alt="logo" height="100em" width="100em">
-            <input id="email" type="email" placeholder="email@example.com" class="form-control"
-                autocomplete="on" />
-            <input id="password" type="password" placeholder="password" class="form-control"
-                autocomplete="on" />
-            <input type="button" class="btn btn-primary" value="Login/Sign up" />
+            <div class="manual">
+                <div class="login">
+                    <h4>Existing user</h4>
+                    <input id="email" type="email" placeholder="email@example.com" class="form-control"
+                        autocomplete="on" />
+                    <input id="password" type="password" placeholder="password" class="form-control"
+                        autocomplete="on" />
+                    <input type="button" class="btn btn-primary" value="Login" onclick="login(false)" />
+                </div>
+                <div class="login">
+                    <h4>New user</h4>
+                    <input id="name" type="text" placeholder="name" class="form-control"
+                        autocomplete="on" />
+                    <input id="newEmail" type="email" placeholder="email@example.com" class="form-control"
+                        autocomplete="on" />
+                    <input id="newPassword" type="password" placeholder="password" class="form-control"
+                        autocomplete="on" onkeyup="validatePassword()"/>
+                    <input id="confirmPassword" type="password" placeholder="confirm password" class="form-control"
+                        autocomplete="on" onkeyup="validatePassword()" />
+                    <input id="signup" type="button" class="btn btn-primary" value="Sign up" onclick="login(true)" />
+                </div>
+            </div>
             <div class="fb-login-button" data-max-rows="3" data-size="large" data-button-type="login_with"
                 data-use-continue-as="true" data-scope="public_profile,email" onlogin="checkLoginState();"></div>
                 <div id="g-signin2"></div>

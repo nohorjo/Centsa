@@ -33,6 +33,18 @@ export const getOrCreateUser = data => {
     });
 };
 
-export const authenticateUser = data => {
-    
+export const getIdPassword = email => {
+    return new Promise((resolve, reject) => {
+        dao.getIdPassword(email, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                const [ existing = {} ] = result;
+                resolve({
+                    user_id: existing.id,
+                    password: existing.password
+                });
+            }
+        });
+    });
 };
