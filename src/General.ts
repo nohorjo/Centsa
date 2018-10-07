@@ -26,6 +26,7 @@ import {
     getNotifications,
     deleteNotification,
     readNotifications,
+    addNotification
 } from './dao/Notifications';
 import { logout } from './Authentication';
 import { createHash } from 'crypto';
@@ -36,7 +37,7 @@ log('init general');
 const route = Router();
 
 const DAY = 8.64e7;
-const SAVING_TEST = /Saving (\d{4}\/\d{2}\/\d{2}): /;
+const SAVING_TEST = /^Saving (\d{4}\/\d{2}\/\d{2}): /;
 
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
@@ -76,7 +77,14 @@ route.get("/budget", (req, resp) => {
                 if (match) {
                     return today >= new Date(match[1]);
                 }
-            }).forEach(({id}) => deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id)));
+            }).forEach(({id, name}) => {
+                deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id));
+                addNotification(
+                    user_id,
+                    `Savings goal ended: ${name.split(SAVING_TEST).pop()}`,
+                    err => err ? log.error(err) : log('goal notified')
+                );
+            });
             const goals = expenses.filter(e => SAVING_TEST.test(e.name))
                 .reduce((sum, e) => e.cost * (today - e.started) / DAY, 0);
             switch (mode.mode) {

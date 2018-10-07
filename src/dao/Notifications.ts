@@ -23,3 +23,11 @@ export const readNotifications = (userId, cb) => {
         cb
     );
 };
+
+export const addNotification = (user_id, message, cb) => {
+    pool.query(
+        `INSERT INTO notifications SET ?;`,
+        {user_id, message},
+        cb
+    );
+};
