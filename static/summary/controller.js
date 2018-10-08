@@ -6,6 +6,9 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
     $scope.getBudget = () => {
         centsa.settings.set("budget.mode", JSON.stringify($scope.budgetMode));
         centsa.general.budget($scope.budgetMode).then(({data}) => $scope.budget = data);
+        if ($scope.budgetMode.mode == "manual") {
+            $scope.initDatePickers();
+        }
     };
 
     $scope.filterDate = $event => {
