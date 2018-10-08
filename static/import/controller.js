@@ -70,7 +70,9 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
         if ($scope.rule) {
             centsa.general.rule($scope.rule).then(resp => {
                 const script = resp.data;
-                editor.getSession().setValue(script);
+                if (editor) {
+                    editor.getSession().setValue(script);
+                }
                 $scope.rules.find(x => x.id == $scope.rule).script = resp.data;
             });
         }
