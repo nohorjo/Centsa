@@ -1,7 +1,7 @@
 const app = angular.module("app", ["ngRoute", "ngCookies", "ngAnimate"]);
 
 app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $timeout, centsa) {
-    $scope.name = $cookies.get('name');
+    $rootScope.name = $cookies.get('name');
     $scope.currentUser = $cookies.get('currentUser') || '-1';
     $scope.controllees = [];
     $rootScope.notifications = [];

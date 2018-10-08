@@ -54,7 +54,7 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Confirm'
         });
-        if (result.value == $rootScope.name) {
+        if ($rootScope.name && result.value == $rootScope.name) {
             centsa.general.deleteUser().then(() => window.location.pathname = '/index.html');
         }
     };
