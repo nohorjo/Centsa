@@ -120,7 +120,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
                 type: 'success',
                 title: 'Updated successfully',
                 showConfirmButton: false,
-                timer: 1000
+                timer: 700
             });
         });
     };

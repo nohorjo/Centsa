@@ -70,7 +70,7 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
                 type: 'success',
                 title: 'Updated successfully',
                 showConfirmButton: false,
-                timer: 1000
+                timer: 700
             });
         });
     };
