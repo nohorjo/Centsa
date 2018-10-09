@@ -77,19 +77,26 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
             });
         }
     };
-    $scope.$watch('showEditor', show => {
-        if (show) {
-            console.log('show editor');
-            editor = ace.edit('editor');
-            editor.setTheme("ace/theme/chrome");
-            editor.session.setMode("ace/mode/javascript");
-            $scope.updateEditor();
-            editor.$blockScrolling = Infinity;
-            editor.setOptions({
-                maxLines: Infinity
-            });
-        }
-    });
+    $scope.$watch('showEditor', (() => {
+        let keyUpApplied = false;
+        return show => {
+            if (show) {
+                console.log('show editor');
+                if (!keyUpApplied) {
+                    $('#editor').keyup(e => e.ctrlKey && e.keyCode == 13 && $scope.saveRule());
+                    keyUpApplied = true;
+                }
+                editor = ace.edit('editor');
+                editor.setTheme("ace/theme/chrome");
+                editor.session.setMode("ace/mode/javascript");
+                $scope.updateEditor();
+                editor.$blockScrolling = Infinity;
+                editor.setOptions({
+                    maxLines: Infinity
+                });
+            }
+        };
+    })());
 
     $scope.saveRule = () => {
         console.log('save rule');
