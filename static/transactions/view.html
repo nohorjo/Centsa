@@ -129,8 +129,7 @@
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th width="5%" data-ng-click="sort('id')">ID</th>
-                    <th width="15%" data-ng-click="sort('date', 'id DESC')">Date</th>
+                    <th width="20%" data-ng-click="sort('date', 'id DESC')">Date</th>
                     <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
                     <th width="10%">Account</th>
                     <th width="10%">Type</th>
@@ -151,8 +150,7 @@
                         data-ng-click="editTrans(t)"
                         data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
                     >
-                        <td width="5%">{{ t.id }}</td>
-                        <td width="15%">{{ formatDate(t.date) }}</td>
+                        <td width="20%">{{ formatDate(t.date) }}</td>
                         <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
                         <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
                         <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>

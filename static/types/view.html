@@ -4,7 +4,6 @@
         <table id="typesTable" class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th width="5%" data-ng-click="sort('id', types, drawPie)">ID</th>
                     <th data-ng-click="sort('name', types, drawPie)">Name</th>
                     <th colspan="2" data-ng-click="sort('sum', types, drawPie)">Sum</th>
                     <th></th>
@@ -12,7 +11,6 @@
             </thead>
             <tbody>
                 <tr>
-                    <td></td>
                     <td>
                         <input type="text" class="form-control" required="required" data-ng-model="newType.name">
                     </td>
@@ -22,7 +20,6 @@
                     </td>
                 </tr>
                 <tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
-                    <td>{{ t.id }}</td>
                     <td>{{ t.name }}</td>
                     <td>{{ t.sum/100 }}</td>
                     <td colspan="2">

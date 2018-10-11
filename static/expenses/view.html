@@ -39,8 +39,7 @@
     <table id="expensesTable" class="table table-condensed table-hover">
         <thead>
             <tr>
-                <th width="5%" data-ng-click="sort('id', expenses)">ID</th>
-                <th width="15%" data-ng-click="sort('name', expenses)">Name</th>
+                <th width="20%" data-ng-click="sort('name', expenses)">Name</th>
                 <th width="10%" data-ng-click="sort('cost', expenses)">Cost</th>
                 <th width="10%">Type</th>
                 <th width="15%">Frequency</th>
@@ -53,7 +52,6 @@
         </thead>
         <tbody>
             <tr>
-                <td></td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newExpense.name">
                 </td>
@@ -157,7 +155,6 @@
                 </td>
             </tr>
             <tr data-ng-repeat="e in expenses" data-ng-click="setFilter({expense_id:e.id.toString()})">
-                <td>{{ e.id }}</td>
                 <td>{{ e.name }}</td>
                 <td>{{ e.cost / 100 }}</td>
                 <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
