@@ -18,7 +18,9 @@ self.addEventListener('message', e => {
         });
     };
 
-    const runScript = (result, script) => {
+    const $centsa = new centsa($http);
+
+    const runScript = async (result, script) => {
         const { data, errors } = Papa.parse(result);
         if (errors.length) {
             throw JSON.stringify(errors);
@@ -26,7 +28,7 @@ self.addEventListener('message', e => {
         const total = data.length;
         self.postMessage({
             processed: 0,
-            total: total
+            total
         });
         const $records = (() => {
             let i = 0;
@@ -48,25 +50,18 @@ self.addEventListener('message', e => {
             };
         })();
 
-        eval(script);
+        return eval(`async () => {${script}}`)();
     };
 
-    const $centsa = new centsa($http);
-
-    if (script) {
-        readFile(csv).then(result => {
-            runScript(result, script);
+    Promise.all([
+        Promise.resolve(script || $centsa.general.rule(rule)),
+        readFile(csv)
+    ]).then(([
+        scriptData,
+        file
+    ]) => runScript(file, scriptData.data || scriptData))
+        .catch(e => {
+            console.error(e);
+            setTimeout(() => { throw e.message || e.response || e; }, 0);
         });
-    } else {
-        Promise.all([
-            $centsa.general.rule(rule),
-            readFile(csv)
-        ]).then(result => {
-            runScript(result[1], result[0].data);
-        }).catch(err => setTimeout(() => {
-            console.error(err);
-            throw JSON.stringify(err.message || err.response);
-        }, 0));
-    }
-
 });
