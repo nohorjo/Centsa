@@ -17,7 +17,7 @@ app.controller("userCtrl", function ($scope, $rootScope, centsa) {
 
     $scope.deleteController = async email => {
         const result = await swal({
-            title: "Are you sure?",
+            title: `Are you sure you want to remove "${email}"?`,
             text: "This user will no longer be able to access your account!",
             type: "warning",
             showCancelButton: true,

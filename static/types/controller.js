@@ -20,7 +20,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
 
     $scope.deleteType = async id => {
         const result = await swal({
-            title: "Are you sure?",
+            title: `Are you sure you want to delete "${$scope.types.find(t => t.id == id).name}"?`,
             text: "Once deleted, you will not be able to recover this type!",
             type: "warning",
             showCancelButton: true,

@@ -50,7 +50,7 @@ app.controller("expensesCtrl", function ($scope, $rootScope, $sce, centsa) {
 
     $scope.deleteExpense = async id => {
         const result = await swal({
-            title: "Are you sure?",
+            title: `Are you sure you want to delete "${$scope.expenses.find(e => e.id == id).name}"?`,
             text: "Once deleted, you will not be able to recover this expense!",
             type: "warning",
             showCancelButton: true,
