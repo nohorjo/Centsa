@@ -36,10 +36,11 @@ export const insert = (req, resp) => {
             log.error(err);
             resp.status(500).send(err);
         } else {
-            req.session.userData.accounts.push({
-                id,
-                ...account
-            });
+            const { userData } = req.session;
+            userData.accounts = [
+                ...userData.accounts.filter(a => a.id != id),
+                { id, ...account }
+            ];
             log('inserted account');
             resp.send(id.toString());
         }

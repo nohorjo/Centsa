@@ -121,7 +121,7 @@ export const deleteExpense = (req, resp) => {
                 log.error(err);
                 resp.status(500).send(err);
             } else {
-            req.session.userData.expenses = req.session.userData.expenses.filter(e => e.id != id);
+                req.session.userData.expenses = req.session.userData.expenses.filter(e => e.id != id);
                 log('deleted type');
                 resp.sendStatus(201);
             }
