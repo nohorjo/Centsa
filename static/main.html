@@ -7,7 +7,7 @@
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.7.1/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
@@ -53,12 +53,30 @@
                 <a href="#!user" data-ng-class="{'active':isActive('/user')}"><i class="far fa-user"></i>My Account</a>
                 <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
             </div>
-            <a href="#!summary" data-ng-class="{'active':isActive('/summary')}"><i class="fas fa-chart-line"></i>Summary</a>
-            <a href="#!transactions" data-ng-class="{'active':isActive('/transactions')}" data-ng-click="resetFilter()"><i class="fas fa-exchange-alt"></i>Transactions</a>
-            <a href="#!accounts" data-ng-class="{'active':isActive('/accounts')}"><i class="far fa-money-bill-alt"></i>Accounts</a>
-            <a href="#!types" data-ng-class="{'active':isActive('/types')}"><i class="fas fa-tags"></i>Types</a>
-            <a href="#!expenses" data-ng-class="{'active':isActive('/expenses')}"><i class="fas fa-file-invoice-dollar"></i>Expenses &amp; Income</a>
-            <a href="#!import" data-ng-class="{'active':isActive('/import')}"><i class="fas fa-file-export"></i>Import</a>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/summary')}">
+                <i class="fas fa-chart-line"></i>
+                <a href="#!summary">Summary</a>
+            </div>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/transactions')}">
+                <i class="fas fa-exchange-alt"></i>
+                <a href="#!transactions" data-ng-click="resetFilter()">Transactions</a>
+            </div>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/accounts')}">
+                <i class="far fa-money-bill-alt"></i>
+                <a href="#!accounts">Accounts</a>
+            </div>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/types')}">
+                <i class="fas fa-tags"></i>
+                <a href="#!types">Types</a>
+            </div>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/expenses')}">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <a href="#!expenses">Expenses &amp; Income</a>
+            </div>
+            <div class="sidebar-link" data-ng-class="{'active':isActive('/import')}">
+                <i class="fas fa-file-export"></i>
+                <a href="#!import">Import</a>
+            </div>
         </div>
     </div>
     <div class="header" style="background: {{ currentUser == -1 ? 'inital' : '#e0a3a3' }}">

@@ -11,8 +11,12 @@ body {
     position: fixed;
     left: 0;
     z-index: 1;
-    width: 15%;
+    width: 5.5em;
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar:hover {
+    width: initial;
 }
 
 .header {
@@ -28,7 +32,7 @@ body {
 .main-panel {
     position: fixed;
     right: 0;
-    width: 85%;
+    width: calc(100% - 5.5em);
     padding: 10px 10px 0 2em;
     margin-right: 10px;
     overflow: auto;
@@ -39,27 +43,31 @@ body {
     float: right;
 }
 
-.sidebar a {
+.sidebar-link {
     position: relative;
     display: block;
     padding: 10px 15px;
     text-decoration: none !important;
     margin: 0.5em 15px;
-}
-
-.sidebar a {
     box-shadow: 2px 3px 20px -10px rgba(0, 0, 0, 0.75);
     overflow: hidden;
+    color: #428bca;
+    white-space: nowrap;
 }
 
-.sidebar a:hover {
+.sidebar-link:hover {
     box-shadow: 0 12px 20px -10px rgba(100, 153, 239, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(100, 153, 239, 0.2);
 }
 
-.sidebar a.active {
+.sidebar-link.active {
     background: #428bca;
     color: white;
     border-radius: 3px;
+}
+
+.sidebar-link>i {
+    padding-right: 1em;
+    font-size: large;
 }
 
 img {
@@ -308,6 +316,7 @@ div.notification.read {
 .notify-container {
     position: relative;
 }
+
 .notify-bubble {
      position: absolute;
      top: -3px;
@@ -319,3 +328,5 @@ div.notification.read {
      border-radius: 50%;
      box-shadow: 1px 1px 1px gray;
 }
+
+
