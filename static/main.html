@@ -50,7 +50,10 @@
     <div class="sidebar">
         <div>
             <div class="notify-container">
-                <a href="#!user" data-ng-class="{'active':isActive('/user')}"><i class="far fa-user"></i>My Account</a>
+                <div class="sidebar-link" data-ng-class="{'active':isActive('/user')}">
+                    <i class="far fa-user"></i>
+                    <a href="#!user">My Account</a>
+                </div>
                 <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
             </div>
             <div class="sidebar-link" data-ng-class="{'active':isActive('/summary')}">
