@@ -48,41 +48,39 @@
 
 <body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
     <div class="sidebar">
-        <div>
-            <div class="notify-container">
-                <div class="sidebar-link" data-ng-class="{'active':isActive('/user')}">
-                    <i class="far fa-user"></i>
-                    <a href="#!user">My Account</a>
-                </div>
-                <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/summary')}">
-                <i class="fas fa-chart-line"></i>
-                <a href="#!summary">Summary</a>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/transactions')}">
-                <i class="fas fa-exchange-alt"></i>
-                <a href="#!transactions" data-ng-click="resetFilter()">Transactions</a>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/accounts')}">
-                <i class="far fa-money-bill-alt"></i>
-                <a href="#!accounts">Accounts</a>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/types')}">
-                <i class="fas fa-tags"></i>
-                <a href="#!types">Types</a>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/expenses')}">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <a href="#!expenses">Expenses &amp; Income</a>
-            </div>
-            <div class="sidebar-link" data-ng-class="{'active':isActive('/import')}">
-                <i class="fas fa-file-export"></i>
-                <a href="#!import">Import</a>
-            </div>
+        <div class="notify-container">
+            <a data-ng-class="{'active':isActive('/user')}" href="#!user">
+                <i class="far fa-user"></i>
+                My Account
+            </a>
+            <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
         </div>
+        <a data-ng-class="{'active':isActive('/summary')}" href="#!summary">
+            <i class="fas fa-chart-line"></i>
+            Summary
+        </a>
+        <a data-ng-class="{'active':isActive('/transactions')}" href="#!transactions">
+            <i class="fas fa-exchange-alt"></i>
+            Transactions
+        </a>
+        <a data-ng-class="{'active':isActive('/accounts')}" href="#!accounts">
+            <i class="far fa-money-bill-alt"></i>
+            Accounts
+        </a>
+        <a data-ng-class="{'active':isActive('/types')}" href="#!types">
+            <i class="fas fa-tags"></i>
+            Types
+        </a>
+        <a data-ng-class="{'active':isActive('/expenses')}" href="#!expenses">
+            <i class="fas fa-file-invoice-dollar"></i>
+            Expenses &amp; Income
+        </a>
+        <a data-ng-class="{'active':isActive('/import')}" href="#!import">
+            <i class="fas fa-file-export"></i>
+            Import
+        </a>
     </div>
-    <div class="header" style="background: {{ currentUser == -1 ? 'inital' : '#e0a3a3' }}">
+    <div class="header" style="background: {{ currentUser == -1 ? 'initial' : '#e0a3a3' }}">
         <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
             <img id="logo" data-ng-src="logo.svg">
         </a>
