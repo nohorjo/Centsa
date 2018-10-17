@@ -21,7 +21,7 @@ import {
 } from './dao/Users';
 import { getSessionStore } from './index';
 import log from './log';
-import { getSummary } from './dao/Transactions';
+import { getSummary, getAll } from './dao/Transactions';
 import {
     getNotifications,
     deleteNotification,
@@ -119,19 +119,35 @@ route.get("/budget", (req, resp) => {
                     break;
                 case 'manual':
                     const start:any = new Date(mode.start);
-                    getSummary(user_id, {
-                        fromDate: start,
-                        toDate: today,
-                    }, (err, data) => {
-                        if (err) {
-                            log.error(err);
-                            resp.status(500).send(err);
-                        } else {
-                            const days = (today - start) / DAY;
-                            const amount = Math.ceil(days / mode.frequency) * mode.amount - data[0].sum;
-                            respond({afterAll: amount - goals});
+                    getAll(
+                        user_id,
+                        {
+                            fromDate: start,
+                            toDate: today,
+                        },
+                        1,
+                        Number.MAX_SAFE_INTEGER,
+                        null,
+                        (err, transactions) => {
+                            if (err) {
+                                log.error(err);
+                                resp.status(500).send(err);
+                            } else {
+                                // filter out incomes that are not transfers
+                                const sum = transactions.filter(t => t.amount > 0 || transactions.some(u => (
+                                    u.comment == t.comment
+                                    && u.date == t.date
+                                    && u.type_id == t.type_id
+                                    && u.expense_id == t.expense_id
+                                    && u.account_id != t.account_id
+                                    && u.amount == -t.amount
+                                ))).reduce((sum, t) => sum + t.amount, 0);
+                                const days = (today - start) / DAY;
+                                const amount = Math.ceil(days / mode.frequency) * mode.amount - sum;
+                                respond({afterAll: amount - goals});
+                            }
                         }
-                    });
+                    );
                     break;
                 case 'time':
                     const current = new Date(today);
