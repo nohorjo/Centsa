@@ -30,6 +30,7 @@ const initWorker = (id, env) => {
     if (id == 1) {
         applyAutoTransactions(true);
         setTimeout(() => {
+            applyAutoTransactions(true);
             setInterval(applyAutoTransactions, 8.64e7);
         }, (24 - (new Date).getHours()) * 3.6e6);
     }
