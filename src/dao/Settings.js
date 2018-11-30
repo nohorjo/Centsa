@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Settings = {};
 
 export const getAll = (userId, cb) => {
     pool.query(
@@ -22,3 +24,5 @@ export const setSetting = (setting, userId, cb) => {
         cb
     );
 };
+
+module.exports = Settings;

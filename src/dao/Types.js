@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Types = {};
 
 export const getAll = (userId, cb) => {
     pool.query(
@@ -40,3 +42,5 @@ export const deleteType = (id, userId, cb) => {
         cb
     );
 };
+
+module.exports = Types;

@@ -1,14 +1,16 @@
-import * as mysql from 'mysql';
-import * as os from 'os';
-import log from '../log';
+const mysql = require('mysql');
+const os = require('os');
+const log = require('../log');
 
 log('init db connection');
 
 const cpus = os.cpus().length;
-const config: any = {
+const config = {
     cpusCount: cpus,
     ...process.env
 };
+
+const Connection = {};
 
 export const testConnection = () => {
     log('test connection');
@@ -44,3 +46,5 @@ process.on('exit', () => {
     log('shutting down pool');
     pool.end();
 });
+
+module.exports = Connection;

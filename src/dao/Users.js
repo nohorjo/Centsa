@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Users = {};
 
 export const getUserAETs = (emailOrId, cb) => {
     const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} AS id`}`;
@@ -137,3 +139,5 @@ export const getIdPassword = (email, cb) => {
         cb
     );
 };
+
+module.exports = Users;

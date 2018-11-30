@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Rules = {};
 
 export const getAll = (userId, cb) => {
     pool.query(
@@ -25,3 +27,5 @@ export const getRule = (id, userId, cb) => {
         cb
     );
 };
+
+module.exports = Rules;

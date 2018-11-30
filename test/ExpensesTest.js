@@ -1,7 +1,7 @@
-import * as Expenses from '../src/Expenses';
-import { pool } from '../src/dao/Connection';
-import { stub, match, spy } from 'sinon';
-import { expect } from 'chai';
+const Expenses = require('../src/Expenses');
+const { pool } = require('../src/dao/Connection');
+const { stub, match, spy } = require('sinon');
+const { expect } = require('chai');
 
 describe("Expenses", () => {
     const userId = 1234;

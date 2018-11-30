@@ -1,11 +1,13 @@
-import axios from 'axios';
-import * as Users from './Users';
-import * as UsersDao from './dao/Users';
-import log from './log';
-import { createHash } from 'crypto';
-import { setSetting } from './dao/Settings';
+const axios = require('axios');
+const Users = require('./Users');
+const UsersDao = require('./dao/Users');
+const log = require('./log');
+const { createHash } = require('crypto');
+const { setSetting } = require('./dao/Settings');
 
 log('init authentication');
+
+const Authentication = {};
 
 export const checkAuth = (req, resp, next) => {
     if (req.session && req.session.userData) {
@@ -193,7 +195,7 @@ const getDetailsFromGoogle = async token => {
     return (({name,email})=>({name,email}))(ticket.getPayload() || {});
 };
 
-const getDetailsFromFB = async ({userID, accessToken}:any = {}) => {
+const getDetailsFromFB = async ({userID, accessToken} = {}) => {
     const fields = ['email', 'name'];
     log('Login request: %s', userID);
     const url = `https://graph.facebook.com/${userID}?access_token=${accessToken}&fields=${fields.join(',')}`;
@@ -211,3 +213,5 @@ const authenticateUser = async data => {
         throw 'Unauthorized';
     }
 };
+
+module.exports = Authentication;

@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import * as dao from './dao/Types';
-import log from './log';
+const { Router } = require('express');
+const dao = require('./dao/Types');
+const log = require('./log');
 
 log('init types');
 
@@ -58,4 +58,8 @@ route.delete('/:id', (req, resp) => {
 const _route = Router();
 _route.use('/types', route);
 
+const Types = {};
+
 export default _route;
+
+module.exports = Types;

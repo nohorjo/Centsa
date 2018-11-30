@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Accounts = {};
 
 export const getAll = (userId, cb) => {
     pool.query(
@@ -17,3 +19,5 @@ export const insert = (account, cb) => {
         }
     );
 };
+
+module.exports = Accounts;

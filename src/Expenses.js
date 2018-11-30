@@ -1,11 +1,13 @@
-import { Router } from 'express';
-import * as dao from './dao/Expenses';
-import * as tdao from './dao/Transactions';
-import log from './log';
+const { Router } = require('express');
+const dao = require('./dao/Expenses');
+const tdao = require('./dao/Transactions');
+const log = require('./log');
 
 log('init expense');
 
 const route = Router();
+
+const Expenses = {};
 
 export const getAll = (req, resp) => {
     log('get all expenses');
@@ -321,3 +323,5 @@ export const isFrequencyValid = frequency => {
         return d < 12 && d >= -12 && d != 0;
     }
 };
+
+module.exports = Expenses;

@@ -1,8 +1,10 @@
-import { Router } from 'express';
-import * as dao from './dao/Accounts';
-import log from './log';
+const { Router } = require('express');
+const dao = require('./dao/Accounts');
+const log = require('./log');
 
 log('init accounts');
+
+const Accounts = {};
 
 export const getAll = (req, resp) => {
     log('get all accounts');
@@ -56,3 +58,5 @@ const _route = Router();
 _route.use('/accounts', route);
 
 export default _route;
+
+module.exports = Accounts;

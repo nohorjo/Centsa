@@ -1,5 +1,7 @@
-import * as dao from './dao/Users';
-import log from './log';
+const dao = require('./dao/Users');
+const log = require('./log');
+
+const Users = {};
 
 export const getOrCreateUser = data => {
     return new Promise((resolve, reject) => {
@@ -33,7 +35,7 @@ export const getOrCreateUser = data => {
     });
 };
 
-export const getIdPassword: any = email => {
+export const getIdPassword = email => {
     return new Promise((resolve, reject) => {
         dao.getIdPassword(email, (err, result) => {
             if (err) {
@@ -48,3 +50,5 @@ export const getIdPassword: any = email => {
         });
     });
 };
+
+module.exports = Users;

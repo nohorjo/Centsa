@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import log from './log';
-import * as otplib from 'otplib';
-import { exec } from 'child_process';
-import { pool } from './dao/Connection';
+const { Router } = require('express');
+const log = require('./log');
+const otplib = require('otplib');
+const { exec } = require('child_process');
+const { pool } = require('./dao/Connection');
 
 log('init admin');
 
@@ -50,4 +50,8 @@ route.post('/execute', (req, resp) => {
     }
 });
 
+const Admin = {};
+
 export default _route;
+
+module.exports = Admin;

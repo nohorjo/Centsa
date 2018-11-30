@@ -1,4 +1,4 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
 
 const NO_FILTER = {
     comments: [{comment: '%%'}],
@@ -7,6 +7,8 @@ const NO_FILTER = {
     fromAmount: Number.MIN_SAFE_INTEGER,
     toAmount: Number.MAX_SAFE_INTEGER
 };
+
+const Transactions = {};
 
 export const insertAutoTransactions = (trans, cb) => {
     if (trans.length > 0) {
@@ -170,3 +172,5 @@ const filterToClause = filter => `
     ${filter.expense_id ? ` AND expense_id=${filter.expense_id}` : ''}
 `;
 
+
+module.exports = Transactions;

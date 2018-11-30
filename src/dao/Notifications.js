@@ -1,4 +1,6 @@
-import { pool } from './Connection';
+const { pool } = require('./Connection');
+
+const Notifications = {};
 
 export const getNotifications = (userId, cb) => {
     pool.query(
@@ -31,3 +33,5 @@ export const addNotification = (user_id, message, cb) => {
         cb
     );
 };
+
+module.exports = Notifications;

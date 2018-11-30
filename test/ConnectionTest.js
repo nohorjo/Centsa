@@ -1,7 +1,7 @@
-import { testConnection } from '../src/dao/Connection';
-import * as mysql from 'mysql';
-import { spy, stub, match } from 'sinon';
-import { expect } from 'chai';
+const { testConnection } = require('../src/dao/Connection');
+const mysql = require('mysql');
+const { spy, stub, match } = require('sinon');
+const { expect } = require('chai');
 
 
 describe("Connection", () => {

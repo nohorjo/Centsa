@@ -1,26 +1,28 @@
-import * as express from 'express';
-import * as session from 'express-session';
-import * as cookieParser from 'cookie-parser';
-import * as cluster from 'cluster';
-import * as os from 'os';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as Authentication from './Authentication';
-import Accounts from './Accounts';
-import Expenses, { applyAutoTransactions } from './Expenses';
-import General from './General';
-import Settings from './Settings';
-import Transactions from './Transactions';
-import Types from './Types';
-import { testConnection, pool } from './dao/Connection';
-import debug from './debug';
-import log from './log';
-import Admin from './Admin';
+const express = require('express');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const cluster = require('cluster');
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const Authentication = require('./Authentication');
+const Accounts = require('./Accounts');
+const Expenses, { applyAutoTransactions } = require('./Expenses');
+const General = require('./General');
+const Settings = require('./Settings');
+const Transactions = require('./Transactions');
+const Types = require('./Types');
+const { testConnection, pool } = require('./dao/Connection');
+const debug = require('./debug');
+const log = require('./log');
+const Admin = require('./Admin');
 const FileMySQLSession = require('file-mysql-session')(session);
 
 const cpus = os.cpus().length;
 
 let sessionStore;
+
+const index = {};
 
 export const getSessionStore = () => sessionStore;
 
@@ -120,3 +122,5 @@ const main = (env, isMaster) => {
 };
 
 main(process.env, cluster.isMaster);
+
+module.exports = index;

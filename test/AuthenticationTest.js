@@ -1,8 +1,8 @@
-import { checkAuth, authSkipLogin, login, logout } from '../src/Authentication';
-import { spy, stub, match } from 'sinon';
-import { expect } from 'chai';
-import axios from 'axios';
-import * as Users from '../src/Users';
+const { checkAuth, authSkipLogin, login, logout } = require('../src/Authentication');
+const { spy, stub, match } = require('sinon');
+const { expect } = require('chai');
+const axios = require('axios');
+const Users = require('../src/Users');
 
 describe("Authentication", () => {
     describe("checkAuth", () => {

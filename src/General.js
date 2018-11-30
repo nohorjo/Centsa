@@ -1,15 +1,15 @@
-import { Router } from 'express';
-import {
+const { Router } = require('express');
+const {
     lastPaymentDate,
     nextPaymentDate,
     isDayOfPayment
-} from './Expenses';
-import {
+} = require('./Expenses');
+const {
     getAllWithSum,
     deleteExpense
-} from './dao/Expenses';
-import * as rules from './dao/Rules';
-import {
+} = require('./dao/Expenses');
+const rules = require('./dao/Rules');
+const {
     getControllees,
     isController,
     getControllers,
@@ -18,19 +18,19 @@ import {
     getUserAETs,
     deleteUser,
     updatePassword,
-} from './dao/Users';
-import { getSessionStore } from './index';
-import log from './log';
-import { getSummary, getAll } from './dao/Transactions';
-import {
+} = require('./dao/Users');
+const { getSessionStore } = require('./index');
+const log = require('./log');
+const { getSummary, getAll } = require('./dao/Transactions');
+const {
     getNotifications,
     deleteNotification,
     readNotifications,
     addNotification
-} from './dao/Notifications';
-import { logout } from './Authentication';
-import { createHash } from 'crypto';
-import { setSetting } from './dao/Settings';
+} = require('./dao/Notifications');
+const { logout } = require('./Authentication');
+const { createHash } = require('crypto');
+const { setSetting } = require('./dao/Settings');
 
 log('init general');
 
@@ -42,7 +42,7 @@ const SAVING_TEST = /^Saving (\d{4}\/\d{2}\/\d{2}): /;
 route.get("/budget", (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
     const { user_id } = req.session.userData;
-    const today:any = new Date(req.get('x-date'));
+    const today = new Date(req.get('x-date'));
     log('get budget', mode);
     const respond = budget => {
         log('returning budget');
@@ -118,7 +118,7 @@ route.get("/budget", (req, resp) => {
                     respond(budget);
                     break;
                 case 'manual':
-                    const start:any = new Date(mode.start);
+                    const start = new Date(mode.start);
                     getAll(
                         user_id,
                         {
@@ -454,4 +454,8 @@ route.post('/password', (req, resp) => {
 const _route = Router();
 _route.use('/general', route);
 
+const General = {};
+
 export default _route;
+
+module.exports = General;

@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import * as dao from './dao/Settings';
-import log from './log';
+const { Router } = require('express');
+const dao = require('./dao/Settings');
+const log = require('./log');
 
 log('init settings');
 
@@ -36,4 +36,8 @@ route.post("/", (req, resp) => {
 const _route = Router();
 _route.use('/settings', route);
 
+const Settings = {};
+
 export default _route;
+
+module.exports = Settings;

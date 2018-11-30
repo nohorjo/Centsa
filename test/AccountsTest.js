@@ -1,7 +1,7 @@
-import { insert, getAll } from '../src/Accounts';
-import { expect } from 'chai';
-import * as Connection from '../src/dao/Connection';
-import { spy, stub, match } from 'sinon';
+const { insert, getAll } = require('../src/Accounts');
+const { expect } = require('chai');
+const Connection = require('../src/dao/Connection');
+const { spy, stub, match } = require('sinon');
 
 describe("Accounts", () => {
     const userId = 1234;

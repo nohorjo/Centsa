@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import log from './log';
+const { Router } = require('express');
+const log = require('./log');
 
 log('init debug');
 
@@ -33,4 +33,8 @@ route.get('/', (req, resp) => {
 const _route = Router();
 _route.use('/debug', route);
 
+const debug = {};
+
 export default _route;
+
+module.exports = debug;
