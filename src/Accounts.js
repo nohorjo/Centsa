@@ -4,9 +4,9 @@ const log = require('./log');
 
 log('init accounts');
 
-const Accounts = {};
+const route = Router();
 
-export const getAll = (req, resp) => {
+route.getAll = (req, resp) => {
     log('get all accounts');
     if (req.query.light == 'true') {
         log('returning accounts from cache');
@@ -26,7 +26,7 @@ export const getAll = (req, resp) => {
     }
 };
 
-export const insert = (req, resp) => {
+route.insert = (req, resp) => {
     log('insert account');
     const account = (({ name, id }) => ({ name, id }))(req.body || {});
     account['user_id'] = req.session.userData.user_id;
@@ -49,14 +49,11 @@ export const insert = (req, resp) => {
     });
 };
 
-const route = Router();
 
-route.get('/', getAll);
-route.post("/", insert);
+route.get('/', route.getAll);
+route.post("/", route.insert);
 
 const _route = Router();
 _route.use('/accounts', route);
 
-export default _route;
-
-module.exports = Accounts;
+module.exports = _route;

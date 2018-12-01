@@ -10,7 +10,7 @@ const NO_FILTER = {
 
 const Transactions = {};
 
-export const insertAutoTransactions = (trans, cb) => {
+Transactions.insertAutoTransactions = (trans, cb) => {
     if (trans.length > 0) {
         pool.query(
             `INSERT IGNORE INTO transactions
@@ -22,7 +22,7 @@ export const insertAutoTransactions = (trans, cb) => {
     }
 };
 
-export const getAll = (
+Transactions.getAll = (
     userId,
     filter,
     page,
@@ -55,7 +55,7 @@ export const getAll = (
     );
 };
 
-export const checkEntityOwnership = (transaction, cb) => {
+Transactions.checkEntityOwnership = (transaction, cb) => {
     pool.query(
         `SELECT COUNT(*) AS count FROM users u 
         JOIN accounts a ON u.id=a.user_id 
@@ -74,7 +74,7 @@ export const checkEntityOwnership = (transaction, cb) => {
     );
 };
 
-export const insert = (transaction, cb) => {
+Transactions.insert = (transaction, cb) => {
     pool.query(
         `${transaction.id ? 'REPLACE' : 'INSERT'} INTO transactions SET ?;`,
         transaction,
@@ -84,7 +84,7 @@ export const insert = (transaction, cb) => {
     );
 };
 
-export const checkBatchEntityOwnership = (
+Transactions.checkBatchEntityOwnership = (
     userId,
     accountIds,
     expenseIds,
@@ -109,7 +109,7 @@ export const checkBatchEntityOwnership = (
     );
 };
 
-export const insertBatch = (transactions, cb) => {
+Transactions.insertBatch = (transactions, cb) => {
     pool.query(
         `INSERT INTO transactions
         (user_id,amount,comment,account_id,type_id,expense_id,date)
@@ -119,7 +119,7 @@ export const insertBatch = (transactions, cb) => {
     );
 };
 
-export const deleteTransaction = (id, userId, cb) => {
+Transactions.deleteTransaction = (id, userId, cb) => {
     pool.query(
         'DELETE FROM transactions WHERE id=? AND user_id=?;',
         [id, userId],
@@ -127,7 +127,7 @@ export const deleteTransaction = (id, userId, cb) => {
     );
 };
 
-export const getAmounts = (userId, cb) => {
+Transactions.getAmounts = (userId, cb) => {
     pool.query(
         'SELECT date, -amount AS amount FROM transactions WHERE user_id=? ORDER BY date ASC;',
         [userId],
@@ -135,7 +135,7 @@ export const getAmounts = (userId, cb) => {
     );
 };
 
-export const getSummary = (userId, filter, cb) => {
+Transactions.getSummary = (userId, filter, cb) => {
     filter = {
         ...NO_FILTER,
         ...filter
@@ -155,7 +155,7 @@ export const getSummary = (userId, filter, cb) => {
     );
 };
 
-export const getUniqueComments = (userId, cb) => {
+Transactions.getUniqueComments = (userId, cb) => {
     pool.query(
         'SELECT DISTINCT comment FROM transactions WHERE user_id=?;',
         [userId],

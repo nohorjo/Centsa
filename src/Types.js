@@ -58,8 +58,4 @@ route.delete('/:id', (req, resp) => {
 const _route = Router();
 _route.use('/types', route);
 
-const Types = {};
-
-export default _route;
-
-module.exports = Types;
+module.exports = _route;

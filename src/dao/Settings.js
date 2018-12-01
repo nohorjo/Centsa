@@ -2,7 +2,7 @@ const { pool } = require('./Connection');
 
 const Settings = {};
 
-export const getAll = (userId, cb) => {
+Settings.getAll = (userId, cb) => {
     pool.query(
         'SELECT setting,value FROM settings WHERE user_id=?;',
         [userId],
@@ -17,7 +17,7 @@ export const getAll = (userId, cb) => {
     );
 };
 
-export const setSetting = (setting, userId, cb) => {
+Settings.setSetting = (setting, userId, cb) => {
     pool.query(
         'REPLACE INTO settings (user_id, setting, value) VALUES (?,?,?);',
         [userId, setting.key, setting.value],

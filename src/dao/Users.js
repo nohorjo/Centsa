@@ -2,7 +2,7 @@ const { pool } = require('./Connection');
 
 const Users = {};
 
-export const getUserAETs = (emailOrId, cb) => {
+Users.getUserAETs = (emailOrId, cb) => {
     const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} AS id`}`;
     pool.query(
         `${getId};
@@ -29,7 +29,7 @@ export const getUserAETs = (emailOrId, cb) => {
     );
 };
 
-export const insert = (name, email, cb) => {
+Users.insert = (name, email, cb) => {
     pool.query(
         `INSERT INTO users (email,name) VALUES (?,?);`,
         [email, name],
@@ -37,7 +37,7 @@ export const insert = (name, email, cb) => {
     );
 };
 
-export const setUpUser = (userId, cb) => {
+Users.setUpUser = (userId, cb) => {
     pool.query(
         `INSERT INTO types (user_id,name) VALUES (?,'Other');
         INSERT INTO accounts (user_id,name) VALUES (?,'Default');
@@ -49,7 +49,7 @@ export const setUpUser = (userId, cb) => {
     );
 };
 
-export const getControllees = (userId, cb) => {
+Users.getControllees = (userId, cb) => {
     pool.query(
         `SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?);`,
         [userId],
@@ -57,7 +57,7 @@ export const getControllees = (userId, cb) => {
     );
 };
 
-export const isController = (controller, controllee, cb) => {
+Users.isController = (controller, controllee, cb) => {
     pool.query(
         `SELECT EXISTS(SELECT 1 FROM usercontrol WHERE controller=? AND controllee=?);`,
         [controller, controllee],
@@ -65,7 +65,7 @@ export const isController = (controller, controllee, cb) => {
     );
 };
 
-export const getControllers = (userId, cb) => {
+Users.getControllers = (userId, cb) => {
     pool.query(
         `SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?)`,
         [userId],
@@ -73,7 +73,7 @@ export const getControllers = (userId, cb) => {
     );
 };
 
-export const addController = (userId, email, cb) => {
+Users.addController = (userId, email, cb) => {
     pool.query(
         `INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);`,
         [email, userId],
@@ -87,7 +87,7 @@ export const addController = (userId, email, cb) => {
     );
 };
 
-export const deleteController = (userId, email, cb) => {
+Users.deleteController = (userId, email, cb) => {
     pool.query(
         `SELECT id FROM users WHERE email=?;`,
         [email],
@@ -104,7 +104,7 @@ export const deleteController = (userId, email, cb) => {
     );
 };
 
-export const deleteUser = (userId, cb) => {
+Users.deleteUser = (userId, cb) => {
     pool.query(
         `DELETE FROM transactions WHERE user_id=?;
         DELETE FROM expenses WHERE user_id=?;
@@ -120,7 +120,7 @@ export const deleteUser = (userId, cb) => {
     );
 };
 
-export const updatePassword = (userId, password, cb) => {
+Users.updatePassword = (userId, password, cb) => {
     pool.query(
         `UPDATE users SET password=? WHERE id=? AND ${password.oldPassword ? 'password=?' : 'password IS NULL'};`,
         [
@@ -132,7 +132,7 @@ export const updatePassword = (userId, password, cb) => {
     );
 };
 
-export const getIdPassword = (email, cb) => {
+Users.getIdPassword = (email, cb) => {
     pool.query(
         `SELECT id, password FROM users WHERE email=?;`,
         [email],

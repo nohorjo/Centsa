@@ -33,8 +33,4 @@ route.get('/', (req, resp) => {
 const _route = Router();
 _route.use('/debug', route);
 
-const debug = {};
-
-export default _route;
-
-module.exports = debug;
+module.exports = _route;

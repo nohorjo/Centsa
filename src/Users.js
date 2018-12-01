@@ -3,7 +3,7 @@ const log = require('./log');
 
 const Users = {};
 
-export const getOrCreateUser = data => {
+Users.getOrCreateUser = data => {
     return new Promise((resolve, reject) => {
         dao.getUserAETs(data.email, (err, user) => {
             if (err) {
@@ -35,7 +35,7 @@ export const getOrCreateUser = data => {
     });
 };
 
-export const getIdPassword = email => {
+Users.getIdPassword = email => {
     return new Promise((resolve, reject) => {
         dao.getIdPassword(email, (err, result) => {
             if (err) {

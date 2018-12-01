@@ -9,7 +9,7 @@ log('init authentication');
 
 const Authentication = {};
 
-export const checkAuth = (req, resp, next) => {
+Authentication.checkAuth = (req, resp, next) => {
     if (req.session && req.session.userData) {
         next();
     } else {
@@ -18,9 +18,9 @@ export const checkAuth = (req, resp, next) => {
     }
 };
 
-export const authSkipLogin = (req, resp, next) => (req.session && req.session.userData) ? resp.redirect('/main.html') : next();
+Authentication.authSkipLogin = (req, resp, next) => (req.session && req.session.userData) ? resp.redirect('/main.html') : next();
 
-export const login = async (req, res) => {
+Authentication.login = async (req, res) => {
     try {
         const { body: data } = req;
         let details, newManualUser;
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
     }
 };
 
-export const logout = (req, res) => {
+Authentication.logout = (req, res) => {
     const { userData } = req.session;
     req.session.destroy(() => {
         log(`Cleared session for ${userData.email}`);
@@ -87,7 +87,7 @@ export const logout = (req, res) => {
     });
 };
 
-export const loginScript = (req, resp) => {
+Authentication.loginScript = (req, resp) => {
     resp.status(200).send(
         `(() => {
                 const authUrl = '/login';

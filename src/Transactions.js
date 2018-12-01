@@ -233,10 +233,6 @@ route.get('/comments', (req, resp) => {
 const _route = Router();
 _route.use('/transactions', route);
 
-const Transactions = {};
-
-export default _route;
-
 const parseFilter = req => {
     const filter = JSON.parse(req.query.filter);
     filter.account_id = parseInt(filter.account_id);
@@ -261,4 +257,4 @@ const parseFilter = req => {
     return filter;
 };
 
-module.exports = Transactions;
+module.exports = _route;

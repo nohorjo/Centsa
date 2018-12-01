@@ -454,8 +454,4 @@ route.post('/password', (req, resp) => {
 const _route = Router();
 _route.use('/general', route);
 
-const General = {};
-
-export default _route;
-
-module.exports = General;
+module.exports = _route;

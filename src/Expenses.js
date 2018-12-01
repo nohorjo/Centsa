@@ -5,11 +5,9 @@ const log = require('./log');
 
 log('init expense');
 
-const route = Router();
+const _route = Router();
 
-const Expenses = {};
-
-export const getAll = (req, resp) => {
+_route.getAll = (req, resp) => {
     log('get all expenses');
     if (req.query.light == 'true') {
         log('returning expenses from cache');
@@ -29,7 +27,7 @@ export const getAll = (req, resp) => {
     }
 };
 
-export const getTotals = (req, resp) => {
+_route.getTotals = (req, resp) => {
     log('get expense totals');
     dao.getTotals(
         req.query.auto == "true",
@@ -58,7 +56,7 @@ export const getTotals = (req, resp) => {
     );
 };
 
-export const insert = (req, resp) => {
+_route.insert = (req, resp) => {
     log('insert expense');
     const expense = req.body;
     if (isFrequencyValid(expense.frequency)) {
@@ -112,7 +110,7 @@ export const insert = (req, resp) => {
     }
 };
 
-export const deleteExpense = (req, resp) => {
+_route.deleteExpense = (req, resp) => {
     log('delete expense');
     const { id } = req.params;
     dao.deleteExpense(
@@ -131,18 +129,17 @@ export const deleteExpense = (req, resp) => {
     );
 };
 
+const route = Router();
+
 route.get('/', getAll);
 route.get('/total', getTotals);
 route.post("/", insert);
 
 route.delete('/:id', deleteExpense);
 
-const _route = Router();
 _route.use('/expenses', route);
 
-export default _route;
-
-export const lastPaymentDate = (expense, date) => {
+_route.lastPaymentDate = (expense, date) => {
     date = new Date(date);
     while (
         !isDayOfPayment(expense.frequency, date, expense.started)
@@ -153,7 +150,7 @@ export const lastPaymentDate = (expense, date) => {
     return date;
 };
 
-export const nextPaymentDate = (expense, date) => {
+_route.nextPaymentDate = (expense, date) => {
     if (date < expense.started) {
         date = new Date(expense.started);
     } else {
@@ -166,7 +163,7 @@ export const nextPaymentDate = (expense, date) => {
     return date;
 };
 
-export const applyAutoTransactions = (all?, id?, today = new Date()) => {
+_route.applyAutoTransactions = (all?, id?, today = new Date()) => {
     log('applying auto transactions');
     today.setHours(12); 
     dao.getAutoExpenses(all, id, today, (err, result) => {
@@ -209,7 +206,7 @@ export const applyAutoTransactions = (all?, id?, today = new Date()) => {
     });
 };
 
-export const isDayOfPayment = (() => {
+_route.isDayOfPayment = (() => {
     const checkPotentialDays = (d, accept, date) => {
         const xDays = [];
         const temp = new Date(date);
@@ -287,7 +284,7 @@ export const isDayOfPayment = (() => {
  *
  * @param frequency The frequency to check
  */
-export const isFrequencyValid = frequency => {
+_route.isFrequencyValid = frequency => {
     frequency = frequency.toString().toUpperCase();
     if (/^\d+$/g.test(frequency)) {
         return frequency > 0;
@@ -324,4 +321,4 @@ export const isFrequencyValid = frequency => {
     }
 };
 
-module.exports = Expenses;
+module.exports = _route;

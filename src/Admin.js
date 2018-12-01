@@ -8,7 +8,6 @@ log('init admin');
 
 const route = Router();
 
-
 const _route = Router();
 _route.use('/admin', route);
 
@@ -50,8 +49,4 @@ route.post('/execute', (req, resp) => {
     }
 });
 
-const Admin = {};
-
-export default _route;
-
-module.exports = Admin;
+module.exports = _route;

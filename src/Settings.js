@@ -36,8 +36,4 @@ route.post("/", (req, resp) => {
 const _route = Router();
 _route.use('/settings', route);
 
-const Settings = {};
-
-export default _route;
-
-module.exports = Settings;
+module.exports = _route;

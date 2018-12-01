@@ -22,10 +22,6 @@ const cpus = os.cpus().length;
 
 let sessionStore;
 
-const index = {};
-
-export const getSessionStore = () => sessionStore;
-
 const initWorker = (id, env) => {
     testConnection();
 
@@ -123,4 +119,6 @@ const main = (env, isMaster) => {
 
 main(process.env, cluster.isMaster);
 
-module.exports = index;
+module.exports = {
+    getSessionStore: () => sessionStore;
+};

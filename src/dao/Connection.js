@@ -12,7 +12,7 @@ const config = {
 
 const Connection = {};
 
-export const testConnection = () => {
+Connection.testConnection = () => {
     log('test connection');
     const connection = mysql.createConnection({
         host: config.DB_IP,
@@ -30,7 +30,7 @@ export const testConnection = () => {
     connection.end();
 };
 
-export const pool = mysql.createPool({
+Connection.pool = mysql.createPool({
     connectionLimit: Math.floor(parseInt(config.DB_CONNECTION_LIMIT) / config.cpusCount) || 1,
     host: config.DB_IP,
     port: parseInt(config.DB_PORT),
