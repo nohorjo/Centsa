@@ -23,8 +23,8 @@ Connection.testConnection = () => {
     });
 
     connection.connect();
-    connection.on('error', (e) => {
-        console.error('Error connecting to database', e);
+    connection.on('error', e => {
+        log.error('Error connecting to database', e);
         process.exit(1);
     });
     connection.end();
@@ -44,7 +44,7 @@ log('pool created');
 
 process.on('exit', () => {
     log('shutting down pool');
-    pool.end();
+    Connection.pool.end();
 });
 
 module.exports = Connection;

@@ -25,7 +25,7 @@ route.get('/', (req, resp) => {
     }
 });
 
-route.post("/", (req, resp) => {
+route.post('/', (req, resp) => {
     log('insert type');
     const { name } = req.body;
     dao.insert(name, req.session.userData.user_id, (err, id) => {
@@ -43,7 +43,7 @@ route.post("/", (req, resp) => {
 route.delete('/:id', (req, resp) => {
     log('deleting type');
     const { id } = req.params;
-    dao.deleteType(id, req.session.userData.user_id, (err, result) => {
+    dao.deleteType(id, req.session.userData.user_id, err => {
         if (err) {
             log.error(err);
             resp.status(500).send(err);

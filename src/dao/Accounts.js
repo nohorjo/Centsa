@@ -11,8 +11,8 @@ Accounts.getAll = (userId, cb) => {
 };
 
 Accounts.insert = (account, cb) => {
-    let { id, ...accountProperties } = account;
-    pool.query(id ? "UPDATE accounts SET ? WHERE id=?;" : "INSERT INTO accounts SET ?;",
+    let { id } = account;
+    pool.query(id ? 'UPDATE accounts SET ? WHERE id=?;' : 'INSERT INTO accounts SET ?;',
         [account, id],
         (err, results) => {
             cb(err, err || results.insertId);

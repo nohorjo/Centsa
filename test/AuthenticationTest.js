@@ -4,9 +4,9 @@ const { expect } = require('chai');
 const axios = require('axios');
 const Users = require('../src/Users');
 
-describe("Authentication", () => {
-    describe("checkAuth", () => {
-        it("calls next when userdata is provided", () => {
+describe('Authentication', () => {
+    describe('checkAuth', () => {
+        it('calls next when userdata is provided', () => {
             const nextSpy = spy();
             const statusSpy = spy();
 
@@ -18,12 +18,12 @@ describe("Authentication", () => {
             expect(nextSpy.called).to.be.true;
             expect(statusSpy.notCalled).to.be.true;
         });
-        it("returns 401 on no userdata", () => {
+        it('returns 401 on no userdata', () => {
             const nextSpy = spy();
             const statusStub = stub();
 
             statusStub.withArgs(401).returns(undefined);
-            statusStub.throws("Unexpected args: status");
+            statusStub.throws('Unexpected args: status');
 
             checkAuth(
                 { session: {} },
@@ -33,12 +33,12 @@ describe("Authentication", () => {
             expect(statusStub.called).to.be.true;
             expect(nextSpy.notCalled).to.be.true;
         });
-        it("returns 401 on no session", () => {
+        it('returns 401 on no session', () => {
             const nextSpy = spy();
             const statusStub = stub();
 
             statusStub.withArgs(401).returns(undefined);
-            statusStub.throws("Unexpected args: status");
+            statusStub.throws('Unexpected args: status');
 
             checkAuth(
                 {},
@@ -49,8 +49,8 @@ describe("Authentication", () => {
             expect(nextSpy.notCalled).to.be.true;
         });
     });
-    describe("authSkipLogin", () => {
-        it("redirects to main on userdata", () => {
+    describe('authSkipLogin', () => {
+        it('redirects to main on userdata', () => {
             const redirectSpy = spy();
             const nextSpy = spy();
 
@@ -60,10 +60,10 @@ describe("Authentication", () => {
                 nextSpy);
 
             expect(redirectSpy.calledOnce).to.be.true;
-            expect(redirectSpy.calledWith("/main.html")).to.be.true;
+            expect(redirectSpy.calledWith('/main.html')).to.be.true;
             expect(nextSpy.notCalled).to.be.true;
         });
-        it("calls next on no userdata", () => {
+        it('calls next on no userdata', () => {
             const redirectSpy = spy();
             const nextSpy = spy();
 
@@ -75,7 +75,7 @@ describe("Authentication", () => {
             expect(nextSpy.called).to.be.true;
             expect(redirectSpy.notCalled).to.be.true;
         });
-        it("calls next on no session", () => {
+        it('calls next on no session', () => {
             const redirectSpy = spy();
             const nextSpy = spy();
 
@@ -88,33 +88,33 @@ describe("Authentication", () => {
             expect(redirectSpy.notCalled).to.be.true;
         });
     });
-    describe("login", () => {
+    describe('login', () => {
         let getStub, getOrCreateUserStub;
         beforeEach(() => {
-            getStub = stub(axios, "get");
-            getOrCreateUserStub = stub(Users, "getOrCreateUser");
+            getStub = stub(axios, 'get');
+            getOrCreateUserStub = stub(Users, 'getOrCreateUser');
         });
         afterEach(() => {
             getStub.restore();
             getOrCreateUserStub.restore();
         });
-        it("makes request to FB to get user data and sets userdata in session and name cookie", async () => {
+        it('makes request to FB to get user data and sets userdata in session and name cookie', async () => {
             const userID = 1234;
-            const accessToken = "token";
-            const name = "name";
+            const accessToken = 'token';
+            const name = 'name';
             const session = {};
 
             getStub.withArgs(`https://graph.facebook.com/${userID}?access_token=${accessToken}&fields=email,name`)
                 .returns(Promise.resolve({ data: { name: name } }));
-            getStub.throws("Unexpected args: get");
+            getStub.throws('Unexpected args: get');
 
             getOrCreateUserStub.withArgs(match({ name: name }))
                 .returns(Promise.resolve());
-            getOrCreateUserStub.throws("Unexpected args: getOrCreateUserStub");
+            getOrCreateUserStub.throws('Unexpected args: getOrCreateUserStub');
 
             const cookieSpy = spy();
             const sendStatusSpy = spy();
-            const statusStub = stub().throws("Unexpected call: status");
+            const statusStub = stub().throws('Unexpected call: status');
 
             await login({
                 session: session,
@@ -123,11 +123,11 @@ describe("Authentication", () => {
                     accessToken: accessToken
                 }
             }, {
-                    cookie: cookieSpy,
-                    sendStatus: sendStatusSpy,
-                    status: statusStub,
-                    clearCookie: () => {}
-                });
+                cookie: cookieSpy,
+                sendStatus: sendStatusSpy,
+                status: statusStub,
+                clearCookie: () => {}
+            });
 
             expect(cookieSpy.calledOnce).to.be.true;
             expect(cookieSpy.calledWith('name', name, match({ maxAge: 31536000000, httpOnly: false })))
@@ -136,13 +136,13 @@ describe("Authentication", () => {
             expect(sendStatusSpy.calledWith(201)).to.be.true;
 
         });
-        it("returns 500 with error", async () => {
-            const error = "Intentional throw";
+        it('returns 500 with error', async () => {
+            const error = 'Intentional throw';
             const statusStub = stub();
             const sendSpy = spy();
 
             statusStub.withArgs(500).returns({ send: sendSpy });
-            statusStub.throws("Unexpected args: status");
+            statusStub.throws('Unexpected args: status');
 
             getStub.throws(error);
 
@@ -154,8 +154,8 @@ describe("Authentication", () => {
             expect(sendSpy.calledWith(error)).to.be.true;
         });
     });
-    describe("logout", () => {
-        it("deletes session and clears name cookie", () => {
+    describe('logout', () => {
+        it('deletes session and clears name cookie', () => {
             const clearCookieSpy = spy();
             const sendStatusSpy = spy();
             const destroyStub = stub();
@@ -169,9 +169,9 @@ describe("Authentication", () => {
                 sendStatus: sendStatusSpy
             });
 
-            expect(clearCookieSpy.calledWith("name")).to.be.true;
-            expect(clearCookieSpy.calledWith("currentUser")).to.be.true;
-            expect(clearCookieSpy.calledWith("connect.sid")).to.be.true;
+            expect(clearCookieSpy.calledWith('name')).to.be.true;
+            expect(clearCookieSpy.calledWith('currentUser')).to.be.true;
+            expect(clearCookieSpy.calledWith('connect.sid')).to.be.true;
             expect(destroyStub.calledOnce).to.be.true;
             expect(sendStatusSpy.calledOnce).to.be.true;
             expect(sendStatusSpy.calledWith(201)).to.be.true;

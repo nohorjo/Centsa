@@ -23,8 +23,8 @@ Expenses.getAllWithSum = (userId, cb) => {
 
 Expenses.getTotals = (auto, date, userId, cb) => {
     const sql = auto ?
-        "SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;" :
-        "SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;";
+        'SELECT cost,frequency FROM expenses WHERE automatic=true AND started<? AND user_id=?;' :
+        'SELECT cost,frequency FROM expenses WHERE started<=? AND user_id=?;';
     pool.query(sql, [date, userId], cb);
 };
 
@@ -46,14 +46,14 @@ Expenses.checkEntityOwnership = (expense, cb) => {
 };
 
 Expenses.insert = (expense, cb) => {
-    pool.query(`INSERT INTO expenses SET ?;`, expense, (err, results) => {
+    pool.query('INSERT INTO expenses SET ?;', expense, (err, results) => {
         cb(err, err || results.insertId);
     });
 };
 
 Expenses.deleteExpense = (id, userId, cb) => {
     pool.query(
-        `DELETE FROM expenses WHERE id=? AND user_id=?;`,
+        'DELETE FROM expenses WHERE id=? AND user_id=?;',
         [id, userId],
         cb
     );
@@ -62,7 +62,7 @@ Expenses.deleteExpense = (id, userId, cb) => {
 Expenses.getAutoExpenses = (all, id, untilDate, cb) => {
     pool.query(
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
-            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ""} started<=? AND automatic=TRUE;`,
+            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ''} started<=? AND automatic=TRUE;`,
         [untilDate],
         cb
     );

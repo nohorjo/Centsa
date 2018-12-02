@@ -4,10 +4,9 @@ const cookieParser = require('cookie-parser');
 const cluster = require('cluster');
 const os = require('os');
 const path = require('path');
-const fs = require('fs');
 const Authentication = require('./Authentication');
 const Accounts = require('./Accounts');
-const Expenses, { applyAutoTransactions } = require('./Expenses');
+const Expenses = require('./Expenses');
 const General = require('./General');
 const Settings = require('./Settings');
 const Transactions = require('./Transactions');
@@ -26,9 +25,9 @@ const initWorker = (id, env) => {
     testConnection();
 
     if (id == 1) {
-        applyAutoTransactions(true);
+        Expenses.applyAutoTransactions(true);
         setTimeout(() => {
-            setInterval(applyAutoTransactions, 8.64e7);
+            setInterval(Expenses.applyAutoTransactions, 8.64e7);
         }, (24 - (new Date).getHours()) * 3.6e6);
     }
 
@@ -102,7 +101,7 @@ const checkConfig = env => {
 };
 
 const main = (env, isMaster) => {
-    if (env.NODE_ENV == "debug") {
+    if (env.NODE_ENV == 'debug') {
         checkConfig(env);
         initWorker(1, env);
     } else {
@@ -120,5 +119,5 @@ const main = (env, isMaster) => {
 main(process.env, cluster.isMaster);
 
 module.exports = {
-    getSessionStore: () => sessionStore;
+    getSessionStore: () => sessionStore,
 };

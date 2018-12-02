@@ -41,7 +41,7 @@ Transactions.getAll = (
     pool.query(
         `SELECT id,amount,comment,account_id,type_id,date,expense_id FROM transactions WHERE user_id=?
         AND ${filterToClause(filter)}
-        ORDER BY ${sort.replace(/,$/g, "")}
+        ORDER BY ${sort.replace(/,$/g, '')}
         LIMIT ${pageSize} OFFSET ${pageSize * (page - 1)};`,
         [
             userId,

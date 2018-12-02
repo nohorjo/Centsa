@@ -33,7 +33,7 @@ route.get('/', (req, resp) => {
     );
 });
 
-route.post("/", (() => {
+route.post('/', (() => {
     const insertBatch = (req, resp) => {
         log('inserting batch transactions');
         const accountIds = [];
@@ -89,9 +89,9 @@ route.post("/", (() => {
         }).then(allowed => {
             if (!allowed) {
                 log.warn('insert batch transactions, entity ownership failed');
-                resp.status(400).send("Invalid account, expense or type ids");
+                resp.status(400).send('Invalid account, expense or type ids');
             } else {
-                dao.insertBatch(transactions, (err, results) => {
+                dao.insertBatch(transactions, err => {
                     if (err) {
                         log.error(err);
                         resp.status(500).send(err);
@@ -139,7 +139,7 @@ route.post("/", (() => {
         }).then(allowed => {
             if (!allowed) {
                 log.warn('insert transactions, entity ownership failed');
-                resp.status(400).send("Invalid account, expense or type id");
+                resp.status(400).send('Invalid account, expense or type id');
             } else {
                 dao.insert(transaction, (err, id) => {
                     if (err) {
@@ -167,7 +167,7 @@ route.post("/", (() => {
 
 route.delete('/:id', (req, resp) => {
     log('deleting transaction');
-    dao.deleteTransaction(req.params.id, req.session.userData.user_id, (err, result) => {
+    dao.deleteTransaction(req.params.id, req.session.userData.user_id, err => {
         if (err) {
             log.error(err);
             resp.status(500).send(err);
@@ -241,7 +241,7 @@ const parseFilter = req => {
     if (filter.comments) {
         filter.comments.forEach(c => {
             if (!c.comment) {
-                c.comment = "";
+                c.comment = '';
                 c.regex = false;
             }
             if (!c.regex) {

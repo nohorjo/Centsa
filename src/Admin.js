@@ -21,23 +21,23 @@ route.post('/execute', (req, resp) => {
         if (otplib.authenticator.check(token, process.env.ADMIN_SECRET)) {
             log('executing', mode, command);
             switch (mode) {
-                case 'sql':
-                    pool.query(command, (err, results) => {
-                        resp.send(err || JSON.stringify(results, null, 4));
-                    });
-                    break;
-                case 'sh':
-                    exec(command, (err, stdout, stderr) => {
-                        resp.send(err || `STDOUT:\n\n${stdout}\n\nSTDERR:\n${stderr}`);
-                    });
-                    break;
-                case 'javascript':
-                    eval(`new Promise((resolve, reject) => {${command}})`)
-                        .then(result => resp.send(result))
-                        .catch(error => resp.send(error));
-                    break;
-                default:
-                    resp.status(400).send(`unsupported mode: ${mode}`);
+            case 'sql':
+                pool.query(command, (err, results) => {
+                    resp.send(err || JSON.stringify(results, null, 4));
+                });
+                break;
+            case 'sh':
+                exec(command, (err, stdout, stderr) => {
+                    resp.send(err || `STDOUT:\n\n${stdout}\n\nSTDERR:\n${stderr}`);
+                });
+                break;
+            case 'javascript':
+                eval(`new Promise((resolve, reject) => {${command}})`)
+                    .then(result => resp.send(result))
+                    .catch(error => resp.send(error));
+                break;
+            default:
+                resp.status(400).send(`unsupported mode: ${mode}`);
             }
         } else {
             log.warn('unauthorized admin %s, %s', req.ip, command);

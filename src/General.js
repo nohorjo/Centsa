@@ -39,7 +39,7 @@ const route = Router();
 const DAY = 8.64e7;
 const SAVING_TEST = /^Saving (\d{4}\/\d{2}\/\d{2}): /;
 
-route.get("/budget", (req, resp) => {
+route.get('/budget', (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
     const { user_id } = req.session.userData;
     const today = new Date(req.get('x-date'));
@@ -88,101 +88,104 @@ route.get("/budget", (req, resp) => {
             const goals = expenses.filter(e => SAVING_TEST.test(e.name))
                 .reduce((sum, e) => e.cost * (today - e.started) / DAY, 0);
             switch (mode.mode) {
-                case 'expense': case 'strictExpense':
-                    const strict = mode.mode == 'strictExpense';
-                    const multiplier = mode.expenseRounds - 1 || 0;
-                    const currentDay = new Date(req.get('x-date')).valueOf();
+            case 'expense': case 'strictExpense': {
+                const strict = mode.mode == 'strictExpense';
+                const multiplier = mode.expenseRounds - 1 || 0;
+                const currentDay = new Date(req.get('x-date')).valueOf();
 
-                    const budget = expenses.reduce(
-                        (currentBudget, expense) => {
-                            if (expense.cost > 0 && expense.started < new Date(currentDay)) {
-                                let { cost } = expense;
-                                if (!strict) {
-                                    const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
-                                    const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
+                const budget = expenses.reduce(
+                    (currentBudget, expense) => {
+                        if (expense.cost > 0 && expense.started < new Date(currentDay)) {
+                            let { cost } = expense;
+                            if (!strict) {
+                                const timeToNextPayment = nextPaymentDate(expense, currentDay) - currentDay;
+                                const timeSinceLastPayment = currentDay - lastPaymentDate(expense, currentDay);
 
-                                    cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
-                                }
-                                cost += multiplier * expense.cost;
-                                currentBudget.afterAll -= cost;
-                                if (expense.automatic) {
-                                    currentBudget.afterAuto -= cost;
-                                }
+                                cost *= timeSinceLastPayment / (timeSinceLastPayment + timeToNextPayment);
                             }
-                            return currentBudget;
-                        }, {
-                            afterAll: total,
-                            afterAuto: total
-                        }
-                    );
-                    respond(budget);
-                    break;
-                case 'manual':
-                    const start = new Date(mode.start);
-                    getAll(
-                        user_id,
-                        {
-                            fromDate: start,
-                            toDate: today,
-                        },
-                        1,
-                        Number.MAX_SAFE_INTEGER,
-                        null,
-                        (err, transactions) => {
-                            if (err) {
-                                log.error(err);
-                                resp.status(500).send(err);
-                            } else {
-                                // filter out incomes that are not transfers
-                                const sum = transactions.filter(t => t.amount > 0 || transactions.some(u => (
-                                    u.comment == t.comment
-                                    && u.date == t.date
-                                    && u.type_id == t.type_id
-                                    && u.expense_id == t.expense_id
-                                    && u.account_id != t.account_id
-                                    && u.amount == -t.amount
-                                ))).reduce((sum, t) => sum + t.amount, 0);
-                                const days = (today - start) / DAY;
-                                const amount = Math.ceil(days / mode.frequency) * mode.amount - sum;
-                                respond({afterAll: amount - goals});
+                            cost += multiplier * expense.cost;
+                            currentBudget.afterAll -= cost;
+                            if (expense.automatic) {
+                                currentBudget.afterAuto -= cost;
                             }
                         }
-                    );
-                    break;
-                case 'time':
-                    const current = new Date(today);
-                    const end = new Date(today.getTime() + mode.days * DAY);
-                    let afterAuto = total - expenses
-                                            .filter(e => SAVING_TEST.test(e.name))
-                                            .map(e => e.cost).reduce((a, b) => a + b, 0);
-                    let afterAll = afterAuto - goals;
-
-                    expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
-
-                    while (current <= end) {
-                        const currentExpenses = expenses.filter(e => isDayOfPayment(e.frequency, current, e.started));
-                        afterAll -= currentExpenses.map(e => e.cost)
-                            .reduce((a, b) => a + b, 0);
-                        afterAuto -= currentExpenses.filter(e => e.automatic)
-                            .map(e => e.cost)
-                            .reduce((a, b) => a + b, 0);
-                        current.setDate(current.getDate() + 1);
+                        return currentBudget;
+                    }, {
+                        afterAll: total,
+                        afterAuto: total
                     }
-                    
-                    log('returning budget');
-                    respond({afterAll, afterAuto});
-                    break;
-                default:
-                    log.warn('invalid budget type');
-                    resp.status(400).send('Invalid budget type');
-                    break;
+                );
+                respond(budget);
+                break;
+            }
+            case 'manual': {
+                const start = new Date(mode.start);
+                getAll(
+                    user_id,
+                    {
+                        fromDate: start,
+                        toDate: today,
+                    },
+                    1,
+                    Number.MAX_SAFE_INTEGER,
+                    null,
+                    (err, transactions) => {
+                        if (err) {
+                            log.error(err);
+                            resp.status(500).send(err);
+                        } else {
+                            // filter out incomes that are not transfers
+                            const sum = transactions.filter(t => t.amount > 0 || transactions.some(u => (
+                                u.comment == t.comment
+                                && u.date == t.date
+                                && u.type_id == t.type_id
+                                && u.expense_id == t.expense_id
+                                && u.account_id != t.account_id
+                                && u.amount == -t.amount
+                            ))).reduce((sum, t) => sum + t.amount, 0);
+                            const days = (today - start) / DAY;
+                            const amount = Math.ceil(days / mode.frequency) * mode.amount - sum;
+                            respond({afterAll: amount - goals});
+                        }
+                    }
+                );
+                break;
+            }
+            case 'time': {
+                const current = new Date(today);
+                const end = new Date(today.getTime() + mode.days * DAY);
+                let afterAuto = total - expenses
+                    .filter(e => SAVING_TEST.test(e.name))
+                    .map(e => e.cost).reduce((a, b) => a + b, 0);
+                let afterAll = afterAuto - goals;
+
+                expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
+
+                while (current <= end) {
+                    const currentExpenses = expenses.filter(e => isDayOfPayment(e.frequency, current, e.started));
+                    afterAll -= currentExpenses.map(e => e.cost)
+                        .reduce((a, b) => a + b, 0);
+                    afterAuto -= currentExpenses.filter(e => e.automatic)
+                        .map(e => e.cost)
+                        .reduce((a, b) => a + b, 0);
+                    current.setDate(current.getDate() + 1);
+                }
+                
+                log('returning budget');
+                respond({afterAll, afterAuto});
+                break;
+            }
+            default:
+                log.warn('invalid budget type');
+                resp.status(400).send('Invalid budget type');
+                break;
             }
         }
     });
 });
 
 // =================== IMPORT
-route.get("/rules", (req, resp) => {
+route.get('/rules', (req, resp) => {
     log('get all rules');
     rules.getAll(req.session.userData.user_id, (err, result) => {
         if (err) {
@@ -195,7 +198,7 @@ route.get("/rules", (req, resp) => {
     });
 });
 
-route.post("/rule/:name", (req, resp) => {
+route.post('/rule/:name', (req, resp) => {
     const { name } = req.params;
     log('insert rule %s', name);
 
@@ -215,11 +218,11 @@ route.post("/rule/:name", (req, resp) => {
             }
         );
     } else {
-        resp.status(400).send("Invalid name");
+        resp.status(400).send('Invalid name');
     }
 });
 
-route.get("/rule/:id", (req, resp) => {
+route.get('/rule/:id', (req, resp) => {
     log('get rule');
     rules.getRule(req.params.id, req.session.userData.user_id, (err, result) => {
         if (err) {
@@ -422,7 +425,9 @@ route.post('/password', (req, resp) => {
     req.body.newPassword = createHash('sha256').update(user_id.toString() + req.body.newPassword).digest('base64');
     try {
         req.body.oldPassword = createHash('sha256').update(user_id.toString() + req.body.oldPassword).digest('base64');
-    } catch (e) {}
+    } catch (e) {
+        // password is being set for the first time
+    }
     updatePassword(user_id, req.body, (err, updated) => {
         if (err) {
             log.error(err);

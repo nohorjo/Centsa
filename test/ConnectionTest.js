@@ -4,38 +4,38 @@ const { spy, stub, match } = require('sinon');
 const { expect } = require('chai');
 
 
-describe("Connection", () => {
-    describe("testConnection", () => {
+describe('Connection', () => {
+    describe('testConnection', () => {
         let createConnectionStub;
         beforeEach(() => {
-            createConnectionStub = stub(mysql, "createConnection");
+            createConnectionStub = stub(mysql, 'createConnection');
         });
         afterEach(() => {
             createConnectionStub.restore();
         });
-        it("Opens a connection, setting an error handler to exit", () => {
+        it('Opens a connection, setting an error handler to exit', () => {
             const connectSpy = spy();
             const onStub = stub();
 
-            onStub.withArgs("error", match.func).callsFake((e, cb) => {
-                const exitStub = stub(process, "exit");
+            onStub.withArgs('error', match.func).callsFake((e, cb) => {
+                const exitStub = stub(process, 'exit');
                 exitStub.withArgs(1).returns(undefined);
-                exitStub.throws("Unexpected args: exit");
+                exitStub.throws('Unexpected args: exit');
 
                 cb();
 
                 exitStub.restore();
             });
-            onStub.throws("Unexpected args: on");
+            onStub.throws('Unexpected args: on');
 
             const endSpy = spy();
 
             const config = {
-                host: "someip",
+                host: 'someip',
                 port: 1234,
-                user: "username",
-                password: "password",
-                database: "testdb"
+                user: 'username',
+                password: 'password',
+                database: 'testdb'
             };
 
             createConnectionStub.withArgs(match(config)).returns({
@@ -43,7 +43,7 @@ describe("Connection", () => {
                 on: onStub,
                 end: endSpy
             });
-            createConnectionStub.throws("Unexpected args: createConnection");
+            createConnectionStub.throws('Unexpected args: createConnection');
 
             testConnection();
 

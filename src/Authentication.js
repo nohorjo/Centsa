@@ -47,7 +47,7 @@ Authentication.login = async (req, res) => {
                 UsersDao.updatePassword(
                     user_id,
                     {
-                         newPassword: createHash('sha256').update(user_id.toString() + data.password).digest('base64')
+                        newPassword: createHash('sha256').update(user_id.toString() + data.password).digest('base64')
                     },
                     err => err ? reject(err) : resolve()
                 );
@@ -72,7 +72,7 @@ Authentication.login = async (req, res) => {
         res.sendStatus(201);
     } catch (e) {
         log.error(e);
-        res.status(e == "Unauthorized" ? 401 : 500).send(e.toString());
+        res.status(e == 'Unauthorized' ? 401 : 500).send(e.toString());
     }
 };
 

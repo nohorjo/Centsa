@@ -3,35 +3,35 @@ const { expect } = require('chai');
 const Connection = require('../src/dao/Connection');
 const { spy, stub, match } = require('sinon');
 
-describe("Accounts", () => {
+describe('Accounts', () => {
     const userId = 1234;
     let queryStub;
 
-    beforeEach(() => queryStub = stub(Connection.pool, "query"));
+    beforeEach(() => queryStub = stub(Connection.pool, 'query'));
     afterEach(() => queryStub.restore());
 
-    describe("getAll", () => {
+    describe('getAll', () => {
         const query = 'SELECT id,name,-(COALESCE((SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id), 0)) AS balance FROM accounts a WHERE user_id=?;';
         const account1 = {
             id: 1234,
-            name: "account1",
+            name: 'account1',
             balance: 987,
         };
         const account2 = {
             id: 5678,
-            name: "account2",
+            name: 'account2',
             balance: 6543,
         };
         const request = { session: { userData: { user_id: userId } }, query: {} };
-        it("returns accounts", () => {
+        it('returns accounts', () => {
             queryStub.withArgs(query, match([userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(null, [account1, account2]);
             });
-            queryStub.throws("Unexpected args: query");
+            queryStub.throws('Unexpected args: query');
 
             const sendStub = stub();
             sendStub.withArgs(match([account1, account2])).returns(undefined);
-            sendStub.throws("Unexpected args: send");
+            sendStub.throws('Unexpected args: send');
 
             const statusSpy = spy();
 
@@ -43,21 +43,21 @@ describe("Accounts", () => {
             expect(sendStub.calledOnce).to.be.true;
             expect(statusSpy.notCalled).to.be.true;
         });
-        it("returns 500 with error", () => {
-            const errorMsg = "Error message: getAll";
+        it('returns 500 with error', () => {
+            const errorMsg = 'Error message: getAll';
 
             queryStub.withArgs(query, match([userId]), match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
             });
-            queryStub.throws("Unexpected args: query");
+            queryStub.throws('Unexpected args: query');
 
             const errorSendStub = stub();
             errorSendStub.withArgs(errorMsg).returns(undefined);
-            errorSendStub.throws("Unexpected args: errorSend");
+            errorSendStub.throws('Unexpected args: errorSend');
 
             const statusStub = stub();
             statusStub.withArgs(500).returns({ send: errorSendStub });
-            statusStub.throws("Unexpected args: status");
+            statusStub.throws('Unexpected args: status');
 
             const sendSpy = spy();
 
@@ -71,15 +71,15 @@ describe("Accounts", () => {
             expect(sendSpy.notCalled).to.be.true;
         });
     });
-    describe("insert", () => {
-        const query = "INSERT INTO accounts SET ?;";
-        const newAccountName = "new account";
+    describe('insert', () => {
+        const query = 'INSERT INTO accounts SET ?;';
+        const newAccountName = 'new account';
         const newId = '5678';
         const request = {
             body: { name: newAccountName },
             session: { userData: { user_id: userId, accounts: [] } }
         };
-        it("returns ID", () => {
+        it('returns ID', () => {
             queryStub.withArgs(
                 query,
                 match([
@@ -89,11 +89,11 @@ describe("Accounts", () => {
                 match.func).callsFake((sql, arr, cb) => {
                 cb(null, { insertId: newId });
             });
-            queryStub.throws("Unexpected args: query");
+            queryStub.throws('Unexpected args: query');
 
             const sendStub = stub();
             sendStub.withArgs(newId).returns(undefined);
-            sendStub.throws("Unexpected args: send");
+            sendStub.throws('Unexpected args: send');
 
             const statusSpy = spy();
 
@@ -105,8 +105,8 @@ describe("Accounts", () => {
             expect(sendStub.calledOnce).to.be.true;
             expect(statusSpy.notCalled).to.be.true;
         });
-        it("returns 500 with error", () => {
-            const errorMsg = "Error message: insert";
+        it('returns 500 with error', () => {
+            const errorMsg = 'Error message: insert';
             queryStub.withArgs(query,
                 match([
                     match({ user_id: userId, name: newAccountName }),
@@ -115,15 +115,15 @@ describe("Accounts", () => {
                 match.func).callsFake((sql, arr, cb) => {
                 cb(errorMsg);
             });
-            queryStub.throws("Unexpected args: query");
+            queryStub.throws('Unexpected args: query');
 
             const errorSendStub = stub();
             errorSendStub.withArgs(errorMsg).returns(undefined);
-            errorSendStub.throws("Unexpected args: errorSend");
+            errorSendStub.throws('Unexpected args: errorSend');
 
             const statusStub = stub();
             statusStub.withArgs(500).returns({ send: errorSendStub });
-            statusStub.throws("Unexpected args: status");
+            statusStub.throws('Unexpected args: status');
 
             const sendSpy = spy();
 

@@ -28,7 +28,7 @@ Notifications.readNotifications = (userId, cb) => {
 
 Notifications.addNotification = (user_id, message, cb) => {
     pool.query(
-        `INSERT INTO notifications SET ?;`,
+        'INSERT INTO notifications SET ?;',
         {user_id, message},
         cb
     );

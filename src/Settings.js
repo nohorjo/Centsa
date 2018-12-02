@@ -19,9 +19,8 @@ route.get('/', (req, resp) => {
     });
 });
 
-route.post("/", (req, resp) => {
+route.post('/', (req, resp) => {
     log('set setting');
-    const setting = req.body;
     dao.setSetting(req.body, req.session.userData.user_id, err => {
         if (err) {
             log.error(err);

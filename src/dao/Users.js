@@ -31,7 +31,7 @@ Users.getUserAETs = (emailOrId, cb) => {
 
 Users.insert = (name, email, cb) => {
     pool.query(
-        `INSERT INTO users (email,name) VALUES (?,?);`,
+        'INSERT INTO users (email,name) VALUES (?,?);',
         [email, name],
         (err, results) => cb(err, err || results.insertId)
     );
@@ -51,7 +51,7 @@ Users.setUpUser = (userId, cb) => {
 
 Users.getControllees = (userId, cb) => {
     pool.query(
-        `SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?);`,
+        'SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?);',
         [userId],
         cb
     );
@@ -59,7 +59,7 @@ Users.getControllees = (userId, cb) => {
 
 Users.isController = (controller, controllee, cb) => {
     pool.query(
-        `SELECT EXISTS(SELECT 1 FROM usercontrol WHERE controller=? AND controllee=?);`,
+        'SELECT EXISTS(SELECT 1 FROM usercontrol WHERE controller=? AND controllee=?);',
         [controller, controllee],
         (err, results) => cb(err, results[0])
     );
@@ -67,7 +67,7 @@ Users.isController = (controller, controllee, cb) => {
 
 Users.getControllers = (userId, cb) => {
     pool.query(
-        `SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?)`,
+        'SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?)',
         [userId],
         (err, results) => cb(err, err || results.map(r => r.email))
     );
@@ -75,10 +75,10 @@ Users.getControllers = (userId, cb) => {
 
 Users.addController = (userId, email, cb) => {
     pool.query(
-        `INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);`,
+        'INSERT INTO usercontrol (controller,controllee) VALUES ((SELECT id FROM users WHERE email=?),?);',
         [email, userId],
-        (err, results) => {
-            if(err && err["sqlMessage"] == "Column 'controller' cannot be null") {
+        err => {
+            if(err && err.sqlMessage == 'Column "controller" cannot be null') {
                 cb();
             } else {
                 cb(err, true);
@@ -89,13 +89,13 @@ Users.addController = (userId, email, cb) => {
 
 Users.deleteController = (userId, email, cb) => {
     pool.query(
-        `SELECT id FROM users WHERE email=?;`,
+        'SELECT id FROM users WHERE email=?;',
         [email],
         (err, results) => {
             let id;
             if (err) cb(err);
-            else if (id = results[0].id) pool.query(
-                `DELETE FROM usercontrol WHERE controller=? AND controllee=?;`,
+            else if ((id = results[0].id)) pool.query(
+                'DELETE FROM usercontrol WHERE controller=? AND controllee=?;',
                 [id, userId],
                 err => cb(err, id)
             );
@@ -134,7 +134,7 @@ Users.updatePassword = (userId, password, cb) => {
 
 Users.getIdPassword = (email, cb) => {
     pool.query(
-        `SELECT id, password FROM users WHERE email=?;`,
+        'SELECT id, password FROM users WHERE email=?;',
         [email],
         cb
     );
