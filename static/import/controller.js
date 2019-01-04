@@ -1,8 +1,8 @@
-app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
+app.controller('importCtrl', function ($scope, $rootScope, $timeout, centsa) {
     $scope.rules = [];
     centsa.general.rules().then(resp => {
         $scope.rules = resp.data;
-        $scope.rule = resp.data.find(x => x.name == "Default").id.toString();
+        $scope.rule = resp.data.find(x => x.name == 'Default').id.toString();
     });
 
     $scope.importProgress = {
@@ -11,13 +11,13 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     };
 
     $scope.importFile = () => {
-        $scope.importError = "";
+        $scope.importError = '';
         $('#progressModal').modal({
             backdrop: 'static',
             keyboard: false
-        }).appendTo("body");
+        }).appendTo('body');
 
-        const importWorker = new Worker("/workers/importWorker.js");
+        const importWorker = new Worker('/workers/importWorker.js');
 
         let debounceTimeout;
         importWorker.addEventListener('message', ({data}) => {
@@ -34,7 +34,7 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
                         processed: 0,
                         total: 1
                     };
-                    $('#progressModal').appendTo(".content").modal("hide");
+                    $('#progressModal').appendTo('.content').modal('hide');
                 }, 1000);
             }
         });
@@ -55,9 +55,9 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
     let editor;
 
     $scope.$watch('rule', newValue => {
-        if (newValue === "") {
+        if (newValue === '') {
             console.log('new rule');
-            $scope.newRuleName = "";
+            $scope.newRuleName = '';
             $scope.showEditor = true;
             if (editor) {
                 editor.getSession().setValue('/** Enter import rule script here **/');
@@ -87,8 +87,8 @@ app.controller("importCtrl", function ($scope, $rootScope, $timeout, centsa) {
                     keyUpApplied = true;
                 }
                 editor = ace.edit('editor');
-                editor.setTheme("ace/theme/chrome");
-                editor.session.setMode("ace/mode/javascript");
+                editor.setTheme('ace/theme/chrome');
+                editor.session.setMode('ace/mode/javascript');
                 $scope.updateEditor();
                 editor.$blockScrolling = Infinity;
                 editor.setOptions({

@@ -1,4 +1,4 @@
-app.controller("typesCtrl", function ($scope, centsa) {
+app.controller('typesCtrl', function ($scope, centsa) {
     $scope.types = [];
     centsa.types.getAll().then(resp => {
         $scope.types = resp.data;
@@ -6,7 +6,7 @@ app.controller("typesCtrl", function ($scope, centsa) {
     });
 
     $scope.newType = {
-        name: ""
+        name: ''
     };
     var newType = {...$scope.newType};
 
@@ -20,9 +20,9 @@ app.controller("typesCtrl", function ($scope, centsa) {
 
     $scope.deleteType = async id => {
         const result = await swal({
-            title: `Are you sure you want to delete "${$scope.types.find(t => t.id == id).name}"?`,
-            text: "Once deleted, you will not be able to recover this type!",
-            type: "warning",
+            title: `Are you sure you want to delete '${$scope.types.find(t => t.id == id).name}'?`,
+            text: 'Once deleted, you will not be able to recover this type!',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
@@ -38,21 +38,21 @@ app.controller("typesCtrl", function ($scope, centsa) {
 
     $scope.drawPie = () => {
         console.log('draw pie');
-        AmCharts.makeChart("types-chart", {
-            type: "pie",
-            theme: "light",
+        AmCharts.makeChart('types-chart', {
+            type: 'pie',
+            theme: 'light',
             dataProvider: $scope.types
                 .filter(t => t.sum > 0)
                 .map(t => ({
                     name: t.name,
                     sum: t.sum / 100
                 })),
-            valueField: "sum",
-            titleField: "name",
+            valueField: 'sum',
+            titleField: 'name',
             balloon: {
                 fixedPosition: true
             }
         });
-    }
+    };
 
 });

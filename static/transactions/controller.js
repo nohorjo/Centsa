@@ -1,5 +1,5 @@
-app.controller("transCtrl", function($scope, $rootScope, centsa) {
-    const DEFAULT_SORT = "date DESC, id DESC";
+app.controller('transCtrl', function($scope, $rootScope, centsa) {
+    const DEFAULT_SORT = 'date DESC, id DESC';
     $scope.tabs = [{
         index: 0,
         filter: $rootScope.filter,
@@ -9,12 +9,12 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.newTrans = {
         amount: 0.0,
-        comment: "",
+        comment: '',
         expense_id: null,
-        date: new Date().formatDate("yyyy/MM/dd")
+        date: new Date().formatDate('yyyy/MM/dd')
     };
     let newTrans = {...$scope.newTrans};
-    centsa.settings.get("default.account").then(data => $scope.$apply(() => {
+    centsa.settings.get('default.account').then(data => $scope.$apply(() => {
         $scope.newTrans.account_id = newTrans.account_id = data.toString();
     }));
 
@@ -33,7 +33,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
     centsa.accounts.getAll({light: true}).then(resp => $scope.accounts = resp.data);
     centsa.types.getAll({light: true}).then(resp => {
         $scope.types = resp.data;
-        $scope.newTrans.type_id = newTrans.type_id = resp.data.find(a => a.name == "Other").id.toString();
+        $scope.newTrans.type_id = newTrans.type_id = resp.data.find(a => a.name == 'Other').id.toString();
     });
     centsa.expenses.getAll({light: true}).then(resp => $scope.expenses = resp.data);
     centsa.transactions.getUniqueComments().then(resp => $scope.uniqueComments = resp.data);
@@ -58,12 +58,12 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                         $scope.transactions[i] = $scope.newTrans;
                     }
                 }
-                $('#transModal').appendTo(".content").modal('hide');
+                $('#transModal').appendTo('.content').modal('hide');
             }
             $scope.newTrans = {...newTrans};
-            $('.datepicker').datepicker("update", new Date().formatDate("yyyy/MM/dd"));
+            $('.datepicker').datepicker('update', new Date().formatDate('yyyy/MM/dd'));
         }).catch(() => {
-            $('.datepicker').datepicker("update", $scope.newTrans.date);
+            $('.datepicker').datepicker('update', $scope.newTrans.date);
         });
     };
 
@@ -71,38 +71,38 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
         const t = {...trans};
         delete t.firstOfWeek;
         t.date = $rootScope.formatDate(t.date);
-        $('.datepicker').datepicker("update", t.date);
+        $('.datepicker').datepicker('update', t.date);
         t.account_id = t.account_id.toString();
         t.type_id = t.type_id.toString();
         t.expense_id = t.expense_id && t.expense_id.toString();
         $scope.newTrans = t;
-        $('#transModal').appendTo("body").modal("show");
+        $('#transModal').appendTo('body').modal('show');
         $('#transModal').on(
             'hidden.bs.modal',
-            e => {
+            () => {
                 $scope.newTrans = {...newTrans};
-                $('.datepicker').datepicker("update",
-                    new Date().formatDate("yyyy/MM/dd"));
-            })
+                $('.datepicker').datepicker('update',
+                    new Date().formatDate('yyyy/MM/dd'));
+            });
     };
 
     $scope.initDatePickers = () => {
         $('.datepicker, .daterangepicker').datepicker({
-            format: "yyyy/mm/dd",
+            format: 'yyyy/mm/dd',
             endDate: new Date(),
-            todayBtn: "linked",
+            todayBtn: 'linked',
             autoclose: true,
             todayHighlight: true
         });
-        $('.datepicker').datepicker("update",
-            new Date().formatDate("yyyy/MM/dd"));
+        $('.datepicker').datepicker('update',
+            new Date().formatDate('yyyy/MM/dd'));
     };
 
     $scope.deleteTrans = async id => {
         const result = await swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this transaction!",
-            type: "warning",
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this transaction!',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
@@ -112,7 +112,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             centsa.transactions.remove(id).then(() => {
                 centsa.transactions.getSummary($rootScope.filter).then(resp => $scope.transactionSummary = resp.data);
                 $scope.transactions.splice($scope.transactions.findIndex(t => t.id == id), 1);
-                $('#transModal').appendTo(".content").modal("hide");
+                $('#transModal').appendTo('.content').modal('hide');
             });
         }
     };
@@ -125,8 +125,8 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                 lastCol = col;
                 asc = false;
             }
-           $scope.tabs[$scope.currentTab].sort = col + " " + ((asc = !asc) ? "ASC" : "DESC") + ", id DESC" +
-                (secondary ? ", " + secondary : "");
+            $scope.tabs[$scope.currentTab].sort = col + ' ' + (((asc = !asc)) ? 'ASC' : 'DESC') + ', id DESC' +
+                (secondary ? ', ' + secondary : '');
             $scope.reloadTrans();
         };
     })();
@@ -166,7 +166,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.exportFilteredTransactions = () => {
         console.log('export');
-        const exportWorker = new Worker("/workers/exportWorker.js");
+        const exportWorker = new Worker('/workers/exportWorker.js');
         exportWorker.addEventListener('message', e => {
             var element = document.createElement('a');
             element.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(e.data)}`);
@@ -197,9 +197,9 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.transScrollTop = () => {
         console.log('scroll to top');
-        $("#transDiv").animate({
+        $('#transDiv').animate({
             scrollTop: 0
-        }, "fast");
+        }, 'fast');
     };
 
     $scope.autoFillFromExpense = expenseId => {
@@ -207,7 +207,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
             console.log('auto fill');
             const expense = $scope.expenses.find(e => e.id == expenseId);
             const { newTrans } =  $scope;
-            newTrans.type_id = expense.type_id.toString()
+            newTrans.type_id = expense.type_id.toString();
             newTrans.comment = expense.name;
         }
     };
@@ -246,7 +246,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
 
     $scope.removeCommentFilter = index => $rootScope.filter.comments.splice(index, 1);
 
-    $scope.addCommentFilter = () => $rootScope.filter.comments.push({comment: ""});
+    $scope.addCommentFilter = () => $rootScope.filter.comments.push({comment: ''});
 
     function setFirstOfWeeks() {
         if (/^date/.test($scope.tabs[$scope.currentTab].sort)) {
@@ -262,7 +262,7 @@ app.controller("transCtrl", function($scope, $rootScope, centsa) {
                     } else {
                         t.firstOfWeek = false;
                     }
-            });
+                });
         }
     }
 });

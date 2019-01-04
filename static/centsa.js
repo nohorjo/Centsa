@@ -131,7 +131,7 @@ const centsa = function ($http) {
     })();
 
 };
-if (typeof app == "object") {
+if (typeof app == 'object') {
     app.factory('httpInterceptor', function ($q) {
         return {
             'request': function (config) {
@@ -140,16 +140,16 @@ if (typeof app == "object") {
             },
             'responseError': function (rejection) {
                 swal(
-                    "Error",
-                    JSON.stringify(rejection.data).replace(/(^"|"$)/g,''),
-                    "error"
+                    'Error',
+                    JSON.stringify(rejection.data).replace(/(^'|'$)/g,''),
+                    'error'
                 ).then(() => {
                     if(rejection.status == 401) window.location.pathname = '/index.html';
                 });
                 return $q.reject(rejection);
             }
         };
-    }).config(["$httpProvider", function ($httpProvider) {
+    }).config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('httpInterceptor');
     }]).service('centsa', centsa);
 }

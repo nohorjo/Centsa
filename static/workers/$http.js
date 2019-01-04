@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const $http = (() => {
     const ajax = x => {
         return new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ const $http = (() => {
                     } else {
                         try {
                             let data = xhr.response;
-                            if (xhr.getResponseHeader('content-type').indexOf("application/json") != -1) {
+                            if (xhr.getResponseHeader('content-type').indexOf('application/json') != -1) {
                                 data = JSON.parse(data);
                             }
                             resolve({ data: data, status: xhr.status });
@@ -20,9 +21,9 @@ const $http = (() => {
                 }
             };
             if (x.params) {
-                x.url += "?";
+                x.url += '?';
                 for (let p in x.params) {
-                    x.url += `${p}=${encodeURIComponent(JSON.stringify(x.params[p]))}&`
+                    x.url += `${p}=${encodeURIComponent(JSON.stringify(x.params[p]))}&`;
                 }
             }
             xhr.open(x.method, x.url, true);
@@ -36,7 +37,7 @@ const $http = (() => {
         get(url, opts) {
             return ajax({
                 url: url,
-                method: "GET",
+                method: 'GET',
                 params: opts && opts.params,
                 headers: opts && opts.headers
             });
@@ -44,9 +45,9 @@ const $http = (() => {
         post(url, data, opts) {
             return ajax({
                 url: url,
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                     ...(opts && opts.headers)
                 },
                 data: JSON.stringify(data)
@@ -55,7 +56,7 @@ const $http = (() => {
         delete(url) {
             return ajax({
                 url: url,
-                method: "DELETE"
+                method: 'DELETE'
             });
         }
     };

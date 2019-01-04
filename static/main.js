@@ -1,6 +1,6 @@
-const app = angular.module("app", ["ngRoute", "ngCookies", "ngAnimate"]);
+const app = angular.module('app', ['ngRoute', 'ngCookies', 'ngAnimate']);
 
-app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $timeout, centsa) {
+app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $timeout, centsa) {
     $rootScope.name = $cookies.get('name');
     $scope.currentUser = $cookies.get('currentUser') || '-1';
     $scope.controllees = [];
@@ -10,7 +10,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
         if (date.constructor == String) {
             date = date.substr(0, 19);
         }
-        return new Date(date).formatDate("yyyy/MM/dd");
+        return new Date(date).formatDate('yyyy/MM/dd');
     };
 
     $rootScope.sort = (() => {
@@ -21,10 +21,10 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
                 lastProp = prop;
                 asc = false;
             }
-            asc = !asc
+            asc = !asc;
             arr.sort((a, b) => {
-                p1 = a[prop];
-                p2 = b[prop];
+                const p1 = a[prop];
+                const p2 = b[prop];
                 var comp;
                 if (p1.constructor == String) {
                     comp = p1.localeCompare(p2);
@@ -47,9 +47,9 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
             account_id: '0',
             type_id: '0',
             expense_id: '0',
-            comments: [{comment:""}],
+            comments: [{comment:''}],
             regex: false
-        }
+        };
         $rootScope.showFilter = false;
     };
     $rootScope.resetFilter();
@@ -62,7 +62,7 @@ app.controller("mainCtrl", function ($scope, $rootScope, $location, $cookies, $t
             comments:[{comment:''}],
             ...f
         };
-        $location.path("transactions");
+        $location.path('transactions');
         $timeout(() => $rootScope.showFilter = false, 1000);
     };
 
@@ -101,8 +101,8 @@ app.directive('fileModel', ['$parse', function ($parse) {
     };
 }]);
 
-app.directive("numberDivide", () => ({
-    require: "ngModel",
+app.directive('numberDivide', () => ({
+    require: 'ngModel',
     link: ($scope, $elem, $attrs, $controller) => {
         $controller.$formatters.push(val => val && val / $attrs.numberDivide);
         $controller.$parsers.push(val => val && val * $attrs.numberDivide);
@@ -117,14 +117,14 @@ app.directive('scrollBottom', () => ({
             if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight - 10) {
                 $scope.$apply($attrs.scrollBottom);
             }
-        })
+        });
     }
 }));
 
 app.directive('maxHeightBottom', () => ({
     restrict: 'A',
-    link: function ($scope, $elem, $attrs) {
-        const setMaxHeight = yPos => $elem.prop("style")["max-height"] = `${(window.innerHeight - yPos) * 0.85}px`;
+    link: function ($scope, $elem) {
+        const setMaxHeight = yPos => $elem.prop('style')['max-height'] = `${(window.innerHeight - yPos) * 0.85}px`;
         setMaxHeight($elem[0].getBoundingClientRect().y);
 
         $scope.$watch(
@@ -134,7 +134,7 @@ app.directive('maxHeightBottom', () => ({
                         $scope.$digest();
                     }
                 }, 200);
-                return $elem[0].getBoundingClientRect().y
+                return $elem[0].getBoundingClientRect().y;
             },
             newV => setMaxHeight(newV)
         );

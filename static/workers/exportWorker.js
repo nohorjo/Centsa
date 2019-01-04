@@ -20,7 +20,7 @@ self.addEventListener('message', e => {
         const types = result[2].data;
 
         const csv = transactions.map(t => ({
-            Date: new Date(t.date).formatDate("yyyy/MM/dd"),
+            Date: new Date(t.date).formatDate('yyyy/MM/dd'),
             Amount: (t.amount / 100).toFixed(2),
             Comment: t.comment,
             Account: accounts.find(x => x.id == t.account_id).name,

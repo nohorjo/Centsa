@@ -30,6 +30,7 @@ self.addEventListener('message', e => {
             processed: 0,
             total
         });
+        // eslint-disable-next-line no-unused-vars
         const $records = (() => {
             let i = 0;
             return {

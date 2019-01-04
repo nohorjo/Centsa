@@ -20,7 +20,8 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            {"avoidEscape": true}
         ],
         "semi": [
             "error",
@@ -37,6 +38,14 @@
         "afterEach": false,
         "app": true,
         "$": false,
-        "AmCharts": false
+        "AmCharts": false,
+        "ace": false,
+        "otplib": false,
+        "swal": false,
+        "angular": false,
+        "centsa": true,
+        "$http": false,
+        "Papa": false,
+        "importScripts": false
     }
 }
