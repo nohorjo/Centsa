@@ -1,12 +1,12 @@
-app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
+app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
     let transChart;
     const byDate = (a, b) => new Date(a.date) - new Date(b.date);
 
     $scope.cumulativeSums = [];
     $scope.getBudget = () => {
-        centsa.settings.set("budget.mode", JSON.stringify($scope.budgetMode));
+        centsa.settings.set('budget.mode', JSON.stringify($scope.budgetMode));
         centsa.general.budget($scope.budgetMode).then(({data}) => $scope.budget = data);
-        if ($scope.budgetMode.mode == "manual") {
+        if ($scope.budgetMode.mode == 'manual') {
             $scope.initDatePickers();
         }
     };
@@ -18,24 +18,24 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                 transChart.handleMouseOut();
                 $rootScope.setFilter({
                     fromDate: date,
-                    sort: "date ASC, id ASC"
+                    sort: 'date ASC, id ASC'
                 });
             }
         }
     };
 
-    centsa.settings.get("budget.mode").then(budgetMode => $scope.$apply(() => {
+    centsa.settings.get('budget.mode').then(budgetMode => $scope.$apply(() => {
         $scope.budgetMode = {
             mode: 'expense',
             expenseRounds: 1,
             frequency: '7',
             days: 90,
-            start: new Date().formatDate("yyyy/MM/dd"),
+            start: new Date().formatDate('yyyy/MM/dd'),
             amount: 0,
             cashflowPeriod: '0',
             ...(budgetMode && JSON.parse(budgetMode))
         };
-        if ($scope.budgetMode.mode == "manual") {
+        if ($scope.budgetMode.mode == 'manual') {
             $scope.initDatePickers();
         }
         $scope.getBudget();
@@ -43,20 +43,20 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
 
     Promise.all([
         centsa.transactions.getCumulativeSums(),
-        centsa.settings.get("moving.average.days").then(setting => $scope.$apply(() => {
+        centsa.settings.get('moving.average.days').then(setting => $scope.$apply(() => {
             $scope.movingAvgDays = setting || '30';
         }))
     ]).then(([resp]) => {
         $scope.cumulativeSums = resp.data.map(x => ({
-            date: new Date(x.date).formatDate("yyyy/MM/dd"),
+            date: new Date(x.date).formatDate('yyyy/MM/dd'),
             sum: x.sum / 100
-        })).sort(byDate)
+        })).sort(byDate);
         if ($scope.cumulativeSums.length) $scope.drawGraph();
     });
 
     $scope.drawGraph = () => {
         console.log('draw graph');
-        centsa.settings.set("moving.average.days", $scope.movingAvgDays);
+        centsa.settings.set('moving.average.days', $scope.movingAvgDays);
         const applyMovingAverage = sums => {
             const millis = $scope.movingAvgDays * 8.64e7;
             const avgs = [];
@@ -96,40 +96,40 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
         const sums = applyMovingAverage($scope.cumulativeSums);
 
         const valueAxes = [{
-            id: "v1",
+            id: 'v1',
             axisAlpha: 0,
-            position: "left",
+            position: 'left',
             ignoreAxisWidth: true
         }];
         const graphs = [{
-            id: "g1",
+            id: 'g1',
             title: 'Total balance', 
             balloon: {
                 drop: true,
                 adjustBorderColor: false,
-                color: "#ffffff"
+                color: '#ffffff'
             },
             lineThickness: 2,
             useLineColorForBulletBorder: true,
-            valueField: "sum",
-            balloonText: "<span>[[value]]</span>"
+            valueField: 'sum',
+            balloonText: '<span>[[value]]</span>'
         }, {
-            id: "g2",
+            id: 'g2',
             title: 'Moving average', 
             lineThickness: 2,
-            valueField: "avg",
+            valueField: 'avg',
             bullet: 'round'
         }, {
-            id: "g3",
+            id: 'g3',
             title: 'Average rate of spending', 
             lineThickness: 2,
-            valueField: "rate",
+            valueField: 'rate',
             bullet: 'round',
             lineColor: '#ff7f7f'
         }];
         const chartOpts = {
-            type: "serial",
-            theme: "light",
+            type: 'serial',
+            theme: 'light',
             marginLeft: 60,
             valueAxes: valueAxes,
             balloon: {
@@ -142,29 +142,29 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
                 valueLineEnabled: true,
                 valueLineBalloonEnabled: true,
                 cursorAlpha: 1,
-                cursorColor: "#258cbb",
-                limitToGraph: "g1",
+                cursorColor: '#258cbb',
+                limitToGraph: 'g1',
                 valueLineAlpha: 0.2,
                 valueZoomable: true
             },
-            categoryField: "date",
+            categoryField: 'date',
             categoryAxis: {
                 parseDates: true,
                 dashLength: 1,
             },
             chartScrollbar: {
-                graph: "g1",
+                graph: 'g1',
                 oppositeAxis: false,
                 offset: 30,
                 scrollbarHeight: 80,
                 backgroundAlpha: 0,
                 selectedBackgroundAlpha: 0.1,
-                selectedBackgroundColor: "#888888",
+                selectedBackgroundColor: '#888888',
                 graphFillAlpha: 0,
                 graphLineAlpha: 0.5,
                 selectedGraphFillAlpha: 0,
                 selectedGraphLineAlpha: 1,
-                color: "#AAAAAA"
+                color: '#AAAAAA'
             },
             dataProvider: sums,
             mouseWheelZoomEnabled: true,
@@ -174,17 +174,18 @@ app.controller("summaryCtrl", function ($scope, $rootScope, centsa) {
             },
             dataDateFormat: 'YYYY/MM/DD'
         };
-        transChart = AmCharts.makeChart("trans-chart", chartOpts);
+        transChart = AmCharts.makeChart('trans-chart', chartOpts);
+        transChart.zoom(new Date - 3.15e10);
     };
 
     $scope.initDatePickers = () => {
         $('#manualStart').datepicker({
-            format: "yyyy/mm/dd",
+            format: 'yyyy/mm/dd',
             endDate: new Date(),
-            todayBtn: "linked",
+            todayBtn: 'linked',
             autoclose: true,
             todayHighlight: true
         });
-        $('#manualStart').datepicker("update", new Date($scope.budgetMode.start).formatDate("yyyy/MM/dd"));
+        $('#manualStart').datepicker('update', new Date($scope.budgetMode.start).formatDate('yyyy/MM/dd'));
     };
 });
