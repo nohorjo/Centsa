@@ -1,4 +1,6 @@
 const { Router } = require('express');
+const _ = require('underscore');
+
 const dao = require('./dao/Accounts');
 const log = require('./log');
 
@@ -18,7 +20,6 @@ _route.getAll = (req, resp) => {
                 log.error(err);
                 resp.status(500).send(err);
             } else {
-                result.forEach(a => a.balance = a.balance || 0);
                 req.session.userData.accounts = result;
                 log('returning accounts');
                 resp.send(result);
@@ -29,7 +30,7 @@ _route.getAll = (req, resp) => {
 
 _route.insert = (req, resp) => {
     log('insert account');
-    const account = (({ name, id }) => ({ name, id }))(req.body || {});
+    const account = _.pick(req.body, 'name', 'id', 'savings');
     account['user_id'] = req.session.userData.user_id;
     if (!account.id) {
         delete account.id;

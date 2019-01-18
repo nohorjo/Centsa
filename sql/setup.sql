@@ -56,6 +56,7 @@ CREATE TABLE accounts
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     name VARCHAR(50) NOT NULL,
+    savings BOOL NOT NULL DEFAULT FALSE,
     UNIQUE(user_id,name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

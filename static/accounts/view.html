@@ -72,7 +72,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <input type="checkbox" class="form-control" data-ng-model="newAccount.savings">
+                    <input type="checkbox" data-ng-model="newAccount.savings">
                 </td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
@@ -109,9 +109,9 @@
                 <td>
                     <input
                         type="checkbox"
-                        class="form-control"
                         data-ng-model="a.savings"
-                        data-ng-click="updateAccount(a, true);$event.stopPropagation()"
+                        data-ng-change="updateAccount(a, true)"
+                        data-ng-click="$event.stopPropagation()"
                     >
                 </td>
                 <td data-ng-init="a.nameOld = a.name">
