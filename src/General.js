@@ -423,10 +423,8 @@ route.post('/password', (req, resp) => {
     const { user_id } = req.session.userData;
     log('updating password', user_id);
     req.body.newPassword = createHash('sha256').update(user_id.toString() + req.body.newPassword).digest('base64');
-    try {
+    if (req.body.oldPassword) {
         req.body.oldPassword = createHash('sha256').update(user_id.toString() + req.body.oldPassword).digest('base64');
-    } catch (e) {
-        // password is being set for the first time
     }
     updatePassword(user_id, req.body, (err, updated) => {
         if (err) {

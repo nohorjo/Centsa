@@ -23,12 +23,11 @@ Authentication.authSkipLogin = (req, resp, next) => (req.session && req.session.
 Authentication.login = async (req, res) => {
     try {
         const { body: data } = req;
-        let details, newManualUser;
+        let details;
         if (data.google_token) {
             details = await getDetailsFromGoogle(data.google_token);
         } else if (data.manual) {
             await authenticateUser(data);
-            newManualUser = true;
             details = {
                 email: data.email,
                 name: data.name
@@ -41,8 +40,9 @@ Authentication.login = async (req, res) => {
             ...(await Users.getOrCreateUser(details))
         };
 
-        if (newManualUser) {
+        if (data.manual) {
             const { user_id }  = req.session.userData;
+            // update password hash with user ID
             await new Promise((resolve, reject) => {
                 UsersDao.updatePassword(
                     user_id,
