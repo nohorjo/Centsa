@@ -244,12 +244,11 @@ app.controller('expensesCtrl', function ($scope, $rootScope, $sce, centsa) {
             started: new Date(),
             type_id: $scope.types.find(t => t.name == 'Other').id
         };
-        centsa.expenses.insert(expense).then(({data}) => {
-            expense.id = data;
-            $scope.expenses.push(expense);
-            getActiveTotals();
-            $scope.goal = {};
-            $("form[name='GoalForm'] .datepicker").datepicker('clearDates');
-        });
+        const { data } = await centsa.expenses.insert(expense);
+        expense.id = data;
+        $scope.expenses.push(expense);
+        getActiveTotals();
+        $scope.goal = {};
+        $("form[name='GoalForm'] .datepicker").datepicker('clearDates');
     };
 });
