@@ -11,7 +11,8 @@ app.controller('accountsCtrl', function ($scope, centsa) {
 
     $scope.newAccount = {
         name: '',
-        balance: 0
+        balance: 0,
+        savings: false,
     };
     let newAccount = {...$scope.newAccount};
 

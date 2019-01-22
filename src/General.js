@@ -31,6 +31,7 @@ const {
 const { logout } = require('./Authentication');
 const { createHash } = require('crypto');
 const { setSetting } = require('./dao/Settings');
+const { deleteAccount } = require('./dao/Accounts');
 
 log('init general');
 
@@ -38,6 +39,7 @@ const route = Router();
 
 const DAY = 8.64e7;
 const SAVING_TEST = /^Saving (\d{4}\/\d{2}\/\d{2}): /;
+const OUT_TEST = /OUT$/;
 
 route.get('/budget', (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
@@ -77,16 +79,27 @@ route.get('/budget', (req, resp) => {
                 if (match) {
                     return today >= new Date(match[1]);
                 }
-            }).forEach(({id, name}) => {
+            }).forEach(({
+                id,
+                name,
+                account_id: out_account_id,
+            }) => {
                 deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id));
-                addNotification(
-                    user_id,
-                    `Savings goal ended: ${name.split(SAVING_TEST).pop()}`,
-                    err => err ? log.error(err) : log('goal notified')
-                );
+                if (OUT_TEST.test(name)) {
+                    const { account_id: in_account_id } = expenses.find(e => e.name.startsWith(name.replace(OUT_TEST, '')));
+                    deleteAccount(
+                        user_id,
+                        out_account_id,
+                        in_account_id,
+                        err => err ? log.error(err) : log('goal account deleted'),
+                    );
+                    addNotification(
+                        user_id,
+                        `Savings goal ended: ${name.split(SAVING_TEST).pop().replace(OUT_TEST, '')}`,
+                        err => err ? log.error(err) : log('goal notified'),
+                    );
+                }
             });
-            const goals = expenses.filter(e => SAVING_TEST.test(e.name))
-                .reduce((sum, e) => e.cost * (today - e.started) / DAY, 0);
             switch (mode.mode) {
             case 'expense': case 'strictExpense': {
                 const strict = mode.mode == 'strictExpense';
@@ -145,7 +158,7 @@ route.get('/budget', (req, resp) => {
                             ))).reduce((sum, t) => sum + t.amount, 0);
                             const days = (today - start) / DAY;
                             const amount = Math.ceil(days / mode.frequency) * mode.amount - sum;
-                            respond({afterAll: amount - goals});
+                            respond({afterAll: amount});
                         }
                     }
                 );
@@ -154,10 +167,8 @@ route.get('/budget', (req, resp) => {
             case 'time': {
                 const current = new Date(today);
                 const end = new Date(today.getTime() + mode.days * DAY);
-                let afterAuto = total - expenses
-                    .filter(e => SAVING_TEST.test(e.name))
-                    .map(e => e.cost).reduce((a, b) => a + b, 0);
-                let afterAll = afterAuto - goals;
+                let afterAuto = total;
+                let afterAll = afterAuto;
 
                 expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
 

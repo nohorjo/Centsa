@@ -15,7 +15,7 @@ Expenses.getAll = (userId, cb) => {
 Expenses.getAllWithSum = (userId, cb) => {
     pool.query(
         `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=? AND account_id IN (SELECT id FROM accounts WHERE user_id=? AND savings=FALSE);
-        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=? AND (account_id IS NULL OR account_id IN (SELECT id FROM accounts WHERE user_id=? AND savings=FALSE));`,
+        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
         Array(4).fill(userId),
         cb,
     );

@@ -13,11 +13,11 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
 
     $scope.filterDate = $event => {
         if ($event.originalEvent.path[3].constructor == HTMLDivElement) {
-            const date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
-            if (new Date(date).getTime()){
+            let date = $($event.currentTarget.innerHTML).find('.amcharts-balloon-div-categoryAxis').text();
+            if ((date = new Date(date)).getTime()){
                 transChart.handleMouseOut();
                 $rootScope.setFilter({
-                    fromDate: date,
+                    fromDate: date.formatDate('yyyy/MM/dd'),
                     sort: 'date ASC, id ASC'
                 });
             }

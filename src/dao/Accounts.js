@@ -30,4 +30,8 @@ Accounts.insert = (account, cb) => {
     );
 };
 
+Accounts.deleteAccount = (userId, idToDelete, idToTransfer, cb) => {
+    // TODO implement
+};
+
 module.exports = Accounts;
