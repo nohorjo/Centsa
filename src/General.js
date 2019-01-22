@@ -21,7 +21,11 @@ const {
 } = require('./dao/Users');
 const { getSessionStore } = require('./index');
 const log = require('./log');
-const { getSummary, getAll } = require('./dao/Transactions');
+const {
+    getSummary,
+    getAll,
+    deleteTransfers,
+} = require('./dao/Transactions');
 const {
     getNotifications,
     deleteNotification,
@@ -86,16 +90,22 @@ route.get('/budget', (req, resp) => {
             }) => {
                 deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id));
                 if (OUT_TEST.test(name)) {
-                    const { account_id: in_account_id } = expenses.find(e => e.name.startsWith(name.replace(OUT_TEST, '')));
-                    deleteAccount(
-                        user_id,
-                        out_account_id,
-                        in_account_id,
-                        err => err ? log.error(err) : log('goal account deleted'),
-                    );
+                    const nameStart = name.replace(OUT_TEST, '');
+                    const { account_id: in_account_id } = expenses.find(e => e.name.startsWith(nameStart));
+                    deleteTransfers(user_id, in_account_id, out_account_id, `${nameStart}%`, err => {
+                        if (err) {
+                            log.error(err);
+                        } else {
+                            deleteAccount(
+                                user_id,
+                                [out_account_id, in_account_id],
+                                err => err ? log.error(err) : log('goal account deleted'),
+                            );
+                        }
+                    });
                     addNotification(
                         user_id,
-                        `Savings goal ended: ${name.split(SAVING_TEST).pop().replace(OUT_TEST, '')}`,
+                        `Savings goal ended: ${nameStart.split(SAVING_TEST).pop()}`,
                         err => err ? log.error(err) : log('goal notified'),
                     );
                 }
