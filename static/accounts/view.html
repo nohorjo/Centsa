@@ -124,7 +124,7 @@
                         data-ng-click="$event.stopPropagation()"
                     >
                 </td>
-                <td colspan="2" data-ng-init="a.balanceOld = a.balance">
+                <td data-ng-init="a.balanceOld = a.balance">
                     <input
                         type="number"
                         step=".01"
@@ -134,6 +134,9 @@
                         data-ng-blur="adjustAccount(a)"
                         data-ng-click="$event.stopPropagation()"
                     >
+                </td>
+                <td>
+                    <a href="" data-ng-click="deleteAccount(a.id);$event.stopPropagation()">Delete</a>
                 </td>
             </tr>
             <tr>

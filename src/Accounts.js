@@ -51,9 +51,22 @@ _route.insert = (req, resp) => {
     });
 };
 
+_route.delete = (req, resp) => {
+    log('deleting account');
+    dao.deleteAccount(req.session.userData.user_id, req.params.id, req.query.transfer, err => {
+        if (err) {
+            log.error(err);
+            resp.status(500).send(err);
+        } else {
+            log('deleted account');
+            resp.sendStatus(201);
+        }
+    });
+};
 
 route.get('/', _route.getAll);
 route.post('/', _route.insert);
+route.delete('/:id', _route.delete);
 
 _route.use('/accounts', route);
 

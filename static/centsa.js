@@ -17,6 +17,12 @@ const centsa = function ($http) {
             return $http.delete(`${this.apiUrl}/${id}`);
         }
     }
+    class accountsApi extends baseApi {
+        remove(id, transfer) {
+            console.log(this.constructor.name, 'remove', {id, transfer});
+            return $http.delete(`${this.apiUrl}/${id}?transfer=${transfer}`);
+        }
+    }
     class expensesApi extends genericApi {
         constructor() { super('expenses'); }
         totalActive(incAuto) {
@@ -40,7 +46,7 @@ const centsa = function ($http) {
         }
     }
 
-    this.accounts = new baseApi('accounts');
+    this.accounts = new accountsApi('accounts');
     this.types = new genericApi('types');
     this.transactions = new transactionsApi();
     this.expenses = new expensesApi();

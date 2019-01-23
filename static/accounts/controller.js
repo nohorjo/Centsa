@@ -114,4 +114,27 @@ app.controller('accountsCtrl', function ($scope, centsa) {
         }
     };
 
+    $scope.deleteAccount = async id => {
+        const inputOptions = $scope.accounts.reduce((opts, a) => {
+            opts[a.id] = a.name;
+            return opts;
+        }, {});
+        const result = await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this account! You will need to select the account to transfer transactions and automatic expenses to',
+            input: 'select',
+            inputOptions,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        });
+        if (result.value) {
+            centsa.accounts.remove(id, result.value).then(() => {
+                $scope.accounts.splice($scope.accounts.findIndex(a => a.id == id), 1);
+            });
+        }
+    };
+
 });
