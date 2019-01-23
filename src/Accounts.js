@@ -38,7 +38,7 @@ _route.insert = (req, resp) => {
     dao.insert(account, (err, id) => {
         if (err) {
             log.error(err);
-            resp.status(500).send(err);
+            resp.status(500).send(err.errno == 1062 ? 'An account with this name already exists' : err);
         } else {
             const { userData } = req.session;
             userData.accounts = [
@@ -53,12 +53,18 @@ _route.insert = (req, resp) => {
 
 _route.delete = (req, resp) => {
     log('deleting account');
-    dao.deleteAccount(req.session.userData.user_id, req.params.id, req.query.transfer, err => {
+    const {
+        params: { id },
+        query: { transfer },
+        session: { userData },
+    } = req;
+    dao.deleteAccount(userData.user_id, id, transfer, err => {
         if (err) {
             log.error(err);
-            resp.status(500).send(err);
+            resp.status(500).send(transfer == -1 && err.errno == 1451 ? "This account is part of a 'savings goal'. Please delete that first from the 'expenses' page" : err);
         } else {
             log('deleted account');
+            userData.accounts = userData.accounts.filter(a => a.id != id);
             resp.sendStatus(201);
         }
     });

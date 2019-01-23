@@ -115,11 +115,20 @@ app.controller('accountsCtrl', function ($scope, centsa) {
     };
 
     $scope.deleteAccount = async id => {
+        if ($scope.accounts.length == 1) {
+            swal(
+                'Error',
+                'Cannot delete last account',
+                'error'
+            );
+            return;
+        }
         const inputOptions = $scope.accounts.reduce((opts, a) => {
-            opts[a.id] = a.name;
+            if (a.id != id)
+                opts[a.id] = a.name;
             return opts;
-        }, {});
-        const result = await swal({
+        }, {[-1]: 'None, delete them'});
+        const transfer = await swal({
             title: 'Are you sure?',
             text: 'Once deleted, you will not be able to recover this account! You will need to select the account to transfer transactions and automatic expenses to',
             input: 'select',
@@ -129,10 +138,21 @@ app.controller('accountsCtrl', function ($scope, centsa) {
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
-        });
-        if (result.value) {
-            centsa.accounts.remove(id, result.value).then(() => {
+        }).then(({value}) => (value == -1) ? swal({
+            title: 'This action in irreversible!',
+            text: 'Once deleted, you will not be able to recover these transactions and expenses!',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(result => result.value && value) : value);
+        if (transfer) {
+            centsa.accounts.remove(id, transfer).then(() => {
                 $scope.accounts.splice($scope.accounts.findIndex(a => a.id == id), 1);
+                if ($scope.defaultAccountId == id) {
+                    $scope.setDefaultAccount($scope.defaultAccountId = $scope.accounts[0].id.toString());
+                }
             });
         }
     };

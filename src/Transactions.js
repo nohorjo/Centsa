@@ -144,7 +144,7 @@ route.post('/', (() => {
                 dao.insert(transaction, (err, id) => {
                     if (err) {
                         log.error(err);
-                        resp.status(500).send(err);
+                        resp.status(500).send(err.errno == 1062 ? 'This transaction already exists' : err);
                     } else {
                         log('inserted transaction');
                         resp.send(id.toString());

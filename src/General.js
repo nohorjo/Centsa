@@ -92,13 +92,14 @@ route.get('/budget', (req, resp) => {
                 if (OUT_TEST.test(name)) {
                     const nameStart = name.replace(OUT_TEST, '');
                     const { account_id: in_account_id } = expenses.find(e => e.name.startsWith(nameStart));
-                    deleteTransfers(user_id, in_account_id, out_account_id, `${nameStart}%`, err => {
+                    deleteTransfers(user_id, [in_account_id, out_account_id], `${nameStart}%`, err => {
                         if (err) {
                             log.error(err);
                         } else {
                             deleteAccount(
                                 user_id,
-                                [out_account_id, in_account_id],
+                                in_account_id,
+                                out_account_id,
                                 err => err ? log.error(err) : log('goal account deleted'),
                             );
                         }
@@ -427,8 +428,15 @@ route.get('/notifications/update', (req, resp) => {
 });
 
 route.delete('/deleteUser', (req, resp) => {
-    const { user_id } = req.session.userData;
+    const { user_id, original_user_id } = req.session.userData;
     log('deleting user', user_id);
+
+    if (user_id !== original_user_id) {
+        log.warn('controller attempt to delete user', {user_id, original_user_id});
+        resp.sendStatus(401);
+        return;
+    }
+
     deleteUser(user_id, err => {
         if (err) {
             log.error(err);
@@ -441,8 +449,15 @@ route.delete('/deleteUser', (req, resp) => {
 });
 
 route.post('/password', (req, resp) => {
-    const { user_id } = req.session.userData;
+    const { user_id, original_user_id } = req.session.userData;
     log('updating password', user_id);
+
+    if (user_id !== original_user_id) {
+        log.warn('controller attempt to change password', {user_id, original_user_id});
+        resp.sendStatus(401);
+        return;
+    }
+
     req.body.newPassword = createHash('sha256').update(user_id.toString() + req.body.newPassword).digest('base64');
     try {
         req.body.oldPassword = createHash('sha256').update(user_id.toString() + req.body.oldPassword).digest('base64');

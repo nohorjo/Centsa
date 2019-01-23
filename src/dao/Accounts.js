@@ -31,24 +31,34 @@ Accounts.insert = (account, cb) => {
 };
 
 Accounts.deleteAccount = (userId, idToDelete, idToTransfer, cb) => {
-    pool.query(
-        `UPDATE transactions SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
-        UPDATE expenses SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
-        DELETE FROM accounts WHERE id=? AND user_id=?;`,
-        [
-            idToTransfer,
-            userId,
-            idToDelete,
-            userId,
-            idToTransfer,
-            userId,
-            idToDelete,
-            userId,
-            idToDelete,
-            userId,
-        ],
-        cb,
-    );
+    if (idToTransfer == -1) {
+        pool.query(
+            `DELETE FROM transactions WHERE account_id=? AND user_id=?;
+            DELETE FROM expenses WHERE account_id=(SELECT id FROM accounts WHERE id=? AND savings=FALSE) AND user_id=?;
+            DELETE FROM accounts WHERE id=? AND user_id=?;`,
+            [].concat(...Array(3).fill([idToDelete, userId])),
+            cb,
+        );
+    } else {
+        pool.query(
+            `UPDATE transactions SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
+            UPDATE expenses SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
+            DELETE FROM accounts WHERE id=? AND user_id=?;`,
+            [
+                idToTransfer,
+                userId,
+                idToDelete,
+                userId,
+                idToTransfer,
+                userId,
+                idToDelete,
+                userId,
+                idToDelete,
+                userId,
+            ],
+            cb,
+        );
+    }
 };
 
 module.exports = Accounts;

@@ -31,7 +31,7 @@ route.post('/', (req, resp) => {
     dao.insert(name, req.session.userData.user_id, (err, id) => {
         if (err) {
             log.error(err);
-            resp.status(500).send(err);
+            resp.status(500).send(err.errno == 1062 ? 'A type with this name already exists' : err);
         } else {
             req.session.userData.types.push({name, id});
             log('inserted type');
@@ -46,7 +46,7 @@ route.delete('/:id', (req, resp) => {
     dao.deleteType(id, req.session.userData.user_id, err => {
         if (err) {
             log.error(err);
-            resp.status(500).send(err);
+            resp.status(500).send(err.errno == 1451 ? "Cannot delete 'Other'" : err);
         } else {
             req.session.userData.types = req.session.userData.types.filter(t => t.id != id);
             log('deleted type');
