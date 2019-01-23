@@ -31,7 +31,24 @@ Accounts.insert = (account, cb) => {
 };
 
 Accounts.deleteAccount = (userId, idToDelete, idToTransfer, cb) => {
-    // TODO implement
+    pool.query(
+        `UPDATE transactions SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
+        UPDATE expenses SET account_id=(SELECT id FROM accounts WHERE id=? AND user_id=?) WHERE account_id=? AND user_id=?;
+        DELETE FROM accounts WHERE id=? AND user_id=?;`,
+        [
+            idToTransfer,
+            userId,
+            idToDelete,
+            userId,
+            idToTransfer,
+            userId,
+            idToDelete,
+            userId,
+            idToDelete,
+            userId,
+        ],
+        cb,
+    );
 };
 
 module.exports = Accounts;
