@@ -8,16 +8,16 @@ Expenses.getAll = (userId, cb) => {
         (SELECT COUNT(*) FROM transactions t WHERE (t.expense_id IS NOT NULL AND t.expense_id=e.id) AND t.date>=e.started) AS instance_count 
         FROM expenses e WHERE user_id=?;`,
         [userId],
-        cb
+        cb,
     );
 };
 
 Expenses.getAllWithSum = (userId, cb) => {
     pool.query(
-        `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=?;
+        `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=? AND account_id IN (SELECT id FROM accounts WHERE user_id=? AND savings=FALSE);
         SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
-        [userId, userId],
-        cb
+        Array(4).fill(userId),
+        cb,
     );
 };
 
@@ -41,7 +41,7 @@ Expenses.checkEntityOwnership = (expense, cb) => {
         ],
         (err, results) => {
             cb(err, err || !results[0].count);
-        }
+        },
     );
 };
 
@@ -55,7 +55,7 @@ Expenses.deleteExpense = (id, userId, cb) => {
     pool.query(
         'DELETE FROM expenses WHERE id=? AND user_id=?;',
         [id, userId],
-        cb
+        cb,
     );
 };
 
@@ -64,7 +64,7 @@ Expenses.getAutoExpenses = (all, id, untilDate, cb) => {
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
             FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ''} started<=? AND automatic=TRUE;`,
         [untilDate],
-        cb
+        cb,
     );
 };
 

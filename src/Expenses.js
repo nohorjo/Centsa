@@ -86,7 +86,7 @@ _route.insert = (req, resp) => {
                 dao.insert(expense, (err, id) => {
                     if (err) {
                         log.error(err);
-                        resp.status(500).send(err);
+                        resp.status(500).send(err.errno == 1062 ? 'An expense with this name already exists' : err);
                     } else {
                         if (expense.automatic) {
                             _route.applyAutoTransactions(true, id, new Date(req.get('x-date')));

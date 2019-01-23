@@ -213,7 +213,7 @@ app.controller('expensesCtrl', function ($scope, $rootScope, $sce, centsa) {
     $scope.changeFrequencyType = $event => $scope.frequency.type = $event.target.querySelectorAll("input[type='radio']")[0].value;
 
     $scope.saveGoal = async () => {
-        const cost = Math.ceil($scope.goal.amount / ((new Date($scope.goal.by) - Date.now()) / 8.64e7));
+        const cost = Math.ceil($scope.goal.amount / Math.ceil(((new Date($scope.goal.by) - Date.now()) / 8.64e7)));
         if (cost <= 0) {
             await swal({
                 title: 'Invalid date or amount',
@@ -236,20 +236,31 @@ app.controller('expensesCtrl', function ($scope, $rootScope, $sce, centsa) {
             });
             if (!value) return;
         }
-        const expense = {
-            automatic: false,
-            cost,
+        const name = `Saving ${$scope.goal.by}: ${$scope.goal.name}`;
+        const baseExpense = {
+            automatic: true,
             frequency: 1,
-            name: `Saving ${$scope.goal.by}: ${$scope.goal.name}`,
             started: new Date(),
             type_id: $scope.types.find(t => t.name == 'Other').id
         };
-        centsa.expenses.insert(expense).then(({data}) => {
+
+        const { data: savingsId } = await centsa.accounts.insert({
+            name,
+            balance: 0,
+            savings: true,
+        });
+        for (let e of ['IN', 'OUT']) {
+            const expense = {
+                cost: e === 'OUT' ? cost : -cost,
+                account_id: e === 'OUT' ? $scope.goal.account_id : savingsId,
+                name: `${name} ${e}`,
+                ...baseExpense,
+            };
+            const { data } = await centsa.expenses.insert(expense);
             expense.id = data;
             $scope.expenses.push(expense);
-            getActiveTotals();
-            $scope.goal = {};
-            $("form[name='GoalForm'] .datepicker").datepicker('clearDates');
-        });
+        }
+        $scope.goal = {};
+        $("form[name='GoalForm'] .datepicker").datepicker('clearDates');
     };
 });

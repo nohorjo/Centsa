@@ -1,4 +1,6 @@
 const axios = require('axios');
+const _ = require('underscore');
+
 const Users = require('./Users');
 const UsersDao = require('./dao/Users');
 const log = require('./log');
@@ -192,7 +194,7 @@ const getDetailsFromGoogle = async token => {
         idToken: token,
         audience: CLIENT_ID 
     });
-    return (({name,email})=>({name,email}))(ticket.getPayload() || {});
+    return _.pick(ticket.getPayload(), 'name', 'email');
 };
 
 const getDetailsFromFB = async ({userID, accessToken} = {}) => {

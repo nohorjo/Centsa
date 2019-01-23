@@ -23,8 +23,7 @@ CREATE TABLE notifications
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     message VARCHAR(500) NOT NULL,
     user_id BIGINT NOT NULL,
-    is_read BOOL NOT NULL DEFAULT FALSE,
-    UNIQUE(message,user_id)
+    is_read BOOL NOT NULL DEFAULT FALSE
 );
 CREATE TABLE usercontrol
 (
@@ -56,6 +55,7 @@ CREATE TABLE accounts
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     name VARCHAR(50) NOT NULL,
+    savings BOOL NOT NULL DEFAULT FALSE,
     UNIQUE(user_id,name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

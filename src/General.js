@@ -21,7 +21,11 @@ const {
 } = require('./dao/Users');
 const { getSessionStore } = require('./index');
 const log = require('./log');
-const { getSummary, getAll } = require('./dao/Transactions');
+const {
+    getSummary,
+    getAll,
+    deleteTransfers,
+} = require('./dao/Transactions');
 const {
     getNotifications,
     deleteNotification,
@@ -31,6 +35,7 @@ const {
 const { logout } = require('./Authentication');
 const { createHash } = require('crypto');
 const { setSetting } = require('./dao/Settings');
+const { deleteAccount } = require('./dao/Accounts');
 
 log('init general');
 
@@ -38,6 +43,7 @@ const route = Router();
 
 const DAY = 8.64e7;
 const SAVING_TEST = /^Saving (\d{4}\/\d{2}\/\d{2}): /;
+const OUT_TEST = /OUT$/;
 
 route.get('/budget', (req, resp) => {
     const mode = JSON.parse(req.query.budgetMode);
@@ -77,16 +83,34 @@ route.get('/budget', (req, resp) => {
                 if (match) {
                     return today >= new Date(match[1]);
                 }
-            }).forEach(({id, name}) => {
+            }).forEach(({
+                id,
+                name,
+                account_id: out_account_id,
+            }) => {
                 deleteExpense(id, user_id, err => err ? log.error(err) : log('deleted goal', id));
-                addNotification(
-                    user_id,
-                    `Savings goal ended: ${name.split(SAVING_TEST).pop()}`,
-                    err => err ? log.error(err) : log('goal notified')
-                );
+                if (OUT_TEST.test(name)) {
+                    const nameStart = name.replace(OUT_TEST, '');
+                    const { account_id: in_account_id } = expenses.find(e => e.name.startsWith(nameStart));
+                    deleteTransfers(user_id, [in_account_id, out_account_id], `${nameStart}%`, err => {
+                        if (err) {
+                            log.error(err);
+                        } else {
+                            deleteAccount(
+                                user_id,
+                                in_account_id,
+                                out_account_id,
+                                err => err ? log.error(err) : log('goal account deleted'),
+                            );
+                        }
+                    });
+                    addNotification(
+                        user_id,
+                        `Savings goal ended: ${nameStart.split(SAVING_TEST).pop()}`,
+                        err => err ? log.error(err) : log('goal notified'),
+                    );
+                }
             });
-            const goals = expenses.filter(e => SAVING_TEST.test(e.name))
-                .reduce((sum, e) => e.cost * (today - e.started) / DAY, 0);
             switch (mode.mode) {
             case 'expense': case 'strictExpense': {
                 const strict = mode.mode == 'strictExpense';
@@ -145,7 +169,7 @@ route.get('/budget', (req, resp) => {
                             ))).reduce((sum, t) => sum + t.amount, 0);
                             const days = (today - start) / DAY;
                             const amount = Math.ceil(days / mode.frequency) * mode.amount - sum;
-                            respond({afterAll: amount - goals});
+                            respond({afterAll: amount});
                         }
                     }
                 );
@@ -154,10 +178,8 @@ route.get('/budget', (req, resp) => {
             case 'time': {
                 const current = new Date(today);
                 const end = new Date(today.getTime() + mode.days * DAY);
-                let afterAuto = total - expenses
-                    .filter(e => SAVING_TEST.test(e.name))
-                    .map(e => e.cost).reduce((a, b) => a + b, 0);
-                let afterAll = afterAuto - goals;
+                let afterAuto = total;
+                let afterAll = afterAuto;
 
                 expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
 
@@ -406,8 +428,15 @@ route.get('/notifications/update', (req, resp) => {
 });
 
 route.delete('/deleteUser', (req, resp) => {
-    const { user_id } = req.session.userData;
+    const { user_id, original_user_id } = req.session.userData;
     log('deleting user', user_id);
+
+    if (user_id !== original_user_id) {
+        log.warn('controller attempt to delete user', {user_id, original_user_id});
+        resp.sendStatus(401);
+        return;
+    }
+
     deleteUser(user_id, err => {
         if (err) {
             log.error(err);
@@ -420,8 +449,15 @@ route.delete('/deleteUser', (req, resp) => {
 });
 
 route.post('/password', (req, resp) => {
-    const { user_id } = req.session.userData;
+    const { user_id, original_user_id } = req.session.userData;
     log('updating password', user_id);
+
+    if (user_id !== original_user_id) {
+        log.warn('controller attempt to change password', {user_id, original_user_id});
+        resp.sendStatus(401);
+        return;
+    }
+
     req.body.newPassword = createHash('sha256').update(user_id.toString() + req.body.newPassword).digest('base64');
     if (req.body.oldPassword) {
         req.body.oldPassword = createHash('sha256').update(user_id.toString() + req.body.oldPassword).digest('base64');

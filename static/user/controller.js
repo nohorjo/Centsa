@@ -31,11 +31,7 @@ app.controller('userCtrl', function ($scope, $rootScope, centsa) {
         }
     };
 
-    $scope.readNotifications = () => {
-        centsa.general.readNotifications().then(() => {
-            $rootScope.notifications.forEach(n => n.is_read = true);
-        });
-    };
+    $scope.readNotifications = () => centsa.general.readNotifications();
 
     $scope.deleteNotification = id => {
         centsa.general.deleteNotification(id).then(() => {

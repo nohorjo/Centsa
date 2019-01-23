@@ -8,7 +8,11 @@
         </button>
     </h5>
     <div id="notifications" class="collapse">
-        <div class="notification" data-ng-repeat="n in notifications" data-ng-class="{read: n.is_read}">
+        <div class="notification"
+            data-ng-repeat="n in notifications"
+            data-ng-class="{read: n.is_read}"
+            data-ng-mouseover="n.is_read=true"
+        >
             {{n.message}} <a class="float-right" href="" data-ng-click="deleteNotification(n.id)">Dismiss</a>
         </div>
         <p data-ng-hide="!!notifications.length">

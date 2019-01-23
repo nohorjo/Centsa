@@ -334,4 +334,30 @@ div.notification.read {
      box-shadow: 1px 1px 1px gray;
 }
 
+.expense-summary {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
 
+.expense-summary>form[name="GoalForm"] {
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.expense-summary>form[name="GoalForm"]>* {
+    margin: 0.5em;
+}
+
+.expense-summary>form[name="GoalForm"]>input[type="submit"] {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    margin: auto;
+    width: 30%;
+}
+
+.expense-summary>form[name="GoalForm"]>h4,
+.expense-summary>form[name="GoalForm"]>p
+{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}

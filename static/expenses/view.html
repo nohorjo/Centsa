@@ -1,39 +1,46 @@
-<h4>Summary</h4>
-<table class="table-condensed">
-    <thead>
-        <tr>
-            <th>Approximate total active expenses</th>
-            <th>Total</th>
-            <th>Auto</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Daily</td>
-            <td>{{ (totalActiveExpenses/100).toFixed(2) || 0 }}</td>
-            <td>{{ (totalAutoExpenses/100).toFixed(2) || 0 }}</td>
-        </tr>
-        <tr>
-            <td>Weekly</td>
-            <td>{{ ((totalActiveExpenses*7)/100).toFixed(2) || 0 }}</td>
-            <td>{{ ((totalAutoExpenses*7)/100).toFixed(2) || 0 }}</td>
-        </tr>
-        <tr>
-            <td>Monthly</td>
-            <td>{{ ((totalActiveExpenses*30)/100).toFixed(2) || 0 }}</td>
-            <td>{{ ((totalAutoExpenses*30)/100).toFixed(2) || 0 }}</td>
-        </tr>
-    </tbody>
-</table>
-<form name="GoalForm" data-ng-submit="saveGoal()">
-    <h4>Savings goal</h4>
-    <p>Create an expense to set aside funds</p>
-    <label>Name </label> <input type="text" class="form-control small" required="required" data-ng-model="goal.name">
-    <label>Amount </label> <input type="number" class="form-control small" required="required" step="0.01" data-number-divide="100" data-ng-model="goal.amount">
-    <label>By </label> <input type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="goal.by">
-    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': GoalForm.$invalid }"
-                        data-ng-disabled="GoalForm.$invalid">
-</form>
+<div class="expense-summary">
+    <div>
+        <h4>Summary</h4>
+        <table class="table-condensed">
+            <thead>
+                <tr>
+                    <th>Approximate total active expenses</th>
+                    <th>Total</th>
+                    <th>Auto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Daily</td>
+                    <td>{{ (totalActiveExpenses/100).toFixed(2) || 0 }}</td>
+                    <td>{{ (totalAutoExpenses/100).toFixed(2) || 0 }}</td>
+                </tr>
+                <tr>
+                    <td>Weekly</td>
+                    <td>{{ ((totalActiveExpenses*7)/100).toFixed(2) || 0 }}</td>
+                    <td>{{ ((totalAutoExpenses*7)/100).toFixed(2) || 0 }}</td>
+                </tr>
+                <tr>
+                    <td>Monthly</td>
+                    <td>{{ ((totalActiveExpenses*30)/100).toFixed(2) || 0 }}</td>
+                    <td>{{ ((totalAutoExpenses*30)/100).toFixed(2) || 0 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form name="GoalForm" data-ng-submit="saveGoal()">
+        <h4>Savings goal</h4>
+        <p>Create an expense to set aside funds</p>
+        <label>Name </label> <input type="text" class="form-control" required="required" data-ng-model="goal.name">
+        <label>Amount </label> <input type="number" class="form-control" required="required" step="0.01" data-number-divide="100" data-ng-model="goal.amount">
+        <label>By </label> <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="goal.by">
+        <label>From</label> <select class="form-control" data-ng-model="goal.account_id" required="required">
+            <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+        </select>
+        <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': GoalForm.$invalid }"
+                            data-ng-disabled="GoalForm.$invalid">
+    </form>
+</div>
 <form name="Form" data-ng-submit="saveExpense()">
     <h4>Manage expenses (incomes have negative amounts)</h4>
     <table id="expensesTable" class="table table-condensed table-hover">

@@ -72,10 +72,15 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
 
     centsa.general.controllees().then(resp => $scope.controllees = resp.data);
 
-    centsa.general.getNotifications().then(({data}) => {
-        data.forEach(x => x.is_read = !!x.is_read);
-        $rootScope.notifications = data;
-    });
+    !function checkNotifications() {
+        centsa.general.getNotifications().then(({
+            data
+        }) => {
+            data.forEach(x => x.is_read = !!x.is_read);
+            $rootScope.notifications = data;
+        });
+        setTimeout(checkNotifications, 60000);
+    }();
 
 });
 

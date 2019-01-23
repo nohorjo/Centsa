@@ -11,7 +11,8 @@ app.controller('accountsCtrl', function ($scope, centsa) {
 
     $scope.newAccount = {
         name: '',
-        balance: 0
+        balance: 0,
+        savings: false,
     };
     let newAccount = {...$scope.newAccount};
 
@@ -106,10 +107,53 @@ app.controller('accountsCtrl', function ($scope, centsa) {
 
     $scope.setDefaultAccount = id => centsa.settings.set('default.account', id);
 
-    $scope.updateAccount = a => {
-        if(a.name != a.nameOld){
+    $scope.updateAccount = (a, force) => {
+        if (force || a.name != a.nameOld){
             console.log('update account');
             centsa.accounts.insert(a);
+        }
+    };
+
+    $scope.deleteAccount = async id => {
+        if ($scope.accounts.length == 1) {
+            swal(
+                'Error',
+                'Cannot delete last account',
+                'error'
+            );
+            return;
+        }
+        const inputOptions = $scope.accounts.reduce((opts, a) => {
+            if (a.id != id)
+                opts[a.id] = a.name;
+            return opts;
+        }, {[-1]: 'None, delete them'});
+        const transfer = await swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this account! You will need to select the account to transfer transactions and automatic expenses to',
+            input: 'select',
+            inputOptions,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(({value}) => (value == -1) ? swal({
+            title: 'This action in irreversible!',
+            text: 'Once deleted, you will not be able to recover these transactions and expenses!',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(result => result.value && value) : value);
+        if (transfer) {
+            centsa.accounts.remove(id, transfer).then(() => {
+                $scope.accounts.splice($scope.accounts.findIndex(a => a.id == id), 1);
+                if ($scope.defaultAccountId == id) {
+                    $scope.setDefaultAccount($scope.defaultAccountId = $scope.accounts[0].id.toString());
+                }
+            });
         }
     };
 

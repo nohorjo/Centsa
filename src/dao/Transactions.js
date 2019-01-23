@@ -157,9 +157,21 @@ Transactions.getSummary = (userId, filter, cb) => {
 
 Transactions.getUniqueComments = (userId, cb) => {
     pool.query(
-        'SELECT DISTINCT comment FROM transactions WHERE user_id=?;',
+        'SELECT DISTINCT comment FROM transactions WHERE user_id=? ORDER BY 1;',
         [userId],
         cb
+    );
+};
+
+Transactions.deleteTransfers = (userId, accounts, likeComment, cb) => {
+    pool.query(
+        'DELETE FROM transactions WHERE user_id=? AND comment LIKE ? AND account_id IN (?);',
+        [
+            userId,
+            likeComment,
+            accounts,
+        ],
+        cb,
     );
 };
 

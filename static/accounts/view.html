@@ -63,6 +63,7 @@
         <thead>
             <tr>
                 <th width="5%">Default</th>
+                <th width="5%">Savings</th>
                 <th data-ng-click="sort('name', accounts)">Name</th>
                 <th colspan="2" data-ng-click="sort('balance', accounts)">Balance</th>
             </tr>
@@ -70,6 +71,9 @@
         <tbody>
             <tr>
                 <td></td>
+                <td>
+                    <input type="checkbox" data-ng-model="newAccount.savings">
+                </td>
                 <td>
                     <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
                 </td>
@@ -102,6 +106,14 @@
                         data-ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
                     >
                 </td>
+                <td>
+                    <input
+                        type="checkbox"
+                        data-ng-model="a.savings"
+                        data-ng-change="updateAccount(a, true)"
+                        data-ng-click="$event.stopPropagation()"
+                    >
+                </td>
                 <td data-ng-init="a.nameOld = a.name">
                     <input
                         type="text"
@@ -112,7 +124,7 @@
                         data-ng-click="$event.stopPropagation()"
                     >
                 </td>
-                <td colspan="2" data-ng-init="a.balanceOld = a.balance">
+                <td data-ng-init="a.balanceOld = a.balance">
                     <input
                         type="number"
                         step=".01"
@@ -123,11 +135,14 @@
                         data-ng-click="$event.stopPropagation()"
                     >
                 </td>
+                <td>
+                    <a href="" data-ng-click="deleteAccount(a.id);$event.stopPropagation()">Delete</a>
+                </td>
             </tr>
             <tr>
                 <td></td>
                 <td>Total</td>
-                <td colspan="2">{{ sumAccountBalances() }}</td>
+                <td colspan="3">{{ sumAccountBalances() }}</td>
             </tr>
         </tbody>
     </table>
