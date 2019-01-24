@@ -23,13 +23,16 @@ body {
     justify-content: center;
 }
 
+form.login {
+    margin: 20% 0 0;
+}
+
 .login {
     background-color: #f2f2f2;
     display: inline-block;
     text-align: center;
     padding: 1em;
     border-radius: 1em;
-    margin: 20% 0 0;
 }
 
 .login>* {
@@ -46,3 +49,23 @@ body {
     grid-template-columns: 50% 50%;
 }
 
+@media only screen and (max-width: 500px) {
+    .cookie-notice {
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+    }
+
+    a#fork {
+        display: none;
+    }
+
+    .manual {
+        grid-template-columns: 100%;
+    }
+}
+
+@media only screen and (max-height: 500px) and (orientation: landscape) {
+    form.login {
+        margin: 4em;
+    }
+}
