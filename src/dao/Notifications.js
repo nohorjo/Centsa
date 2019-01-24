@@ -6,7 +6,14 @@ Notifications.getNotifications = (userId, cb) => {
     pool.query(
         'SELECT id,message,is_read FROM notifications WHERE user_id=?;',
         [userId],
-        cb
+        (err, results) => {
+            if (err) {
+                cb(err);
+            } else {
+                results.forEach(n => n.is_read = !!n.is_read);
+                cb(null, results);
+            }
+        },
     );
 };
 
