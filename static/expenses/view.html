@@ -162,7 +162,7 @@
             </tr>
             <tr data-ng-repeat="e in expenses" data-ng-click="setFilter({expense_id:e.id.toString()})">
                 <td>{{ e.name }}</td>
-                <td>{{ e.cost / 100 }}</td>
+                <td>{{ (e.cost / 100).toFixed(2) }}</td>
                 <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
                 <td data-ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
                 <td>

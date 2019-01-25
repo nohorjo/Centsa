@@ -21,7 +21,7 @@
                 </tr>
                 <tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
                     <td>{{ t.name }}</td>
-                    <td>{{ t.sum/100 }}</td>
+                    <td>{{ (t.sum/100).toFixed(2) }}</td>
                     <td colspan="2">
                         <a href="" data-ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
                     </td>

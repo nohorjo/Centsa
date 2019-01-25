@@ -150,7 +150,7 @@
                         data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
                     >
                         <td width="20%">{{ formatDate(t.date) }}</td>
-                        <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ t.amount / 100 }}</td>
+                        <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ (t.amount / 100).toFixed(2) }}</td>
                         <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
                         <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
                         <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
