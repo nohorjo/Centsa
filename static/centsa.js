@@ -147,7 +147,7 @@ if (typeof app == 'object') {
             'responseError': function (rejection) {
                 swal(
                     'Error',
-                    JSON.stringify(rejection.data).replace(/(^'|'$)/g,''),
+                    JSON.stringify(rejection.data).replace(/(^["']|["']$)/g,''),
                     'error'
                 ).then(() => {
                     if(rejection.status == 401) window.location.pathname = '/index.html';
