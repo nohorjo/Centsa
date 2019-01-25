@@ -43,10 +43,12 @@ route.post('/', (req, resp) => {
 route.delete('/:id', (req, resp) => {
     log('deleting type');
     const { id } = req.params;
-    dao.deleteType(id, req.session.userData.user_id, err => {
+    dao.deleteType(id, req.session.userData.user_id, (err, result) => {
         if (err) {
             log.error(err);
             resp.status(500).send(err.errno == 1451 ? "Cannot delete 'Other'" : err);
+        } else if (!result.affectedRows) {
+            resp.status(400).send("Cannot delete 'Other'");
         } else {
             req.session.userData.types = req.session.userData.types.filter(t => t.id != id);
             log('deleted type');

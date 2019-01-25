@@ -28,7 +28,7 @@ Types.deleteType = (id, userId, cb) => {
         UPDATE expenses SET type_id=
         (SELECT id FROM types ty WHERE ty.user_id=? AND ty.name='Other')
         WHERE type_id=? AND user_id=?;
-        DELETE FROM types WHERE id=? AND user_id=?;`,
+        DELETE FROM types WHERE id=? AND user_id=? AND name!='Other';`,
         [
             userId,
             id,
