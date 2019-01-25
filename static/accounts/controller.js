@@ -1,13 +1,21 @@
 app.controller('accountsCtrl', function ($scope, centsa) {
     $scope.accounts = [];
     let otherType = null;
-    centsa.accounts.getAll().then(resp => $scope.accounts = resp.data);
+    centsa.accounts.getAll().then(resp => {
+        $scope.accounts = resp.data;
+
+        centsa.settings.get('default.account').then(data => $scope.$apply(() => {
+            $scope.defaultAccountId = data.toString();
+            $scope.transfer.from = transfer.from = $scope.defaultAccountId;
+            $scope.transfer.to = transfer.to = (
+                $scope.accounts.find(a => a.savings)
+                || $scope.accounts.find(a => a.id != data)
+                || {id: data}
+            ).id.toString();
+        }));
+    });
     centsa.types.getAll().then(resp => otherType = resp.data.find(t => t.name == 'Other').id);
     $scope.defaultAccountId = '';
-
-    centsa.settings.get('default.account').then(data => $scope.$apply(() => {
-        $scope.defaultAccountId = data.toString();
-    }));
 
     $scope.newAccount = {
         name: '',
@@ -18,8 +26,6 @@ app.controller('accountsCtrl', function ($scope, centsa) {
 
     $scope.transfer = {
         date: new Date().formatDate('yyyy/MM/dd'),
-        to: '1',
-        from: '1',
         amount: 0,
         comment: ''
     };
