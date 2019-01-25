@@ -13,14 +13,42 @@
     <h1>Admin console</h1>
     <div class="container">
         <div class="two-column container">
-            Password <input id="password" type="text" onkeyup="updatePassword()"
-            /> Mode
+            Password
+            <input
+                id="password"
+                type="text"
+                onkeyup="updatePassword()"
+            />
+            Mode
             <div onclick="updateMode()">
-                <input type="radio" name="mode" value="sh" checked /> Bash <br/>
-                <input type="radio" name="mode" value="sql" /> SQL <br/>
-                <input type="radio" name="mode" value="javascript" /> JS
+                <input
+                    type="radio"
+                    name="mode"
+                    value="sh"
+                    checked
+                />
+                    Bash
+                    <br/>
+                <input
+                    type="radio"
+                    name="mode"
+                    value="sql"
+                />
+                SQL
+                <br/>
+                <input
+                    type="radio"
+                    name="mode"
+                    value="javascript"
+                />
+                JS
             </div>
-            <input class="two-column" type="button" value="execute" onclick="execute(5)">
+            <input
+                class="two-column"
+                type="button"
+                value="execute"
+                onclick="execute(5)"
+            >
         </div>
         <div>
             Input

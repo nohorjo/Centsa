@@ -12,11 +12,22 @@
             <tbody>
                 <tr>
                     <td>
-                        <input type="text" class="form-control" required="required" data-ng-model="newType.name">
+                        <input
+                            type="text"
+                            class="form-control"
+                            required="required"
+                            data-ng-model="newType.name"
+                        >
                     </td>
                     <td></td>
                     <td>
-                        <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+                        <input
+                            type="submit"
+                            value="Save"
+                            class="btn btn-primary"
+                            data-ng-class="{ 'btn-warning': Form.$invalid }"
+                            data-ng-disabled="Form.$invalid"
+                        >
                     </td>
                 </tr>
                 <tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">

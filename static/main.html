@@ -48,7 +48,11 @@
     <script src="login.js"></script>
 </head>
 
-<body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
+<body
+    data-ng-app="app"
+    data-ng-controller="mainCtrl"
+    onload="fbInit()"
+>
     <div
         class="sidebar"
         data-ng-class="{'open': sidebarOpen}"
@@ -60,13 +64,19 @@
                 <i class="far fa-user"></i>
                 My Account
             </a>
-            <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">{{(notifications | filter:is_read=false).length}}</span>
+            <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">
+                {{(notifications | filter:is_read=false).length}}
+            </span>
         </div>
         <a data-ng-class="{'active':isActive('/summary')}" href="#!summary">
             <i class="fas fa-chart-line"></i>
             Summary
         </a>
-        <a data-ng-class="{'active':isActive('/transactions')}" data-ng-click="resetFilter()" href="#!transactions">
+        <a
+            data-ng-class="{'active':isActive('/transactions')}"
+            data-ng-click="resetFilter()"
+            href="#!transactions"
+        >
             <i class="fas fa-exchange-alt"></i>
             Transactions
         </a>
@@ -91,10 +101,20 @@
         <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
             <img id="logo" data-ng-src="logo.svg">
         </a>
-        <input type="button" class="btn btn-primary float-right" value="Log out" onclick="logout()"/>
-        <select id="name" class="form-control float-right" data-ng-change="switchUser()" data-ng-model="currentUser">
-           <option value="-1">{{ name }}</option> 
-          <option data-ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
+        <input
+            type="button"
+            class="btn btn-primary float-right"
+            value="Log out"
+            onclick="logout()"
+        />
+        <select
+            id="name"
+            class="form-control float-right"
+            data-ng-change="switchUser()"
+            data-ng-model="currentUser"
+        >
+            <option value="-1">{{ name }}</option> 
+            <option data-ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
         </select> 
     </div>
     <div class="main-panel">

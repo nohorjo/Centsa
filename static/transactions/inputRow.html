@@ -1,8 +1,21 @@
 <td>
-    <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newTrans.date">
+    <input
+        type="text"
+        class="datepicker form-control"
+        pattern="\d{4}/\d{1,2}/\d{1,2}"
+        required="required"
+        data-ng-model="newTrans.date"
+    >
 </td>
 <td>
-    <input type="number" class="form-control" required="required" step="0.01" data-ng-model="newTrans.amount" data-number-divide="100">
+    <input
+        type="number"
+        class="form-control"
+        required="required"
+        step="0.01"
+        data-ng-model="newTrans.amount"
+        data-number-divide="100"
+    >
 </td>
 <td>
     <select class="form-control" data-ng-model="newTrans.account_id">
@@ -26,13 +39,26 @@
 </td>
 <td>
     <div class="datalist">
-        <input type="text" class="form-control" required="required" placeholder="Enter a comment" list="uniqueComments" data-ng-model="newTrans.comment"
-            data-ng-focus="showDataList = true" data-ng-blur="showDataList = false">
+        <input
+            type="text"
+            class="form-control"
+            required="required"
+            placeholder="Enter a comment"
+            list="uniqueComments"
+            data-ng-model="newTrans.comment"
+            data-ng-focus="showDataList = true" data-ng-blur="showDataList = false"
+        >
         <datalist id="uniqueComments">
             <option ng-repeat="c in uniqueComments" value="{{ c }}">
         </datalist>
     </div>
 </td>
 <td>
-    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid }" data-ng-disabled="Form.$invalid">
+    <input
+        type="submit"
+        value="Save"
+        class="btn btn-primary"
+        data-ng-class="{ 'btn-warning': Form.$invalid }"
+        data-ng-disabled="Form.$invalid"
+    >
 </td>

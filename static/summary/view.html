@@ -27,16 +27,26 @@
                 </td>
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
                     <label>Expense rounds</label> 
-                    <input class="form-control small" type="number" step="1" min="1"
-                        data-ng-min="1" data-ng-model="budgetMode.expenseRounds"
+                    <input
+                        class="form-control small"
+                        type="number"
+                        step="1"
+                        min="1"
+                        data-ng-min="1"
+                        data-ng-model="budgetMode.expenseRounds"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
                     > 
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'time'">
                     <label>Next </label>
-                    <input class="form-control xsmall" type="number" step="1" min="1"
-                        data-ng-min="1" data-ng-model="budgetMode.days"
+                    <input
+                        class="form-control xsmall"
+                        type="number"
+                        step="1"
+                        min="1"
+                        data-ng-min="1"
+                        data-ng-model="budgetMode.days"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
                     >
@@ -44,22 +54,43 @@
                 </td> 
                 <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>
-                    <input id="manualStart" type="text" class="datepicker form-control small" pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    <input
+                        id="manualStart"
+                        type="text"
+                        class="datepicker form-control small"
+                        pattern="\d{4}/\d{1,2}/\d{1,2}"
                         data-ng-model="budgetMode.start"
                         data-ng-change="getBudget()"
                         data-ng-model-options="{ 'debounce' : 500 }"
-                    ><br/>
+                    >
+                    <br/>
                     <label>Amount</label>
                     <div class="cell">
-                        <input class="form-control small" type="number" step="0.01"
+                        <input
+                            class="form-control small"
+                            type="number"
+                            step="0.01"
                             data-ng-model="budgetMode.amount"
                             data-ng-change="getBudget()"
                             data-ng-model-options="{ 'debounce' : 500 }"
                             data-number-divide="100"
-                        ><br/>
+                        >
+                        <br/>
                         <div data-ng-click="getBudget()">
-                            <input type="radio" name="manualFrequency" value="7" data-ng-model="budgetMode.frequency"> Weekly
-                            <input type="radio" name="manualFrequency" value="30" data-ng-model="budgetMode.frequency"> Monthly
+                            <input
+                                type="radio"
+                                name="manualFrequency"
+                                value="7"
+                                data-ng-model="budgetMode.frequency"
+                            >
+                            Weekly
+                            <input
+                                type="radio"
+                                name="manualFrequency"
+                                value="30"
+                                data-ng-model="budgetMode.frequency"
+                            >
+                            Monthly
                         </div> 
                     </div> 
                 </td> 

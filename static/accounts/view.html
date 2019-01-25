@@ -21,14 +21,12 @@
             </td>
             <td>
                 <select class="form-control" data-ng-model="transfer.from">
-                    <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}
-                    </option>
+                    <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
                 </select>
             </td>
             <td>
                 <select class="form-control" data-ng-model="transfer.to">
-                    <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}
-                    </option>
+                    <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
                 </select>
             </td>
             <td>
@@ -42,7 +40,12 @@
                 >
             </td>
             <td>
-                <input type="text" class="form-control" required="required" data-ng-model="transfer.comment">
+                <input
+                    type="text"
+                    class="form-control"
+                    required="required"
+                    data-ng-model="transfer.comment"
+                >
             </td>
             <td>
                 <input
@@ -75,7 +78,12 @@
                     <input type="checkbox" data-ng-model="newAccount.savings">
                 </td>
                 <td>
-                    <input type="text" class="form-control" required="required" data-ng-model="newAccount.name">
+                    <input
+                        type="text"
+                        class="form-control"
+                        required="required"
+                        data-ng-model="newAccount.name"
+                    >
                 </td>
                 <td>
                     <input

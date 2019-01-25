@@ -31,14 +31,45 @@
     <form name="GoalForm" data-ng-submit="saveGoal()">
         <h4>Savings goal</h4>
         <p>Create an expense to set aside funds</p>
-        <label>Name </label> <input type="text" class="form-control" required="required" data-ng-model="goal.name">
-        <label>Amount </label> <input type="number" class="form-control" required="required" step="0.01" data-number-divide="100" data-ng-model="goal.amount">
-        <label>By </label> <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="goal.by">
-        <label>From</label> <select class="form-control" data-ng-model="goal.account_id" required="required">
+        <label>Name</label>
+        <input
+            type="text"
+            class="form-control"
+            required="required"
+            data-ng-model="goal.name"
+        >
+        <label>Amount</label>
+        <input
+            type="number"
+            class="form-control"
+            required="required"
+            step="0.01"
+            data-number-divide="100"
+            data-ng-model="goal.amount"
+        >
+        <label>By</label>
+        <input
+            type="text"
+            class="datepicker form-control"
+            pattern="\d{4}/\d{1,2}/\d{1,2}"
+            required="required"
+            data-ng-model="goal.by"
+        >
+        <label>From</label>
+        <select
+            class="form-control"
+            data-ng-model="goal.account_id"
+            required="required"
+        >
             <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
         </select>
-        <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': GoalForm.$invalid }"
-                            data-ng-disabled="GoalForm.$invalid">
+        <input
+            type="submit"
+            value="Save"
+            class="btn btn-primary"
+            data-ng-class="{ 'btn-warning': GoalForm.$invalid }"
+            data-ng-disabled="GoalForm.$invalid"
+        >
     </form>
 </div>
 <form name="Form" data-ng-submit="saveExpense()">
@@ -59,10 +90,22 @@
         <tbody>
             <tr>
                 <td>
-                    <input type="text" class="form-control" required="required" data-ng-model="newExpense.name">
+                    <input
+                        type="text"
+                        class="form-control"
+                        required="required"
+                        data-ng-model="newExpense.name"
+                    >
                 </td>
                 <td>
-                    <input type="number" class="form-control" required="required" step="0.01" data-ng-model="newExpense.cost" data-number-divide="100">
+                    <input
+                        type="number"
+                        class="form-control"
+                        required="required"
+                        step="0.01"
+                        data-ng-model="newExpense.cost"
+                        data-number-divide="100"
+                    >
                 </td>
                 <td>
                     <select class="form-control" data-ng-model="newExpense.type_id">
@@ -71,19 +114,48 @@
                 </td>
                 <td>
                     <div class="dropdown" id="frequencySelect">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        <button
+                            class="btn btn-default dropdown-toggle"
+                            type="button"
+                            data-toggle="dropdown"
+                        >
                             <span data-ng-bind-html="trust(frequencyDisplayText(newExpense.frequency) || 'Set')"></span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" data-ng-click="changeFrequencyType($event)">
                             <li data-ng-class="{ 'disabled' : frequency.type != 'basic' }">
-                                <input type="radio" name="frequency" value="basic" data-ng-model="frequency.type"> Every
-                                <input type="number" class="form-control" min="1" data-ng-model="frequency.date"> day(s)
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="basic"
+                                    data-ng-model="frequency.type"
+                                >
+                                Every
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-model="frequency.date"
+                                >
+                                day(s)
                             </li>
                             <li data-ng-class="{ 'disabled' : frequency.type != 'date' }">
-                                <input type="radio" name="frequency" value="date" data-ng-model="frequency.type"> On the
-                                <input type="number" class="form-control" min="1" data-ng-model="frequency.date" data-ng-max="getDateMax(getMaxDaysInMonth(),frequency.type == 'date')">
-                                <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup> of
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="date"
+                                    data-ng-model="frequency.type"
+                                >
+                                    On the
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-model="frequency.date"
+                                    data-ng-max="getDateMax(getMaxDaysInMonth(),frequency.type == 'date')"
+                                >
+                                <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
+                                of
                                 <select class="form-control" data-ng-model="frequency.month">
                                     <option value="0">Every month</option>
                                     <option value="1">January</option>
@@ -101,8 +173,20 @@
                                 </select>
                             </li>
                             <li data-ng-class="{ 'disabled' : frequency.type != 'day' }">
-                                <input type="radio" name="frequency" value="day" data-ng-model="frequency.type"> On the
-                                <input type="number" class="form-control" min="1" data-ng-max="getDateMax(5, frequency.type == 'day')" data-ng-model="frequency.date">
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="day"
+                                    data-ng-model="frequency.type"
+                                >
+                                    On the
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-max="getDateMax(5, frequency.type == 'day')"
+                                    data-ng-model="frequency.date"
+                                >
                                 <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
                                 (last
                                 <input type="checkbox" data-ng-model="frequency.last">)
@@ -118,25 +202,65 @@
                                 of the month
                             </li>
                             <li data-ng-class="{ 'disabled' : frequency.type != 'monthday' }">
-                                <input type="radio" name="frequency" value="monthday" data-ng-model="frequency.type"> On the
-                                <input type="number" class="form-control" min="1" data-ng-max="getDateMax(31, frequency.type == 'monthday')" data-ng-model="frequency.date">
+                                <inpu
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="monthday"
+                                    data-ng-model="frequency.type"
+                                >
+                                On the
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-max="getDateMax(31, frequency.type == 'monthday')"
+                                    data-ng-model="frequency.date"
+                                >
                                 <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
                                 (last
-                                <input type="checkbox" data-ng-model="frequency.last">) day of the month
+                                <input type="checkbox" data-ng-model="frequency.last">
+                                ) day of the month
                             </li>
                             <li data-ng-class="{ 'disabled' : frequency.type != 'workday' }">
-                                <input type="radio" name="frequency" value="workday" data-ng-model="frequency.type"> On the
-                                <input type="number" class="form-control" min="1" data-ng-max="getDateMax(23, frequency.type == 'workday')" data-ng-model="frequency.date">
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="workday"
+                                    data-ng-model="frequency.type"
+                                >
+                                On the
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-max="getDateMax(23, frequency.type == 'workday')"
+                                    data-ng-model="frequency.date"
+                                >
                                 <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
                                 (last
-                                <input type="checkbox" data-ng-model="frequency.last">) work-day of the month
+                                <input type="checkbox" data-ng-model="frequency.last">
+                                ) work-day of the month
                             </li>
                             <li data-ng-class="{ 'disabled' : frequency.type != 'restday' }">
-                                <input type="radio" name="frequency" value="restday" data-ng-model="frequency.type"> On the
-                                <input type="number" class="form-control" min="1" data-ng-max="getDateMax(12, frequency.type == 'restday')" data-ng-model="frequency.date">
+                                <input
+                                    type="radio"
+                                    name="frequency"
+                                    value="restday"
+                                    data-ng-model="frequency.type"
+                                >
+                                On the
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    min="1"
+                                    data-ng-max="getDateMax(12, frequency.type == 'restday')"
+                                    data-ng-model="frequency.date"
+                                >
                                 <sup>{{ calculateNumberSuperscript(frequency.date) }}</sup>
                                 (last
-                                <input type="checkbox" data-ng-model="frequency.last">) rest-day of the month
+                                <input type="checkbox" data-ng-model="frequency.last">
+                                ) rest-day of the month
                             </li>
                         </ul>
                     </div>
@@ -147,17 +271,35 @@
                     <input type="checkbox" data-ng-model="newExpense.automatic">
                 </td>
                 <td>
-                    <select class="form-control" data-ng-model="newExpense.account_id" data-ng-disabled="!newExpense.automatic" data-ng-required="newExpense.automatic">
+                    <select
+                        class="form-control"
+                        data-ng-model="newExpense.account_id"
+                        data-ng-disabled="!newExpense.automatic"
+                        data-ng-required="newExpense.automatic"
+                    >
                         <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="datepicker form-control" pattern="\d{4}/\d{1,2}/\d{1,2}" required="required" data-ng-model="newExpense.started">
+                    <input
+                        type="text"
+                        class="datepicker
+                        form-control"
+                        pattern="\d{4}/\d{1,2}/\d{1,2}"
+                        required="required"
+                        data-ng-model="newExpense.started"
+                    >
                 </td>
                 <td></td>
                 <td>
-                    <input type="submit" value="Save" class="btn btn-primary" data-ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
-                        data-ng-disabled="Form.$invalid || !newExpense.frequency">
+                    <input
+                        type="submit"
+                        value="Save"
+                        class="btn
+                        btn-primary"
+                        data-ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
+                        data-ng-disabled="Form.$invalid || !newExpense.frequency"
+                    >
                 </td>
             </tr>
             <tr data-ng-repeat="e in expenses" data-ng-click="setFilter({expense_id:e.id.toString()})">
@@ -166,7 +308,11 @@
                 <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
                 <td data-ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
                 <td>
-                    <input type="checkbox" disabled="disabled" data-ng-checked="e.automatic">
+                    <input
+                        type="checkbox"
+                        disabled="disabled"
+                        data-ng-checked="e.automatic"
+                    >
                 </td>
                 <td>{{ (accounts | prop:'id':e.account_id)[0].name || '' }}</td>
                 <td>{{ formatDate(e.started) }}</td>
