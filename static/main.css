@@ -13,10 +13,10 @@ body {
     max-width: 5.5em;
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
     background: #fff;
-    transition: max-width cubic-bezier(0.33, 0.54, 0.77, 0.34) 0.5s;
+    transition: max-width cubic-bezier(0.33, 0.54, 0.77, 0.34) 0.3s;
 }
 
-.sidebar:hover {
+.sidebar.open {
     max-width: 500px;
 }
 

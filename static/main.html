@@ -49,7 +49,12 @@
 </head>
 
 <body data-ng-app="app" data-ng-controller="mainCtrl" onload="fbInit()">
-    <div class="sidebar">
+    <div
+        class="sidebar"
+        data-ng-class="{'open': sidebarOpen}"
+        data-ng-mouseover="sidebarOpen=true"
+        data-ng-mouseleave="sidebarOpen=false"
+    >
         <div class="notify-container">
             <a data-ng-class="{'active':isActive('/user')}" href="#!user">
                 <i class="far fa-user"></i>
