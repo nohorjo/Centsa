@@ -1,11 +1,11 @@
 <div id="types-view">
-    <form name="Form" data-ng-submit="saveType()">
+    <form name="Form" ng-submit="saveType()">
         <h4>Manage types</h4>
         <table id="typesTable" class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th data-ng-click="sort('name', types, drawPie)">Name</th>
-                    <th colspan="2" data-ng-click="sort('sum', types, drawPie)">Sum</th>
+                    <th ng-click="sort('name', types, drawPie)">Name</th>
+                    <th colspan="2" ng-click="sort('sum', types, drawPie)">Sum</th>
                     <th></th>
                 </tr>
             </thead>
@@ -16,7 +16,7 @@
                             type="text"
                             class="form-control"
                             required="required"
-                            data-ng-model="newType.name"
+                            ng-model="newType.name"
                         >
                     </td>
                     <td></td>
@@ -25,16 +25,16 @@
                             type="submit"
                             value="Save"
                             class="btn btn-primary"
-                            data-ng-class="{ 'btn-warning': Form.$invalid }"
-                            data-ng-disabled="Form.$invalid"
+                            ng-class="{ 'btn-warning': Form.$invalid }"
+                            ng-disabled="Form.$invalid"
                         >
                     </td>
                 </tr>
-                <tr data-ng-repeat="t in types" data-ng-click="setFilter({type_id:t.id.toString()})">
+                <tr ng-repeat="t in types" ng-click="setFilter({type_id:t.id.toString()})">
                     <td>{{ t.name }}</td>
                     <td>{{ (t.sum/100).toFixed(2) }}</td>
                     <td colspan="2">
-                        <a href="" data-ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
+                        <a href="" ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
                     </td>
                 </tr>
             </tbody>

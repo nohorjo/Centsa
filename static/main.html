@@ -49,57 +49,57 @@
 </head>
 
 <body
-    data-ng-app="app"
-    data-ng-controller="mainCtrl"
+    ng-app="app"
+    ng-controller="mainCtrl"
     onload="fbInit()"
 >
     <div
         class="sidebar"
-        data-ng-class="{'open': sidebarOpen}"
-        data-ng-mouseover="sidebarOpen=true"
-        data-ng-mouseleave="sidebarOpen=false"
+        ng-class="{'open': sidebarOpen}"
+        ng-mouseover="sidebarOpen=true"
+        ng-mouseleave="sidebarOpen=false"
     >
         <div class="notify-container">
-            <a data-ng-class="{'active':isActive('/user')}" href="#!user">
+            <a ng-class="{'active':isActive('/user')}" href="#!user">
                 <i class="far fa-user"></i>
                 My Account
             </a>
-            <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">
+            <span class="notify-bubble" ng-hide="(notifications | filter:is_read=false).length == 0">
                 {{(notifications | filter:is_read=false).length}}
             </span>
         </div>
-        <a data-ng-class="{'active':isActive('/summary')}" href="#!summary">
+        <a ng-class="{'active':isActive('/summary')}" href="#!summary">
             <i class="fas fa-chart-line"></i>
             Summary
         </a>
         <a
-            data-ng-class="{'active':isActive('/transactions')}"
-            data-ng-click="resetFilter()"
+            ng-class="{'active':isActive('/transactions')}"
+            ng-click="resetFilter()"
             href="#!transactions"
         >
             <i class="fas fa-exchange-alt"></i>
             Transactions
         </a>
-        <a data-ng-class="{'active':isActive('/accounts')}" href="#!accounts">
+        <a ng-class="{'active':isActive('/accounts')}" href="#!accounts">
             <i class="far fa-money-bill-alt"></i>
             Accounts
         </a>
-        <a data-ng-class="{'active':isActive('/types')}" href="#!types">
+        <a ng-class="{'active':isActive('/types')}" href="#!types">
             <i class="fas fa-tags"></i>
             Types
         </a>
-        <a data-ng-class="{'active':isActive('/expenses')}" href="#!expenses">
+        <a ng-class="{'active':isActive('/expenses')}" href="#!expenses">
             <i class="fas fa-file-invoice-dollar"></i>
             Expenses &amp; Income
         </a>
-        <a data-ng-class="{'active':isActive('/import')}" href="#!import">
+        <a ng-class="{'active':isActive('/import')}" href="#!import">
             <i class="fas fa-file-export"></i>
             Import
         </a>
     </div>
     <div class="header" style="background: {{ currentUser == -1 ? 'initial' : '#e0a3a3' }}">
         <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
-            <img id="logo" data-ng-src="logo.svg">
+            <img id="logo" ng-src="logo.svg">
         </a>
         <input
             type="button"
@@ -110,15 +110,15 @@
         <select
             id="name"
             class="form-control float-right"
-            data-ng-change="switchUser()"
-            data-ng-model="currentUser"
+            ng-change="switchUser()"
+            ng-model="currentUser"
         >
             <option value="-1">{{ name }}</option> 
-            <option data-ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
+            <option ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
         </select> 
     </div>
     <div class="main-panel">
-        <div class="content" data-ng-view autoscroll="true"></div>
+        <div class="content" ng-view autoscroll="true"></div>
     </div>
 </body>
 

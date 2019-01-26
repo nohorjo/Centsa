@@ -100,12 +100,12 @@ div.amcharts-chart-div>a {
     display: none !important;
 }
 
-th[data-ng-click],
+th[ng-click],
 table.table-hover tr td {
     cursor: pointer;
 }
 
-th[data-ng-click]:after {
+th[ng-click]:after {
     content: " \21c5"
 }
 

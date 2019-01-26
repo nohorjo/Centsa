@@ -13,11 +13,11 @@
                 <td>
                     <label>Budget mode</label>
                 </td>
-                <td data-ng-click="getBudget()">
+                <td ng-click="getBudget()">
                     <select
                         class="form-control"
-                        data-ng-change="getBudget()"
-                        data-ng-model="budgetMode.mode"
+                        ng-change="getBudget()"
+                        ng-model="budgetMode.mode"
                     >
                         <option value="expense">Expense based</option>
                         <option value="strictExpense">Strict expense based</option>
@@ -25,43 +25,43 @@
                         <option value="manual">Manual</option>
                     </select>
                 </td>
-                <td class="no-animate" data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
+                <td class="no-animate" ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
                     <label>Expense rounds</label> 
                     <input
                         class="form-control small"
                         type="number"
                         step="1"
                         min="1"
-                        data-ng-min="1"
-                        data-ng-model="budgetMode.expenseRounds"
-                        data-ng-change="getBudget()"
-                        data-ng-model-options="{ 'debounce' : 500 }"
+                        ng-min="1"
+                        ng-model="budgetMode.expenseRounds"
+                        ng-change="getBudget()"
+                        ng-model-options="{ 'debounce' : 500 }"
                     > 
                 </td> 
-                <td class="no-animate" data-ng-show="budgetMode.mode == 'time'">
+                <td class="no-animate" ng-show="budgetMode.mode == 'time'">
                     <label>Next </label>
                     <input
                         class="form-control xsmall"
                         type="number"
                         step="1"
                         min="1"
-                        data-ng-min="1"
-                        data-ng-model="budgetMode.days"
-                        data-ng-change="getBudget()"
-                        data-ng-model-options="{ 'debounce' : 500 }"
+                        ng-min="1"
+                        ng-model="budgetMode.days"
+                        ng-change="getBudget()"
+                        ng-model-options="{ 'debounce' : 500 }"
                     >
                     <label> days</label>
                 </td> 
-                <td class="no-animate" data-ng-show="budgetMode.mode == 'manual'">
+                <td class="no-animate" ng-show="budgetMode.mode == 'manual'">
                     <label>Starting</label>
                     <input
                         id="manualStart"
                         type="text"
                         class="datepicker form-control small"
                         pattern="\d{4}/\d{1,2}/\d{1,2}"
-                        data-ng-model="budgetMode.start"
-                        data-ng-change="getBudget()"
-                        data-ng-model-options="{ 'debounce' : 500 }"
+                        ng-model="budgetMode.start"
+                        ng-change="getBudget()"
+                        ng-model-options="{ 'debounce' : 500 }"
                     >
                     <br/>
                     <label>Amount</label>
@@ -70,25 +70,25 @@
                             class="form-control small"
                             type="number"
                             step="0.01"
-                            data-ng-model="budgetMode.amount"
-                            data-ng-change="getBudget()"
-                            data-ng-model-options="{ 'debounce' : 500 }"
+                            ng-model="budgetMode.amount"
+                            ng-change="getBudget()"
+                            ng-model-options="{ 'debounce' : 500 }"
                             data-number-divide="100"
                         >
                         <br/>
-                        <div data-ng-click="getBudget()">
+                        <div ng-click="getBudget()">
                             <input
                                 type="radio"
                                 name="manualFrequency"
                                 value="7"
-                                data-ng-model="budgetMode.frequency"
+                                ng-model="budgetMode.frequency"
                             >
                             Weekly
                             <input
                                 type="radio"
                                 name="manualFrequency"
                                 value="30"
-                                data-ng-model="budgetMode.frequency"
+                                ng-model="budgetMode.frequency"
                             >
                             Monthly
                         </div> 
@@ -103,8 +103,8 @@
                     <label>Period</label>
                     <select
                         class="form-control small"
-                        data-ng-change="getBudget()"
-                        data-ng-model="budgetMode.cashflowPeriod"
+                        ng-change="getBudget()"
+                        ng-model="budgetMode.cashflowPeriod"
                     >
                         <option value="0">Never</option> 
                         <option value="7">Week</option> 
@@ -116,38 +116,40 @@
                     </select>
                 </td>
             </tr>
-            <tr data-ng-class="{ 'warning' : budget.afterAll < 0 && budget.afterAuto, 'danger' : !budget.afterAuto && budget.afterAll < 0 }">
+            <tr ng-class="{ 'warning' : budget.afterAll < 0 && budget.afterAuto, 'danger' : !budget.afterAuto && budget.afterAll < 0 }">
                 <td>
                     <label>Budget</label>
                 </td>
                 <td>{{ (budget.afterAll/100).toFixed(2) }}</td>
                 <td>
-                    <div data-ng-show="budget.afterAll < 0">
-                         <span data-ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time'">
+                    <div ng-show="budget.afterAll < 0">
+                         <span ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time'">
                             You may need to re-evaluate your <a href="#!expenses">expenses</a>
                         </span>
-                        <span data-ng-show="budgetMode.mode == 'manual'">You have overspent your budget</span> 
+                        <span ng-show="budgetMode.mode == 'manual'">You have overspent your budget</span> 
                     </div>
                 </td>
             </tr>
-            <tr data-ng-class="{ 'danger' : budget.afterAuto < 0 }" data-ng-show="budget.afterAuto !== undefined">
+            <tr ng-class="{ 'danger' : budget.afterAuto < 0 }" ng-show="budget.afterAuto !== undefined">
                 <td>
                     <label>Budget (Only automatic expenses)</label>
                 </td>
                 <td>{{ (budget.afterAuto/100).toFixed(2) }}</td>
                 <td>
-                    <span data-ng-show="budget.afterAuto < 0">You may not have enough to pay for some automatic expenses</span>
+                    <span ng-show="budget.afterAuto < 0">
+                        You may not have enough to pay for some automatic expenses
+                    </span>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-<div data-ng-show="cumulativeSums.length">
+<div ng-show="cumulativeSums.length">
     <div style="display: inline-block">
         <select
             class="form-control small"
-            data-ng-change="drawGraph()"
-            data-ng-model="movingAvgDays"
+            ng-change="drawGraph()"
+            ng-model="movingAvgDays"
         >
             <option value="7">Weekly</option> 
             <option value="30">Monthly</option> 
@@ -159,4 +161,4 @@
     </div>
     <span>moving average</span>
 </div>
-<div id="trans-chart" data-ng-click="filterDate($event)"></div>
+<div id="trans-chart" ng-click="filterDate($event)"></div>

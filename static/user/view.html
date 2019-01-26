@@ -5,10 +5,10 @@
             type="button"
             data-toggle="collapse"
             data-target="#notifications"
-            data-ng-click="readNotifications()"
+            ng-click="readNotifications()"
         >
             <div class="notify-container">
-                <span class="notify-bubble" data-ng-hide="(notifications | filter:is_read=false).length == 0">
+                <span class="notify-bubble" ng-hide="(notifications | filter:is_read=false).length == 0">
                     {{(notifications | filter:is_read=false).length}}
                 </span>
                 Notifications
@@ -18,20 +18,20 @@
     <div id="notifications" class="collapse">
         <div
             class="notification"
-            data-ng-repeat="n in notifications"
-            data-ng-class="{read: n.is_read}"
-            data-ng-mouseover="n.is_read=true"
+            ng-repeat="n in notifications"
+            ng-class="{read: n.is_read}"
+            ng-mouseover="n.is_read=true"
         >
             {{n.message}}
             <a
                 class="float-right"
                 href=""
-                data-ng-click="deleteNotification(n.id)"
+                ng-click="deleteNotification(n.id)"
             >
                 Dismiss
             </a>
         </div>
-        <p data-ng-hide="!!notifications.length">
+        <p ng-hide="!!notifications.length">
             You have no notifications
         </p>
     </div>
@@ -48,17 +48,20 @@
         </button>
     </h5>
     <div id="controllerUsers" class="collapse">
-        <p>These users will be able to switch to your account using the user picker
-            in the header bar.</p>
         <p>
-            <strong>This will allow them to make changes as well as add and remove data from your account!</strong>
+            These users will be able to switch to your account using the user picker in the header bar.
         </p>
-        <p> The email for the current logged in account is: <strong>{{ email }}</strong></p>
-        <form name="controllerForm" data-ng-submit="addController()">
+        <p>
+            <strong>
+                This will allow them to make changes as well as add and remove data from your account!
+            </strong>
+        </p>
+        <p>The email for the current logged in account is: <strong>{{ email }}</strong></p>
+        <form name="controllerForm" ng-submit="addController()">
             <table id="controllerTable" class="table table-condensed table-hover">
                 <thead>
                     <tr>
-                        <th width="80%" data-ng-click="sort('email', controllers)">Email</th>
+                        <th width="80%" ng-click="sort('email', controllers)">Email</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -69,7 +72,7 @@
                                 type="email"
                                 class="form-control"
                                 required="required"
-                                data-ng-model="newController"
+                                ng-model="newController"
                             >
                         </td>
                         <td>
@@ -77,15 +80,15 @@
                                 type="submit"
                                 value="Save"
                                 class="btn btn-primary"
-                                data-ng-class="{ 'btn-warning': controllerForm.$invalid }"
-                                data-ng-disabled="controllerForm.$invalid"
+                                ng-class="{ 'btn-warning': controllerForm.$invalid }"
+                                ng-disabled="controllerForm.$invalid"
                             >
                         </td>
                     </tr>
-                    <tr data-ng-repeat="email in controllers">
+                    <tr ng-repeat="email in controllers">
                         <td>{{ email }}</td>
-                        <td data-ng-init="a.nameOld = a.name">
-                            <a href="" data-ng-click="deleteController(email)">Delete</a>
+                        <td ng-init="a.nameOld = a.name">
+                            <a href="" ng-click="deleteController(email)">Delete</a>
                         </td>
                     </tr>
                 </tbody>
@@ -107,13 +110,13 @@
     <div id="userSettings" class="collapse">
         <table class="table-condensed">
             <tbody>
-                <tr data-ng-show="passwordSet">
+                <tr ng-show="passwordSet">
                     <td>Old Password</td>
                     <td>
                         <input
                             type="password"
                             class="form-control"
-                            data-ng-model="passwordData.oldPassword"
+                            ng-model="passwordData.oldPassword"
                         />
                     </td>
                 </tr>
@@ -123,8 +126,8 @@
                         <input
                             type="password"
                             class="form-control"
-                            data-ng-model="passwordData.newPassword"
-                            data-ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
+                            ng-model="passwordData.newPassword"
+                            ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
                         />
                     </td>
                 </tr>
@@ -134,8 +137,8 @@
                         <input
                             type="password"
                             class="form-control"
-                            data-ng-model="passwordData.confirmPassword"
-                            data-ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
+                            ng-model="passwordData.confirmPassword"
+                            ng-class="{'alert-danger' : passwordData.confirmPassword != passwordData.newPassword}"
                         />
                     </td>
                 </tr>
@@ -145,14 +148,14 @@
             type="button"
             class="btn btn-danger"
             value="Delete account"
-            data-ng-click="deleteUser()"
+            ng-click="deleteUser()"
         />
         <input
             type="button"
             class="btn btn-primary"
             value="Update password"
-            data-ng-click="updatePassword()"
-            data-ng-disabled="passwordData.confirmPassword != passwordData.newPassword"
+            ng-click="updatePassword()"
+            ng-disabled="passwordData.confirmPassword != passwordData.newPassword"
         />
     </div>
 </div>

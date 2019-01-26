@@ -13,7 +13,7 @@
                 >
                     &times;
                 </button>
-                <form name="Form" data-ng-submit="saveTrans(true)">
+                <form name="Form" ng-submit="saveTrans(true)">
                     <table id="modalTransTable" class="table table-condensed table-hover">
                         <thead>
                             <tr>
@@ -27,14 +27,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
+                            <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
                             <tr>
                                 <td colspan="8">
                                     <input
                                         type="button"
                                         value="Delete transaction"
                                         class="float-right btn btn-danger"
-                                        data-ng-click="deleteTrans(newTrans.id)"
+                                        ng-click="deleteTrans(newTrans.id)"
                                     >
                                 </td>
                             </tr>
@@ -48,56 +48,56 @@
 <h4>Manage transactions</h4>
 <ul class="nav nav-tabs">
     <li
-        data-ng-repeat="t in tabs"
-        data-ng-class="{ 'active': currentTab == $index }"
-        data-ng-mouseover="t.hover = true"
-        data-ng-mouseout="t.hover = false"
+        ng-repeat="t in tabs"
+        ng-class="{ 'active': currentTab == $index }"
+        ng-mouseover="t.hover = true"
+        ng-mouseout="t.hover = false"
     >
-        <a href="" data-ng-click="currentTab == $index ? deleteTab($index) : goToTab($index) ">
+        <a href="" ng-click="currentTab == $index ? deleteTab($index) : goToTab($index) ">
             {{ t.hover && currentTab == $index ? 'Close' : 'Tab ' + (t.index + 1) }}
         </a>
     </li>
-    <li><a href="" data-ng-click="newTab()">+</a></li>
+    <li><a href="" ng-click="newTab()">+</a></li>
 </ul>
  <div class="tab-content">
-    <div data-ng-class="{'bg-success' : filter.fromDate || filter.toDate || filter.fromAmount != null || filter.toAmount != null || filter.account_id && filter.account_id != '0' || filter.type_id && filter.type_id != '0' || filter.expense_id && filter.expense_id != '0' || hasFilterComments() }">
-        <input type="checkbox" data-ng-model="showFilter"> Show filter
+    <div ng-class="{'bg-success' : filter.fromDate || filter.toDate || filter.fromAmount != null || filter.toAmount != null || filter.account_id && filter.account_id != '0' || filter.type_id && filter.type_id != '0' || filter.expense_id && filter.expense_id != '0' || hasFilterComments() }">
+        <input type="checkbox" ng-model="showFilter"> Show filter
     </div>
     <form
         id="FilterForm"
         name="FilterForm"
-        data-ng-submit="reloadTrans()"
-        data-ng-show="showFilter"
+        ng-submit="reloadTrans()"
+        ng-show="showFilter"
     >
         <table class="table table-condensed">
             <tbody>
                 <tr>
-                    <td colspan="3" data-ng-class="{'success' : filter.fromDate || filter.toDate }">
+                    <td colspan="3" ng-class="{'success' : filter.fromDate || filter.toDate }">
                         <label>Dates</label>
                         <div class="input-group input-daterange">
                             <input
                                 type="text"
                                 class="daterangepicker form-control"
                                 pattern="\d{4}/\d{1,2}/\d{1,2}"
-                                data-ng-model="filter.fromDate"
+                                ng-model="filter.fromDate"
                             >
                             <div class="input-group-addon">to</div>
                             <input
                                 type="text"
                                 class="daterangepicker form-control"
                                 pattern="\d{4}/\d{1,2}/\d{1,2}"
-                                data-ng-model="filter.toDate"
+                                ng-model="filter.toDate"
                             >
                         </div>
                     </td>
-                    <td colspan="3" data-ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
+                    <td colspan="3" ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
                         <label>Amount</label>
                         <div class="input-group input-daterange">
                             <input
                                 type="number"
                                 step="0.01"
                                 class="form-control"
-                                data-ng-model="filter.fromAmount"
+                                ng-model="filter.fromAmount"
                                 data-number-divide="100"
                             >
                             <div class="input-group-addon">to</div>
@@ -105,51 +105,51 @@
                                 type="number"
                                 step="0.01"
                                 class="form-control"
-                                data-ng-model="filter.toAmount"
+                                ng-model="filter.toAmount"
                                 data-number-divide="100"
                             >
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2" data-ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
+                    <td colspan="2" ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
                         <label>Account</label>
-                        <select class="form-control" data-ng-model="filter.account_id">
+                        <select class="form-control" ng-model="filter.account_id">
                             <option value="0"></option>
-                            <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+                            <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
                         </select>
                     </td>
-                    <td colspan="2" data-ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
+                    <td colspan="2" ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
                         <label>Type</label>
-                        <select class="form-control" data-ng-model="filter.type_id">
+                        <select class="form-control" ng-model="filter.type_id">
                             <option value="0"></option>
-                            <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+                            <option ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
                         </select>
                     </td>
-                    <td colspan="2" data-ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
+                    <td colspan="2" ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
                         <label>Expense</label>
-                        <select class="form-control" data-ng-model="filter.expense_id">
+                        <select class="form-control" ng-model="filter.expense_id">
                             <option value="0"></option>
-                            <option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+                            <option ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
                         </select>
                     </td>
                 </tr>
-                <tr data-ng-repeat="c in filter.comments">
-                    <td colspan="5" data-ng-class="{'success' : hasFilterComments() }">
+                <tr ng-repeat="c in filter.comments">
+                    <td colspan="5" ng-class="{'success' : hasFilterComments() }">
                         <label>Comment</label>
                         <input
                             type="text"
                             class="form-control"
-                            data-ng-model="c.comment"
+                            ng-model="c.comment"
                         >
-                        <input type="checkbox" data-ng-model="c.regex"> Regular expression
+                        <input type="checkbox" ng-model="c.regex"> Regular expression
                     </td>
                     <td>
                         <a
                             href=""
                             class="no-animate"
-                            data-ng-show="$last"
-                            data-ng-click="addCommentFilter()"
+                            ng-show="$last"
+                            ng-click="addCommentFilter()"
                         >
                             Add
                         </a>
@@ -157,8 +157,8 @@
                         <a
                             href=""
                             class="no-animate"
-                            data-ng-hide="$first && filter.comments.length == 1"
-                            data-ng-click="removeCommentFilter($index)"
+                            ng-hide="$first && filter.comments.length == 1"
+                            ng-click="removeCommentFilter($index)"
                         >
                             Remove
                         </a>
@@ -171,14 +171,14 @@
                                 type="button"
                                 class="btn btn-default"
                                 value="Clear"
-                                data-ng-click="clearFilter()"
+                                ng-click="clearFilter()"
                             >
                             <input
                                 type="submit"
                                 class="btn btn-primary"
                                 value="Apply"
-                                data-ng-class="{ 'btn-warning': FilterForm.$invalid }"
-                                data-ng-disabled="FilterForm.$invalid"
+                                ng-class="{ 'btn-warning': FilterForm.$invalid }"
+                                ng-disabled="FilterForm.$invalid"
                             >
                         </div>
                     </td>
@@ -194,33 +194,33 @@
             type="button"
             class="btn btn-info"
             value="Export current transaction set to CSV"
-            data-ng-click="exportFilteredTransactions()"
+            ng-click="exportFilteredTransactions()"
         >
     </div>
-    <form name="Form" data-ng-submit="saveTrans()">
+    <form name="Form" ng-submit="saveTrans()">
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th width="20%" data-ng-click="sort('date', 'id DESC')">Date</th>
-                    <th width="10%" data-ng-click="sort('amount', 'date DESC')">Amount</th>
+                    <th width="20%" ng-click="sort('date', 'id DESC')">Date</th>
+                    <th width="10%" ng-click="sort('amount', 'date DESC')">Amount</th>
                     <th width="10%">Account</th>
                     <th width="10%">Type</th>
                     <th width="10%">Expense</th>
-                    <th width="40%" data-ng-click="sort('comment', 'date DESC')">Comment</th>
+                    <th width="40%" ng-click="sort('comment', 'date DESC')">Comment</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
+                <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
             </tbody>
         </table>
         <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
             <table class="table table-condensed table-hover">
                 <tbody>
                     <tr
-                        data-ng-repeat="t in transactions"
-                        data-ng-click="editTrans(t)"
-                        data-ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
+                        ng-repeat="t in transactions"
+                        ng-click="editTrans(t)"
+                        ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
                     >
                         <td width="20%">{{ formatDate(t.date) }}</td>
                         <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ (t.amount / 100).toFixed(2) }}</td>
@@ -230,7 +230,7 @@
                         <td width="40%" colspan="2">{{ t.comment }}</td>
                         <td></td>
                     </tr>
-                    <tr data-ng-show="moreToLoad">
+                    <tr ng-show="moreToLoad">
                         <td colspan="8">
                             <div class="loader">Loading...</div>
                         </td>
@@ -244,7 +244,7 @@
                 type="button"
                 class="btn btn-default btn-sm"
                 value="Back to top"
-                data-ng-click="transScrollTop()"
+                ng-click="transScrollTop()"
             >
         </div>
     </form>

@@ -15,8 +15,8 @@
                     <div
                         class="progress-bar progress-bar-success progress-bar-striped active"
                         role="progressbar"
-                        data-ng-style="{ 'width' : (importProgress.processed * 100 / importProgress.total).toFixed(2) + '%' }"
-                         data-ng-class="{ 'progress-bar-danger' : importError }"
+                        ng-style="{ 'width' : (importProgress.processed * 100 / importProgress.total).toFixed(2) + '%' }"
+                        ng-class="{ 'progress-bar-danger' : importError }"
                     />
                 </div>
                 <div>{{ importError }}</div>
@@ -26,7 +26,7 @@
                     type="button"
                     class="btn btn-default float-right"
                     data-dismiss="modal"
-                    data-ng-show="importError"
+                    ng-show="importError"
                 >
                     Close
                 </button>
@@ -43,16 +43,16 @@
         <td width="25%">
             <select
                 class="form-control"
-                data-ng-model="rule"
-                data-ng-change="updateEditor()"
+                ng-model="rule"
+                ng-change="updateEditor()"
             >
-                <option data-ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
+                <option ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
                 <option value="">-- NEW RULE --</option>
             </select>
             <input
                 type="checkbox"
-                data-ng-model="showEditor"
-                data-ng-disabled="!rule"
+                ng-model="showEditor"
+                ng-disabled="!rule"
             >
             Show editor
         </td>
@@ -68,13 +68,13 @@
                 type="button"
                 value="Import file"
                 class="btn btn-primary"
-                data-ng-click="importFile()"
-                data-ng-class="{ 'btn-warning': !rule || !uploadFile }"
-                 data-ng-disabled="!rule || !uploadFile"
+                ng-click="importFile()"
+                ng-class="{ 'btn-warning': !rule || !uploadFile }"
+                ng-disabled="!rule || !uploadFile"
             />
         </td>
     </tr>
-    <tr data-ng-show="showEditor" id="ruleEditor">
+    <tr ng-show="showEditor" id="ruleEditor">
         <td colspan="4">
             <div class="form-group">
                 <div id="editor">/** Enter import rule script here **/</div>
@@ -90,15 +90,15 @@
                     type="text"
                     class="form-control"
                     placeholder="Enter rule name"
-                    data-ng-model="newRuleName"
+                    ng-model="newRuleName"
                 >
                 <input
                     type="button"
                     class="btn btn-primary"
                     value="Save"
-                    data-ng-class="{ 'btn-warning': !isRuleNameValid() }"
-                    data-ng-disabled="!isRuleNameValid()"
-                    data-ng-click="saveRule()"
+                    ng-class="{ 'btn-warning': !isRuleNameValid() }"
+                    ng-disabled="!isRuleNameValid()"
+                    ng-click="saveRule()"
                 >
             </div>
         </td>
