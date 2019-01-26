@@ -4,11 +4,11 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
 
     $scope.cumulativeSums = [];
     $scope.getBudget = () => {
+        if ($scope.budgetMode.mode === 'manual' && !$('#manualStart').val()) {
+            return;
+        }
         centsa.settings.set('budget.mode', JSON.stringify($scope.budgetMode));
         centsa.general.budget($scope.budgetMode).then(({data}) => $scope.budget = data);
-        if ($scope.budgetMode.mode == 'manual') {
-            $scope.initDatePickers();
-        }
     };
 
     $scope.filterDate = $event => {

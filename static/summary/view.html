@@ -16,7 +16,7 @@
                 <td ng-click="getBudget()">
                     <select
                         class="form-control"
-                        ng-change="getBudget()"
+                        ng-change="getBudget(); initDatePickers()"
                         ng-model="budgetMode.mode"
                     >
                         <option value="expense">Expense based</option>
