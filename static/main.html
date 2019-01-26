@@ -53,73 +53,90 @@
     ng-controller="mainCtrl"
     onload="fbInit()"
 >
+    <div class="header" style="background: {{ currentUser == -1 ? 'initial' : '#e0a3a3' }}">
+        <i
+            id="sidebar-button"
+            class="fas fa-bars"
+            ng-click="sidebarOpen = !sidebarOpen"
+        ></i>
+        <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
+            <img id="logo" ng-src="logo.svg">
+        </a>
+        <div>
+            <select
+                class="name form-control"
+                ng-change="switchUser()"
+                ng-model="currentUser"
+            >
+                <option value="-1">{{ name }}</option> 
+                <option ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
+            </select> 
+            <input
+                type="button"
+                class="btn btn-primary"
+                value="Log out"
+                onclick="logout()"
+            />
+        </div>
+    </div>
     <div
         class="sidebar"
         ng-class="{'open': sidebarOpen}"
         ng-mouseover="sidebarOpen=true"
         ng-mouseleave="sidebarOpen=false"
     >
-        <div class="notify-container">
-            <a ng-class="{'active':isActive('/user')}" href="#!user">
-                <i class="far fa-user"></i>
-                My Account
-            </a>
-            <span class="notify-bubble" ng-hide="(notifications | filter:is_read=false).length == 0">
-                {{(notifications | filter:is_read=false).length}}
-            </span>
-        </div>
-        <a ng-class="{'active':isActive('/summary')}" href="#!summary">
-            <i class="fas fa-chart-line"></i>
-            Summary
-        </a>
-        <a
-            ng-class="{'active':isActive('/transactions')}"
-            ng-click="resetFilter()"
-            href="#!transactions"
-        >
-            <i class="fas fa-exchange-alt"></i>
-            Transactions
-        </a>
-        <a ng-class="{'active':isActive('/accounts')}" href="#!accounts">
-            <i class="far fa-money-bill-alt"></i>
-            Accounts
-        </a>
-        <a ng-class="{'active':isActive('/types')}" href="#!types">
-            <i class="fas fa-tags"></i>
-            Types
-        </a>
-        <a ng-class="{'active':isActive('/expenses')}" href="#!expenses">
-            <i class="fas fa-file-invoice-dollar"></i>
-            Expenses &amp; Income
-        </a>
-        <a ng-class="{'active':isActive('/import')}" href="#!import">
-            <i class="fas fa-file-export"></i>
-            Import
-        </a>
-    </div>
-    <div class="header" style="background: {{ currentUser == -1 ? 'initial' : '#e0a3a3' }}">
-        <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
-            <img id="logo" ng-src="logo.svg">
-        </a>
-        <input
-            type="button"
-            class="btn btn-primary float-right"
-            value="Log out"
-            onclick="logout()"
-        />
         <select
-            id="name"
-            class="form-control float-right"
+            class="name form-control"
             ng-change="switchUser()"
             ng-model="currentUser"
         >
             <option value="-1">{{ name }}</option> 
             <option ng-repeat="user in controllees" value="{{ user.id }}">{{ user.name }}</option> 
         </select> 
+        <div ng-click="sidebarOpen = false">
+            <div class="notify-container">
+                <a ng-class="{'active':isActive('/user')}" href="#!user">
+                    <i class="far fa-user"></i>
+                    My Account
+                </a>
+                <span class="notify-bubble" ng-hide="(notifications | filter:is_read=false).length == 0">
+                    {{(notifications | filter:is_read=false).length}}
+                </span>
+            </div>
+            <a ng-class="{'active':isActive('/summary')}" href="#!summary">
+                <i class="fas fa-chart-line"></i>
+                Summary
+            </a>
+            <a
+                ng-class="{'active':isActive('/transactions')}"
+                ng-click="resetFilter()"
+                href="#!transactions"
+            >
+                <i class="fas fa-exchange-alt"></i>
+                Transactions
+            </a>
+            <a ng-class="{'active':isActive('/accounts')}" href="#!accounts">
+                <i class="far fa-money-bill-alt"></i>
+                Accounts
+            </a>
+            <a ng-class="{'active':isActive('/types')}" href="#!types">
+                <i class="fas fa-tags"></i>
+                Types
+            </a>
+            <a ng-class="{'active':isActive('/expenses')}" href="#!expenses">
+                <i class="fas fa-file-invoice-dollar"></i>
+                Expenses &amp; Income
+            </a>
+            <a ng-class="{'active':isActive('/import')}" href="#!import">
+                <i class="fas fa-file-export"></i>
+                Import
+            </a>
+        </div>
     </div>
     <div class="main-panel">
         <div class="content" ng-view autoscroll="true"></div>
     </div>
 </body>
+
 
 </html>

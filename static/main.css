@@ -1,3 +1,4 @@
+/* main {{{ */
 body {
     font-family: "Segoe UI", sans-serif;
 }
@@ -20,6 +21,10 @@ body {
     max-width: 500px;
 }
 
+.header #sidebar-button {
+    display: none;
+}
+
 .header {
     position: fixed;
     top: 0;
@@ -28,6 +33,12 @@ body {
     width: 100%;
     padding: 4px 10px;
     box-shadow: 6px 1px 10px 0px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+}
+
+.header>div:last-child {
+    display: flex;
 }
 
 .sidebar, .header {
@@ -41,11 +52,6 @@ body {
     padding: 10px 10px 0 2em;
     margin-right: 10px;
     overflow: auto;
-}
-
-
-.float-right {
-    float: right;
 }
 
 .sidebar a {
@@ -75,29 +81,15 @@ body {
     font-size: large;
 }
 
-img {
-    width: auto;
-    height: 100%;
+.sidebar select.name {
+    display: none;
 }
 
-#types-chart {
-    float: right;
-    width: 60%;
-    height: 500px;
-}
-
-#trans-chart {
-    height: 500px;
-    width: 95%;
-}
-
-#types-view>form {
-    float: left;
-    width: 40%;
-}
-
-div.amcharts-chart-div>a {
-    display: none !important;
+select.name {
+    font-weight: bold;
+    padding: 0.5em 1em;
+    color: #428bca;
+    margin: 0 0.5em;
 }
 
 th[ng-click],
@@ -109,77 +101,57 @@ th[ng-click]:after {
     content: " \21c5"
 }
 
+.float-right {
+    float: right;
+}
+
+img {
+    width: auto;
+    height: 100%;
+}
+
+select.small,
+input.small {
+    max-width: 15em;
+    display: inline-block;
+}
+
+input.xsmall {
+    max-width: 5em;
+    display: inline-block;
+}
+
+.ng-hide {
+    opacity: 0;
+}
+
+.ng-hide-add,
+.ng-hide-remove {
+    transition: all linear 0.2s;
+}
+
+.no-animate {
+   -webkit-transition: none !important;
+   transition: none !important;
+}
+/* }}} */
+
+/* transactions {{{ */
+#trans-chart {
+    height: 500px;
+    width: 95%;
+}
+
+div.amcharts-chart-div>a {
+    display: none !important;
+}
+
 #filterButtons>input {
     margin: 2em 0.5em;
 }
 
-.no-border-inactive:not(:focus) {
-    border: 0;
-}
-
-#frequencySelect>.dropdown-menu {
-    width: calc(100% + 25em);
-}
-
-#frequencySelect>.btn {
-    white-space: normal;
-}
-
-.dropdown-menu li {
-    padding: 0 0.5em;
-}
-
-.dropdown-menu li:hover {
-    background: #f5f5f5;
-}
-
-.dropdown>button {
-    width: 100%;
-}
-
-.dropdown-menu input[type="number"] {
-    display: inline;
-    width: 20%;
-}
-
-.dropdown-menu select {
-    display: inline;
-    width: 30%;
-}
-
-li.disabled :not([type="radio"]) {
-    pointer-events: none;
-}
-
-li.disabled {
-    opacity: 0.5;
-}
-
-img#logout {
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-#name{
-    font-weight: bold;
-    padding: 0.5em 1em;
-    color: #428bca;
-    margin: 0 0.5em;
-    max-width: 20em;
-}
-
 input#export{
     margin-bottom: 3px;
-}
-
-#editor{
-    min-height: 20em;
-    width: 100%;
-}
-
-#ruleEditor input.form-control {
-    display: inline-block;
-    width: initial;
 }
 
 #transDiv {
@@ -260,26 +232,6 @@ tr.first-trans-of-week {
     text-decoration: underline;
 }
 
-select.small,
-input.small {
-    max-width: 15em;
-    display: inline-block;
-}
-
-input.xsmall {
-    max-width: 5em;
-    display: inline-block;
-}
-
-.ng-hide {
-    opacity: 0;
-}
-
-.ng-hide-add,
-.ng-hide-remove {
-    transition: all linear 0.2s;
-}
-
 .tab-content {
     border: lightgrey solid 1px;
     border-top: none;
@@ -287,21 +239,117 @@ input.xsmall {
     padding: 0.5em;
 }
 
-.no-animate {
-   -webkit-transition: none !important;
-   transition: none !important;
+#FilterForm td {
+    vertical-align: middle;
+}
+/* }}} */
+
+/* types {{{ */
+#types-chart {
+    float: right;
+    width: 60%;
+    height: 500px;
 }
 
+#types-view>form {
+    float: left;
+    width: 40%;
+}
+/* }}} */
+
+/* expenses {{{ */
+#frequencySelect>.dropdown-menu {
+    width: calc(100% + 25em);
+}
+
+#frequencySelect>.btn {
+    white-space: normal;
+}
+
+.dropdown-menu li {
+    padding: 0 0.5em;
+}
+
+.dropdown-menu li:hover {
+    background: #f5f5f5;
+}
+
+.dropdown>button {
+    width: 100%;
+}
+
+.dropdown-menu input[type="number"] {
+    display: inline;
+    width: 20%;
+}
+
+.dropdown-menu select {
+    display: inline;
+    width: 30%;
+}
+
+li.disabled :not([type="radio"]) {
+    pointer-events: none;
+}
+
+li.disabled {
+    opacity: 0.5;
+}
+
+.expense-summary {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.expense-summary>form[name="GoalForm"] {
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.expense-summary>form[name="GoalForm"]>* {
+    margin: 0.5em;
+}
+
+.expense-summary>form[name="GoalForm"]>input[type="submit"] {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    margin: auto;
+    width: 30%;
+}
+
+.expense-summary>form[name="GoalForm"]>h4,
+.expense-summary>form[name="GoalForm"]>p
+{
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+/* }}} */
+
+/* accounts {{{ */
+.no-border-inactive:not(:focus) {
+    border: 0;
+}
+/* }}} */
+
+/* import {{{ */
+#editor{
+    min-height: 20em;
+    width: 100%;
+}
+
+#ruleEditor input.form-control {
+    display: inline-block;
+    width: initial;
+}
+/* }}} */
+
+/* summary {{{ */
 .cell {
     display: inline-table;
 }
 
 tr#budgetMode input {
     margin: 1px 0;
-}
-
-#FilterForm td {
-    vertical-align: middle;
 }
 
 button.accordion-header {
@@ -333,31 +381,37 @@ div.notification.read {
      border-radius: 50%;
      box-shadow: 1px 1px 1px gray;
 }
+/* }}} */
 
-.expense-summary {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
+@media only screen and (max-width: 500px) {
+    .sidebar {
+        max-width: unset;
+        left: -100%;
+    }
 
-.expense-summary>form[name="GoalForm"] {
-    display: grid;
-    grid-template-columns: 30% 70%;
-}
+    .sidebar.open {
+        left: 0;
+    }
 
-.expense-summary>form[name="GoalForm"]>* {
-    margin: 0.5em;
-}
+    .sidebar select.name {
+        display: initial;
+        width: -webkit-fill-available;
+        margin: 1em;
+    }
 
-.expense-summary>form[name="GoalForm"]>input[type="submit"] {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    margin: auto;
-    width: 30%;
-}
+    .header #sidebar-button {
+        display: initial;
+        font-size: 1.5em;
+        color: #428bca;
+        position: relative;
+        top: 0.25em;
+    }
 
-.expense-summary>form[name="GoalForm"]>h4,
-.expense-summary>form[name="GoalForm"]>p
-{
-    grid-column-start: 1;
-    grid-column-end: 3;
+    .header select.name {
+        display: none;
+    }
+
+    .main-panel {
+       width: 100%; 
+    }
 }
