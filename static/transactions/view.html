@@ -61,7 +61,15 @@
 </ul>
  <div class="tab-content">
     <div ng-class="{'bg-success' : filter.fromDate || filter.toDate || filter.fromAmount != null || filter.toAmount != null || filter.account_id && filter.account_id != '0' || filter.type_id && filter.type_id != '0' || filter.expense_id && filter.expense_id != '0' || hasFilterComments() }">
-        <input type="checkbox" ng-model="showFilter"> Show filter
+        <input type="checkbox" ng-model="showFilter">
+        <span>Show filter</span>
+        <input
+            id="export"
+            type="button"
+            class="btn btn-info float-right"
+            value="Export current transaction set to CSV"
+            ng-click="exportFilteredTransactions()"
+        >
     </div>
     <form
         id="FilterForm"
@@ -188,15 +196,6 @@
         <h5>Count: {{ transactionSummary.count }}</h5>
         <h5>Sum: {{ transactionSummary.sum / 100 }}</h5>
     </form>
-    <div>
-        <input
-            id="export"
-            type="button"
-            class="btn btn-info"
-            value="Export current transaction set to CSV"
-            ng-click="exportFilteredTransactions()"
-        >
-    </div>
     <form name="Form" ng-submit="saveTrans()">
         <table class="table table-condensed table-hover">
             <thead>
