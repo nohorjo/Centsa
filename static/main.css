@@ -105,6 +105,14 @@ th[ng-click]:after {
     float: right;
 }
 
+.danger {
+    background: #e0a3a3;
+}
+
+.warning {
+    background: #ffe187;
+}
+
 img {
     width: auto;
     height: 100%;
@@ -343,15 +351,7 @@ li.disabled {
 }
 /* }}} */
 
-/* summary {{{ */
-.cell {
-    display: inline-table;
-}
-
-tr#budgetMode input {
-    margin: 1px 0;
-}
-
+/* my account {{{ */
 button.accordion-header {
     width: 100%;
     border: #428bca solid 1px;
@@ -383,7 +383,28 @@ div.notification.read {
 }
 /* }}} */
 
+/* summary {{{ */
+.summary>div {
+    padding: 0.5em;
+}
+
+.budget-mode {
+    display: grid;
+    grid-template-columns: max-content max-content max-content;
+    grid-gap: 2em;
+}
+
+.cashflow,
+.moving-average,
+.budget {
+    display: grid;
+    grid-template-columns: 35% max-content auto;
+    grid-gap: 1em;
+}
+/* }}} */
+
 @media only screen and (max-width: 500px) {
+/* main {{{ */
     .sidebar {
         max-width: unset;
         left: -100%;
@@ -414,4 +435,15 @@ div.notification.read {
     .main-panel {
        width: 100%; 
     }
+/* }}} */
+
+/* summary {{{ */
+    .budget-mode,
+    .cashflow,
+    .moving-average,
+    .budget {
+        grid-template-columns: 100%;
+        grid-gap: 10px;
+    }
+/* }}} */
 }
