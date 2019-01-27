@@ -65,7 +65,12 @@ form.login {
 }
 
 @media only screen and (max-height: 500px) and (orientation: landscape) {
-    form.login {
-        margin: 4em;
+    .cookie-notice {
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+    }
+
+    a#fork {
+        display: none;
     }
 }
