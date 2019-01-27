@@ -197,7 +197,7 @@ app.controller('transCtrl', function($scope, $rootScope, centsa) {
 
     $scope.transScrollTop = () => {
         console.log('scroll to top');
-        $('#transDiv').animate({
+        $('#transactions').animate({
             scrollTop: 0
         }, 'fast');
     };

@@ -154,7 +154,7 @@ div.amcharts-chart-div>a {
     display: none !important;
 }
 
-#filterButtons>input {
+#filter-buttons>input {
     margin: 2em 0.5em;
 }
 
@@ -162,7 +162,7 @@ input#export{
     margin-bottom: 3px;
 }
 
-#transDiv {
+#transactions {
     overflow-y: scroll;
     width: 100%;
 }
@@ -227,7 +227,7 @@ input#export{
   }
 }
 
-#scrollButtom {
+#scroll-button {
     margin: 0.5em;
 }
 
@@ -247,7 +247,7 @@ tr.first-trans-of-week {
     padding: 0.5em;
 }
 
-#FilterForm td {
+form#filter td {
     vertical-align: middle;
 }
 /* }}} */
@@ -266,11 +266,11 @@ tr.first-trans-of-week {
 /* }}} */
 
 /* expenses {{{ */
-#frequencySelect>.dropdown-menu {
+#frequency-select>.dropdown-menu {
     width: calc(100% + 25em);
 }
 
-#frequencySelect>.btn {
+#frequency-select>.btn {
     white-space: normal;
 }
 
@@ -345,7 +345,7 @@ li.disabled {
     width: 100%;
 }
 
-#ruleEditor input.form-control {
+#rule-editor input.form-control {
     display: inline-block;
     width: initial;
 }

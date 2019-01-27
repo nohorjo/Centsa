@@ -72,7 +72,7 @@
         >
     </div>
     <form
-        id="FilterForm"
+        id="filter"
         name="FilterForm"
         ng-submit="reloadTrans()"
         ng-show="showFilter"
@@ -174,7 +174,7 @@
                 </tr>
                 <tr>
                     <td colspan="6">
-                        <div id="filterButtons" class="float-right">
+                        <div id="filter-buttons" class="float-right">
                             <input
                                 type="button"
                                 class="btn btn-default"
@@ -213,7 +213,7 @@
                 <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
             </tbody>
         </table>
-        <div id="transDiv" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
+        <div id="transactions" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
             <table class="table table-condensed table-hover">
                 <tbody>
                     <tr
@@ -239,7 +239,7 @@
         </div>
         <div class="text-center">
             <input
-                id="scrollButtom"
+                id="scroll-button"
                 type="button"
                 class="btn btn-default btn-sm"
                 value="Back to top"
