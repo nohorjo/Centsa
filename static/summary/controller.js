@@ -3,6 +3,30 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
     const byDate = (a, b) => new Date(a.date) - new Date(b.date);
 
     $scope.cumulativeSums = [];
+    $scope.budgetModes = [
+        {name: 'Expense based', code: 'expense'},
+        {name: 'Strict expense based', code: 'strictExpense'},
+        {name: 'Time based', code: 'time'},
+        {name: 'Manual', code: 'manual'},
+    ];
+    $scope.cashflowPeriods = [
+        {name: 'Never', days: 0},
+        {name: 'Week', days: 7},
+        {name: 'Month', days: 30},
+        {name: 'Five week', days: 35},
+        {name: 'Quarter', days: 90},
+        {name: 'Half year', days: 180},
+        {name: 'Year', days: 365},
+    ];
+    $scope.movingAverages = [
+        {name: 'Weekly', days: 7},
+        {name: 'Monthly', days: 30},
+        {name: 'Five-weekly', days: 35},
+        {name: 'Quarterly', days: 90},
+        {name: 'Half-yearly', days: 180},
+        {name: 'Annually', days: 365},
+    ];
+
     $scope.getBudget = () => {
         if ($scope.budgetMode.mode === 'manual' && !$('#manualStart').val()) {
             return;
