@@ -56,7 +56,7 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
             days: 90,
             start: new Date().formatDate('yyyy/MM/dd'),
             amount: 0,
-            cashflowPeriod: '0',
+            cashflowPeriod: 0,
             ...(budgetMode && JSON.parse(budgetMode))
         };
         if ($scope.budgetMode.mode == 'manual') {
@@ -68,7 +68,7 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
     Promise.all([
         centsa.transactions.getCumulativeSums(),
         centsa.settings.get('moving.average.days').then(setting => $scope.$apply(() => {
-            $scope.movingAvgDays = setting || '30';
+            $scope.movingAvgDays = +setting || 30;
         }))
     ]).then(([resp]) => {
         $scope.cumulativeSums = resp.data.map(x => ({
