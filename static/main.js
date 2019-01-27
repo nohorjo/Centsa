@@ -22,9 +22,11 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
                 asc = false;
             }
             asc = !asc;
-            arr.sort((a, b) => {
-                const p1 = a[prop];
-                const p2 = b[prop];
+            arr.sort((p1, p2) => {
+                if (prop) {
+                    p1 = p1[prop];
+                    p2 = p2[prop];
+                }
                 var comp;
                 if (p1.constructor == String) {
                     comp = p1.localeCompare(p2);

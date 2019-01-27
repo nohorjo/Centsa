@@ -92,11 +92,13 @@ select.name {
     margin: 0 0.5em;
 }
 
+.sortable,
 th[ng-click],
 table.table-hover tr td {
     cursor: pointer;
 }
 
+.sortable:after,
 th[ng-click]:after {
     content: " \21c5"
 }
@@ -141,6 +143,30 @@ input.xsmall {
 .no-animate {
    -webkit-transition: none !important;
    transition: none !important;
+}
+
+div.notification {
+    width: 100%;
+}
+
+div.notification.read {
+    color: #d0d0d0;
+}
+
+.notify-container {
+    position: relative;
+}
+
+.notify-bubble {
+     position: absolute;
+     top: -3px;
+     right: 5px;
+     padding: 3px 8px;
+     background-color: #d9534f;
+     color: white;
+     font-size: 0.9em;
+     border-radius: 50%;
+     box-shadow: 1px 1px 1px gray;
 }
 /* }}} */
 
@@ -358,28 +384,25 @@ button.accordion-header {
     color: #428bca;
 }
 
-div.notification {
-    width: 100%;
+.controllers {
+    display: grid;
+    grid-template-columns: auto max-content;
+    grid-gap: 1em;
 }
 
-div.notification.read {
-    color: #d0d0d0;
+.controllers>label {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
-.notify-container {
-    position: relative;
+.password {
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-gap: 1em;
 }
 
-.notify-bubble {
-     position: absolute;
-     top: -3px;
-     right: 5px;
-     padding: 3px 8px;
-     background-color: #d9534f;
-     color: white;
-     font-size: 0.9em;
-     border-radius: 50%;
-     box-shadow: 1px 1px 1px gray;
+.password>input[type="button"] {
+    grid-column-start: 2;
 }
 /* }}} */
 
@@ -444,6 +467,20 @@ div.notification.read {
     .budget {
         grid-template-columns: 100%;
         grid-gap: 10px;
+    }
+/* }}} */
+
+/* my account {{{ */
+    .password {
+        grid-template-columns: 100%;
+    }
+
+    .password>input[type="button"] {
+        grid-column-start: 1;
+    }
+    
+    #deleteAccount {
+        width: 100%;
     }
 /* }}} */
 }

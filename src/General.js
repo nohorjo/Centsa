@@ -19,7 +19,6 @@ const {
     deleteUser,
     updatePassword,
 } = require('./dao/Users');
-const { getSessionStore } = require('./index');
 const log = require('./log');
 const {
     getSummary,
@@ -341,14 +340,16 @@ route.post('/controllers', (req, resp) => {
     } else {
         addController(user_id, controllerEmail, (err, result) => {
             if (err) {
-                log.error(err);
-                resp.status(500).send(err);
-            } else if(result) {
+                if (err.errno === 1048) {
+                    log('controller not found');
+                    resp.sendStatus(404);
+                } else {
+                    log.error(err);
+                    resp.status(500).send(err);
+                }
+            } else if (result) {
                 log('controller added');
                 resp.sendStatus(201);
-            } else {
-                log('controller not found');
-                resp.sendStatus(404);
             }
         });        
     }
@@ -362,7 +363,7 @@ route.delete('/controllers/:email', (req, resp) => {
             log.error(err);
             resp.status(500).send(err);
         } else {
-            const sessionStore = getSessionStore();
+            const sessionStore = require('./index').getSessionStore();
             sessionStore.all((err, sessions) => {
                 if (err) log.error(err);
                 else Object.keys(sessions).forEach(k => {

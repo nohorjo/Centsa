@@ -94,7 +94,7 @@ Users.deleteController = (userId, email, cb) => {
         (err, results) => {
             let id;
             if (err) cb(err);
-            else if ((id = results[0].id)) pool.query(
+            else if (results.length && (id = results[0].id)) pool.query(
                 'DELETE FROM usercontrol WHERE controller=? AND controllee=?;',
                 [id, userId],
                 err => cb(err, id)
