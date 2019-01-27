@@ -11,10 +11,10 @@
                 ng-options="option.code as option.name for option in budgetModes"
             ></select>
         </div>
-        <div class="no-animate" ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
+        <div class="no-animate expense-budget" ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense'">
             <label>Expense rounds</label> 
             <input
-                class="form-control small"
+                class="form-control"
                 type="number"
                 step="1"
                 min="1"

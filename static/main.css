@@ -424,6 +424,12 @@ button.accordion-header {
     grid-template-columns: 35% max-content auto;
     grid-gap: 1em;
 }
+
+.expense-budget {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 1em;
+}
 /* }}} */
 
 @media only screen and (max-width: 500px) {
@@ -467,6 +473,10 @@ button.accordion-header {
     .budget {
         grid-template-columns: 100%;
         grid-gap: 10px;
+    }
+
+    .expense-budget {
+        grid-template-columns: auto;
     }
 /* }}} */
 
