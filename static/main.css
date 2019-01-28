@@ -356,12 +356,12 @@ li.disabled {
 
 .expense-summary {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 1fr;
 }
 
 .expense-summary>form[name="GoalForm"] {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 3fr 7fr;
 }
 
 .expense-summary>form[name="GoalForm"]>* {
@@ -410,7 +410,7 @@ button.accordion-header {
 
 .controllers {
     display: grid;
-    grid-template-columns: auto max-content;
+    grid-template-columns: minmax(30%, max-content) max-content;
     grid-gap: 1em;
 }
 
@@ -421,7 +421,7 @@ button.accordion-header {
 
 .password {
     display: grid;
-    grid-template-columns: max-content auto;
+    grid-template-columns: max-content max-content;
     grid-gap: 1em;
 }
 
@@ -441,8 +441,13 @@ button.accordion-header {
     grid-gap: 2em;
 }
 
+.moving-average {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-gap: 1em;
+}
+
 .cashflow,
-.moving-average,
 .budget {
     display: grid;
     grid-template-columns: 35% max-content auto;
@@ -495,7 +500,7 @@ button.accordion-header {
     .cashflow,
     .moving-average,
     .budget {
-        grid-template-columns: 100%;
+        grid-template-columns: 1fr;
         grid-gap: 10px;
     }
 
@@ -506,7 +511,7 @@ button.accordion-header {
 
 /* my account {{{ */
     .password {
-        grid-template-columns: 100%;
+        grid-template-columns: 1fr;
     }
 
     .password>input[type="button"] {
@@ -520,7 +525,7 @@ button.accordion-header {
 
 /* types {{{ */
     #types-view {
-        grid-template-columns: 100%;
+        grid-template-columns: 1fr;
     }
 /* }}} */
 }
