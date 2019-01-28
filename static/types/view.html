@@ -1,44 +1,30 @@
+<h4>Manage types</h4>
 <div id="types-view">
     <form name="Form" ng-submit="saveType()">
-        <h4>Manage types</h4>
-        <table id="typesTable" class="table table-condensed table-hover">
-            <thead>
-                <tr>
-                    <th ng-click="sort('name', types, drawPie)">Name</th>
-                    <th colspan="2" ng-click="sort('sum', types, drawPie)">Sum</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <input
-                            type="text"
-                            class="form-control"
-                            required="required"
-                            ng-model="newType.name"
-                        >
-                    </td>
-                    <td></td>
-                    <td>
-                        <input
-                            type="submit"
-                            value="Save"
-                            class="btn btn-primary"
-                            ng-class="{ 'btn-warning': Form.$invalid }"
-                            ng-disabled="Form.$invalid"
-                        >
-                    </td>
-                </tr>
-                <tr ng-repeat="t in types" ng-click="setFilter({type_id:t.id.toString()})">
-                    <td>{{ t.name }}</td>
-                    <td>{{ (t.sum/100).toFixed(2) }}</td>
-                    <td colspan="2">
-                        <a href="" ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <label class="sortable" ng-click="sort('name', types, drawPie)">Name</label>
+        <label class="sortable" ng-click="sort('sum', types, drawPie)">Sum</label>
+        <input
+            type="text"
+            class="form-control"
+            required="required"
+            ng-model="newType.name"
+        >
+        <input
+            type="submit"
+            value="Save"
+            class="btn btn-primary"
+            ng-class="{ 'btn-warning': Form.$invalid }"
+            ng-disabled="Form.$invalid"
+        >
+        <div
+            class="type-item"
+            ng-repeat="t in types"
+            ng-click="setFilter({type_id:t.id.toString()})"
+        >
+            <span>{{ t.name }}</span>
+            <span>{{ (t.sum/100).toFixed(2) }}</span>
+            <a href="" ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
+        </div>
     </form>
+    <div id="types-chart"></div>
 </div>
-<div id="types-chart"></div>

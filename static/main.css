@@ -93,7 +93,7 @@ select.name {
 }
 
 .sortable,
-th[ng-click],
+[ng-click],
 table.table-hover tr td {
     cursor: pointer;
 }
@@ -279,15 +279,39 @@ form#filter td {
 /* }}} */
 
 /* types {{{ */
-#types-chart {
-    float: right;
-    width: 60%;
-    height: 500px;
+#types-view {
+    display: grid;
+    grid-template-columns: 7fr 13fr;
 }
 
-#types-view>form {
-    float: left;
-    width: 40%;
+#types-view>form,
+.type-item {
+    display: grid;
+    grid-template-columns: 5fr 3fr 2fr;
+    grid-gap: 0.5em;
+}
+
+#types-view>form>input[type="submit"] {
+    height: fit-content;
+}
+
+#types-view>form>input:first-of-type {
+    grid-column-start: 1;
+}
+
+#types-view>form>label:nth-of-type(2) {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.type-item {
+    grid-column: 1 / -1;
+    padding: 3px;
+    border-top: lightgrey solid 1px;
+}
+
+#types-chart {
+    height: 500px;
 }
 /* }}} */
 
@@ -491,6 +515,12 @@ button.accordion-header {
     
     #deleteAccount {
         width: 100%;
+    }
+/* }}} */
+
+/* types {{{ */
+    #types-view {
+        grid-template-columns: 100%;
     }
 /* }}} */
 }
