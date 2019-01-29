@@ -6,9 +6,9 @@ Users.getUserAETs = (emailOrId, cb) => {
     const getId = `SELECT ${isNaN(emailOrId) ? 'id FROM users WHERE email=?' : `${emailOrId} AS id`}`;
     pool.query(
         `${getId};
-        SELECT id, name FROM accounts WHERE user_id=(${getId});
-        SELECT id, name, type_id FROM expenses WHERE user_id=(${getId});
-        SELECT id, name FROM types WHERE user_id=(${getId});
+        SELECT id, name FROM accounts WHERE user_id=(${getId}) ORDER BY name;
+        SELECT id, name, type_id FROM expenses WHERE user_id=(${getId}) ORDER BY name;
+        SELECT id, name FROM types WHERE user_id=(${getId}) ORDER BY name;
         SELECT name FROM users WHERE id=(${getId})`, 
         Array(5).fill(emailOrId),
         (err, data) => {
@@ -51,7 +51,7 @@ Users.setUpUser = (userId, cb) => {
 
 Users.getControllees = (userId, cb) => {
     pool.query(
-        'SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?);',
+        'SELECT id, name FROM users WHERE id IN (SELECT controllee FROM usercontrol WHERE controller=?) ORDER BY name;',
         [userId],
         cb
     );
@@ -67,7 +67,7 @@ Users.isController = (controller, controllee, cb) => {
 
 Users.getControllers = (userId, cb) => {
     pool.query(
-        'SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?)',
+        'SELECT email FROM users WHERE id IN (SELECT controller FROM usercontrol WHERE controllee=?) ORDER BY email;',
         [userId],
         (err, results) => cb(err, err || results.map(r => r.email))
     );

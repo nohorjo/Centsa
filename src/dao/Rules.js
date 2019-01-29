@@ -4,7 +4,7 @@ const Rules = {};
 
 Rules.getAll = (userId, cb) => {
     pool.query(
-        'SELECT id,name FROM rules WHERE user_id IS NULL OR user_id=?;',
+        'SELECT id,name FROM rules WHERE user_id IS NULL OR user_id=? ORDER BY name;',
         [userId],
         cb
     );

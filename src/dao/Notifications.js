@@ -4,7 +4,7 @@ const Notifications = {};
 
 Notifications.getNotifications = (userId, cb) => {
     pool.query(
-        'SELECT id,message,is_read FROM notifications WHERE user_id=?;',
+        'SELECT id,message,is_read FROM notifications WHERE user_id=? ORDER BY id;',
         [userId],
         (err, results) => {
             if (err) {

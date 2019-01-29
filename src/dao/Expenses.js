@@ -4,7 +4,7 @@ const Expenses = {};
 
 Expenses.getAll = (userId, cb) => {
     pool.query(
-        'SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;',
+        'SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=? ORDER BY name;',
         [userId],
         cb,
     );
@@ -13,7 +13,7 @@ Expenses.getAll = (userId, cb) => {
 Expenses.getAllWithSum = (userId, cb) => {
     pool.query(
         `SELECT -SUM(amount) AS total FROM transactions WHERE user_id=? AND account_id IN (SELECT id FROM accounts WHERE user_id=? AND savings=FALSE);
-        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=?;`,
+        SELECT id,name,cost,frequency,started,automatic,account_id,type_id FROM expenses e WHERE user_id=? ORDER BY name;`,
         Array(4).fill(userId),
         cb,
     );
@@ -60,7 +60,7 @@ Expenses.deleteExpense = (id, userId, cb) => {
 Expenses.getAutoExpenses = (all, id, untilDate, cb) => {
     pool.query(
         `SELECT id,user_id,name,cost,frequency,started,account_id,type_id 
-            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ''} started<=? AND automatic=TRUE;`,
+            FROM expenses WHERE ${id ? `id=${parseInt(id)} AND` : ''} started<=? AND automatic=TRUE ORDER BY name;`,
         [untilDate],
         cb,
     );

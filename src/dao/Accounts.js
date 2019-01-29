@@ -4,7 +4,7 @@ const Accounts = {};
 
 Accounts.getAll = (userId, cb) => {
     pool.query(
-        'SELECT id,name,savings, -(COALESCE((SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id), 0)) AS balance FROM accounts a WHERE user_id=?;',
+        'SELECT id,name,savings, -(COALESCE((SELECT SUM(amount) FROM transactions t WHERE t.account_id=a.id), 0)) AS balance FROM accounts a WHERE user_id=? ORDER BY name;',
         [userId],
         (err, result) => {
             if (err) {

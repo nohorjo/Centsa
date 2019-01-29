@@ -4,7 +4,7 @@ const Types = {};
 
 Types.getAll = (userId, cb) => {
     pool.query(
-        'SELECT id,name,(SELECT SUM(amount) FROM transactions t WHERE t.type_id=a.id) AS sum FROM types a WHERE user_id=?;',
+        'SELECT id,name,(SELECT SUM(amount) FROM transactions t WHERE t.type_id=a.id) AS sum FROM types a WHERE user_id=? ORDER BY name;',
         [userId],
         cb
     );
