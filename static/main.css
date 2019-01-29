@@ -443,6 +443,11 @@ button.accordion-header {
     padding: 0.5em;
 }
 
+.summary hr {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .budget-mode {
     display: grid;
     grid-template-columns: max-content max-content max-content;
