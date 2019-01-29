@@ -38,7 +38,7 @@ app.controller('typesCtrl', function ($scope, centsa) {
 
     $scope.drawPie = () => {
         console.log('draw pie');
-        AmCharts.makeChart('types-chart', {
+        const chartOpts = {
             type: 'pie',
             theme: 'light',
             dataProvider: $scope.types
@@ -51,8 +51,13 @@ app.controller('typesCtrl', function ($scope, centsa) {
             titleField: 'name',
             balloon: {
                 fixedPosition: true
-            }
-        });
+            },
+        };
+        if ($(window).width() <= 500) {
+            chartOpts.labelsEnabled = false;
+            chartOpts.legend = new AmCharts.AmLegend();
+        }
+        AmCharts.makeChart('types-chart', chartOpts);
     };
 
 });
