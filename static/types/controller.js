@@ -52,10 +52,10 @@ app.controller('typesCtrl', function ($scope, centsa) {
             balloon: {
                 fixedPosition: true
             },
+            legend: new AmCharts.AmLegend(),
         };
         if ($(window).width() <= 500) {
             chartOpts.labelsEnabled = false;
-            chartOpts.legend = new AmCharts.AmLegend();
         }
         AmCharts.makeChart('types-chart', chartOpts);
     };

@@ -14,7 +14,7 @@ body {
     max-width: 5.5em;
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
     background: #fff;
-    transition: max-width cubic-bezier(0.33, 0.54, 0.77, 0.34) 0.3s;
+    transition: max-width cubic-bezier(0.33, 0.54, 0.77, 0.34) 0.2s;
 }
 
 .sidebar.open {
@@ -282,6 +282,7 @@ form#filter td {
 #types-view {
     display: grid;
     grid-template-columns: 7fr 13fr;
+    grid-gap: 0.5em;
 }
 
 #types-view>form,
@@ -466,6 +467,7 @@ button.accordion-header {
     .sidebar {
         max-width: unset;
         left: -100%;
+        transition: left ease-out 0.25s;
     }
 
     .sidebar.open {
