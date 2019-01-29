@@ -94,7 +94,7 @@
     <hr/>
     <div class="budget" ng-class="{ 'warning' : budget.afterAll < 0 && budget.afterAuto, 'danger' : !budget.afterAuto && budget.afterAll < 0 }">
         <label>Budget</label>
-        <span>{{ (budget.afterAll/100).toFixed(2) }}</span>
+        <span>{{ applyCurrency((budget.afterAll/100).toFixed(2)) }}</span>
         <div ng-show="budget.afterAll <= 0">
              <span ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time'">
                 You may need to re-evaluate your
@@ -105,7 +105,7 @@
     </div>
     <div class="budget" ng-show="budgetMode.mode !== 'manual'">
         <label>Budget (Only automatic expenses)</label>
-        <span>{{ (budget.afterAuto/100).toFixed(2) }}</span>
+        <span>{{ applyCurrency((budget.afterAuto/100).toFixed(2)) }}</span>
         <span ng-show="budget.afterAuto <= 0">
             You may not have enough to pay for some automatic expenses
         </span>

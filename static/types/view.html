@@ -22,7 +22,7 @@
             ng-click="setFilter({type_id:t.id.toString()})"
         >
             <span>{{ t.name }}</span>
-            <span>{{ (t.sum/100).toFixed(2) }}</span>
+            <span>{{ applyCurrency((t.sum/100).toFixed(2)) }}</span>
             <a href="" ng-click="deleteType(t.id);$event.stopPropagation()">Delete</a>
         </div>
     </form>

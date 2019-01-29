@@ -5,6 +5,10 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
     $scope.currentUser = $cookies.get('currentUser') || '-1';
     $scope.controllees = [];
     $rootScope.notifications = [];
+    $rootScope.currency = {
+        symbol: '£',
+        prepend: true,
+    };
 
     $rootScope.formatDate = date => {
         if (date.constructor == String) {
@@ -68,6 +72,8 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
         $timeout(() => $rootScope.showFilter = false, 1000);
     };
 
+    $rootScope.applyCurrency = v => `${v < 0 ? '-' : ''}${$rootScope.currency.prepend ? $rootScope.currency.symbol : ''}${Math.abs(v)}${$rootScope.currency.prepend ? '' : $rootScope.currency.symbol}`;
+
     $scope.isActive = path => $location.path() == path;
     
     $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
@@ -78,6 +84,14 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
         centsa.general.getNotifications().then(({data}) => $rootScope.notifications = data);
         setTimeout(checkNotifications, 3.6e6);
     }();
+
+    centsa.settings.get('currency').then(data => {
+        if (data) {
+            $scope.$apply(() => {
+                $rootScope.currency = JSON.parse(data);
+            });
+        }
+    });
 
 });
 

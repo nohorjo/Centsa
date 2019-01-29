@@ -420,7 +420,8 @@ button.accordion-header {
     grid-column-end: 3;
 }
 
-.password {
+.password,
+.currency {
     display: grid;
     grid-template-columns: max-content max-content;
     grid-gap: 1em;
@@ -429,6 +430,12 @@ button.accordion-header {
 .password>input[type="button"] {
     grid-column-start: 2;
 }
+
+.currency>input[type="text"] {
+    width: 5em;
+}
+
+
 /* }}} */
 
 /* summary {{{ */

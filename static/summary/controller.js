@@ -118,12 +118,15 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
         };
 
         const sums = applyMovingAverage($scope.cumulativeSums);
+        const balloonText = `<span>${$rootScope.currency.prepend ? $rootScope.currency.symbol : ''}[[value]]${$rootScope.currency.prepend ? '' : $rootScope.currency.symbol}</span>`;
 
         const valueAxes = [{
             id: 'v1',
             axisAlpha: 0,
             position: 'left',
-            ignoreAxisWidth: true
+            ignoreAxisWidth: true,
+            unit: $rootScope.currency.symbol,
+            unitPosition: $rootScope.currency.prepend ? 'left' : 'right',
         }];
         const graphs = [{
             id: 'g1',
@@ -136,20 +139,22 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
             lineThickness: 2,
             useLineColorForBulletBorder: true,
             valueField: 'sum',
-            balloonText: '<span>[[value]]</span>'
+            balloonText
         }, {
             id: 'g2',
             title: 'Moving average', 
             lineThickness: 2,
             valueField: 'avg',
-            bullet: 'round'
+            bullet: 'round',
+            balloonText
         }, {
             id: 'g3',
             title: 'Average rate of spending', 
             lineThickness: 2,
             valueField: 'rate',
             bullet: 'round',
-            lineColor: '#ff7f7f'
+            lineColor: '#ff7f7f',
+            balloonText
         }];
         const chartOpts = {
             type: 'serial',
@@ -194,7 +199,8 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
             mouseWheelZoomEnabled: true,
             legend: {
                 useGraphSettings: true,
-                position: 'top'
+                position: 'top',
+                spacing: 75,
             },
             dataDateFormat: 'YYYY/MM/DD'
         };

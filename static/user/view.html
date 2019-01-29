@@ -96,6 +96,36 @@
         </button>
     </h5>
     <div id="userSettings" class="collapse">
+        <div class="currency">
+            <label>Currency sign</label>
+            <input
+                type="text"
+                maxLength="1"
+                class="form-control"
+                ng-model="currency.symbol"
+                ng-change="saveCurrency()"
+            />
+            <label>Position</label>
+            <div>
+                <span>Prepend</span>
+                <input
+                    type="radio"
+                    name="currencyPosition"
+                    ng-value="true"
+                    ng-model="currency.prepend"
+                    ng-change="saveCurrency()"
+                />
+                <span>Append</span>
+                <input
+                    type="radio"
+                    name="currencyPosition"
+                    ng-value="false"
+                    ng-model="currency.prepend"
+                    ng-change="saveCurrency()"
+                />
+            </div>
+        </div>
+        <hr/>
         <div class="password">
             <label ng-show="passwordSet">Old Password</label>
             <input

@@ -12,18 +12,18 @@
             <tbody>
                 <tr>
                     <td>Daily</td>
-                    <td>{{ (totalActiveExpenses/100).toFixed(2) || 0 }}</td>
-                    <td>{{ (totalAutoExpenses/100).toFixed(2) || 0 }}</td>
+                    <td>{{ applyCurrency((totalActiveExpenses/100).toFixed(2) || 0) }}</td>
+                    <td>{{ applyCurrency((totalAutoExpenses/100).toFixed(2) || 0) }}</td>
                 </tr>
                 <tr>
                     <td>Weekly</td>
-                    <td>{{ ((totalActiveExpenses*7)/100).toFixed(2) || 0 }}</td>
-                    <td>{{ ((totalAutoExpenses*7)/100).toFixed(2) || 0 }}</td>
+                    <td>{{ applyCurrency(((totalActiveExpenses*7)/100).toFixed(2) || 0) }}</td>
+                    <td>{{ applyCurrency(((totalAutoExpenses*7)/100).toFixed(2) || 0) }}</td>
                 </tr>
                 <tr>
                     <td>Monthly</td>
-                    <td>{{ ((totalActiveExpenses*30)/100).toFixed(2) || 0 }}</td>
-                    <td>{{ ((totalAutoExpenses*30)/100).toFixed(2) || 0 }}</td>
+                    <td>{{ applyCurrency(((totalActiveExpenses*30)/100).toFixed(2) || 0) }}</td>
+                    <td>{{ applyCurrency(((totalAutoExpenses*30)/100).toFixed(2) || 0) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -304,7 +304,7 @@
             </tr>
             <tr ng-repeat="e in expenses" ng-click="setFilter({expense_id:e.id.toString()})">
                 <td>{{ e.name }}</td>
-                <td>{{ (e.cost / 100).toFixed(2) }}</td>
+                <td>{{ applyCurrency((e.cost / 100).toFixed(2)) }}</td>
                 <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
                 <td ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
                 <td>

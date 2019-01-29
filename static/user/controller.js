@@ -70,5 +70,9 @@ app.controller('userCtrl', function ($scope, $rootScope, centsa) {
             });
         });
     };
+
+    $scope.saveCurrency = () => {
+        centsa.settings.set('currency', JSON.stringify($rootScope.currency));
+    };
 });
 
