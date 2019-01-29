@@ -47,7 +47,7 @@ route.delete('/:id', (req, resp) => {
         if (err) {
             log.error(err);
             resp.status(500).send(err.errno == 1451 ? "Cannot delete 'Other'" : err);
-        } else if (!result.affectedRows) {
+        } else if (!result[2].affectedRows) {
             resp.status(400).send("Cannot delete 'Other'");
         } else {
             req.session.userData.types = req.session.userData.types.filter(t => t.id != id);
