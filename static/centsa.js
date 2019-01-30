@@ -145,13 +145,15 @@ if (typeof app == 'object') {
                 return config;
             },
             'responseError': function (rejection) {
-                swal(
-                    'Error',
-                    JSON.stringify(rejection.data).replace(/(^["']|["']$)/g,''),
-                    'error'
-                ).then(() => {
-                    if(rejection.status == 401) window.location.pathname = '/index.html';
-                });
+                if (rejection.data) {
+                    swal(
+                        'Error',
+                        JSON.stringify(rejection.data).replace(/(^["']|["']$)/g,''),
+                        'error'
+                    ).then(() => {
+                        if (rejection.status == 401) window.location.pathname = '/index.html';
+                    });
+                }
                 return $q.reject(rejection);
             }
         };
