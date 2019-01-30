@@ -156,3 +156,18 @@ app.directive('maxHeightBottom', () => ({
         );
     }
 }));
+
+$(document).ready(() => {
+    !function checkInactivity() {
+        let timer = setTimeout(() => window.location.reload(), 3.6e6);
+        function reset() {
+            clearTimeout(timer);
+            checkInactivity();
+        }
+
+        $(this).mousemove(reset);
+        $(this).keypress(reset);
+        $(this).scroll(reset);
+        $('body').bind('touchmove', reset);
+    }();
+});
