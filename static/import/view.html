@@ -35,110 +35,84 @@
     </div>
 </div>
 <h4>Import CSV</h4>
-<table class="table">
-    <tr>
-        <td width="20%">
-            <label>Parse rule</label>
-        </td>
-        <td width="25%">
-            <select
+<div class="import">
+    <label>Parse rule</label>
+    <div>
+        <select
+            class="form-control"
+            ng-model="rule"
+            ng-change="updateEditor()"
+        >
+            <option ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
+            <option value="">-- NEW RULE --</option>
+        </select>
+        <input
+            type="checkbox"
+            ng-model="showEditor"
+            ng-disabled="!rule"
+        >
+        <span>Show editor</span>
+    </div>
+    <input
+        type="file"
+        class="form-control-file"
+        data-file-model="uploadFile"
+    />
+    <input
+        type="button"
+        value="Import file"
+        class="btn btn-primary"
+        ng-click="importFile()"
+        ng-class="{ 'btn-warning': !rule || !uploadFile }"
+        ng-disabled="!rule || !uploadFile"
+    />
+    <div class="editor-container" ng-show="showEditor">
+        <div id="editor">/** Enter import rule script here **/</div>
+        <div class="editor-controls">
+            <input
+                type="text"
                 class="form-control"
-                ng-model="rule"
-                ng-change="updateEditor()"
+                placeholder="Enter rule name"
+                ng-model="newRuleName"
             >
-                <option ng-repeat="r in rules" value="{{ r.id }}">{{ r.name }}</option>
-                <option value="">-- NEW RULE --</option>
-            </select>
-            <input
-                type="checkbox"
-                ng-model="showEditor"
-                ng-disabled="!rule"
-            >
-            Show editor
-        </td>
-        <td width="30%">
-            <input
-                type="file"
-                class="form-control-file"
-                data-file-model="uploadFile"
-            />
-        </td>
-        <td width="25%">
             <input
                 type="button"
-                value="Import file"
                 class="btn btn-primary"
-                ng-click="importFile()"
-                ng-class="{ 'btn-warning': !rule || !uploadFile }"
-                ng-disabled="!rule || !uploadFile"
-            />
-        </td>
-    </tr>
-    <tr ng-show="showEditor" id="rule-editor">
-        <td colspan="4">
-            <div class="form-group">
-                <div id="editor">/** Enter import rule script here **/</div>
-                <input
-                    type="hidden"
-                    id="ruleScript"
-                    value=""
-                />
-            </div>
-
-            <div class="form-group">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter rule name"
-                    ng-model="newRuleName"
-                >
-                <input
-                    type="button"
-                    class="btn btn-primary"
-                    value="Save"
-                    ng-class="{ 'btn-warning': !isRuleNameValid() }"
-                    ng-disabled="!isRuleNameValid()"
-                    ng-click="saveRule()"
-                >
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="4">
-            <p>
-                Import CSV spreadsheets into the database.
-            </p>
-            <p>
-                The
-                <i>default</i> rule expects a CSV in the format of the example below. (The first 'header' row is ignored).
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="4">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Comment</th>
-                    <th>Account</th>
-                    <th>Type</th>
-                </tr>
-                <tr>
-                    <td>2017/01/29</td>
-                    <td>12.99</td>
-                    <td>Eating out</td>
-                    <td>Cash</td>
-                    <td>Food</td>
-                </tr>
-                <tr>
-                    <td>2017/02/05</td>
-                    <td>-2015.96</td>
-                    <td>Wages</td>
-                    <td>Bank</td>
-                    <td>Income</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+                value="Save"
+                ng-class="{ 'btn-warning': !isRuleNameValid() }"
+                ng-disabled="!isRuleNameValid()"
+                ng-click="saveRule()"
+            >
+        </div>
+    </div>
+    <p>
+        Import CSV spreadsheets into the database.
+    </p>
+    <p>
+        The
+        <i>default</i> rule expects a CSV in the format of the example below. (The first 'header' row is ignored).
+    </p>
+    <table class="table table-bordered">
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Comment</th>
+            <th>Account</th>
+            <th>Type</th>
+        </tr>
+        <tr>
+            <td>2017/01/29</td>
+            <td>12.99</td>
+            <td>Eating out</td>
+            <td>Cash</td>
+            <td>Food</td>
+        </tr>
+        <tr>
+            <td>2017/02/05</td>
+            <td>-2015.96</td>
+            <td>Wages</td>
+            <td>Bank</td>
+            <td>Income</td>
+        </tr>
+    </table>
+</div>

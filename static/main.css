@@ -15,7 +15,7 @@ body {
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
     background: #fff;
     transition: max-width cubic-bezier(0.33, 0.54, 0.77, 0.34) 0.2s;
-    overflow: scroll;
+    overflow-y: auto;
 }
 
 .sidebar.open {
@@ -400,14 +400,38 @@ li.disabled {
 /* }}} */
 
 /* import {{{ */
-#editor{
+#editor {
     min-height: 20em;
     width: 100%;
 }
 
-#rule-editor input.form-control {
-    display: inline-block;
-    width: initial;
+div.import {
+    display: grid;
+    grid-template-columns: 1fr 2fr 3fr 1fr;
+    grid-gap: 1em;
+}
+
+div.import p,
+div.import table,
+.editor-container {
+    grid-column: 1 / -1;
+} 
+
+div.import>input[type="button"] {
+    height: fit-content;
+}
+
+.editor-container>* {
+    margin-bottom: 1em;
+}
+
+.editor-controls {
+    display: flex;
+}
+
+.editor-controls>input[type="text"] {
+    width: max-content;
+    margin-right: 1em;
 }
 /* }}} */
 
@@ -549,6 +573,16 @@ button.accordion-header {
 /* types {{{ */
     #types-view {
         grid-template-columns: 1fr;
+    }
+/* }}} */
+
+/* import {{{ */
+    div.import {
+        grid-template-columns: 1fr;
+    }
+
+    div.import>table {
+        font-size: 6pt;
     }
 /* }}} */
 }
