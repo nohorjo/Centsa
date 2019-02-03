@@ -167,7 +167,7 @@ div.notification.read {
 }
 
 input {
-    height: fit-content;
+    align-self: end;
 }
 
 .swal2-select {
@@ -176,14 +176,6 @@ input {
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;    
-}
-
-.mobile {
-    display: none;
-}
-
-.web {
-    display: initial;
 }
 /* }}} */
 
@@ -406,6 +398,7 @@ li.disabled {
     border: unset;
     box-shadow: unset;
     background: unset;
+    padding: unset;
 }
 
 form[name="TransferForm"] {
@@ -595,7 +588,7 @@ button.accordion-header {
     }
 
     .web {
-       display: none;
+       display: none !important;
     }
 /* }}} */
 
@@ -639,7 +632,7 @@ button.accordion-header {
     }
 
     div.import>table {
-        font-size: 6pt;
+        font-size: 8pt;
     }
 /* }}} */
 
@@ -656,6 +649,10 @@ button.accordion-header {
 
     .account-item {
         grid-template-columns: 1fr 1fr;
+        border: lightgrey solid 1px;
+        border-radius: 5px;
+        padding: 5px;
+        box-shadow: lightgrey 1px 1px 3px 1px;
     }
 
     form[name="AccountsForm"] input[type="checkbox"] {
@@ -666,4 +663,14 @@ button.accordion-header {
         grid-column: 1 / 1;
     }
 /* }}} */
+}
+
+@media only screen and (min-width: 500px) {
+    .mobile {
+        display: none !important;
+    }
+
+    .web {
+        display: initial;
+    }
 }

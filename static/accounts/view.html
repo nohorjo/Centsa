@@ -102,17 +102,17 @@
         ng-click="setFilter({account_id:a.id.toString()})"
         ng-init="a.nameOld = a.name; a.balanceOld = a.balance"
     >
-        <label class="mobile">Default</label>
         <input
             type="radio"
+            class="web"
             name="defaultAccount"
             ng-value="a.id"
             ng-model="defaultAccountId"
             ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
         >
-        <label class="mobile">Savings</label>
         <input
             type="checkbox"
+            class="web"
             ng-model="a.savings"
             ng-change="updateAccount(a, true)"
             ng-click="$event.stopPropagation()"
@@ -135,6 +135,23 @@
             number-divide="100"
             ng-blur="adjustAccount(a)"
             ng-click="$event.stopPropagation()"
+        >
+        <label class="mobile">Savings</label>
+        <input
+            type="checkbox"
+            class="mobile"
+            ng-model="a.savings"
+            ng-change="updateAccount(a, true)"
+            ng-click="$event.stopPropagation()"
+        >
+        <label class="mobile">Default</label>
+        <input
+            type="radio"
+            class="mobile"
+            name="defaultAccount"
+            ng-value="a.id"
+            ng-model="defaultAccountId"
+            ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
         >
         <a href="" ng-click="deleteAccount(a.id);$event.stopPropagation()">Delete</a>
     </div>
