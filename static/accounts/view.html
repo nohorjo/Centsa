@@ -1,158 +1,145 @@
+<h4>Transfer funds from one account to another</h4>
 <form name="TransferForm" ng-submit="transferFunds()">
-    <h4>Transfer funds from one account to another</h4>
-    <table class="table">
-        <tr>
-            <th width="15%">Date</th>
-            <th width="15%">From</th>
-            <th width="15%">To</th>
-            <th width="10%">Amount</th>
-            <th width="25%">Comment</th>
-            <th width="20%"></th>
-        </tr>
-        <tr>
-            <td>
-                <input
-                    type="text"
-                    class="datepicker form-control"
-                    pattern="\d{4}/\d{1,2}/\d{1,2}"
-                    required="required"
-                    ng-model="transfer.date"
-                >
-            </td>
-            <td>
-                <select class="form-control" ng-model="transfer.from">
-                    <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-                </select>
-            </td>
-            <td>
-                <select class="form-control" ng-model="transfer.to">
-                    <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-                </select>
-            </td>
-            <td>
-                <input
-                    type="number"
-                    class="form-control"
-                    required="required"
-                    step="0.01"
-                    ng-model="transfer.amount"
-                    number-divide="100"
-                >
-            </td>
-            <td>
-                <input
-                    type="text"
-                    class="form-control"
-                    required="required"
-                    ng-model="transfer.comment"
-                >
-            </td>
-            <td>
-                <input
-                    type="submit"
-                    value="Transfer"
-                    class="btn btn-primary"
-                    ng-class="{ 'btn-warning': TransferForm.$invalid || transfer.to == transfer.from }"
-                    ng-disabled="TransferForm.$invalid || transfer.to == transfer.from"
-                >
-            </td>
-        </tr>
-    </table>
+    <div>
+        <label>Date</label>
+        <input
+            type="text"
+            class="datepicker form-control"
+            pattern="\d{4}/\d{1,2}/\d{1,2}"
+            required="required"
+            ng-model="transfer.date"
+        >
+    </div>
+    <div>
+        <label>From</label>
+        <select
+            class="form-control"
+            ng-model="transfer.from"
+            ng-options="option.id as option.name for option in accounts"
+        ></select>
+    </div>
+    <div>
+        <label>To</label>
+        <select
+            class="form-control"
+            ng-model="transfer.to"
+            ng-options="option.id as option.name for option in accounts"
+        ></select>
+    </div>
+    <div>
+        <label>Amount</label>
+        <input
+            type="number"
+            class="form-control"
+            required="required"
+            step="0.01"
+            ng-model="transfer.amount"
+            number-divide="100"
+        >
+    </div>
+    <div>
+        <label>Comment</label>
+        <input
+            type="text"
+            class="form-control"
+            required="required"
+            ng-model="transfer.comment"
+        >
+    </div>
+    <input
+        type="submit"
+        value="Transfer"
+        class="btn btn-primary"
+        ng-class="{ 'btn-warning': TransferForm.$invalid || transfer.to == transfer.from }"
+        ng-disabled="TransferForm.$invalid || transfer.to == transfer.from"
+    >
 </form>
 
-<form name="Form" ng-submit="saveAccount()">
-    <h4>Add new accounts</h4>
-    <table id="accountsTable" class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th width="5%">Default</th>
-                <th width="5%">Savings</th>
-                <th ng-click="sort('name', accounts)">Name</th>
-                <th colspan="2" ng-click="sort('balance', accounts)">Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="checkbox" ng-model="newAccount.savings">
-                </td>
-                <td>
-                    <input
-                        type="text"
-                        class="form-control"
-                        required="required"
-                        ng-model="newAccount.name"
-                    >
-                </td>
-                <td>
-                    <input
-                        type="number"
-                        step=".01"
-                        class="form-control"
-                        required="required"
-                        ng-model="newAccount.balance"
-                        number-divide="100"
-                    >
-                </td>
-                <td>
-                    <input
-                        type="submit"
-                        value="Save"
-                        class="btn btn-primary"
-                        ng-class="{ 'btn-warning': Form.$invalid }"
-                        ng-disabled="Form.$invalid"
-                    >
-                </td>
-            </tr>
-            <tr ng-repeat="a in accounts" ng-click="setFilter({account_id:a.id.toString()})">
-                <td>
-                    <input
-                        type="radio"
-                        name="defaultAccount"
-                        value="{{a.id}}"
-                        ng-model="defaultAccountId"
-                        ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
-                    >
-                </td>
-                <td>
-                    <input
-                        type="checkbox"
-                        ng-model="a.savings"
-                        ng-change="updateAccount(a, true)"
-                        ng-click="$event.stopPropagation()"
-                    >
-                </td>
-                <td ng-init="a.nameOld = a.name">
-                    <input
-                        type="text"
-                        step=".01"
-                        class="form-control no-border-inactive"
-                        ng-model="a.name"
-                        ng-blur="updateAccount(a)"
-                        ng-click="$event.stopPropagation()"
-                    >
-                </td>
-                <td ng-init="a.balanceOld = a.balance">
-                    <input
-                        type="number"
-                        step=".01"
-                        class="form-control no-border-inactive"
-                        ng-model="a.balance"
-                        number-divide="100"
-                        ng-blur="adjustAccount(a)"
-                        ng-click="$event.stopPropagation()"
-                    >
-                </td>
-                <td>
-                    <a href="" ng-click="deleteAccount(a.id);$event.stopPropagation()">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>Total</td>
-                <td colspan="3">{{ applyCurrency(sumAccountBalances()) }}</td>
-            </tr>
-        </tbody>
-    </table>
+<h4>Add new accounts</h4>
+<form name="AccountsForm" ng-submit="saveAccount()">
+    <div class="web">
+        <label>Default</label>
+    </div>
+    <div class="web">
+        <label>Savings</label>
+        <input type="checkbox" ng-model="newAccount.savings">
+    </div>
+    <div>
+        <label class="sortable" ng-click="sort('name', accounts)">Name</label>
+        <input
+            type="text"
+            class="form-control"
+            required="required"
+            ng-model="newAccount.name"
+        >
+    </div>
+    <div>
+        <label class="sortable" ng-click="sort('balance', accounts)">Balance</label>
+        <input
+            type="number"
+            step=".01"
+            class="form-control"
+            required="required"
+            ng-model="newAccount.balance"
+            number-divide="100"
+        >
+    </div>
+    <div class="mobile">
+        <input type="checkbox" ng-model="newAccount.savings">
+        <span>Savings</span>
+    </div>
+    <input
+        type="submit"
+        value="Save"
+        class="btn btn-primary"
+        ng-class="{ 'btn-warning': AccountsForm.$invalid }"
+        ng-disabled="AccountsForm.$invalid"
+    >
+    <div
+        class="account-item list-item"
+        ng-class="{ first: $first }"
+        ng-repeat="a in accounts"
+        ng-click="setFilter({account_id:a.id.toString()})"
+        ng-init="a.nameOld = a.name; a.balanceOld = a.balance"
+    >
+        <label class="mobile">Default</label>
+        <input
+            type="radio"
+            name="defaultAccount"
+            ng-value="a.id"
+            ng-model="defaultAccountId"
+            ng-click="setDefaultAccount(a.id);$event.stopPropagation()"
+        >
+        <label class="mobile">Savings</label>
+        <input
+            type="checkbox"
+            ng-model="a.savings"
+            ng-change="updateAccount(a, true)"
+            ng-click="$event.stopPropagation()"
+        >
+        <label class="mobile">Name</label>
+        <input
+            type="text"
+            step=".01"
+            class="form-control no-border-inactive"
+            ng-model="a.name"
+            ng-blur="updateAccount(a)"
+            ng-click="$event.stopPropagation()"
+        >
+        <label class="mobile">Balance</label>
+        <input
+            type="number"
+            step=".01"
+            class="form-control no-border-inactive"
+            ng-model="a.balance"
+            number-divide="100"
+            ng-blur="adjustAccount(a)"
+            ng-click="$event.stopPropagation()"
+        >
+        <a href="" ng-click="deleteAccount(a.id);$event.stopPropagation()">Delete</a>
+    </div>
+    <div class="account-sum">
+        <span>Total</span>
+        <span>{{ applyCurrency(sumAccountBalances()) }}</span>
+    </div>
 </form>

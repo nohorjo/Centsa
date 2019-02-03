@@ -56,7 +56,7 @@
     <div class="header" ng-class="{ 'danger': currentUser != -1 }">
         <i
             id="sidebar-button"
-            class="fas fa-bars"
+            class="mobile fas fa-bars"
             ng-click="sidebarOpen = !sidebarOpen"
         ></i>
         <a href="https://github.com/nohorjo/Centsa/wiki" target="_blank">
@@ -64,7 +64,7 @@
         </a>
         <div>
             <select
-                class="name form-control"
+                class="web name form-control"
                 ng-change="switchUser()"
                 ng-model="currentUser"
             >
@@ -86,7 +86,7 @@
         ng-mouseleave="sidebarOpen=false"
     >
         <select
-            class="name form-control"
+            class="mobile name form-control"
             ng-change="switchUser()"
             ng-model="currentUser"
         >

@@ -5,13 +5,13 @@ app.controller('accountsCtrl', function ($scope, centsa) {
         $scope.accounts = resp.data;
 
         centsa.settings.get('default.account').then(data => $scope.$apply(() => {
-            $scope.defaultAccountId = data.toString();
+            $scope.defaultAccountId = +data;
             $scope.transfer.from = transfer.from = $scope.defaultAccountId;
             $scope.transfer.to = transfer.to = (
                 $scope.accounts.find(a => a.savings)
                 || $scope.accounts.find(a => a.id != data)
                 || {id: data}
-            ).id.toString();
+            ).id;
         }));
     });
     centsa.types.getAll().then(resp => otherType = resp.data.find(t => t.name == 'Other').id);
