@@ -211,40 +211,32 @@
             </thead>
             <tbody>
                 <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
+                <tr
+                    ng-repeat="t in transactions"
+                    ng-click="editTrans(t)"
+                    ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
+                >
+                    <td width="20%">{{ formatDate(t.date) }}</td>
+                    <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ applyCurrency((t.amount / 100).toFixed(2)) }}</td>
+                    <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
+                    <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
+                    <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
+                    <td width="40%" colspan="2">{{ t.comment }}</td>
+                    <td></td>
+                </tr>
+                <tr ng-show="moreToLoad">
+                    <td colspan="8">
+                        <div class="loader">Loading...</div>
+                    </td>
+                </tr>
             </tbody>
         </table>
-        <div id="transactions" data-scroll-bottom="loadMoreTransactions()" data-max-height-bottom>
-            <table class="table table-condensed table-hover">
-                <tbody>
-                    <tr
-                        ng-repeat="t in transactions"
-                        ng-click="editTrans(t)"
-                        ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
-                    >
-                        <td width="20%">{{ formatDate(t.date) }}</td>
-                        <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ applyCurrency((t.amount / 100).toFixed(2)) }}</td>
-                        <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
-                        <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
-                        <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
-                        <td width="40%" colspan="2">{{ t.comment }}</td>
-                        <td></td>
-                    </tr>
-                    <tr ng-show="moreToLoad">
-                        <td colspan="8">
-                            <div class="loader">Loading...</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center">
-            <input
-                id="scroll-button"
-                type="button"
-                class="btn btn-default btn-sm"
-                value="Back to top"
-                ng-click="transScrollTop()"
-            >
-        </div>
+        <input
+            id="scroll-button"
+            type="button"
+            class="btn btn-info btn-sm"
+            value="Back to top"
+            ng-click="transScrollTop()"
+        >
     </form>
  </div>

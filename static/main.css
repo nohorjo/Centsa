@@ -197,11 +197,6 @@ input#export{
     margin-bottom: 3px;
 }
 
-#transactions {
-    overflow-y: scroll;
-    width: 100%;
-}
-
 .loader,
 .loader:before,
 .loader:after {
@@ -263,6 +258,9 @@ input#export{
 }
 
 #scroll-button {
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
     margin: 0.5em;
 }
 
@@ -280,6 +278,7 @@ tr.first-trans-of-week {
     border-top: none;
     border-radius: 0 0 3px 3px;
     padding: 0.5em;
+    margin-bottom: 4em;
 }
 
 form#filter td {

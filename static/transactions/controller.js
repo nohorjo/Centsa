@@ -179,29 +179,6 @@ app.controller('transCtrl', function($scope, $rootScope, centsa) {
         exportWorker.postMessage($scope.tabs[$scope.currentTab].currentFilter);
     };
 
-    $scope.loadMoreTransactions = () => {
-        console.log('load more');
-        if ($scope.moreToLoad) {
-            centsa.transactions.getAll({
-                page: ++$scope.currentPage,
-                pageSize: 20,
-                sort: $scope.tabs[$scope.currentTab].sort,
-                filter: $rootScope.filter
-            }).then(resp => {
-                $scope.transactions = $scope.transactions.concat(resp.data);
-                $scope.moreToLoad = resp.data.length;
-                setFirstOfWeeks();
-            });
-        }
-    };
-
-    $scope.transScrollTop = () => {
-        console.log('scroll to top');
-        $('#transactions').animate({
-            scrollTop: 0
-        }, 'fast');
-    };
-
     $scope.autoFillFromExpense = expenseId => {
         if (expenseId) {
             console.log('auto fill');
@@ -247,6 +224,29 @@ app.controller('transCtrl', function($scope, $rootScope, centsa) {
     $scope.removeCommentFilter = index => $rootScope.filter.comments.splice(index, 1);
 
     $scope.addCommentFilter = () => $rootScope.filter.comments.push({comment: ''});
+
+    $scope.transScrollTop = () => {
+        console.log('scroll to top');
+        $('.main-panel').animate({
+            scrollTop: 0
+        }, 'fast');
+    };
+
+    $rootScope.onScrollBottom = () => {
+        console.log('load more');
+        if ($scope.moreToLoad) {
+            centsa.transactions.getAll({
+                page: ++$scope.currentPage,
+                pageSize: 20,
+                sort: $scope.tabs[$scope.currentTab].sort,
+                filter: $rootScope.filter
+            }).then(resp => {
+                $scope.transactions = $scope.transactions.concat(resp.data);
+                $scope.moreToLoad = resp.data.length;
+                setFirstOfWeeks();
+            });
+        }
+    };
 
     function setFirstOfWeeks() {
         if (/^date/.test($scope.tabs[$scope.currentTab].sort)) {

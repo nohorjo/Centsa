@@ -78,6 +78,10 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
     
     $scope.switchUser = () => centsa.general.switchUser($scope.currentUser).then(() => window.location.reload());
 
+    $scope.$on('$routeChangeStart', () => { 
+        delete $rootScope.onScrollBottom;
+    });
+
     centsa.general.controllees().then(resp => $scope.controllees = resp.data);
 
     !function checkNotifications() {
@@ -134,26 +138,6 @@ app.directive('scrollBottom', () => ({
                 $scope.$apply($attrs.scrollBottom);
             }
         });
-    }
-}));
-
-app.directive('maxHeightBottom', () => ({
-    restrict: 'A',
-    link: function ($scope, $elem) {
-        const setMaxHeight = yPos => $elem.prop('style')['max-height'] = `${(window.innerHeight - yPos) * 0.85}px`;
-        setMaxHeight($elem[0].getBoundingClientRect().y);
-
-        $scope.$watch(
-            () => {
-                setTimeout(() => {
-                    if (!$scope.$$phase) {
-                        $scope.$digest();
-                    }
-                }, 200);
-                return $elem[0].getBoundingClientRect().y;
-            },
-            newV => setMaxHeight(newV)
-        );
     }
 }));
 
