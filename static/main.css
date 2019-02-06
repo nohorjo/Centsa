@@ -189,10 +189,6 @@ div.amcharts-chart-div>a {
     display: none !important;
 }
 
-#filter-buttons>input {
-    margin: 2em 0.5em;
-}
-
 input#export{
     margin-bottom: 3px;
 }
@@ -281,8 +277,23 @@ tr.first-trans-of-week {
     margin-bottom: 4em;
 }
 
-form#filter td {
-    vertical-align: middle;
+form[name="FilterForm"] .options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr 5fr);
+    grid-gap: 1em;
+    width: 100%;
+    margin: 1em 0;
+}
+
+form[name="FilterForm"] .options div.comments {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: 4fr 3fr;
+    grid-gap: 1em;
+}
+
+form[name="FilterForm"] .options label.comments {
+    grid-column-start: 1;
 }
 /* }}} */
 
@@ -660,6 +671,22 @@ button.accordion-header {
 
     .account-sum {
         grid-column: 1 / 1;
+    }
+/* }}} */
+
+/* transactions {{{ */
+    #export {
+        width: 100%;
+        margin-top: 1em;
+        margin-bottom: 1em !important;
+    }
+    
+    form[name="FilterForm"] .options {
+        grid-template-columns: 1fr;
+    }
+
+    form[name="FilterForm"] .options div.comments {
+        grid-template-columns: 4fr 1fr;
     }
 /* }}} */
 }

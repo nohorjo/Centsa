@@ -73,127 +73,119 @@
         >
     </div>
     <form
-        id="filter"
         name="FilterForm"
         ng-submit="reloadTrans()"
         ng-show="showFilter"
     >
-        <table class="table table-condensed">
-            <tbody>
-                <tr>
-                    <td colspan="3" ng-class="{'success' : filter.fromDate || filter.toDate }">
-                        <label>Dates</label>
-                        <div class="input-group input-daterange">
-                            <input
-                                type="text"
-                                class="daterangepicker form-control"
-                                pattern="\d{4}/\d{1,2}/\d{1,2}"
-                                ng-model="filter.fromDate"
-                            >
-                            <div class="input-group-addon">to</div>
-                            <input
-                                type="text"
-                                class="daterangepicker form-control"
-                                pattern="\d{4}/\d{1,2}/\d{1,2}"
-                                ng-model="filter.toDate"
-                            >
-                        </div>
-                    </td>
-                    <td colspan="3" ng-class="{'success' : filter.fromAmount != null || filter.toAmount != null }">
-                        <label>Amount</label>
-                        <div class="input-group input-daterange">
-                            <input
-                                type="number"
-                                step="0.01"
-                                class="form-control"
-                                ng-model="filter.fromAmount"
-                                data-number-divide="100"
-                            >
-                            <div class="input-group-addon">to</div>
-                            <input
-                                type="number"
-                                step="0.01"
-                                class="form-control"
-                                ng-model="filter.toAmount"
-                                data-number-divide="100"
-                            >
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" ng-class="{'success' : filter.account_id && filter.account_id != '0' }">
-                        <label>Account</label>
-                        <select class="form-control" ng-model="filter.account_id">
-                            <option value="0"></option>
-                            <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-                        </select>
-                    </td>
-                    <td colspan="2" ng-class="{'success' : filter.type_id && filter.type_id != '0' }">
-                        <label>Type</label>
-                        <select class="form-control" ng-model="filter.type_id">
-                            <option value="0"></option>
-                            <option ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-                        </select>
-                    </td>
-                    <td colspan="2" ng-class="{'success' : filter.expense_id && filter.expense_id != '0' }">
-                        <label>Expense</label>
-                        <select class="form-control" ng-model="filter.expense_id">
-                            <option value="0"></option>
-                            <option ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr ng-repeat="c in filter.comments">
-                    <td colspan="5" ng-class="{'success' : hasFilterComments() }">
-                        <label>Comment</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            ng-model="c.comment"
-                        >
-                        <input type="checkbox" ng-model="c.regex"> Regular expression
-                    </td>
-                    <td>
-                        <a
-                            href=""
-                            class="no-animate"
-                            ng-show="$last"
-                            ng-click="addCommentFilter()"
-                        >
-                            Add
-                        </a>
-                        <br/>
-                        <a
-                            href=""
-                            class="no-animate"
-                            ng-hide="$first && filter.comments.length == 1"
-                            ng-click="removeCommentFilter($index)"
-                        >
-                            Remove
-                        </a>
-                    </td> 
-                </tr>
-                <tr>
-                    <td colspan="6">
-                        <div id="filter-buttons" class="float-right">
-                            <input
-                                type="button"
-                                class="btn btn-default"
-                                value="Clear"
-                                ng-click="clearFilter()"
-                            >
-                            <input
-                                type="submit"
-                                class="btn btn-primary"
-                                value="Apply"
-                                ng-class="{ 'btn-warning': FilterForm.$invalid }"
-                                ng-disabled="FilterForm.$invalid"
-                            >
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="options">
+            <label ng-class="{'bg-success' : filter.fromDate || filter.toDate }">Dates</label>
+            <div class="input-group input-daterange">
+                <input
+                    type="text"
+                    class="daterangepicker form-control"
+                    pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    ng-model="filter.fromDate"
+                >
+                <div class="input-group-addon">to</div>
+                <input
+                    type="text"
+                    class="daterangepicker form-control"
+                    pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    ng-model="filter.toDate"
+                >
+            </div>
+            <label ng-class="{'bg-success' : filter.fromAmount != null || filter.toAmount != null }">Amount</label>
+            <div class="input-group input-daterange">
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    ng-model="filter.fromAmount"
+                    data-number-divide="100"
+                >
+                <div class="input-group-addon">to</div>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    ng-model="filter.toAmount"
+                    data-number-divide="100"
+                >
+            </div>
+            <label ng-class="{'bg-success' : filter.account_id && filter.account_id != '0' }">Account</label>
+            <select
+                class="form-control"
+                ng-model="filter.account_id"
+            >
+                <option value="0"></option>
+                <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+            </select>
+            <label ng-class="{'bg-success' : filter.type_id && filter.type_id != '0' }">Type</label>
+            <select
+                class="form-control"
+                ng-model="filter.type_id"
+            >
+                <option value="0"></option>
+                <option ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+            </select>
+            <label ng-class="{'bg-success' : filter.expense_id && filter.expense_id != '0' }">Expense</label>
+            <select
+                class="form-control"
+                ng-model="filter.expense_id"
+            >
+                <option value="0"></option>
+                <option ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
+            </select>
+            <label class="comments" ng-class="{'bg-success' : hasFilterComments() }">Comments</label>
+            <div class="comments" ng-repeat="c in filter.comments">
+                <input
+                    type="text"
+                    class="form-control"
+                    ng-model="c.comment"
+                >
+                <div>
+                    <a
+                        href=""
+                        class="no-animate"
+                        ng-show="$last"
+                        ng-click="addCommentFilter()"
+                    >
+                        Add
+                    </a>
+                    <a
+                        href=""
+                        class="no-animate"
+                        ng-hide="$first && filter.comments.length == 1"
+                        ng-click="removeCommentFilter($index)"
+                    >
+                        Remove
+                    </a>
+                </div>
+                <div>
+                    <input
+                        type="checkbox"
+                        ng-model="c.regex"
+                    >
+                    <span>Regular expression</span>
+                </div>
+            </div>
+        </div>
+        <div class="float-right">
+            <input
+                id="clear"
+                type="button"
+                class="btn btn-default"
+                value="Clear"
+                ng-click="clearFilter()"
+            >
+            <input
+                type="submit"
+                class="btn btn-primary"
+                value="Apply"
+                ng-class="{ 'btn-warning': FilterForm.$invalid }"
+                ng-disabled="FilterForm.$invalid"
+            >
+        </div>
         <h5>Count: {{ transactionSummary.count }}</h5>
         <h5>Sum: {{ applyCurrency((transactionSummary.sum / 100).toFixed(2)) }}</h5>
     </form>
