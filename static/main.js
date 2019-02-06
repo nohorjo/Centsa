@@ -85,8 +85,10 @@ app.controller('mainCtrl', function ($scope, $rootScope, $location, $cookies, $t
     centsa.general.controllees().then(resp => $scope.controllees = resp.data);
 
     !function checkNotifications() {
-        centsa.general.getNotifications().then(({data}) => $rootScope.notifications = data);
-        setTimeout(checkNotifications, 3.6e6);
+        centsa.general.getNotifications().then(({data}) => {
+            $rootScope.notifications = data;
+            setTimeout(checkNotifications, 3.6e6);
+        });
     }();
 
     centsa.settings.get('currency').then(data => {
@@ -142,13 +144,11 @@ app.directive('scrollBottom', () => ({
 }));
 
 $(document).ready(() => {
-    !function checkInactivity() {
-        let timer = setTimeout(() => window.location.reload(),  3.6e6);
-        function reset() {
-            clearTimeout(timer);
-            checkInactivity();
-        }
-
-        $(this).click(reset);
-    }();
+    let timer;
+    function checkInactivity() {
+        console.log('reset activity timout');
+        clearTimeout(timer);
+        timer = setTimeout(() => window.location.reload(),  3.6e6);
+    }
+    $(window).click(checkInactivity);
 });

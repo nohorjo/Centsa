@@ -55,6 +55,7 @@
     >
         <a href="" ng-click="currentTab == $index ? deleteTab($index) : goToTab($index) ">
             {{ t.hover && currentTab == $index ? 'Close' : 'Tab ' + (t.index + 1) }}
+            <span class="mobile">&times;</span>
         </a>
     </li>
     <li><a href="" ng-click="newTab()">+</a></li>
