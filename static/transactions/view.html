@@ -5,7 +5,7 @@
 >
     <div class="modal-dialog extra-lg-modal">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-header">
                 <button
                     type="button"
                     class="close"
@@ -13,34 +13,23 @@
                 >
                     &times;
                 </button>
-                <form name="Form" ng-submit="saveTrans(true)">
-                    <table id="modalTransTable" class="table table-condensed table-hover">
-                        <thead>
-                            <tr>
-                                <th width="20%">Date</th>
-                                <th width="10%">Amount</th>
-                                <th width="10%">Account</th>
-                                <th width="10%">Type</th>
-                                <th width="10%">Expense</th>
-                                <th width="40%">Comment</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
-                            <tr>
-                                <td colspan="8">
-                                    <input
-                                        type="button"
-                                        value="Delete transaction"
-                                        class="float-right btn btn-danger"
-                                        ng-click="deleteTrans(newTrans.id)"
-                                    >
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
+            </div>
+            <div class="modal-body">
+                <form
+                    name="Form"
+                    class="transaction-form"
+                    ng-submit="saveTrans(true)"
+                    ng-include="'transactions/inputRow.html'"
+                    onload="initDatePickers()"
+                />
+            </div>
+            <div class="modal-footer">
+                <input
+                    type="button"
+                    value="Delete transaction"
+                    class="float-right btn btn-danger"
+                    ng-click="deleteTrans(newTrans.id)"
+                >
             </div>
         </div>
     </div>
@@ -189,47 +178,43 @@
         <h5>Count: {{ transactionSummary.count }}</h5>
         <h5>Sum: {{ applyCurrency((transactionSummary.sum / 100).toFixed(2)) }}</h5>
     </form>
-    <form name="Form" ng-submit="saveTrans()">
-        <table class="table table-condensed table-hover">
-            <thead>
-                <tr>
-                    <th width="20%" ng-click="sort('date', 'id DESC')">Date</th>
-                    <th width="10%" ng-click="sort('amount', 'date DESC')">Amount</th>
-                    <th width="10%">Account</th>
-                    <th width="10%">Type</th>
-                    <th width="10%">Expense</th>
-                    <th width="40%" ng-click="sort('comment', 'date DESC')">Comment</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-include="'transactions/inputRow.html'" onload="initDatePickers()"></tr>
-                <tr
-                    ng-repeat="t in transactions"
-                    ng-click="editTrans(t)"
-                    ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
-                >
-                    <td width="20%">{{ formatDate(t.date) }}</td>
-                    <td width="10%" style="background-color:{{ getHighlight(t.amount) }};">{{ applyCurrency((t.amount / 100).toFixed(2)) }}</td>
-                    <td width="10%">{{ (accounts | prop:'id':t.account_id)[0].name }}</td>
-                    <td width="10%">{{ (types | prop:'id':t.type_id)[0].name }}</td>
-                    <td width="10%">{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</td>
-                    <td width="40%" colspan="2">{{ t.comment }}</td>
-                    <td></td>
-                </tr>
-                <tr ng-show="moreToLoad">
-                    <td colspan="8">
-                        <div class="loader">Loading...</div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <input
-            id="scroll-button"
-            type="button"
-            class="btn btn-info btn-sm"
-            value="Back to top"
-            ng-click="transScrollTop()"
-        >
-    </form>
+    <hr/>
+    <form
+        name="Form"
+        class="transaction-form"
+        ng-submit="saveTrans()"
+        ng-include="'transactions/inputRow.html'"
+        onload="initDatePickers()"
+    />
+    <div
+        class="list-item transaction"
+        ng-repeat="t in transactions"
+        ng-click="editTrans(t)"
+        ng-class="{ 'first-trans-of-week': t.firstOfWeek }"
+    >
+        <label class="mobile">Date</label>
+        <span>{{ formatDate(t.date) }}</span>
+        <label class="mobile">Amount</label>
+        <span style="background-color:{{ getHighlight(t.amount) }};">{{ applyCurrency((t.amount / 100).toFixed(2)) }}</span>
+        <label class="mobile">Account</label>
+        <span>{{ (accounts | prop:'id':t.account_id)[0].name }}</span>
+        <label class="mobile">Type</label>
+        <span>{{ (types | prop:'id':t.type_id)[0].name }}</span>
+        <label class="mobile">Expense</label>
+        <span>{{ (expenses | prop:'id':t.expense_id)[0].name || 'N/A' }}</span>
+        <label class="mobile">Comment</label>
+        <span>{{ t.comment }}</span>
+    </div>
+    <div ng-show="moreToLoad">
+        <td colspan="8">
+            <div class="loader">Loading...</div>
+        </td>
+    </div>
+    <input
+        id="scroll-button"
+        type="button"
+        class="btn btn-info btn-sm"
+        value="Back to top"
+        ng-click="transScrollTop()"
+    >
  </div>

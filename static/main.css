@@ -86,7 +86,6 @@ select.name {
 }
 
 .sortable,
-[ng-click],
 table.table-hover tr td {
     cursor: pointer;
 }
@@ -256,15 +255,17 @@ input#export{
 #scroll-button {
     position: fixed;
     bottom: 5px;
-    left: 50%;
+    left: calc(50% - 60px);
     margin: 0.5em;
 }
 
 .extra-lg-modal {
     width: 85%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
-tr.first-trans-of-week {
+div.first-trans-of-week {
     font-weight: bold;
     text-decoration: underline;
 }
@@ -294,6 +295,22 @@ form[name="FilterForm"] .options div.comments {
 
 form[name="FilterForm"] .options label.comments {
     grid-column-start: 1;
+}
+
+.transaction.list-item,
+form.transaction-form {
+    display: grid;
+    grid-template-columns: repeat(5, 2fr) 4fr 1fr;
+}
+
+form.transaction-form {
+    grid-gap: 1em;
+    margin-bottom: 1em;
+}
+
+.transaction.list-item>* {
+    padding: 0.5em 1em;
+    border-top: lightgrey solid 1px;
 }
 /* }}} */
 
@@ -679,6 +696,7 @@ button.accordion-header {
         width: 100%;
         margin-top: 1em;
         margin-bottom: 1em !important;
+        float: unset;
     }
     
     form[name="FilterForm"] .options {
@@ -687,6 +705,27 @@ button.accordion-header {
 
     form[name="FilterForm"] .options div.comments {
         grid-template-columns: 4fr 1fr;
+    }
+
+    form.transaction-form {
+        grid-template-columns: 1fr;
+    }
+    
+    #transModal input[type="button"] {
+        width: 100%;
+    }
+
+    .transaction.list-item {
+        grid-template-columns: 1fr 4fr;
+        border: lightgrey solid 1px;
+        border-radius: 5px;
+        padding: 5px;
+        box-shadow: lightgrey 1px 1px 3px 1px;
+        margin-bottom: 1em;
+    }
+
+    .transaction.list-item>* {
+        border-top: none;
     }
 /* }}} */
 }

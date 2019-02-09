@@ -1,4 +1,5 @@
-<td>
+<div>
+    <label class="sortable" ng-click="sort('date', 'id DESC')">Date</label>
     <input
         type="text"
         class="datepicker form-control"
@@ -6,8 +7,9 @@
         required="required"
         data-ng-model="newTrans.date"
     >
-</td>
-<td>
+</div>
+<div>
+    <label class="sortable" ng-click="sort('amount', 'date DESC')">Amount</label>
     <input
         type="number"
         class="form-control"
@@ -16,18 +18,21 @@
         data-ng-model="newTrans.amount"
         data-number-divide="100"
     >
-</td>
-<td>
+</div>
+<div>
+    <label>Account</label>
     <select class="form-control" data-ng-model="newTrans.account_id">
         <option data-ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
     </select>
-</td>
-<td>
+</div>
+<div>
+    <label>Type</label>
     <select class="form-control" data-ng-model="newTrans.type_id">
         <option data-ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
     </select>
-</td>
-<td>
+</div>
+<div>
+    <label>Expense</label>
     <select
         class="form-control"
         data-ng-model="newTrans.expense_id"
@@ -36,9 +41,10 @@
         <option value="">N/A</option>
         <option data-ng-repeat="exp in expenses" value="{{ exp.id }}">{{ exp.name }}</option>
     </select>
-</td>
-<td>
-    <div class="datalist">
+</div>
+<div>
+    <label class="sortable" ng-click="sort('comment', 'date DESC')">Comment</label>
+    <div>
         <input
             type="text"
             class="form-control"
@@ -52,13 +58,11 @@
             <option ng-repeat="c in uniqueComments" value="{{ c }}">
         </datalist>
     </div>
-</td>
-<td>
-    <input
-        type="submit"
-        value="Save"
-        class="btn btn-primary"
-        data-ng-class="{ 'btn-warning': Form.$invalid }"
-        data-ng-disabled="Form.$invalid"
-    >
-</td>
+</div>
+<input
+    type="submit"
+    value="Save"
+    class="btn btn-primary"
+    data-ng-class="{ 'btn-warning': Form.$invalid }"
+    data-ng-disabled="Form.$invalid"
+>
