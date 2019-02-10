@@ -1,32 +1,18 @@
-<div class="expense-summary">
-    <div>
+<div class="expense-page">
+    <div class="expense-summary">
         <h4>Summary</h4>
-        <table class="table-condensed">
-            <thead>
-                <tr>
-                    <th>Approximate total active expenses</th>
-                    <th>Total</th>
-                    <th>Auto</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Daily</td>
-                    <td>{{ applyCurrency((totalActiveExpenses/100).toFixed(2) || 0) }}</td>
-                    <td>{{ applyCurrency((totalAutoExpenses/100).toFixed(2) || 0) }}</td>
-                </tr>
-                <tr>
-                    <td>Weekly</td>
-                    <td>{{ applyCurrency(((totalActiveExpenses*7)/100).toFixed(2) || 0) }}</td>
-                    <td>{{ applyCurrency(((totalAutoExpenses*7)/100).toFixed(2) || 0) }}</td>
-                </tr>
-                <tr>
-                    <td>Monthly</td>
-                    <td>{{ applyCurrency(((totalActiveExpenses*30)/100).toFixed(2) || 0) }}</td>
-                    <td>{{ applyCurrency(((totalAutoExpenses*30)/100).toFixed(2) || 0) }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <label>Approximate total active expenses</label>
+        <label>Total</label>
+        <label>Auto</label>
+        <span>Daily</span>
+        <span>{{ applyCurrency((totalActiveExpenses/100).toFixed(2) || 0) }}</span>
+        <span>{{ applyCurrency((totalAutoExpenses/100).toFixed(2) || 0) }}</span>
+        <span>Weekly</span>
+        <span>{{ applyCurrency(((totalActiveExpenses*7)/100).toFixed(2) || 0) }}</span>
+        <span>{{ applyCurrency(((totalAutoExpenses*7)/100).toFixed(2) || 0) }}</span>
+        <span>Monthly</span>
+        <span>{{ applyCurrency(((totalActiveExpenses*30)/100).toFixed(2) || 0) }}</span>
+        <span>{{ applyCurrency(((totalAutoExpenses*30)/100).toFixed(2) || 0) }}</span>
     </div>
     <form name="GoalForm" ng-submit="saveGoal()">
         <h4>Savings goal</h4>
@@ -71,65 +57,55 @@
             ng-disabled="GoalForm.$invalid"
         >
     </form>
-</div>
-<form name="Form" ng-submit="saveExpense()">
-    <h4>Manage expenses (incomes have negative amounts)</h4>
-    <table id="expensesTable" class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th width="20%" ng-click="sort('name', expenses)">Name</th>
-                <th width="10%" ng-click="sort('cost', expenses)">Cost</th>
-                <th width="10%">Type</th>
-                <th width="20%">Frequency</th>
-                <th width="5%">Automatic</th>
-                <th width="10%">Account</th>
-                <th width="15%" ng-click="sort('started', expenses)">Started</th>
-                <th width="5%" colspan="2"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <input
-                        type="text"
-                        class="form-control"
-                        required="required"
-                        ng-model="newExpense.name"
+    <div class="expenses">
+        <h4>Manage expenses (incomes have negative amounts)</h4>
+        <form name="Form" ng-submit="saveExpense()">
+            <div>
+                <label ng-click="sort('name', expenses)">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    required="required"
+                    ng-model="newExpense.name"
+                >
+            </div>
+            <div>
+                <label ng-click="sort('cost', expenses)">Cost</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    required="required"
+                    step="0.01"
+                    ng-model="newExpense.cost"
+                    data-number-divide="100"
+                >
+            </div>
+            <div>
+                <label>Type</label>
+                <select class="form-control" ng-model="newExpense.type_id">
+                    <option ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
+                </select>
+            </div>
+            <div>
+                <label>Frequency</label>
+                <div class="dropdown" id="frequency-select">
+                    <button
+                        class="btn btn-default dropdown-toggle"
+                        type="button"
+                        data-toggle="dropdown"
                     >
-                </td>
-                <td>
-                    <input
-                        type="number"
-                        class="form-control"
-                        required="required"
-                        step="0.01"
-                        ng-model="newExpense.cost"
-                        data-number-divide="100"
-                    >
-                </td>
-                <td>
-                    <select class="form-control" ng-model="newExpense.type_id">
-                        <option ng-repeat="ty in types" value="{{ ty.id }}">{{ ty.name }}</option>
-                    </select>
-                </td>
-                <td>
-                    <div class="dropdown" id="frequency-select">
-                        <button
-                            class="btn btn-default dropdown-toggle"
-                            type="button"
-                            data-toggle="dropdown"
-                        >
-                            <span ng-bind-html="trust(frequencyDisplayText(newExpense.frequency) || 'Set')"></span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" ng-click="changeFrequencyType($event)">
-                            <li ng-class="{ 'disabled' : frequency.type != 'basic' }">
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="basic"
-                                    ng-model="frequency.type"
-                                >
+                        <span ng-bind-html="trust(frequencyDisplayText(newExpense.frequency) || 'Set')"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" ng-click="changeFrequencyType($event)">
+                        <li ng-class="{ 'disabled' : frequency.type != 'basic' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="basic"
+                                ng-model="frequency.type"
+                            >
+                            <div>
                                 Every
                                 <input
                                     type="number"
@@ -138,15 +114,17 @@
                                     ng-model="frequency.date"
                                 >
                                 day(s)
-                            </li>
-                            <li ng-class="{ 'disabled' : frequency.type != 'date' }">
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="date"
-                                    ng-model="frequency.type"
-                                >
-                                    On the
+                            </div>
+                        </li>
+                        <li ng-class="{ 'disabled' : frequency.type != 'date' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="date"
+                                ng-model="frequency.type"
+                            >
+                            <div>
+                                On the
                                 <input
                                     type="number"
                                     class="form-control"
@@ -171,15 +149,17 @@
                                     <option value="11">November</option>
                                     <option value="12">December</option>
                                 </select>
-                            </li>
-                            <li ng-class="{ 'disabled' : frequency.type != 'day' }">
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="day"
-                                    ng-model="frequency.type"
-                                >
-                                    On the
+                            </div>
+                        </li>
+                        <li ng-class="{ 'disabled' : frequency.type != 'day' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="day"
+                                ng-model="frequency.type"
+                            >
+                            <div>
+                                On the
                                 <input
                                     type="number"
                                     class="form-control"
@@ -200,15 +180,16 @@
                                     <option value="SU">Sunday</option>
                                 </select>
                                 of the month
-                            </li>
-                            <li ng-class="{ 'disabled' : frequency.type != 'monthday' }">
-                                <inpu
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="monthday"
-                                    ng-model="frequency.type"
-                                >
+                            </div>
+                        </li>
+                        <li ng-class="{ 'disabled' : frequency.type != 'monthday' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="monthday"
+                                ng-model="frequency.type"
+                            >
+                            <div>
                                 On the
                                 <input
                                     type="number"
@@ -221,14 +202,16 @@
                                 (last
                                 <input type="checkbox" ng-model="frequency.last">
                                 ) day of the month
-                            </li>
-                            <li ng-class="{ 'disabled' : frequency.type != 'workday' }">
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="workday"
-                                    ng-model="frequency.type"
-                                >
+                            </div>
+                        </li>
+                        <li ng-class="{ 'disabled' : frequency.type != 'workday' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="workday"
+                                ng-model="frequency.type"
+                            >
+                            <div>
                                 On the
                                 <input
                                     type="number"
@@ -241,14 +224,16 @@
                                 (last
                                 <input type="checkbox" ng-model="frequency.last">
                                 ) work-day of the month
-                            </li>
-                            <li ng-class="{ 'disabled' : frequency.type != 'restday' }">
-                                <input
-                                    type="radio"
-                                    name="frequency"
-                                    value="restday"
-                                    ng-model="frequency.type"
-                                >
+                            </div>
+                        </li>
+                        <li ng-class="{ 'disabled' : frequency.type != 'restday' }">
+                            <input
+                                type="radio"
+                                name="frequency"
+                                value="restday"
+                                ng-model="frequency.type"
+                            >
+                            <div>
                                 On the
                                 <input
                                     type="number"
@@ -261,65 +246,76 @@
                                 (last
                                 <input type="checkbox" ng-model="frequency.last">
                                 ) rest-day of the month
-                            </li>
-                        </ul>
-                    </div>
-
-
-                </td>
-                <td>
-                    <input type="checkbox" ng-model="newExpense.automatic">
-                </td>
-                <td>
-                    <select
-                        class="form-control"
-                        ng-model="newExpense.account_id"
-                        ng-disabled="!newExpense.automatic"
-                        ng-required="newExpense.automatic"
-                    >
-                        <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
-                    </select>
-                </td>
-                <td>
-                    <input
-                        type="text"
-                        class="datepicker
-                        form-control"
-                        pattern="\d{4}/\d{1,2}/\d{1,2}"
-                        required="required"
-                        ng-model="newExpense.started"
-                    >
-                </td>
-                <td></td>
-                <td>
-                    <input
-                        type="submit"
-                        value="Save"
-                        class="btn
-                        btn-primary"
-                        ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
-                        ng-disabled="Form.$invalid || !newExpense.frequency"
-                    >
-                </td>
-            </tr>
-            <tr ng-repeat="e in expenses" ng-click="setFilter({expense_id:e.id.toString()})">
-                <td>{{ e.name }}</td>
-                <td>{{ applyCurrency((e.cost / 100).toFixed(2)) }}</td>
-                <td>{{ (types | prop:'id':e.type_id)[0].name }}</td>
-                <td ng-bind-html="trust(frequencyDisplayText(e.frequency))"></td>
-                <td>
-                    <input
-                        type="checkbox"
-                        disabled="disabled"
-                        ng-checked="e.automatic"
-                    >
-                </td>
-                <td>{{ (accounts | prop:'id':e.account_id)[0].name || '' }}</td>
-                <td>{{ formatDate(e.started) }}</td>
-                <td colspan="2">
-                    <a href="" ng-click="deleteExpense(e.id);$event.stopPropagation()">Delete</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label class="web">Automatic</label>
+                <input
+                    id="automatic"
+                    type="checkbox"
+                    ng-model="newExpense.automatic"
+                >
+                <span class="mobile">Automatic</span>
+            </div>
+            <div>
+                <label>Account</label>
+                <select
+                    class="form-control"
+                    ng-model="newExpense.account_id"
+                    ng-disabled="!newExpense.automatic"
+                    ng-required="newExpense.automatic"
+                >
+                    <option ng-repeat="acc in accounts" value="{{ acc.id }}">{{ acc.name }}</option>
+                </select>
+            </div>
+            <div>
+                <label ng-click="sort('started', expenses)">Started</label>
+                <input
+                    type="text"
+                    class="datepicker
+                    form-control"
+                    pattern="\d{4}/\d{1,2}/\d{1,2}"
+                    required="required"
+                    ng-model="newExpense.started"
+                >
+            </div>
+            <input
+                type="submit"
+                value="Save"
+                class="btn
+                btn-primary"
+                ng-class="{ 'btn-warning': Form.$invalid || !newExpense.frequency }"
+                ng-disabled="Form.$invalid || !newExpense.frequency"
+            >
+        </form>
+        <div
+            class="list-item"
+            ng-class="{ first: $first }"
+            ng-repeat="e in expenses"
+            ng-click="setFilter({expense_id:e.id.toString()})"
+        >
+            <label class="mobile">Name</label>
+            <span>{{ e.name }}</span>
+            <label class="mobile">Cost</label>
+            <span>{{ applyCurrency((e.cost / 100).toFixed(2)) }}</span>
+            <label class="mobile">Type</label>
+            <span>{{ (types | prop:'id':e.type_id)[0].name }}</span>
+            <label class="mobile">Frequency</label>
+            <span ng-bind-html="trust(frequencyDisplayText(e.frequency))"></span>
+            <input
+                type="checkbox"
+                disabled="disabled"
+                class="web"
+                ng-checked="e.automatic"
+            >
+            <label class="mobile" ng-class="{ 'web': e.automatic == false }">Account</label>
+            <span ng-class="{ 'web': e.automatic == false }">{{ (accounts | prop:'id':e.account_id)[0].name || '' }}</span>
+            <label class="mobile">Started</label>
+            <span>{{ formatDate(e.started) }}</span>
+            <a href="" ng-click="deleteExpense(e.id);$event.stopPropagation()">Delete</a>
+        </div>
+    </div>
+</div>

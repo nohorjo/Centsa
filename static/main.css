@@ -46,7 +46,7 @@ body {
     position: fixed;
     right: 0;
     width: calc(100% - 5.5em);
-    padding: 10px 10px 0 2em;
+    padding: 10px 10px 2em 2em;
     margin-right: 10px;
     overflow: auto;
 }
@@ -163,10 +163,16 @@ div.notification.read {
 
 .list-item:hover {
     background: #f5f5f5;
+    cursor: pointer;
 }
 
-input {
+input[type="submit"],
+input[type="button"] {
     align-self: end;
+}
+
+input[type="radio"] {
+    align-self: center;
 }
 
 .swal2-select {
@@ -337,8 +343,7 @@ form.transaction-form {
 }
 
 #types-view>form>label:nth-of-type(2) {
-    grid-column-start: 2;
-    grid-column-end: 3;
+    grid-column: 2 / 3;
 }
 
 .type-item {
@@ -354,7 +359,7 @@ form.transaction-form {
 
 /* expenses {{{ */
 #frequency-select>.dropdown-menu {
-    width: calc(100% + 25em);
+    width: 35em;
 }
 
 #frequency-select>.btn {
@@ -362,7 +367,10 @@ form.transaction-form {
 }
 
 .dropdown-menu li {
-    padding: 0 0.5em;
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-gap: 1em;
+    padding: 3px 0.5em;
 }
 
 .dropdown-menu li:hover {
@@ -391,32 +399,58 @@ li.disabled {
     opacity: 0.5;
 }
 
-.expense-summary {
+.expense-page {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
-.expense-summary>form[name="GoalForm"] {
+.expense-page h4,
+.expense-page p {
+    grid-column: 1 / -1;
+}
+
+.expense-summary {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+.expense-page>form[name="GoalForm"] {
     display: grid;
     grid-template-columns: 3fr 7fr;
+    grid-gap: 1em;
 }
 
-.expense-summary>form[name="GoalForm"]>* {
-    margin: 0.5em;
+.expense-page>.expenses {
+    grid-column: 1 / -1;
 }
 
-.expense-summary>form[name="GoalForm"]>input[type="submit"] {
-    grid-column-start: 2;
-    grid-column-end: 3;
+.expense-page>form[name="GoalForm"]>input[type="submit"] {
+    grid-column: 2 / 3;
     margin: auto;
     width: 30%;
 }
 
-.expense-summary>form[name="GoalForm"]>h4,
-.expense-summary>form[name="GoalForm"]>p
-{
-    grid-column-start: 1;
-    grid-column-end: 3;
+.expense-page .list-item,
+.expense-page form[name="Form"] {
+    display: grid;
+    grid-template-columns: 4fr 2fr 2fr 3fr 2fr 2fr 3fr 2fr;
+    grid-gap: 1em;
+}
+
+.expense-page .list-item {
+    border-top: lightgrey solid 1px;
+}
+
+.expense-page .list-item.first {
+    margin-top: 0.5em;
+}
+
+.expense-page .list-item>* {
+    padding: 0.5em;
+}
+
+.expense-page form[name="Form"] input#automatic {
+    display: block;
 }
 /* }}} */
 
@@ -518,8 +552,7 @@ button.accordion-header {
 }
 
 .controllers>label {
-    grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column: 1 / 3;
 }
 
 .password,
@@ -722,10 +755,53 @@ button.accordion-header {
         padding: 5px;
         box-shadow: lightgrey 1px 1px 3px 1px;
         margin-bottom: 1em;
+        grid-gap: unset;
     }
 
     .transaction.list-item>* {
         border-top: none;
+    }
+
+    div.first-trans-of-week {
+        font-weight: unset;
+        text-decoration: unset;
+    }
+/* }}} */
+
+/* expenses {{{ */
+    #frequency-select>.dropdown-menu {
+        width: calc(100vw - 3em);
+        font-size: 9pt;
+    }
+
+    .expense-page,
+    .expense-page form[name="GoalForm"] ,
+    .expense-page .list-item,
+    .expense-page form[name="Form"] {
+        grid-template-columns: 1fr;
+    }
+
+    .expense-page>form[name="GoalForm"]>input[type="submit"] {
+        grid-column: unset;
+        width: 100%;
+    }
+
+    .expense-page .list-item {
+        grid-template-columns: 1fr 4fr;
+        border: lightgrey solid 1px;
+        border-radius: 5px;
+        padding: 5px;
+        box-shadow: lightgrey 1px 1px 3px 1px;
+        margin-bottom: 1em;
+        grid-gap: 0.5em;
+    }
+
+    .expense-page .list-item>* {
+        padding: 0;
+    }
+
+    .expense-page form[name="Form"] input#automatic {
+        display: initial;
     }
 /* }}} */
 }
