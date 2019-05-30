@@ -1,4 +1,4 @@
-const axios = require('axios');
+const fetch = require('node-fetch');
 const _ = require('underscore');
 
 const Users = require('./Users');
@@ -202,7 +202,7 @@ const getDetailsFromFB = async ({userID, accessToken} = {}) => {
     log('Login request: %s', userID);
     const url = `https://graph.facebook.com/${userID}?access_token=${accessToken}&fields=${fields.join(',')}`;
 
-    return (await axios.get(url)).data;
+    return fetch(url).then(r => r.json());
 };
 
 const authenticateUser = async data => {
