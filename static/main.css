@@ -38,6 +38,10 @@ body {
     display: flex;
 }
 
+.header>a {
+    display: contents;
+}
+
 .sidebar, .header {
     z-index: 1;
 }
