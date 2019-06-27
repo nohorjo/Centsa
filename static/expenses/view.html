@@ -61,7 +61,7 @@
         <h4>Manage expenses (incomes have negative amounts)</h4>
         <form name="Form" ng-submit="saveExpense()">
             <div>
-                <label ng-click="sort('name', expenses)">Name</label>
+                <label class="sortable" ng-click="sort('name', expenses)">Name</label>
                 <input
                     type="text"
                     class="form-control"
@@ -70,7 +70,7 @@
                 >
             </div>
             <div>
-                <label ng-click="sort('cost', expenses)">Cost</label>
+                <label class="sortable" ng-click="sort('cost', expenses)">Cost</label>
                 <input
                     type="number"
                     class="form-control"
@@ -272,7 +272,7 @@
                 </select>
             </div>
             <div>
-                <label ng-click="sort('started', expenses)">Started</label>
+                <label class="sortable" ng-click="sort('started', expenses)">Started</label>
                 <input
                     type="text"
                     class="datepicker

@@ -92,6 +92,7 @@ select.name {
 .sortable,
 table.table-hover tr td {
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .sortable:after,
