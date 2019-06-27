@@ -341,6 +341,7 @@ form.transaction-form {
     display: grid;
     grid-template-columns: 5fr 3fr 2fr;
     grid-column-gap: 0.5em;
+    grid-auto-rows: min-content;
 }
 
 #types-view>form>input:first-of-type {
