@@ -24,7 +24,7 @@
                 ng-model-options="{ 'debounce' : 500 }"
             > 
         </div> 
-        <div class="no-animate" ng-show="budgetMode.mode == 'time'">
+        <div class="no-animate" ng-show="budgetMode.mode == 'time' || budgetMode.mode == 'strictTime'">
             <label>Next </label>
             <input
                 class="form-control xsmall"

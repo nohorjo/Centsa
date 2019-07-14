@@ -174,21 +174,38 @@ route.get('/budget', (req, resp) => {
                 );
                 break;
             }
-            case 'time': {
+            case 'time': case 'strictTime': {
+                const strict = mode.mode == 'strictTime';
                 const current = new Date(today);
                 const end = new Date(today.getTime() + mode.days * DAY);
                 let afterAuto = total;
                 let afterAll = afterAuto;
 
-                expenses = expenses.filter(e => e.cost > 0 && !SAVING_TEST.test(e.name));
+                expenses = expenses.filter(e => (!strict || e.cost > 0) && !SAVING_TEST.test(e.name));
+
+                let bankAll = 0;
+                let bankAuto = 0;
 
                 while (current <= end) {
                     const currentExpenses = expenses.filter(e => isDayOfPayment(e.frequency, current, e.started));
-                    afterAll -= currentExpenses.map(e => e.cost)
+                    const sumCurrentExpenses = currentExpenses.map(e => e.cost)
                         .reduce((a, b) => a + b, 0);
-                    afterAuto -= currentExpenses.filter(e => e.automatic)
+                    const sumCurrentAuto= currentExpenses.filter(e => e.automatic)
                         .map(e => e.cost)
                         .reduce((a, b) => a + b, 0);
+
+                    if (sumCurrentExpenses < 0 || bankAll >= sumCurrentExpenses) {
+                        bankAll -= sumCurrentExpenses;
+                    } else {
+                        afterAll -= (sumCurrentExpenses - bankAll);
+                        bankAll = 0;
+                    }
+                    if (sumCurrentAuto < 0 || bankAuto >= sumCurrentAuto) {
+                        bankAuto -= sumCurrentAuto;
+                    } else {
+                        afterAuto -= (sumCurrentAuto - bankAuto);
+                        bankAuto = 0;
+                    }
                     current.setDate(current.getDate() + 1);
                 }
                 

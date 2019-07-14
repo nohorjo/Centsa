@@ -7,6 +7,7 @@ app.controller('summaryCtrl', function ($scope, $rootScope, centsa) {
         {name: 'Expense based', code: 'expense'},
         {name: 'Strict expense based', code: 'strictExpense'},
         {name: 'Time based', code: 'time'},
+        {name: 'Strict Time based', code: 'strictTime'},
         {name: 'Manual', code: 'manual'},
     ];
     $scope.cashflowPeriods = [
