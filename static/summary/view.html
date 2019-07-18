@@ -96,7 +96,7 @@
         <label>Budget</label>
         <span>{{ applyCurrency((budget.afterAll/100).toFixed(2)) }}</span>
         <div ng-show="budget.afterAll <= 0">
-             <span ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time'">
+             <span ng-show="budgetMode.mode == 'expense' || budgetMode.mode == 'strictExpense' || budgetMode.mode == 'time' || budgetMode.mode == 'strictTime'">
                 You may need to re-evaluate your
                 <a href="#!expenses">expenses</a>
             </span>
