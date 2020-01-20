@@ -12,3 +12,4 @@ mochawesome-report/*
 *.vim
 tags
 sessions/*
+elm-stuff/*

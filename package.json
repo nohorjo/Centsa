@@ -21,6 +21,9 @@
   },
   "devDependencies": {
     "chai": "4.1.2",
+    "elm": "0.19.1-3",
+    "elm-format": "0.8.2",
+    "elm-live": "4.0.1",
     "istanbul": "0.4.5",
     "mocha": "5.0.4",
     "mochawesome": "3.0.2",
@@ -29,12 +32,16 @@
     "sinon": "4.1.5"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "NODE_ENV=debug node-dev --inspect src/index.js",
+    "backend": "NODE_ENV=debug node-dev --inspect src/index.js",
+    "build-frontend": "elm make frontend/index.elm --output=public/index.html",
     "debug": "NODE_ENV=debug node --inspect-brk=9009 src/index.js",
+    "dev": "npm run frontend & npm run backend",
+    "format": "elm-format frontend/*.elm",
+    "frontend": "elm-live frontend/index.elm",
+    "postinstall": "npm test",
+    "start": "node src/index.js",
     "test": "exit 0; DEBUG=centsa:* DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha test/**/*Test.js --reporter mochawesome",
-    "xtest": "DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha --reporter mochawesome",
-    "postinstall": "npm test"
+    "xtest": "DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha --reporter mochawesome"
   },
   "repository": {
     "type": "git",
