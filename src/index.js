@@ -78,7 +78,8 @@ const initWorker = (id, env) => {
     app.delete('/login', Authentication.logout);
     app.post('/login', Authentication.login);
 
-    app.use(express.static(path.join(__dirname, '..', 'static')));
+    app.use(express.static(path.join(__dirname, '..', 'public')));
+    app.use(express.static(path.join(__dirname, '..', 'old')));
 
     app.listen(port, () => log(`Server ${id} listening on port ${port}`));
 };
