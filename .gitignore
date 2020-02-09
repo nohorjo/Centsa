@@ -13,3 +13,4 @@ mochawesome-report/*
 tags
 sessions/*
 elm-stuff/*
+public/elm.js
