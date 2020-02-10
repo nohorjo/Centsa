@@ -29,6 +29,7 @@
     "mochawesome": "3.0.2",
     "node-dev": "^3.1.3",
     "nyc": "14.1.1",
+    "sass": "1.25.0",
     "sinon": "4.1.5"
   },
   "scripts": {
@@ -37,7 +38,7 @@
     "debug": "NODE_ENV=debug node --inspect-brk=9009 src/index.js",
     "dev": "npm run frontend & npm run backend",
     "format": "elm-format frontend/*.elm --yes",
-    "frontend": "cd frontend && elm-live index.elm -d ../public --start-page=index.html -- --output ../public/elm.js",
+    "frontend": "cd frontend && (sass index.scss ../public/index.css --watch & elm-live index.elm -d ../public --start-page=index.html -- --output ../public/elm.js)",
     "postinstall": "npm test",
     "start": "node src/index.js",
     "test": "exit 0; DEBUG=centsa:* DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha test/**/*Test.js --reporter mochawesome",

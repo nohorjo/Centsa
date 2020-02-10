@@ -14,3 +14,5 @@ tags
 sessions/*
 elm-stuff/*
 public/elm.js
+public/index.css
+public/*.map
