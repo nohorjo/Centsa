@@ -3,6 +3,9 @@ $gh-size: 150px;
 body {
     background: url(background.svg) no-repeat center center fixed;
     background-size: cover;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    color: #333;
 }
 .gh-link {
     position: absolute;
