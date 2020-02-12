@@ -61,7 +61,7 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Centsa money managing solution"
     , body =
-        [ span [ attribute "class" "cookie-notice" ] [ text "Centsa uses cookies to store login state. By using this service you are agreeing to having these cookies stored on your device" ]
+        [ div [ class "cookie-notice" ] [ text "Centsa uses cookies to store login state. By using this service you are agreeing to having these cookies stored on your device" ]
         , a
             [ href "https://github.com/nohorjo/Centsa"
             , target "_blank"

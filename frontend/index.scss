@@ -1,6 +1,23 @@
+$gh-size: 150px;
+
+body {
+    background: url(background.svg) no-repeat center center fixed;
+    background-size: cover;
+}
 .gh-link {
     position: absolute;
     top: 0;
     right: 0;
     border: 0;
+    height: $gh-size;
+    width: $gh-size;
+}
+.cookie-notice {
+    padding: 0.5em $gh-size;
+    font-weight: bold;
+    text-align: center;
+    background: #171d42d2;
+    color: #ff8c00;
+    position: fixed;
+    top: 0;
 }
