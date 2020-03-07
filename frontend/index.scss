@@ -1,29 +1,46 @@
 $gh-size: 150px;
 
 body {
-    background: url(background.svg) no-repeat center center fixed;
-    background-size: cover;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    color: #333;
-    margin: 0;
+  background: url(background.svg) no-repeat center center fixed;
+  background-size: cover;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  position: relative;
+  height: 100vh;
 }
 .gh-link {
-    position: absolute;
-    top: 0;
-    right: 0;
-    border: 0;
-    height: $gh-size;
-    width: $gh-size;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  height: $gh-size;
+  width: $gh-size;
 }
 .cookie-notice {
-    padding: 0.5em $gh-size;
-    font-weight: bold;
-    text-align: center;
-    background: #171d42d2;
-    color: #ff8c00;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    box-sizing: border-box;
+  padding: 0.5rem $gh-size;
+  font-weight: bold;
+  text-align: center;
+  background: #171d42d2;
+  color: #ff8c00;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.2rem;
+}
+
+.login-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2f2f2;
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 1rem;
+  .logo {
+    height: 6rem;
+  }
 }

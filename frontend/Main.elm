@@ -61,7 +61,43 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Centsa money managing solution"
     , body =
-        [ div [] []
+        [ div [ class "login-form" ]
+            [ img
+                [ src "icon.svg"
+                , alt "logo"
+                , class "logo"
+                ]
+                []
+            , div
+                [ class "fb-login-button"
+                , attribute "data-max-rows" "3"
+                , attribute "data-size" "large"
+                , attribute "data-button-type" "login_with"
+                , attribute "data-use-continue-as" "true"
+                , attribute "data-scope" "public_profile,email"
+                , attribute "onlogin" "checkLoginState();"
+                ]
+                []
+            , div [ id "g-signin2" ] []
+            , div [ class "manual" ]
+                [ div []
+                    [ h4 [] [ text "Existing user" ]
+                    , input [ type_ "email", placeholder "email@example.com" ] []
+                    , input [ type_ "password", placeholder "password" ] []
+                    , input [ type_ "button", value "Login" ] []
+                    ]
+                , div []
+                    [ h4 [] [ text "New user" ]
+                    , input [ placeholder "name" ] []
+                    , input [ type_ "email", placeholder "email@example.com" ] []
+                    , input [ type_ "password", placeholder "password" ] []
+                    , input [ type_ "password", placeholder "confirm password" ] []
+                    , input [ type_ "button", value "Sign up" ] []
+                    ]
+                ]
+            , text "* Google sign in requires third party cookies enabled for "
+            , em [] [ text "google.com" ]
+            ]
         , div [ class "cookie-notice" ] [ text "Centsa uses cookies to store login state. By using this service you are agreeing to having these cookies stored on your device" ]
         , a
             [ href "https://github.com/nohorjo/Centsa"
