@@ -89,102 +89,10 @@ Authentication.logout = (req, res) => {
     });
 };
 
-Authentication.loginScript = (req, resp) => {
-    resp.status(200).send(
-        `(() => {
-                const authUrl = '/login';
-                window.fbInit = () => {
-                    const initConfig = {
-                        appId: '${process.env.FB_APP_ID}',
-                        cookie: true,
-                        xfbml: true,
-                        version: 'v2.11'
-                    };
-
-                    window.checkLoginState = () => {
-                        FB.getLoginStatus(response => {
-                            if (response.authResponse) {
-                                loginRequest(response.authResponse,() => { FB.getLoginStatus(() => { FB.logout(); }); });
-                            }
-                        });
-                    };
-
-                    window.fbAsyncInit = () => {
-                        FB.init(initConfig);
-                        FB.AppEvents.logPageView();
-                    };
-
-                    (function (d, s, id) {
-                        let js, fjs = d.getElementsByTagName(s)[0];
-                        if (d.getElementById(id)) return;
-                        js = d.createElement(s);
-                        js.id = id;
-                        js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1'
-                                    + '&version=' + initConfig.version
-                                    + '&appId=' + initConfig.appId
-                                    + '&autoLogAppEvents=1';
-                        fjs.parentNode.insertBefore(js, fjs);
-                    }(document, 'script', 'facebook-jssdk'));
-                };
-
-                window.googleInit = () => gapi.load('auth2', () => {
-                    gapi.auth2.init({client_id: '${process.env.GOOGLE_CLIENT_ID}'});
-                    gapi.signin2.render('g-signin2', {onsuccess: window.onSignIn});
-                });
-
-                window.login = isNew => {
-                    if (!isNew || $('#newPassword').val() == $('#confirmPassword').val()) {
-                        loginRequest({
-                            isNew,
-                            manual: true,
-                            name: $('#name').val(),
-                            email: $(isNew ? '#newEmail' : '#email').val(),
-                            password: $(isNew ? '#newPassword' : '#password').val()
-                        });
-                    }
-                };
-
-                window.validatePassword = () => {
-                    if ($('#newPassword').val() != $('#confirmPassword').val()) {
-                        $('#newPassword').addClass('alert-danger');
-                        $('#confirmPassword').addClass('alert-danger')
-                        $('#signup').attr('disabled', true);
-                    } else {
-                        $('#newPassword').removeClass('alert-danger');
-                        $('#confirmPassword').removeClass('alert-danger')
-                        $('#signup').attr('disabled', false);
-                    }
-                };
-
-                window.logout = () => {
-                    $.ajax({
-                        url: authUrl,
-                        type: 'DELETE',
-                        success: () => window.location.pathname = "index.html"
-                    });
-
-                };
-
-                window.onSignIn = googleUser => {
-                    loginRequest({google_token:googleUser.getAuthResponse().id_token}, gapi.auth2.getAuthInstance().signOut);
-                };
-
-                function loginRequest(data, signOut) {
-                    $.post({
-                        url: authUrl,
-                        contentType: 'application/json',
-                        data: JSON.stringify(data),
-                        success: () => {
-                            signOut && signOut();
-                            window.location.hash = "";
-                            window.location.pathname = "main.html";
-                        },
-                        error: message => swal("Error", message.responseText, "error")
-                  });
-                }
-            })()`
-    );
-};
+Authentication.appIds = (req, resp) => resp.status(200).send({
+    FB_APP_ID: process.env.FB_APP_ID,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+});
 
 const getDetailsFromGoogle = async token => {
     log('google auth');

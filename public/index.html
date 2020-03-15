@@ -5,14 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="elm.js"></script>
   <link rel="stylesheet" type="text/css" href="index.css">
+  <script src="https://apis.google.com/js/platform.js"></script>
 </head>
 
 <body>
   <script>
-      const app = Elm.Main.init(
-      {
-	flags: {},
+    const app = Elm.Main.init({
+      flags: {},
+    });
+
+    const authUrl = '/login';
+
+    function loginRequest(data, signOut) {
+      fetch(
+        authUrl,
+        {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data),
+        },
+      ).then(async resp => {
+        if (resp.ok) {
+          signOut && signOut();
+          window.location.hash = "";
+          window.location.pathname = "main.html";
+        } else {
+          swal("Error", await resp.text(), "error");
+        }
       });
+    }
+
+    window.login = isNew => {
+      if (!isNew || $('#newPassword').val() == $('#confirmPassword').val()) {
+        loginRequest({
+          isNew,
+          manual: true,
+          name: $('#name').val(),
+          email: $(isNew ? '#newEmail' : '#email').val(),
+          password: $(isNew ? '#newPassword' : '#password').val()
+        });
+      }
+    };
+
+    fetch('/app-ids').then(r => r.json()).then(ids => {
+      const initConfig = {
+        appId: ids.FB_APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: 'v2.11',
+      };
+
+      window.checkLoginState = () => {
+        FB.getLoginStatus(response => {
+          if (response.authResponse) {
+            loginRequest(response.authResponse, () => {
+              FB.getLoginStatus(() => {
+                FB.logout();
+              });
+            });
+          }
+        });
+      };
+
+      window.fbAsyncInit = () => {
+        FB.init(initConfig);
+        FB.AppEvents.logPageView();
+      };
+
+      (function(d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1' +
+          '&version=' + initConfig.version +
+          '&appId=' + initConfig.appId +
+          '&autoLogAppEvents=1';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      gapi.load('auth2', () => {
+        gapi.auth2.init({
+          client_id: ids.GOOGLE_CLIENT_ID,
+        });
+        gapi.signin2.render('g-signin2', {
+          onsuccess: window.onSignIn
+        });
+     });
+
+      window.logout = () => fetch(authUrl, {method: 'delete'}).then(() => {
+        window.location.pathname = "index.html";
+      });
+
+      window.onSignIn = googleUser => loginRequest(
+        {google_token: googleUser.getAuthResponse().id_token},
+        gapi.auth2.getAuthInstance().signOut,
+      );
+    });
+
+    window.validatePassword = () => {
+      if ($('#newPassword').val() != $('#confirmPassword').val()) {
+        $('#newPassword').addClass('alert-danger');
+        $('#confirmPassword').addClass('alert-danger')
+        $('#signup').attr('disabled', true);
+      } else {
+        $('#newPassword').removeClass('alert-danger');
+        $('#confirmPassword').removeClass('alert-danger')
+        $('#signup').attr('disabled', false);
+      }
+    };
   </script>
 </body>
 </html>

@@ -59,7 +59,7 @@ const initWorker = (id, env) => {
     app.use(['/index.html', '/api', '/login'], session(sess));
 
     app.get('/index.html', Authentication.authSkipLogin);
-    app.get('/login.js', Authentication.loginScript);
+    app.get('/app-ids', Authentication.appIds);
 
     app.use(debug);
     app.get(['/', ''], (req, res) => res.redirect('/index.html'));
