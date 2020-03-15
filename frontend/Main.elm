@@ -3,6 +3,7 @@ module Main exposing (Document, Flags, Model, Msg(..), init, main, subscriptions
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
 
 main =
@@ -15,7 +16,10 @@ main =
 
 
 type Msg
-    = NoOp
+    = EmailChange String
+    | NameChange String
+    | PasswordChange String
+    | ConfirmPasswordChange String
 
 
 type alias Model =
@@ -54,7 +58,18 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        EmailChange str ->
+            ( { model | email = str }, Cmd.none )
+
+        PasswordChange str ->
+            ( { model | password = str }, Cmd.none )
+
+        ConfirmPasswordChange str ->
+            ( { model | confirmPassword = str }, Cmd.none )
+
+        NameChange str ->
+            ( { model | name = str }, Cmd.none )
 
 
 view : Model -> Browser.Document Msg
@@ -82,21 +97,23 @@ view model =
             , div [ class "manual" ]
                 [ div []
                     [ h4 [] [ text "Existing user" ]
-                    , input [ type_ "email", placeholder "email@example.com" ] []
-                    , input [ type_ "password", placeholder "password" ] []
+                    , input [ type_ "email", placeholder "email@example.com", value model.email, onInput EmailChange ] []
+                    , input [ type_ "password", placeholder "password", value model.password, onInput PasswordChange ] []
                     , input [ type_ "button", value "Login" ] []
                     ]
                 , div []
                     [ h4 [] [ text "New user" ]
-                    , input [ placeholder "name" ] []
-                    , input [ type_ "email", placeholder "email@example.com" ] []
-                    , input [ type_ "password", placeholder "password" ] []
-                    , input [ type_ "password", placeholder "confirm password" ] []
+                    , input [ placeholder "name", value model.name, onInput NameChange ] []
+                    , input [ type_ "email", placeholder "email@example.com", value model.email, onInput EmailChange ] []
+                    , input [ type_ "password", placeholder "password", value model.password, onInput PasswordChange ] []
+                    , input [ type_ "password", placeholder "confirm password", value model.confirmPassword, onInput ConfirmPasswordChange ] []
                     , input [ type_ "button", value "Sign up" ] []
                     ]
                 ]
-            , text "* Google sign in requires third party cookies enabled for "
-            , em [] [ text "google.com" ]
+            , span []
+                [ text "* Google sign in requires third party cookies enabled for "
+                , em [] [ text "google.com" ]
+                ]
             ]
         , div [ class "cookie-notice" ] [ text "Centsa uses cookies to store login state. By using this service you are agreeing to having these cookies stored on your device" ]
         , a
