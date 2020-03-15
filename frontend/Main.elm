@@ -1,9 +1,13 @@
-module Main exposing (Document, Flags, Model, Msg(..), init, main, subscriptions, update, view)
+port module Main exposing (..)
 
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Json.Encode as E
+
+
+port doLogin : { isNew : Bool, data : Model } -> Cmd msg
 
 
 main =
@@ -20,6 +24,8 @@ type Msg
     | NameChange String
     | PasswordChange String
     | ConfirmPasswordChange String
+    | DoLogin
+    | DoNewLogin
 
 
 type alias Model =
@@ -71,6 +77,12 @@ update msg model =
         NameChange str ->
             ( { model | name = str }, Cmd.none )
 
+        DoLogin ->
+            ( model, doLogin { isNew = False, data = model } )
+
+        DoNewLogin ->
+            ( model, doLogin { isNew = True, data = model } )
+
 
 view : Model -> Browser.Document Msg
 view model =
@@ -99,7 +111,7 @@ view model =
                     [ h4 [] [ text "Existing user" ]
                     , input [ type_ "email", placeholder "email@example.com", value model.email, onInput EmailChange ] []
                     , input [ type_ "password", placeholder "password", value model.password, onInput PasswordChange ] []
-                    , input [ type_ "button", value "Login" ] []
+                    , input [ type_ "button", value "Login", onClick DoLogin ] []
                     ]
                 , div []
                     [ h4 [] [ text "New user" ]
@@ -107,7 +119,7 @@ view model =
                     , input [ type_ "email", placeholder "email@example.com", value model.email, onInput EmailChange ] []
                     , input [ type_ "password", placeholder "password", value model.password, onInput PasswordChange ] []
                     , input [ type_ "password", placeholder "confirm password", value model.confirmPassword, onInput ConfirmPasswordChange ] []
-                    , input [ type_ "button", value "Sign up" ] []
+                    , input [ type_ "button", value "Sign up", onClick DoNewLogin ] []
                     ]
                 ]
             , span []

@@ -10,10 +10,6 @@
 
 <body>
   <script>
-    const app = Elm.Main.init({
-      flags: {},
-    });
-
     const authUrl = '/login';
 
     function loginRequest(data, signOut) {
@@ -34,18 +30,6 @@
         }
       });
     }
-
-    window.login = isNew => {
-      if (!isNew || $('#newPassword').val() == $('#confirmPassword').val()) {
-        loginRequest({
-          isNew,
-          manual: true,
-          name: $('#name').val(),
-          email: $(isNew ? '#newEmail' : '#email').val(),
-          password: $(isNew ? '#newPassword' : '#password').val()
-        });
-      }
-    };
 
     fetch('/app-ids').then(r => r.json()).then(ids => {
       const initConfig = {
@@ -89,31 +73,33 @@
           client_id: ids.GOOGLE_CLIENT_ID,
         });
         gapi.signin2.render('g-signin2', {
-          onsuccess: window.onSignIn
+          onsuccess: googleUser => loginRequest(
+            {google_token: googleUser.getAuthResponse().id_token},
+            gapi.auth2.getAuthInstance().signOut,
+          ),
         });
      });
 
       window.logout = () => fetch(authUrl, {method: 'delete'}).then(() => {
         window.location.pathname = "index.html";
       });
-
-      window.onSignIn = googleUser => loginRequest(
-        {google_token: googleUser.getAuthResponse().id_token},
-        gapi.auth2.getAuthInstance().signOut,
-      );
     });
 
-    window.validatePassword = () => {
-      if ($('#newPassword').val() != $('#confirmPassword').val()) {
-        $('#newPassword').addClass('alert-danger');
-        $('#confirmPassword').addClass('alert-danger')
-        $('#signup').attr('disabled', true);
-      } else {
-        $('#newPassword').removeClass('alert-danger');
-        $('#confirmPassword').removeClass('alert-danger')
-        $('#signup').attr('disabled', false);
+    const app = Elm.Main.init({
+      flags: {},
+    });
+
+    app.ports.doLogin.subscribe(({isNew, data}) => {
+      if (!isNew || data.password === data.confirmPassword) {
+        loginRequest({
+          isNew,
+          manual: true,
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        });
       }
-    };
+    });
   </script>
 </body>
 </html>
