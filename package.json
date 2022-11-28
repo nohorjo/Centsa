@@ -1,61 +1,43 @@
 {
-  "name": "centsa",
-  "version": "3.2.0",
-  "description": "Centsa money managing solution",
-  "main": "src/index.js",
-  "directories": {
-    "test": "test"
+  "name": "centsa2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "cookie-parser": "1.4.3",
-    "debug": "3.1.0",
-    "express": "4.16.2",
-    "express-session": "1.15.6",
-    "file-mysql-session": "nohorjo/file-mysql-session",
-    "google-auth-library": "1.5.0",
-    "mysql": "2.15.0",
-    "node-fetch": "2.6.0",
-    "otplib": "10.0.1",
-    "supports-color": "5.4.0",
-    "underscore": "^1.9.1"
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13"
   },
   "devDependencies": {
-    "chai": "4.1.2",
-    "istanbul": "0.4.5",
-    "mocha": "5.0.4",
-    "mochawesome": "3.0.2",
-    "node-dev": "^3.1.3",
-    "nyc": "14.1.1",
-    "sinon": "4.1.5"
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
   },
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "NODE_ENV=debug node-dev --inspect src/index.js",
-    "debug": "NODE_ENV=debug node --inspect-brk=9009 src/index.js",
-    "test": "exit 0; DEBUG=centsa:* DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha test/**/*Test.js --reporter mochawesome",
-    "xtest": "DB_IP=someip DB_PORT=1234 DB_USER=username DB_PASSWORD=password DB_NAME=testdb nyc mocha --reporter mochawesome",
-    "postinstall": "npm test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nohorjo/Centsa.git"
-  },
-  "author": "Muhammed Haque",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nohorjo/Centsa/issues"
-  },
-  "homepage": "https://github.com/nohorjo/Centsa#readme",
-  "nyc": {
-    "extension": [
-      ".ts"
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
     ],
-    "include": [
-      "src/**/*"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "all": true
-  }
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }
